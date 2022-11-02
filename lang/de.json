@@ -1,0 +1,125 @@
+{
+    "dsk": {
+        "characteristics": {
+            "mu": {
+                "abbr": "KO",
+                "name": "Mut"
+            },
+            "ff": {
+                "abbr": "FF",
+                "name": "Fingerfertigkeit"
+            },
+            "kl": {
+                "abbr": "KL",
+                "name": "Klugheit"
+            },
+            "ge": {
+                "abbr": "GE",
+                "name": "Gewandheit"
+            },
+            "in": {
+                "abbr": "IN",
+                "name": "Intuition"
+            },
+            "ko": {
+                "abbr": "KO",
+                "name": "Konstitution"
+            },
+            "ch": {
+                "abbr": "CH",
+                "name": "Charisma"
+            },
+            "kk": {
+                "abbr": "KK",
+                "name": "Körperkraft"
+            }
+        },
+        "CONDITION": {
+            "defeated": "Besiegt",
+            "encumbered": "Belastung",
+            "stunned": "Betäubung",
+            "feared": "Furcht",
+            "inpain": "Schmerz",
+            "selfconfidence": "Selbstvertrauen",
+            "prone": "Auf dem Rücken",
+            "rooted": "Bewegungsunfähig",
+            "unconcscious": "Bewusstlos",
+            "blind": "Blind",
+            "constricted": "Eingeengt",
+            "fixated": "Fixiert",
+            "hallucinating": "Halluzinierend",
+            "incapacitated": "Handlungsunfähig",
+            "panic": "Panisch",
+            "rage": "Raserei",
+            "mute": "Stumm",
+            "deaf": "Taub",
+            "surprised": "Überrascht",
+            "invisible": "Unsichtbar",
+            "poisoned": "Vergiftet"
+        },
+        "CONDITIONDESCRIPTION": {
+            "defeated": "Der Held ist besiegt.",
+            "encumbered": "Schweres Gepäck und Rüstungen können den Träger sehr belasten und seine Bewegungsfreiheit einschränken. Solange diese Lasten getragen werden, erleidet der Charakter entsprechende Stufen an Belastung. Werden die Lasten abgelegt, verschwinden auch die Belastungsstufen. Pro Stufe erhält der Charakter eine Erschwernis von -1 auf Fertigkeiten, die durch Belastung erschwert werden. Bei Stufe 8 erleidet er den Status Fixiert.",
+            "stunned": "Durch Eierlikör und andere Rauschmittel kann ein Charakter Stufen von Betäubung erleiden. Wenn nichts anderes beim Auslöser angegeben ist, verschwinden alle Stufen des Zustandes Betäubung nach einer Ruhephase (siehe Seite 190). Pro Stufe erhält der Charakter eine Erschwernis von -1 auf alle Fertigkeiten. Bei Stufe 8 erleidet er den Status Bewusstlos.",
+            "feared": "Besonders grauenerregende Kreaturen, aber auch Ahnengaben oder der Nachteil Angst vor ... können Furcht auslösen. Wesen reagieren recht unterschiedlich auf Furcht. Manche versuchen, den Auslöser der Furcht ständig im Auge zu behalten, auf Abstand zu bleiben oder zu fliehen, andere versuchen meist recht unkoordiniert, ihn aus dem Weg zu räumen. Im schlimmsten Falle verfallen sie in Katatonie. Ist beim Auslöser nichts anderes angegeben, so verschwinden alle Stufen des Zustandes Furcht innerhalb von 15 Minuten, nachdem der Auslöser nicht mehr vorhanden ist. Pro Stufe erhält der Charakter eine Erschwernisvon -1 auf alle Fertigkeiten. Bei Stufe 8 erleidet er den Status Panisch.",
+            "inpain": "Durch Verletzungen, Gifte und andere Unannehmlichkeiten kann ein Charakter Schmerzen erleiden, die ihn im schlimmsten Falle handlungsunfähig machen. Durch den Verlust von Lebenspunkten erhält der Charakter Stufen dieses Zustandes. Der Charakter erhält jeweils 2 Stufen Schmerz, wenn seine LeP die folgende Schwellenwerte erreichen oder unterschreiten: Dreiviertel, die Hälfte oder ein Viertel der LE, oder 5 Punkte. Steigen die Lebenspunkte wieder über diese Schwellenwerte, verschwinden damit auch die entsprechenden Stufen Schmerz. Wenn nichts anderes beim Auslöser angegeben ist, verschwinden alle Stufen des Zustandes Schmerz nach einer Ruhephase (siehe Seite 190). Pro Stufe erhält der Charakter eine Erschwernis von -1 auf alle Fertigkeiten. Bei Stufe 8 erleidet er den Status Handlungsunfähig.",
+            "selfconfidence": "Ein endlich entdeckter Hinweis, der Sieg über einen gefährlichen Gegner oder ein glitzernder Schatz in den Pfoten steigern das Selbstvertrauen ungemein. Aufgaben gehen nun leichter von der Hand, man ist konzentrierter und energischer. Im Gegensatz zu allen anderen Zuständen erleichtert der Zustand Selbstvertrauen Aufgaben. Der Spielleiter kann eine oder mehrere Stufen dieses Zustandes als Belohnung verwenden, wenn die Charaktere ein wichtiges Zwischenziel des Abenteuers erreicht oder einen besonderen Erfolg errungen haben. Wenn nichts anderes beim Auslöser angegeben ist, verschwinden alle Stufen des Zustandes Selbstver-rauen nach einer Ruhephase (siehe Seite 190). Pro Stufe erhält der Charakter eine Erleichterung von +1 auf alle Fertigkeiten",
+            "prone": "Ob gerade geweckt oder zu Boden geworfen, der Charakter befindet sich Auf dem Rücken. Dies führt besonders im Kampf zu einigen Modifikationen. Solange man auf dem Rücken liegt, kann man sich nicht fortbewegen (GS 0). Verteidigungswerte fallen um 2, Angriffswerte um 4 (siehe Seite 150). Wer aufstehen möchte, braucht dazu 1 Aktion. Ist ein Gegner in Angriffsdistanz, kann dieser dabei einen Passierschlag ausführen (siehe Seite 158). Um keinen Passierschlag abzubekommen, kann der Aufstehende eine Probe auf Körperbeherrschung ablegen.",
+            "rooted": "Stabile Fesseln oder lähmende Gifte können dazu führen, dass man sich nicht mehr bewegen kann. Man kann noch normal wahrnehmen und Hand lungen ausführen, für die man keine körperlichen Bewegungen benötigt. Beispiele hierfür wären die meisten Anwendungen von Geistesfertigkeiten oder das Wirken von Ahnengaben ohne Gesten und Formeln (siehe Seite 168).",
+            "unconcscious": "Wenn jemand schläft oder einen sehr harten Schlag auf den Kopf bekommen hat, zählt er als Bewusstlos. Zwar ist sein Körper nicht eingeschränkt, aber sein Geist ist entweder anderweitig beschäftigt oder inaktiv. Er erhält dazu automatisch den Status Handlungsunfähig.",
+            "blind": "Ein Erblindeter kann seinen Sehsinn nicht verwenden. Ursache hierfür können beispielsweise völlige Dunkelheit oder verbundene Augen sein. Inwieweit sich ein Erblindeter orientieren kann, ist von seinen anderen Sinnen abhängig. Selbst für einfache Aktionen können Proben auf Sinnesschärfe erforderlich sein. Manche Fertigkeiten kann ein Erblindeter gar nicht ausführen, viele sind oft deutlich erschwert. Welche Fertigkeiten gar nicht oder nur erschwert ausgeführt werden können, entscheidet der Spielleiter je nach Situation. Im Kampf muss sich ein blinder Kämpfer zumindest grob über die Position seines Gegners bewusst sein, beispielsweise, weil er ihn hören kann. Hierzu sind vergleichende Proben auf Sinnesschärfe und Verbergen nötig. Ist der blinde Kämpfer erfolgreich, darf er Angriffe gegen seinen Gegner ausführen. Sein Angriffswert im Nahkampf sinkt um -8, Angriffe im Fernkampf sind reine Glückstreffer (gewürfelte 2 auf 2W20). Der Verteidigungswert eines Erblindeten fällt auf 0 (siehe Seite 150). Ahnengaben, die auf Distanz gewirkt werden, können auf andere nur gewirkt werden, wenn der blinde Wirkende sein Ziel berührt.",
+            "constricted": "Befindet sich ein Charakter beispielsweise in einer Zwischendecke, Rohrleitung oder in einem dichten Gedränge, gilt dies als beengte Umgebung. In einer solchen Situation erleidet er den Status Eingeengt. Er kann sich nur noch eingeschränkt bewegen, was sich besonders im Kampf negativ auswirkt. Je nach Länge der Waffe werden Angriffswert und Verteidigungswert wie in der Tabelle ersichtlich modifiziert (siehe auch Seite 150). Die Anwendung von Fertigkeiten kann in solchen Situationen um bis zu 8 erschwert sein. Das Wirken von Ahnengaben wird nicht negativ beeinflusst, wenn der Wirkende Eingeengt ist.",
+            "fixated": "Wenn jemand am Boden festklebt oder von Ranken oder kräftigen Armen an Ort und Stelle gehalten wird, gilt er als Fixiert. Seine GS fällt auf 0, sein Verteidigungswert wird um 2 gesenkt.",
+            "hallucinating": "Der Charakter nimmt Dinge wahr, die nicht existieren und kann Wahnvorstellungen und Realität nicht unterscheiden. Er hört Stimmen oder Geräusche, sieht Personen oder Gegenstände, die nicht real sind, oder hat andere Sinnestäuschungen. Halluzinationen können von kleineren, bisweilen verstörenden Details innerhalb der realen Wahrnehmung bis hin zu völligem Abgleiten in eine mehr oder weniger surreale Fantasiewelt reichen. Auswirkungen auf Proben sollte der Spielleiter entsprechend der Situation individuell festlegen.",
+            "incapacitated": "Durch Zustände oder andere Modifikatoren kann man so angeschlagen sein, dass man nicht mehr handeln kann. Die GS fällt auf 0 und man kann keine Aktionen ausführen. In den meisten Situationen gilt man zudem als Auf dem Rücken. Je nach Situation kann der Spielleiter freie Aktionen zum Sprechen erlauben.",
+            "panic": "Gerät ein Charakter in Panik, kann er nichts anderes tun, als vor der Quelle seiner Furcht zu fliehen, auch wenn er sich oder andere dabei gefährdet. In Panik agiert er dabei irrational, greift Personen an, die ihn von der Flucht abhalten wollen, geht bei seinen Fluchtversuchen unnötige Risiken ein oder drängt sich in ein Versteck und verharrt dort in Katatonie. Auswirkungen auf Proben sollte der Spielleiter entsprechend der Situation individuell festlegen",
+            "rage": "Der Charakter ist nur noch vom Drang nach Kampf und Blutvergießen erfüllt. Sobald der Charakter diesen Status erhält, steigt sein Angriffswert im Nahkampf um +4, dafür fällt sein Verteidigungswert auf 0 (siehe Seite 150). Er kann keine Fernkampfangriffe ausführen oder Fertigkeiten einsetzen außer Körperfertigkeiten. Er kann auch keine Kampfsonderfertigkeiten nutzen. Der Charakter ignoriert alle Abzüge durch den Zustand Schmerz. Die genaue Dauer in Kampfrunden wird vom Spielleiter im Geheimen mittels 2W20 bestimmt. Der Charakter greift in diesem Zeitraum zunächst jeden an, der sich ihm gegenüber feindselig verhält oder gegen den er Antipathien hegt. Sollten diese kampfunfähig sein, greift er den Nächstbesten an, also auch Unbeteiligte oder Verbündete. Steht außer ihm in Sichtweite niemand mehr, beginnt er sinnlos zu wüten. Nach dem Rausch erleidet der Charakter vier Stufen Betäubung.",
+            "mute": "Ein Stummer kann nicht sprechen, was die Kommunikation mit ihm deutlich einschränkt. Ahnenkinder mit diesem Status können keine Formeln sprechen (siehe Seite 168). Auswirkungen auf Proben sollte der Spielleiter entsprechend der Situation individuell festlegen.",
+            "deaf": "Ein Tauber kann nichts hören, was die Kommunikation mit ihm deutlich einschränkt. Mit diesem Status kann man keine Proben auf Sinnesschärfe ablegen, die sich nur auf den Hörsinn beziehen. Spielen neben dem Gehör noch andere Sinne eine Rolle, kann der Spielleiter je nach Situation Proben auf Sinnesschärfe um bis zu -4 erschweren.",
+            "surprised": "Die üblichen Kampfhandlungen gehen davon aus, dass alle Parteien ihre Gegner sehen oder anderweitig wahrnehmen. Allerdings gibt es Situationen, wie beispielsweise Hinterhalte, in denen man Überrascht ist. Überraschte Charaktere haben einen Verteidigungswert von 0 (siehe Seite 150).",
+            "invisible": "Ein Unsichtbarer ist mit dem Sehsinn nicht mehr wahrnehmbar. Er ist natürlich trotzdem weiterhin hör-, riech- und ertastbar. Im Kampf kann ein Unsichtbarer nur angegriffen werden, wenn der Angreifer sich dessen Existenz und grober Position bewusst ist. Hierzu sind vergleichende Proben auf Sinnesschärfe und Verbergen nötig. Ist der Angreifer erfolgreich, darf er Angriffe gegen den Unsichtbaren ausführen. Sämtliche Angriffswerte im Nahkampf werden hierbei um -8 erschwert, Fernkampfangriffe sind reine Glückstreffer (gewürfelte 2 auf 2W20). Gegen Angriffe von Unsichtbaren fällt der Verteidigungswert des Angegriffenen auf 0 (siehe Seite 150). Ahnengaben, die auf Distanz gewirkt werden können, können nur auf einen Unsichtbaren gewirkt werden, wenn der Wirkende den Unsichtbaren berührt.",
+            "poisoned": "Schlangen und anderes giftiges Getier ist im Umland Havenas nicht ungewöhnlich. Solange ein Gift wirkt, kann der Vergiftete nicht mehr durch eine normale Ruhephase (siehe Seite 190) regenerieren."
+        },
+        "DIALOG": {
+            "firstTime": "Spracheinstellungen",
+            "firstTimeWarning": "Bitte wähle die passende Sprache. Kompendien verschiedener Sprachen sind nicht miteinander kompatibel und bestehende Charaktere können nicht in die andere Sprache migriert werden. Stelle sicher, dass alle User die gleiche Sprache verwenden, um Problemen vorzubeugen."
+        },
+        "SETTINGS": {
+            "forceLanguage": "Sprache erzwingen",
+            "forceLanguageHint": "Spieler erhalten beim Login einen Dialog, wenn deren Sprache falsch eingestellt ist. Unterschiedliche Spracheinstellungen können zu Problemen führen.",
+            "disableDidYouKnow": "\"Wusstest du Schon?\" deaktivieren",
+            "disableDidYouKnowHint": "Sag NEIN zu Weiterbildung!"
+        },
+        "WELCOME": "<p><h2>Willkommen zu DSK<br> für Foundry VTT</h2></p><p>Wir wünschen dir viel Spaß beim Spielen von DSK.</p><h3>Erste Schritte</h3><p>Für einen einfachen und schnellen Start empfehlen wir das Grundregelmodul in deinem System zu installieren. So kannst du unverzüglich Aventurien erkunden. Wenn du das Grundregelmodul nicht hast, musst du alle Gegenstände, Ahnengeschenke, Sonderfertigkeiten, Charaktere, etc. selbst anlegen.</p><p>Das Modul kannst du im <a href=\"https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/\" target=\"_blank\">F-Shop/</a> erwerben.</p><p>Für die Charaktererstellung stelle sicher, dass du per Drag and Drop die Spezies auf dein Charakterblatt ziehst (zur Berechnung der Attribute).</p><h3>Hilfe</h3><p>Bei Problemen benutze die Hilfe (/help im Chat), besuche den ulisses-dsa Channel im <a target=\"_blank\" href=\"https://discord.gg/foundryvtt\">Foundry Discord.</p><p>Diese Nachricht wird nur einmal angezeigt.</p>",
+        "didyouknow": "Wusstest du schon?",
+        "price": "Preis",
+        "fshopLink": "https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/",
+        "UNITS": {
+            "weight": "Gewicht in Zehntstein",
+            "money": "Wert in Mondglöckchen"
+        },
+        "DSKError": {
+            "reportBug": "Fehler melden"
+        }
+    },
+    "ITEM.TypeMeleeweapon": "Nahkampfwaffe",
+    "ITEM.TypeRangeweapon": "Fernkampfwaffe",
+    "ITEM.TypeArmor": "Rüstung",
+    "ITEM.TypeAmmunition": "Munition",
+    "ITEM.TypeEquipment": "Ausrüstung",
+    "ITEM.TypeSpecies": "Spezies",
+    "ITEM.TypeCulture": "Kultur",
+    "ITEM.TypeProfession": "Profession",
+    "ITEM.TypeAdvantage": "Vorteil",
+    "ITEM.TypeDisadvantage": "Nachteil",
+    "ITEM.TypeSpecialability": "Sonderfertigkeit",
+    "ITEM.TypeAhnengeschenk": "Ahnengeschenk",
+    "ITEM.TypeAhnengabe": "Ahnengabe",
+    "ITEM.TypePoison": "Gift",
+    "ITEM.TypeSkill": "Fertigkeit",
+    "ITEM.TypeCombatskill": "Kampffertigkeit",
+    "ACTOR.TypeCharacter": "Charakter",
+    "ACTOR.TypeNpc": "Nichtspielercharakter",
+    "ACTOR.TypeCreature": "Kreatur"
+
+}

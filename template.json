@@ -1,0 +1,334 @@
+{
+    "Actor": {
+        "types": [
+           "character",
+           "creature",
+           "npc"
+        ],
+        "templates": {
+            "characteristics": {
+                "characteristics": {
+                    "mu": {
+                        "initial": 8,
+                        "modifier": 0,
+                        "advances": 0
+                    },
+                    "ch": {
+                        "initial": 8,
+                        "modifier": 0,
+                        "advances": 0
+                    },
+                    "kl": {
+                        "initial": 8,
+                        "modifier": 0,
+                        "advances": 0
+                    },
+                    "in": {
+                        "initial": 8,
+                        "modifier": 0,
+                        "advances": 0
+                    },
+                    "ge": {
+                        "initial": 8,
+                        "modifier": 0,
+                        "advances": 0
+                    },
+                    "ff": {
+                        "initial": 8,
+                        "modifier": 0,
+                        "advances": 0
+                    },
+                    "kk": {
+                        "initial": 8,
+                        "modifier": 0,
+                        "advances": 0
+                    },
+                    "ko": {
+                        "initial": 8,
+                        "modifier": 0,
+                        "advances": 0
+                    }
+                }
+            },
+            "stats": {
+                "stats": {
+                    "LeP": {
+                        "initial": 0,
+                        "advances": 0,
+                        "modifier": 0
+                    },
+                    "AeP": {
+                        "initial": 0,
+                        "advances": 0,
+                        "modifier": 0
+                    },
+                    "sk": {
+                        "initial": 0,
+                        "advances": 0,
+                        "modifier": 0
+                    },
+                    "zk": {
+                        "initial": 0,
+                        "advances": 0,
+                        "modifier": 0
+                    },
+                    "schips": {
+                        "initial": 0,
+                        "modifier": 0
+                    },
+                    "gs": {
+                        "initial": 0,
+                        "modifier": 0
+                    },
+                    "ini": {
+                        "initial": 0,
+                        "modifier": 0,
+                        "die": "1d6"
+                    }
+                },
+                "status": {
+                   "encumbered": 0,
+                   "stunned": 0,
+                   "feared": 0,
+                   "inpain": 0,
+                   "selfconfidence": 0
+                },
+                "details": {
+                    "species": "",
+                    "size": ""
+                },
+                "money": 0 
+            },
+            "heroStats": {
+                "details": {
+                    "profession": "",
+                    "culture": "",
+                    "gender": "",
+                    "pack": "",
+                    "age": ""
+                }                
+            }
+        },
+        "character": {
+            "templates": [
+                "stats",
+                "characteristics",
+                "heroStats"
+            ],
+            "details": {
+                "experience": {
+                    "total": 0,
+                    "spent": 0
+                }
+            }
+        },
+        "creature": {
+            "templates": [
+                "stats",
+                "characteristics"
+            ],
+            "notes": {
+                "description": "",
+                "fight": "",
+                "specialRules": ""
+            }
+        },
+        "npc": {
+            "templates": [
+                "stats",
+                "characteristics",
+                "heroStats"
+            ]
+        }
+    }, 
+    "Item": {
+        "types": [
+            "meleeweapon",
+            "rangeweapon",
+            "armor",
+            "ammunition",
+            "equipment",
+            "species",
+            "culture",
+            "profession",
+            "advantage",
+            "disadvantage",
+            "specialability",
+            "ahnengeschenk",
+            "ahnengabe",
+            "poison",
+            "skill",
+            "combatskill"
+        ],
+        "templates": {
+            "description": {
+                "value": "",
+                "gminfo": ""
+            },
+            "gear": {
+                "price": 0,
+                "weight": 0,
+                "quantity": 1
+            }
+        },
+        "skill": {
+            "description": {
+                "value": ""
+            },
+            "characteristic1": "ff",
+            "characteristic2": "ff",
+            "applications": "",
+            "encumbers": false,
+            "StF": "A",
+            "group": 1
+        },
+        "combatskill": {
+            "description": {
+                "value": ""
+            }
+        },
+        "meleeweapon": {
+            "templates": [
+                "gear",
+                "description"
+            ],
+            "tp": "1d6",
+            "aw:": 0,
+            "vw": 0,
+            "rw": 1,
+            "length": 0
+        },
+        "rangeweapon": {
+            "templates": [
+                "gear",
+                "description"
+            ],
+            "tp": "1d6",
+            "lz": 1,
+            "rw": "0/0/0",
+            "ammunitionType": "",
+            "length": 0
+        },
+        "armor": {
+            "templates": [
+                "gear",
+                "description"
+            ],
+            "rs": 0
+        },
+        "ammunition": {
+            "templates": [
+                "gear",
+                "description"
+            ]
+        },
+        "equipment": {
+            "templates": [
+                "gear",
+                "description"
+            ]
+        },
+        "species": {
+            "description": {
+                "value": ""
+            },
+            "LeP": 0,
+            "sk": 0,
+            "zk": 0,
+            "gs": 0,
+            "sprint": 0
+        },
+        "culture": {
+            "description": {
+                "value": ""
+            },
+            "skills": ""
+        },
+        "profession": {
+            "description": {
+                "value": "",
+                "gear": ""
+            },
+            "skills": {
+                "body": "",
+                "social": "",
+                "mental": "",
+                "trade": "",
+                "combat": ""
+            },
+            "requirements": {
+                "advantage": "-",
+                "specialability": "-"
+            },
+            "ancestralgift": "",
+            "ancestralpresent": ""
+        },
+        "advantage": {
+            "description": {
+                "value": ""
+            },
+            "rule": "",
+            "requirements": "",
+            "ap": "",
+            "level": 0,
+            "max": 0
+        },
+        "disadvantage": {
+            "description": {
+                "value": ""
+            },
+            "rule": "",
+            "requirements": "",
+            "ap": "",
+            "level": 0,
+            "max": 0
+        },
+        "specialability": {
+            "description": {
+                "value": ""
+            },
+            "rule": "",
+            "requirements": "",
+            "ap": "",
+            "category": 0,
+            "combatskills": "",
+            "level": 0,
+            "max": 0
+        },
+        "ahnengeschenk": {
+            "description": {
+                "value": ""
+            },
+            "range": "",
+            "duration": ""
+        },
+        "ahnengabe": {
+            "description": {
+                "value": ""
+            },
+            "characteristic1": "ff",
+            "characteristic2": "ff",
+            "effect": "",
+            "AeP": "",
+            "range": "",
+            "targetCategory": "",
+            "distribution": "",
+            "StF": "A"
+        },
+        "poison": {
+            "description": {
+                "value": ""
+            },
+            "level": 1,
+            "category": "",
+            "resist": "sk",
+            "effect": "",
+            "start": "",
+            "duration": "",
+            "search": "-",
+            "process": "-",
+            "price": 0,
+            "quantity": 1
+        }
+    }
+}

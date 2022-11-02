@@ -1,0 +1,31 @@
+<div class="didYouKnow">
+    <div class="row-section">
+        <div class="col05">
+            <img src="systems/dsk/icons/categories/DSA-Auge.webp" height="40px" width="40px"/>
+        </div>
+        <div class="col80">
+            <div class="row-section">
+                <div class="col80">
+                    <h3>{{localize 'dsk.didyouknow'}}</h3>
+                </div>
+                <div class="col10 right">
+                    <a class="stopFade">
+                        {{#if fadeOut}}
+                        <i class="fas fa-stop"></i>
+                        {{else}}
+                        <i class="fas fa-angle-right"></i>
+                        {{/if}}
+                    </a>
+                </div>
+                <div class="col10 right">
+                    <a class="closeDidYou"><i class="fas fa-times"></i></a>
+                </div>
+            </div>
+            <div class="row-section">
+                <div class="col">
+                <p>{{msg}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
