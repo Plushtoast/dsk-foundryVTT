@@ -44,7 +44,7 @@ export function setupConfiguration(){
     game.settings.registerMenu("dsk", "changelog", {
         name: "Changelog",
         label: "Changelog",
-        hint: game.i18n.localize("DSASETTINGS.changelog"),
+        hint: game.i18n.localize("dsk.SETTINGS.changelog"),
         type: ChangelogForm,
         restricted: false
     })

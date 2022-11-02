@@ -17,7 +17,7 @@ export function initSidebar(){
         const button = $(`<button id="openLibrary"><i class="fas fa-university"></i>${game.i18n.localize("ItemLibrary")}</button>`);
         const headerActions = html.find(".header-actions")
         headerActions.append(button);
-        button.click(() => { game.dsa5.itemLibrary.render(true) })
+        button.click(() => { game.dsk.itemLibrary.render(true) })
 
         const toRemove = game.i18n.lang == "de" ? "en" : "de"
         const packsToRemove = game.packs.filter(p => getProperty(p.metadata, "flags.dsalang") == toRemove)

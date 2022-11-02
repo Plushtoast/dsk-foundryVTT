@@ -1,0 +1,35 @@
+<div class="row-section ">
+    <div class="col10">
+        <img src="{{item.img}}" data-edit="img" />
+    </div>
+    <div class="col90 item-main">
+        <div class="row-section">
+            <div class="col25">
+                <label class="label-text table-title">{{localize "dsk.category"}}</label>
+            </div>
+            <div class="col40">
+                <label>{{categoryType}}</label>
+            </div>
+            <div class="col25">
+                <label class="label-text table-title">{{localize "dsk.quantity"}}</label>
+            </div>
+            <div class="col15">
+                <input class="input-text" type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+            </div>
+        </div>
+        <div class="row-section">
+            <div class="col25">
+                <label data-tooltip="{{localize 'dsk.UNITS.money'}}" class="label-text table-title">{{localize "dsk.price"}}</label>
+            </div>
+            <div class="col40">
+                <input data-tooltip="{{localize 'dsk.UNITS.money'}}" class="input-text" type="number" name="system.price" value="{{system.price}}" />
+            </div>
+            <div class="col25">
+                <label data-tooltip="{{localize 'dsk.UNITS.weight'}}" class="label-text table-title">{{localize "dsk.weight"}}</label>
+            </div>
+            <div class="col15">
+                <input data-tooltip="{{localize 'dsk.UNITS.weight'}}" class="input-text" type="number" name="system.weight" value="{{system.weight}}" />
+            </div>
+        </div>
+    </div>
+</div>

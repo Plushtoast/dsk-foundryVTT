@@ -10,7 +10,7 @@ import ActorSheetCreature from "./actor/actor_sheet_creature.js"
 import ActorSheetNPC from "./actor/actor_sheet_npc.js"
 
 Hooks.once("init", () => {
-    console.log("Initializing DSA5 system")
+    console.log("Initializing DSK system")
 
     CONFIG.statusEffects = DSK.statusEffects
     game.dsk = {

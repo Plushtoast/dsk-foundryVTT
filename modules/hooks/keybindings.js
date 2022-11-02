@@ -1,11 +1,11 @@
 export function setupKeybindings() {    
-    game.keybindings.register("dsa5", "combatTrackerNext", {
+    game.keybindings.register("dsk", "combatTrackerNext", {
         name: "COMBAT.TurnNext",
         hint: game.i18n.localize("COMBAT.TurnNext"),
         editable: [{ key: "KeyN" }],
         onDown: () => combatTurn("nextTurn")
     })
-    game.keybindings.register("dsa5", "combatTrackerPrevious", {
+    game.keybindings.register("dsk", "combatTrackerPrevious", {
         name: "COMBAT.TurnPrev",
         hint: game.i18n.localize("COMBAT.TurnPrev"),
         editable: [{ key: "KeyV" }],

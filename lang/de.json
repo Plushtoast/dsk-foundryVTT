@@ -55,7 +55,8 @@
             "deaf": "Taub",
             "surprised": "Überrascht",
             "invisible": "Unsichtbar",
-            "poisoned": "Vergiftet"
+            "poisoned": "Vergiftet",
+            "add": "Zustand hinzufügen"
         },
         "CONDITIONDESCRIPTION": {
             "defeated": "Der Held ist besiegt.",
@@ -88,7 +89,8 @@
             "forceLanguage": "Sprache erzwingen",
             "forceLanguageHint": "Spieler erhalten beim Login einen Dialog, wenn deren Sprache falsch eingestellt ist. Unterschiedliche Spracheinstellungen können zu Problemen führen.",
             "disableDidYouKnow": "\"Wusstest du Schon?\" deaktivieren",
-            "disableDidYouKnowHint": "Sag NEIN zu Weiterbildung!"
+            "disableDidYouKnowHint": "Sag NEIN zu Weiterbildung!",
+            "changelog": "Schau dir Änderungen und neue Inhalte an."
         },
         "WELCOME": "<p><h2>Willkommen zu DSK<br> für Foundry VTT</h2></p><p>Wir wünschen dir viel Spaß beim Spielen von DSK.</p><h3>Erste Schritte</h3><p>Für einen einfachen und schnellen Start empfehlen wir das Grundregelmodul in deinem System zu installieren. So kannst du unverzüglich Aventurien erkunden. Wenn du das Grundregelmodul nicht hast, musst du alle Gegenstände, Ahnengeschenke, Sonderfertigkeiten, Charaktere, etc. selbst anlegen.</p><p>Das Modul kannst du im <a href=\"https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/\" target=\"_blank\">F-Shop/</a> erwerben.</p><p>Für die Charaktererstellung stelle sicher, dass du per Drag and Drop die Spezies auf dein Charakterblatt ziehst (zur Berechnung der Attribute).</p><h3>Hilfe</h3><p>Bei Problemen benutze die Hilfe (/help im Chat), besuche den ulisses-dsa Channel im <a target=\"_blank\" href=\"https://discord.gg/foundryvtt\">Foundry Discord.</p><p>Diese Nachricht wird nur einmal angezeigt.</p>",
         "didyouknow": "Wusstest du schon?",
@@ -100,7 +102,23 @@
         },
         "DSKError": {
             "reportBug": "Fehler melden"
-        }
+        },
+        "name": "Name",
+        "category": "Kategorie",
+        "quantity": "Anzahl",
+        "weight": "Gewicht",
+        "condition": "Zustand",
+        "value": "Wert",
+        "ABBR": {
+            "value": "Wert",
+            "modifiers": "Mod.",
+            "advances": "Zukauf",
+            "max": "Max", 
+            "AoE": "Größe in Schritt, Template"
+        },
+        "description": "Beschreibung",
+        "details": "Details",
+        "statuseffects": "Statuseffekte"
     },
     "ITEM.TypeMeleeweapon": "Nahkampfwaffe",
     "ITEM.TypeRangeweapon": "Fernkampfwaffe",

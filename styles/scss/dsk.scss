@@ -22,9 +22,271 @@ body {
   font-family: var(--normalFont);
 }
 
+textarea {
+  font-family: var(--normalFont);
+}
+
+b {
+  font-family: var(--boldFont);
+  font-weight: bold;
+}
+
+h1, h2, h3, h4, h5, h6, h7 {
+  font-family: "Andalus";
+  overflow: hidden;
+}
+
+.dsk {
+  .tab.description.active {
+    display: flex;
+    flex-flow: column;
+    height: calc(100% - 129px);
+    overflow-y: hidden;
+
+    .editor {
+      height: 100%;
+    }
+  }
+
+  &.item-sheet img {
+    max-height: 50px;
+    max-width: 50px;
+    margin-top: 5px;
+    border-color: transparent;
+
+    &.fullImg {
+      width: 100%;
+      max-width: initial;
+      max-height: initial;
+    }
+  }
+
+  &.item textarea {
+    padding: 1px 3px;
+  }
+
+  .editor {
+    border: none;
+    overflow: auto;
+    flex-grow: 1;
+    display: flex;
+    padding: 3px;
+    margin-top: 0px;
+    margin-bottom: 7px;
+    height: 100%;
+    width: 100%;
+  }
+
+  .item-main {
+    .row-section {
+      margin-left: 10px;
+      font-size: 12px;
+    }
+  
+    .col {
+      label, input {
+        border: 1px solid var(--border-color);
+      }
+    }
+  
+    label {
+      padding: 6px;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+    }
+  
+    &.noequipment {
+      margin-top: 15px;
+    }
+  }
+
+  .dsahidden, .roll-dialog-tag, .expandDetails {
+    display: none;
+  }
+
+  .table-title {
+    background: rgb(188, 136, 111);
+    background: linear-gradient(90deg, rgba(188, 136, 111, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    box-shadow: none;
+  }
+  
+  .dsk.item .item-main input {
+    margin: 0;
+    border-radius: 0%;
+    height: 29px;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  &.item-sheet .statusEffect img, .statusEffect img {
+    border: none;
+    background: rgba(0, 0, 0, 0.3);
+    height: 28px;
+    width: 28px;
+    margin: 0;
+  }
+
+  &.item {
+    .item-header {
+      background-image: url('../../icons/backgrounds/kapitelstart.webp');
+      background-size: 100% 50px;
+      background-repeat: no-repeat;
+      height: 50px;
+  
+      h1 {
+        margin: 0 10%;
+        cursor: pointer;
+      }
+    }
+  
+    div.item-header, .item-header input {
+      text-align: center;
+      padding: 8px;
+      background: none;
+      border: none;
+    }
+  
+    &.minimized .window-header .window-title {
+      color: black;
+    }
+  
+    .window-header .window-title {
+      color: transparent;
+      text-shadow: none;
+    }
+  }
+}
+
+.cards-notification .icon, .didYouKnow img, fieldset, .app.sidebar-popout, .dsk.item h1, .dsajournal img, .itemLibrary img, .charimg, .dsk.post-item img {
+  border: none;
+}
+
+.dsk.item .input-text, .creature-sheet .input-text {
+  border: 1px solid var(--border-color);
+  border-radius: 0px;
+  height: 28px;
+
+  /*font-size: 12px;*/
+  text-align: center;
+}
+
+form {
+  .form-group {
+    &.autoHeight label {
+      align-self: stretch;
+      vertical-align: middle;
+    }
+
+    &.full-height {
+      label, input {
+        align-self: stretch;
+        vertical-align: middle;
+      }
+
+      textarea {
+        min-height: 140px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .career .form-group.full-height textarea {
+    min-height: 80px;
+  }
+
+  .form-group {
+    &.double {
+      span {
+        flex: 0.9;
+        display: inline;
+        text-align: center;
+      }
+
+      .input-text {
+        flex: 1;
+        display: inline;
+        text-align: center;
+      }
+    }
+
+    &.tripple .input-text {
+      flex: 2;
+    }
+
+    &.doubleInput .input-text {
+      flex: 1.45;
+    }
+
+    div.input-text {
+      padding: 0 3px;
+
+      ul {
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    &.tripple select {
+      flex: 1;
+      padding: 0;
+    }
+  }
+}
+
+.window-app {
+  &.actor .window-content {
+    box-shadow: 0 0 20px #000;
+  }
+
+  &.image-popout .window-content {
+    background: url('../../icons/backgrounds/sheet2.webp') no-repeat;
+    background-position: center;
+    background-repeat: repeat-y;
+    background-size: 101% 1400px;
+  }
+}
+
+.app.sidebar-popout .window-content {
+  background: url('../../icons/backgrounds/sheet2.webp') no-repeat;
+  background-position: center;
+  background-repeat: repeat-y;
+  background-size: 101% 1400px;
+}
+
+.window-app {
+  .window-content {
+    background: url('../../icons/backgrounds/sheet2.webp') no-repeat;
+    background-position: center;
+    background-repeat: repeat-y;
+    background-size: 101% 1400px;
+  }
+
+  &.dsajournal .window-content {
+    background-image: url('../../icons/backgrounds/journalentry.webp');
+    background-size: 97% 1000px;
+    background-position: center;
+    background-repeat: repeat-y;
+    padding: 0 50px;
+  }
+}
 
 
-.dsk {}
+.chat-condition, .item-sheet .chatButton, .dsajournal .chatButton {
+  padding: 0px 4px;
+  border: 1px solid #4b4a44;
+  border-radius: 2px;
+  white-space: nowrap;
+  word-break: break-all;
+  box-shadow: none;
+  background: var(--bg-color);
+  display: inline;
+}
+
+.chat-condition img, .item-sheet .chatButton img, .dsajournal .chatButton img {
+  top: 3px;
+}
 
 #settings .fshopButton div {
   display: inline-block;
@@ -49,6 +311,7 @@ body {
   background: none;
   border: none;
   box-shadow: none;
+  position: relative;
 
   &:before {
     background-image: url('../../icons/backgrounds/dsabot.webp');

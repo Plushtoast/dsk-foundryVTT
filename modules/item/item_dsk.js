@@ -10,7 +10,7 @@ export default class ItemDSK extends Item{
 
     static defaultIcon(data) {
         if (!data.img || data.img == "") {
-            data.img = this.defaultImages(data.type) || "systems/dsa5/icons/blank.webp"
+            data.img = this.defaultImages(data.type) || "systems/dsk/icons/blank.webp"
         }
     }
 
@@ -21,7 +21,22 @@ export default class ItemDSK extends Item{
 
     static setupSubClasses() {
         game.dsk.config.ItemSubClasses = {
-
+            meleeweapon: ItemMeleeweapon,
+            rangeweapon: ItemRangeweapon,
+            armor: ItemArmor,
+            ammunition: ItemAmmunition,
+            equipment: ItemEquipment,
+            species: ItemSpecies,
+            culture: ItemCulture,
+            profession: ItemProfession,
+            advantage: ItemAdvantage,
+            disadvantage: ItemDisadvantage,
+            specialability: ItemSpecialability,
+            ahnengeschenk: ItemAhnengeschenk,
+            ahnengabe: ItemAhnengabe,
+            poison: ItemPoison,
+            skill: ItemSkill,
+            combatskill: ItemCombatskill
         }
     }
 
@@ -44,8 +59,72 @@ export default class ItemDSK extends Item{
 
         if (chatData.img.includes("/blank.webp")) chatData.img = null
 
-        const html = await renderTemplate("systems/dsa5/templates/chat/post-item.html", chatData)
+        const html = await renderTemplate("systems/dsk/templates/chat/post-item.html", chatData)
         const chatOptions = DSKUtility.chatDataSetup(html)
         ChatMessage.create(chatOptions)
     }
+}
+
+class ItemMeleeweapon extends ItemDSK{
+
+}
+
+class ItemRangeweapon extends ItemDSK{
+
+}
+
+class ItemArmor extends ItemDSK{
+
+}
+
+class ItemAmmunition extends ItemDSK{
+
+}
+
+class ItemEquipment extends ItemDSK{
+
+}
+
+class ItemSpecies extends ItemDSK{
+
+}
+
+class ItemCulture extends ItemDSK{
+
+}
+
+class ItemProfession extends ItemDSK{
+
+}
+
+class ItemAdvantage extends ItemDSK{
+
+}
+
+class ItemDisadvantage extends ItemDSK{
+
+}
+
+class ItemSpecialability extends ItemDSK{
+
+}
+
+class ItemAhnengeschenk extends ItemDSK{
+
+}
+
+class ItemAhnengabe extends ItemDSK{
+
+}
+
+class ItemPoison extends ItemDSK{
+
+}
+
+class ItemSkill extends ItemDSK{
+
+}
+
+class ItemCombatskill extends ItemDSK{
+
 }

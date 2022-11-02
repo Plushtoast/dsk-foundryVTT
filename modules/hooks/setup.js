@@ -5,7 +5,7 @@ export function initSetup(){
     Hooks.once('setup', () => {
         setupConfiguration()
         if (!["de", "en"].includes(game.i18n.lang)) {
-            console.warn(`DSA5 - ${game.i18n.lang} is not a supported language. Falling back to default language.`)
+            console.warn(`DSK - ${game.i18n.lang} is not a supported language. Falling back to default language.`)
             game.settings.set("core", "language", "de").then(()=> foundry.utils.debouncedReload())
         }
         const forceLanguage = game.settings.get("dsk", "forceLanguage")
@@ -19,7 +19,7 @@ export function initSetup(){
 
 const showWrongLanguageDialog = (forceLanguage) => {
     let data = {
-        title: game.i18n.localize("DSASETTINGS.forceLanguage"),
+        title: game.i18n.localize("dsk.SETTINGS.forceLanguage"),
         content: game.i18n.format("DSAError.wrongLanguage", { lang: forceLanguage }),
         buttons: {
             ok: {
