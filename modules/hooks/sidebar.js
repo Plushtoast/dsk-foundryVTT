@@ -1,6 +1,6 @@
 export function initSidebar(){
     Hooks.on("renderSettings", (app, html, data) => {
-        let button = $(`<button id="reportADSABug"><i class="fas fa-bug"></i> ${game.i18n.localize("dsk.DSKError.reportBug")}</button>`)
+        let button = $(`<button id="reportADSKBug"><i class="fas fa-bug"></i> ${game.i18n.localize("dsk.DSKError.reportBug")}</button>`)
         button.click(() => { window.open("https://github.com/Plushtoast/dsk-foundryVTT/issues", "_blank") })
         html.find("#settings-documentation").append(button)
 
@@ -14,13 +14,13 @@ export function initSidebar(){
     })
 
     Hooks.on("renderCompendiumDirectory", (app, html, data) => {
-        const button = $(`<button id="openLibrary"><i class="fas fa-university"></i>${game.i18n.localize("ItemLibrary")}</button>`);
+        const button = $(`<button id="openLibrary"><i class="fas fa-university"></i>${game.i18n.localize("dsk.ItemLibrary")}</button>`);
         const headerActions = html.find(".header-actions")
         headerActions.append(button);
         button.click(() => { game.dsk.itemLibrary.render(true) })
 
         const toRemove = game.i18n.lang == "de" ? "en" : "de"
-        const packsToRemove = game.packs.filter(p => getProperty(p.metadata, "flags.dsalang") == toRemove)
+        const packsToRemove = game.packs.filter(p => getProperty(p.metadata, "flags.dsklang") == toRemove)
 
         for (let pack of packsToRemove) {
             let name = `${pack.metadata.packageName}.${pack.metadata.name}`

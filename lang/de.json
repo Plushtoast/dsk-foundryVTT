@@ -90,7 +90,14 @@
             "forceLanguageHint": "Spieler erhalten beim Login einen Dialog, wenn deren Sprache falsch eingestellt ist. Unterschiedliche Spracheinstellungen können zu Problemen führen.",
             "disableDidYouKnow": "\"Wusstest du Schon?\" deaktivieren",
             "disableDidYouKnowHint": "Sag NEIN zu Weiterbildung!",
-            "changelog": "Schau dir Änderungen und neue Inhalte an."
+            "changelog": "Schau dir Änderungen und neue Inhalte an.",
+            "enableDPS": "DPS aktivieren",
+            "enableDPSHint": "Aktiviere das \"Dere Positioning System\".\nMit Händlern und Türen kann nur noch aus direkter Nähe interagiert werden.\nDer Distanzmodifikator für Fernkampfwaffen wird automatisch gesetzt.",
+            "dicesonicesettings": "Wähle Farbschemen für Würfeltypen",
+            "hideEffects": "Status Effekte verbergen",
+            "hideEffectsHint": "Zeige Status Effekte an Tokens nur deren Besitzer",
+            "enableItemDropToCanvas": "Items auf die Map legen",
+        "enableItemDropToCanvasHint": "Lege Gegenstände per drag & drop auf die Karte als Schatztoken."
         },
         "WELCOME": "<p><h2>Willkommen zu DSK<br> für Foundry VTT</h2></p><p>Wir wünschen dir viel Spaß beim Spielen von DSK.</p><h3>Erste Schritte</h3><p>Für einen einfachen und schnellen Start empfehlen wir das Grundregelmodul in deinem System zu installieren. So kannst du unverzüglich Aventurien erkunden. Wenn du das Grundregelmodul nicht hast, musst du alle Gegenstände, Ahnengeschenke, Sonderfertigkeiten, Charaktere, etc. selbst anlegen.</p><p>Das Modul kannst du im <a href=\"https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/\" target=\"_blank\">F-Shop/</a> erwerben.</p><p>Für die Charaktererstellung stelle sicher, dass du per Drag and Drop die Spezies auf dein Charakterblatt ziehst (zur Berechnung der Attribute).</p><h3>Hilfe</h3><p>Bei Problemen benutze die Hilfe (/help im Chat), besuche den ulisses-dsa Channel im <a target=\"_blank\" href=\"https://discord.gg/foundryvtt\">Foundry Discord.</p><p>Diese Nachricht wird nur einmal angezeigt.</p>",
         "didyouknow": "Wusstest du schon?",
@@ -101,14 +108,29 @@
             "money": "Wert in Mondglöckchen"
         },
         "DSKError": {
-            "reportBug": "Fehler melden"
+            "reportBug": "Fehler melden",
+            "wrongLanguage": "Deine Spracheinstellung passt nicht zur vorgegebenen Einstellung ({lang}). Möchtest du die Sprache ändern?",
+            "notInRangeToLoot": "Zu weit entfernt für eine Interaktion.",
+            "sceneNotInitialized": "Szene nicht gefunden. Schon initialisiert?",
+            "MissingChoices": "Noch nicht alle Optionen ausgefüllt.",
+            "notUnderstood": "Folgende Einträge  konnten nicht umgesetzt bzw. in der Datenbank gefunden werden. Bitte manuell anpassen/hinzufügen.",
+            "itemNotFound": "Dieser Eintrag wurde nicht in der Datenbank gefunden, bitte manuell anlegen"
         },
+        "gridUnits": "Schritt",
         "name": "Name",
         "category": "Kategorie",
         "quantity": "Anzahl",
+        "cancel": "Abbrechen",
+        "delete": "Löschen",
+        "initialize": "Initialisieren",
+        "ok": "Ok",
         "weight": "Gewicht",
+        "ItemLibrary": "Bibliothek",
         "condition": "Zustand",
         "value": "Wert",
+        "ahnen": "Ahnen",
+        "zoo": "Zoo",
+        "importDefault": "<div class=\"detailbox\"><p>DAS SCHWARZE AUGE, AVENTURIEN, DERE, MYRANOR, RIESLAND, THARUN, UTHURIA und THE DARK EYE sind eingetragene Marken der Ulisses Spiele GmbH, Waldems.</p><p>Copyright © 2021 by Ulisses Spiele GmbH. Alle Rechte vorbehalten.</p><p>Titel und Inhalte dieses Werkes sind urheberrechtlich geschützt. Der Nachdruck, auch auszugsweise, die Bearbeitung, Verarbeitung, Verbreitung und Vervielfältigung des Werkes in jedweder Form, insbesondere die Vervielfältigung auf photomechanischem, elektronischem oder ähnlichem Weg, sind nur mit schriftlicher Genehmigung der Ulisses Spiele GmbH, Waldems, gestattet.</p></div>",
         "ABBR": {
             "value": "Wert",
             "modifiers": "Mod.",
@@ -116,9 +138,58 @@
             "max": "Max", 
             "AoE": "Größe in Schritt, Template"
         },
+        "KEYBINDINGS": {
+            "journalBrowser": "Öffne den Journalbrowser",
+            "library": "Öffne die Bibliothek",
+            "attack": "Öffne das Angriffsmenü für den aktuellen Token oder Spieler (im Kampf für den aktuellen Akteur)"
+        },
+        "Book": {
+            "Wizard": "Journal Browser",
+            "Description": "Willkommen im Journal Browser. Dieses Tool soll dich bei der Verwendung von Quellen-, Regel- und Abenteuermodulen unterstützen und einen Überblick über alle enthaltenen Inhalte liefern, wie z.B. die Szenen, Kapitel und Beschreibungen. Außerdem werden Hinweise zur Anwendung und gegebenenfalls automatische Funktionen zur Initialiserung der Module bereitgestellt.",
+            "availableModules": "Installierte Abenteuermodule",
+            "availableRules": "Verfügbare Regelwerke",
+            "availableRSHs": "Verfügbare Regionalspielhilfen",
+            "preparation": "Vorbereitung",
+            "preparationDescription": "Um das meiste aus diesem Abenteuermodul zu holen, empfehlen wir folgende Dinge zu beachten: <ul class=\"dsalist\"><li>Lies die passenden Journaleinträge zur aktuellen Szene im Voraus.</li><li>Mache dich ein bisschen mit der Battlemap vertraut und platziere ggf. Tokens bereits zuvor. Empfehlenswert ist es die Token unsichtbar zu platzieren und erst sichtbar zu machen, wenn die Spieler auf diese treffen (z.b. über Alt gedrückt halten beim Platzieren). So können Spoiler vermieden werden.</li><li>Initialisiere ggf. alle Inhalte des Abenteuers über die oben verfügbare Funktion. Die Szenen nur aus den Kompendien zu ziehen reicht nicht aus, um alles korrekt zu verlinken. Achte darauf, dass du nicht mehrmals initialisierst.</li><li>Überprüfe ob du alle empfohlenen Module installiert und aktiviert hast. Diese erleichtern das Führen des Abenteuers und liefern noch ein paar weitere Details, sind aber nicht zwingend erforderlich (s.u.)</li><li>Die zur Verfügung gestellten Karten sind nur ein Vorschlag. Du kannst statt dessen auch einfach nur die Karte oder eine passende stimmige Zeichnung verwenden. Für die Battlemaps findet sich sicher später noch eine Verwendung.</li></ul>",
+            "toc": "Kapitel",
+            "info": "Info",
+            "scenes": "Szenen",
+            "active": "Aktiv",
+            "actors": "Akteure",
+            "background": "Hintergrund",
+            "nothing": "Noch keine",
+            "home": "Hauptverzeichnis",
+            "foundryUsage": "Foundry & DSA",
+            "search": "Durchsuchen",
+            "foundryUsagedesc": "<p>Den Journalbrowser verwenden:<ul class=\"dsalist\"><li>Mit einem Rechtsklick auf Bilder kannst du diese separat anzeigen und deinen Spielern zeigen</li><li>Da die Module Kopien der Printausgaben sind, können Verweise und Formulierungen auf das jeweilige Printprodukt hinweisen und im Spiel abweichen.</li><li>Einge der Akteure der Abenteuer haben möglicherweise keinen Token und keine Statistiken, da diese nur eine sehr kleine erzählerische Rolle einnehmen. Falls Würfelwürfe notwendig sind, kannst du diese über das Chatcommand <b>/ch</b> improvisieren.</li><li>Wichtige Kreaturen und Charaktere haben gewöhnlicherweise noch extra Informationen im Charakterblatt.</li><li>Die zusätzlichen Werte und Fertigkeiten der Nscs in Abenteuern sind ergänzt worden und entsprechen nicht zwingendermaßen dem Inhalt des gedruckten Abenteuers. Sie dienen der breiteren Nutzung der Nscs, sind aber nicht notwendigerweise regelkonform.</li></ul></p>",
+            "fulltextsearch": "Volltextsuche",
+            "sceneReset": "Szene aktualisieren",
+            "sceneResetDescription": "Die Szene <b>{name}</b> wurde bereits importiert. Möchtest du diese zurücksetzen?<br/> Es werden alle Änderungen und Token entfernt.",
+            "playerVisibility": "Sichtbarkeit für Spieler"
+        },
         "description": "Beschreibung",
         "details": "Details",
-        "statuseffects": "Statuseffekte"
+        "YouAlreadyHaveit": "Hast du bereits",
+        "statuseffects": "Statuseffekte",
+        "CHATNOTIFICATION": {
+            "BlindRoll": "Blinder Wurf",
+            "whisper": "Private Nachricht"
+        },
+        "TT": {
+            "onlyGM": "Nur für den Spielleiter sichtbar."
+        },
+        "Library": {
+            "searchPlaceholder": "Durchsuche die Bibliothek",
+            "searchCategoryDescription": "Bitte Filterkategorie(n) auswählen",
+            "search": "Suche",
+            "buildingIndex": "Index wird erzeugt",
+            "advanced": "Erweiterte Suche",
+            "selectAdvanced": "Wähle eine Kategorie",
+            "noFilter": "Kein Filter",
+            "indexWorldItems": "Welt Items indexieren (Deaktivieren verbessert Leistung, erfordert neuladen der Welt)",
+            "fullTextSearch": "Volltextsuche (Deaktivieren verbessert Leistung, erfordert neuladen der Welt)",
+            "loading": "Lade {item}..."
+        }
     },
     "ITEM.TypeMeleeweapon": "Nahkampfwaffe",
     "ITEM.TypeRangeweapon": "Fernkampfwaffe",
@@ -136,8 +207,14 @@
     "ITEM.TypePoison": "Gift",
     "ITEM.TypeSkill": "Fertigkeit",
     "ITEM.TypeCombatskill": "Kampffertigkeit",
+    "ITEM.TypeInformation": "Information",
+    "ITEM.TypeEffectWrapper": "Effektcontainer",
+    "ITEM.TypeTrait": "Eigenschaft",
     "ACTOR.TypeCharacter": "Charakter",
     "ACTOR.TypeNpc": "Nichtspielercharakter",
-    "ACTOR.TypeCreature": "Kreatur"
+    "ACTOR.TypeCreature": "Kreatur",
+    "ITEM.TypeCharacter": "Charakter",
+    "ITEM.TypeNpc": "Nichtspielercharakter",
+    "ITEM.TypeCreature": "Kreatur"
 
 }

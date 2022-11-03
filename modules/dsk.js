@@ -8,6 +8,10 @@ import DSK from "./system/config.js"
 import ActorSheetCharacter from "./actor/actor_sheet_character.js"
 import ActorSheetCreature from "./actor/actor_sheet_creature.js"
 import ActorSheetNPC from "./actor/actor_sheet_npc.js"
+import DSKItemLibrary from "./system/itemlibrary.js"
+import DSKActiveEffect from "./status/dsk_active_effects.js"
+import DSKHotbar from "./system/hotbar.js"
+import DSKInitializer from "./system/initializer.js"
 
 Hooks.once("init", () => {
     console.log("Initializing DSK system")
@@ -16,6 +20,7 @@ Hooks.once("init", () => {
     game.dsk = {
         apps: {
             DSKUtility,
+            DSKInitializer
         },
         documents: {
             ActorDSK,
@@ -28,11 +33,15 @@ Hooks.once("init", () => {
             ActorSheetCharacter,
             ActorSheetNPC
         },
-        config: DSK
+        config: DSK,
+        itemLibrary: new DSKItemLibrary()
     }
 
     CONFIG.Actor.documentClass = ActorDSK
     CONFIG.Item.documentClass = ItemDSK
+    CONFIG.ActiveEffect.documentClass = DSKActiveEffect
+    CONFIG.ui.hotbar = DSKHotbar
+    CONFIG.ChatMessage.template = "systems/dsk/templates/chat/chat-message.html"
 })
 
 initHooks()

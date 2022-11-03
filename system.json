@@ -21,19 +21,10 @@
     ],
     "packs": [
         {
-            "name": "skills",
-            "label": "Fertigkeiten",
+            "name": "default",
+            "label": "Standard Fertigkeiten",
             "system": "dsk",
-            "path": "packs/skills.db",
-            "type": "Item",
-            "private": false,
-            "flags": { "dsklang": "de"}
-        },
-        {
-            "name": "combatskills",
-            "label": "Kampffertigkeiten",
-            "system": "dsk",
-            "path": "packs/combatskills.db",
+            "path": "packs/default.db",
             "type": "Item",
             "private": false,
             "flags": { "dsklang": "de"}
@@ -45,7 +36,7 @@
             "path": "packs/patzer.db",
             "type": "RollTable",
             "private": false,
-            "flags": { "dsalang": "de"}
+            "flags": { "dsklang": "de"}
         }
      ],
     "languages": [

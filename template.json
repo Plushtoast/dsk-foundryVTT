@@ -158,7 +158,10 @@
             "ahnengabe",
             "poison",
             "skill",
-            "combatskill"
+            "combatskill",
+            "effectwrapper",
+            "information",
+            "trait"
         ],
         "templates": {
             "description": {
@@ -170,6 +173,11 @@
                 "weight": 0,
                 "quantity": 1
             }
+        },
+        "effectwrapper": {
+            "description": [
+                "value"
+            ]
         },
         "skill": {
             "description": {
@@ -185,7 +193,8 @@
         "combatskill": {
             "description": {
                 "value": ""
-            }
+            },
+            "weapontype": "melee"
         },
         "meleeweapon": {
             "templates": [
@@ -197,6 +206,14 @@
             "vw": 0,
             "rw": 1,
             "length": 0
+        },
+        "trait": {
+            "templates": [
+                "description"
+            ],
+            "traitType": {
+                "value": "meleeAttack"
+            }
         },
         "rangeweapon": {
             "templates": [
@@ -214,7 +231,11 @@
                 "gear",
                 "description"
             ],
-            "rs": 0
+            "rs": 0,
+            "worn": {
+                "value": false,
+                "wearable": true
+            }
         },
         "ammunition": {
             "templates": [
@@ -226,7 +247,11 @@
             "templates": [
                 "gear",
                 "description"
-            ]
+            ],
+            "worn": {
+                "value": false,
+                "wearable": false
+            }
         },
         "species": {
             "description": {
@@ -260,8 +285,8 @@
                 "advantage": "-",
                 "specialability": "-"
             },
-            "ancestralgift": "",
-            "ancestralpresent": ""
+            "ahnengabe": "",
+            "ahnengeschenk": ""
         },
         "advantage": {
             "description": {
@@ -329,6 +354,16 @@
             "process": "-",
             "price": 0,
             "quantity": 1
+        },
+        "information": {
+            "qs1": "",
+            "qs2": "",
+            "qs3": "",
+            "qs4": "",
+            "qs5": "",
+            "qs6": "",
+            "skill": "",
+            "modifier": 0
         }
     }
 }

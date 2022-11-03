@@ -36,7 +36,10 @@ export default class ItemDSK extends Item{
             ahnengabe: ItemAhnengabe,
             poison: ItemPoison,
             skill: ItemSkill,
-            combatskill: ItemCombatskill
+            combatskill: ItemCombatskill,
+            effectwrapper: ItemEffectwrapper,
+            information: ItemInformation,
+            trait: ItemTrait
         }
     }
 
@@ -63,6 +66,18 @@ export default class ItemDSK extends Item{
         const chatOptions = DSKUtility.chatDataSetup(html)
         ChatMessage.create(chatOptions)
     }
+}
+
+class ItemTrait extends ItemDSK {
+
+}
+
+class ItemInformation extends ItemDSK {
+
+}
+
+class ItemEffectwrapper extends ItemDSK {
+
 }
 
 class ItemMeleeweapon extends ItemDSK{

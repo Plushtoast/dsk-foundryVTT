@@ -1,5 +1,7 @@
+import BookWizard from "../wizards/adventure_wizard.js"
 import { setupConfiguration } from "./configuration.js"
 import { setupKeybindings } from "./keybindings.js"
+import { setupScene } from "./scene.js"
 
 export function initSetup(){
     Hooks.once('setup', () => {
@@ -14,13 +16,15 @@ export function initSetup(){
         }
 
         setupKeybindings()
+        setupScene()
+        BookWizard.initHook()
     })
 }
 
 const showWrongLanguageDialog = (forceLanguage) => {
     let data = {
         title: game.i18n.localize("dsk.SETTINGS.forceLanguage"),
-        content: game.i18n.format("DSAError.wrongLanguage", { lang: forceLanguage }),
+        content: game.i18n.format("dsk.DSKError.wrongLanguage", { lang: forceLanguage }),
         buttons: {
             ok: {
                 icon: '<i class="fa fa-check"></i>',

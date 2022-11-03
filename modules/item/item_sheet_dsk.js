@@ -1,26 +1,30 @@
 import DSKUtility from "../system/dsk_utility.js";
 import { svgAutoFit } from "../system/view_helper.js";
+import { ItemSheetObfuscation } from "./obfuscatemixin.js";
 
 export default class ItemSheetDSK extends ItemSheet {
     static setupSheets(){
         Items.unregisterSheet("core", ItemSheet)
 
         Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["meleeweapon"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["rangeweapon"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["armor"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["ammunition"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["equipment"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["species"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["culture"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["profession"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["advantage"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["disadvantage"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["specialability"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["ahnengeschenk"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["ahnengabe"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["poison"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["skill"] });
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["combatskill"] });
+        Items.registerSheet("dsk", ItemSheetRangeweapon, { makeDefault: true, types: ["rangeweapon"] });
+        Items.registerSheet("dsk", ItemSheetArmor, { makeDefault: true, types: ["armor"] });
+        Items.registerSheet("dsk", ItemSheetAmmunition, { makeDefault: true, types: ["ammunition"] });
+        Items.registerSheet("dsk", ItemSheetEquipment, { makeDefault: true, types: ["equipment"] });
+        Items.registerSheet("dsk", ItemSheetSpecies, { makeDefault: true, types: ["species"] });
+        Items.registerSheet("dsk", ItemSheetCulture, { makeDefault: true, types: ["culture"] });
+        Items.registerSheet("dsk", ItemSheetProfession, { makeDefault: true, types: ["profession"] });
+        Items.registerSheet("dsk", ItemSheetAdvantage, { makeDefault: true, types: ["advantage"] });
+        Items.registerSheet("dsk", ItemSheetDisadvantage, { makeDefault: true, types: ["disadvantage"] });
+        Items.registerSheet("dsk", ItemSheetSpecialability, { makeDefault: true, types: ["specialability"] });
+        Items.registerSheet("dsk", ItemSheetAhnengeschenk, { makeDefault: true, types: ["ahnengeschenk"] });
+        Items.registerSheet("dsk", ItemSheetAhnengabe, { makeDefault: true, types: ["ahnengabe"] });
+        Items.registerSheet("dsk", ItemSheetPoison, { makeDefault: true, types: ["poison"] });
+        Items.registerSheet("dsk", ItemSheetSkill, { makeDefault: true, types: ["skill"] });
+        Items.registerSheet("dsk", ItemSheetCombatskill, { makeDefault: true, types: ["combatskill"] });
+        Items.registerSheet("dsk", ItemSheetInformation, { makeDefault: true, types: ["information"] });
+        Items.registerSheet("dsk", ItemSheetEffectwrapper, { makeDefault: true, types: ["effectwrapper"] });
+        Items.registerSheet("dsk", ItemSheetTrait, { makeDefault: true, types: ["trait"] });
     }
 
     _getHeaderButtons() {
@@ -54,8 +58,7 @@ export default class ItemSheetDSK extends ItemSheet {
         data.editable = this.isEditable
         data.item = this.item
         data.isGM = game.user.isGM
-        data.categoryType = game.i18n.localize(`ITEM.Type${this.item.type.slice(0,1).toUpperCase()}${this.item.type.slice(1)}`)
-
+        
         data.enrichedDescription = await TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: true, async: true})
         data.enrichedGmdescription = await TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: true, async: true})
         return data
@@ -104,23 +107,35 @@ export default class ItemSheetDSK extends ItemSheet {
     }
 }
 
-class ItemSheetMeleeweapon extends ItemSheetDSK{
+class ItemSheetTrait extends ItemSheetDSK {
+    
+}
+
+class ItemSheetEffectwrapper extends ItemSheetDSK {
 
 }
 
-class ItemSheetRangeweapon extends ItemSheetDSK{
+class ItemSheetInformation extends ItemSheetDSK {
 
 }
 
-class ItemSheetArmor extends ItemSheetDSK{
+class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
 
 }
 
-class ItemSheetAmmunition extends ItemSheetDSK{
+class ItemSheetRangeweapon extends ItemSheetObfuscation(ItemSheetDSK){
 
 }
 
-class ItemSheetEquipment extends ItemSheetDSK{
+class ItemSheetArmor extends ItemSheetObfuscation(ItemSheetDSK){
+
+}
+
+class ItemSheetAmmunition extends ItemSheetObfuscation(ItemSheetDSK){
+
+}
+
+class ItemSheetEquipment extends ItemSheetObfuscation(ItemSheetDSK){
 
 }
 
@@ -156,7 +171,7 @@ class ItemSheetAhnengabe extends ItemSheetDSK{
 
 }
 
-class ItemSheetPoison extends ItemSheetDSK{
+class ItemSheetPoison extends ItemSheetObfuscation(ItemSheetDSK){
 
 }
 

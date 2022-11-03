@@ -1,3 +1,5 @@
+import DSKUtility from "../system/dsk_utility.js"
+
 export function setupKeybindings() {    
     game.keybindings.register("dsk", "combatTrackerNext", {
         name: "COMBAT.TurnNext",
@@ -10,6 +12,18 @@ export function setupKeybindings() {
         hint: game.i18n.localize("COMBAT.TurnPrev"),
         editable: [{ key: "KeyV" }],
         onDown: () => combatTurn("previousTurn")
+    })
+    game.keybindings.register("dsk", "journalBrowser", {
+        name: "Book.Wizard",
+        hint: game.i18n.localize("dsk.KEYBINDINGS.journalBrowser"),
+        editable: [{ key: "KeyJ" }],
+        onDown: () => DSKUtility.renderToggle(game.dsk.apps.journalBrowser)
+    })
+    game.keybindings.register("dsk", "library", {
+        name: "ItemLibrary",
+        hint: game.i18n.localize("dsk.KEYBINDINGS.library"),
+        editable: [{ key: "KeyL" }],
+        onDown: () => DSKUtility.renderToggle(game.dsk.itemLibrary)
     })
 }
 
