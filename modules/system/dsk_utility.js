@@ -84,8 +84,8 @@ export default class DSKUtility {
             return []
         }
 
-        let search = Array.isArray(itemType) ? itemType : [itemType]
-        let items = (await pack.getDocuments()).filter(i => search.includes(i.type));
+        const search = Array.isArray(itemType) ? itemType : [itemType]
+        const items = (await pack.getDocuments({ type: search}))
         return items.map(x => x.toObject());
     }
 

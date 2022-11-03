@@ -1,9 +1,9 @@
-import DSA5CombatDialog from './dialog-combat-dsa5.js'
+//import DSA5CombatDialog from './dialog-combat-dsa5.js'
 import DialogShared from './dialog-shared.js'
-import DSA5SkillDialog from './dialog-skill-dsa5.js'
-import DSA5SpellDialog from './dialog-spell-dsa5.js'
+//import DSA5SkillDialog from './dialog-skill-dsa5.js'
+//import DSA5SpellDialog from './dialog-spell-dsa5.js'
 
-export default class DSA5Dialog extends DialogShared {
+export default class DSKDialog extends DialogShared {
     static getDialogForItem(type) {
         switch (type) {
             case "rangeweapon":
@@ -20,7 +20,7 @@ export default class DSA5Dialog extends DialogShared {
                 return DSA5SkillDialog
             
         }
-        return DSA5Dialog
+        return DSKDialog
     }
 
     static getRollButtons(testData, dialogOptions, resolve, reject){
@@ -28,7 +28,7 @@ export default class DSA5Dialog extends DialogShared {
             rollButton: {
                 label: game.i18n.localize("Roll"),
                 callback: (html) => {
-                    game.dsa5.memory.remember(testData.extra.speaker, testData.source, testData.mode, html)
+                    game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html)
                     resolve(dialogOptions.callback(html))
                 },
             },
@@ -38,7 +38,7 @@ export default class DSA5Dialog extends DialogShared {
                 cheat: {
                     label: game.i18n.localize("DIALOG.cheat"),
                     callback: (html) => {
-                        game.dsa5.memory.remember(testData.extra.speaker, testData.source, testData.mode, html)
+                        game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html)
                         resolve(dialogOptions.callback(html, { cheat: true }))
                     },
                 },

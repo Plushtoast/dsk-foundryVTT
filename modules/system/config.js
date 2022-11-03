@@ -133,6 +133,38 @@ DSK.statusEffects = [
     }
 ]
 
+DSK.StFs = {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "E": "E"
+}
+
+DSK.characteristics = {
+    "mu": "dsk.characteristics.mu.name",
+    "kl": "dsk.characteristics.kl.name",
+    "in": "dsk.characteristics.in.name",
+    "ch": "dsk.characteristics.ch.name",
+    "ff": "dsk.characteristics.ff.name",
+    "ge": "dsk.characteristics.ge.name",
+    "ko": "dsk.characteristics.ko.name",
+    "kk": "dsk.characteristics.kk.name"
+}
+
+DSK.skillBurdens = {
+    "yes": "dsk.yes",
+    "no": "dsk.no",
+    "maybe": "dsk.maybe"
+}
+
+DSK.skillGroups = {
+    "body": "dsk.SKILL.body",
+    "social": "dsk.SKILL.social",
+    "knowledge": "dsk.SKILL.knowledge",
+    "trade": "dsk.SKILL.trade"
+};
+
 CONFIG.time.roundTime = 5
 CONFIG.time.turnTime = 0
 

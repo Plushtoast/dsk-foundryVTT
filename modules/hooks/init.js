@@ -4,7 +4,6 @@ import ActorSheetNPC from "../actor/actor_sheet_npc.js";
 import ItemSheetDSK from "../item/item_sheet_dsk.js";
 import DSKJournalSheet from "../journal/journal_sheet.js";
 import DPS from "../system/derepositioningsystem.js";
-import BookWizard from "../wizards/adventure_wizard.js";
 import { setupHandlebars } from "./handlebars.js";
 import { setupJournal } from "./journal.js";
 import { setupMacros } from "./macro_support.js";
@@ -23,7 +22,8 @@ export function initHooks(){
             "systems/dsk/templates/items/item-equipment.html",
             "systems/dsk/templates/items/item-header.html",
             "systems/dsk/templates/items/item-description.html",
-            "systems/dsk/templates/items/item-effects.html"
+            "systems/dsk/templates/items/item-effects.html",
+            "systems/dsk/templates/items/item-stat.html"
         ])
     })
     Actors.unregisterSheet("core", ActorSheet);

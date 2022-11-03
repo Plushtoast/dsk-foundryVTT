@@ -5,7 +5,7 @@ export default class DialogShared extends Dialog {
     static roman = ['', ' I', ' II', ' III', ' IV', ' V', ' VI', ' VII', ' VIII', ' IX',' X']
 
     recallSettings(speaker, source, mode) {
-        this.recallData = game.dsa5.memory.recall(speaker, source, mode)
+        this.recallData = game.dsk.memory.recall(speaker, source, mode)
         this.dialogData = {
             mode,
             speaker,
@@ -58,7 +58,7 @@ export default class DialogShared extends Dialog {
     }
 
     async updateTargets(html, targets) {
-        const template = await renderTemplate('systems/dsa5/templates/dialog/parts/targets.html', {targets})
+        const template = await renderTemplate('systems/dsk/templates/dialog/parts/targets.html', {targets})
         html.find(".targets").html(template);
         this.updateRollButton(targets)
     }

@@ -34,6 +34,12 @@
                 "name": "Körperkraft"
             }
         },
+        "SKILL": {
+            "body": "Körperfertigkeiten",
+            "social": "Gesellschaftsfertigkeiten",
+            "knowledge": "Geistesfertigkeiten",
+            "trade": "Handwerksfertigkeiten"
+        },
         "CONDITION": {
             "defeated": "Besiegt",
             "encumbered": "Belastung",
@@ -118,12 +124,18 @@
         },
         "gridUnits": "Schritt",
         "name": "Name",
+        "Group": "Gruppe",
+        "Characteristic": "Attribut",
         "category": "Kategorie",
         "quantity": "Anzahl",
         "cancel": "Abbrechen",
         "delete": "Löschen",
         "initialize": "Initialisieren",
         "ok": "Ok",
+        "StF": "StF",
+        "yes": "Ja",
+        "no": "Nein",
+        "maybe": "Evtl.",
         "weight": "Gewicht",
         "ItemLibrary": "Bibliothek",
         "condition": "Zustand",

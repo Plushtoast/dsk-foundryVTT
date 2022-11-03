@@ -185,16 +185,21 @@
             },
             "characteristic1": "ff",
             "characteristic2": "ff",
-            "applications": "",
-            "encumbers": false,
+            "encumbers": "no",
             "StF": "A",
-            "group": 1
+            "group": 1,
+            "level": 0
         },
         "combatskill": {
             "description": {
                 "value": ""
             },
-            "weapontype": "melee"
+            "characteristic1": "ff",
+            "characteristic2": "ff",
+            "encumbers": "no",
+            "weapontype": "melee",
+            "StF": "A",
+            "level": 0
         },
         "meleeweapon": {
             "templates": [

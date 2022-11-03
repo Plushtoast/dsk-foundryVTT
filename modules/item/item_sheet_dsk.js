@@ -1,3 +1,4 @@
+import DSK from "../system/config.js";
 import DSKUtility from "../system/dsk_utility.js";
 import { svgAutoFit } from "../system/view_helper.js";
 import { ItemSheetObfuscation } from "./obfuscatemixin.js";
@@ -176,7 +177,17 @@ class ItemSheetPoison extends ItemSheetObfuscation(ItemSheetDSK){
 }
 
 class ItemSheetSkill extends ItemSheetDSK{
-
+    async getData(options) {
+        const data = await super.getData(options)
+        mergeObject(data, {
+            characteristics: DSK.characteristics,
+            skillGroups: DSK.skillGroups,
+            skillBurdens: DSK.skillBurdens,
+            hasLocalization: game.i18n.has(`SKILLdescr.${this.item.name}`),
+            StFs: DSK.StFs   
+        })
+        return data
+    }
 }
 
 class ItemSheetCombatskill extends ItemSheetDSK{

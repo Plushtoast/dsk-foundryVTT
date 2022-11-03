@@ -1,4 +1,4 @@
-import DSA5Dialog from "../dialog/dialog-dsk.js/index.js.js"
+import DSKDialog from "../dialog/dialog-dsk.js"
 import DSKChatAutoCompletion from "./chat_autocompletion.js"
 import DSKUtility from "./dsk_utility.js"
 
@@ -169,7 +169,7 @@ export default class RequestRoll {
                 }
             }
         }
-        new DSA5Dialog(data).render(true)
+        new DSKDialog(data).render(true)
     }
 
     static async removeGCEntry(ev) {
