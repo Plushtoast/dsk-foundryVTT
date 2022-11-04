@@ -31,7 +31,7 @@ export function initSidebar(){
         const search = $(`
         <div class="header-search flexrow">
             <i class="fas fa-search"></i>
-            <input type="search" name="search" value="" placeholder="${game.i18n.localize('searchCompendium')}" autocomplete="off">
+            <input type="search" name="search" value="" placeholder="${game.i18n.localize('dsk.searchCompendium')}" autocomplete="off">
             <a></a>
         </div>`)
         headerActions.after(search)

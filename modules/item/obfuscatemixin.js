@@ -29,7 +29,7 @@ export const ItemSheetObfuscation = (superclass) => class extends superclass {
             if(!ele.length) continue
 
             const invisible = options.tabsinvisible ||this.isObfuscated(tab)
-            const tooltip = game.i18n.localize(`SHEET.${invisible ? "deobfuscateItem" : "obfuscateItem"}`)
+            const tooltip = game.i18n.localize(`dsk.SHEET.${invisible ? "deobfuscateItem" : "obfuscateItem"}`)
             if(game.user.isGM){
                 const sectionName = `obfuscateSection${this.obfuscationCss(tab)}`
                 const existingElem = ele.find(`.${sectionName}`)

@@ -1,0 +1,93 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}}
+
+    <div class="row-section ">
+
+        <div class="col item-main noequipment" style="margin-bottom: 10px;">
+            <div class="row-section">
+                <div class="col fourty">
+                    <label class="label-text table-title">{{localize "dsk.category"}}</label>
+                </div>
+                <div class="col sixty">
+                    <label>{{itemCategory item.type}}</label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+    </nav>
+
+
+    <section class="content career">
+
+        <div class="tab description active" data-tab="description">
+            <div class="row-section">
+                <div class="col two">
+                    {{editor enrichedDescription target="system.description.value" button=true owner=owner editable=editable}}
+                </div>
+                <div class="col two">
+                    <img src="{{item.img}}" class="fullImg" data-edit="img" /> {{editor enrichedClothing target="system.description.gear" button=true owner=owner editable=editable}}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab details" data-tab="details">
+
+
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "dsk.requiredAdvantages"}}</label>
+                <textarea class="input-text" type="text" name="system.requirements.advantage" data-dtype="String">{{system.requirements.advantage}}</textarea>
+            </div>
+
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "dsk.requiredSpecialabilities"}}</label>
+                <textarea class="input-text" type="text" name="system.requirements.specialability" data-dtype="String">{{system.requirements.specialability}}</textarea>
+            </div>
+        
+
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "dsk.SKILL.body"}}</label>
+                <textarea class="input-text" type="text" name="system.skills.body" data-dtype="String">{{system.skills.body}}</textarea>
+            </div>
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "dsk.SKILL.social"}}</label>
+                <textarea class="input-text" type="text" name="system.skills.social" data-dtype="String">{{system.skills.social}}</textarea>
+            </div>
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "dsk.SKILL.knowledge"}}</label>
+                <textarea class="input-text" type="text" name="system.skills.knowledge" data-dtype="String">{{system.skills.knowledge}}</textarea>
+            </div>
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "dsk.SKILL.trade"}}</label>
+                <textarea class="input-text" type="text" name="system.skills.trade" data-dtype="String">{{system.skills.trade}}</textarea>
+            </div>
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "dsk.SKILL.combat"}}</label>
+                <textarea class="input-text" type="text" name="system.skills.combat" data-dtype="String">{{system.skills.combat}}</textarea>
+            </div>
+                    
+
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</label>
+                <input type="checkbox" name="system.isAncestor" value="{{system.isAncestor}}" data-dtype="Boolean" {{checked system.isAncestor}}/>
+            </div>            
+           
+            {{#if system.isAncestor}}
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "ITEM.TypeAhnengabe"}}</label>
+                <textarea class="input-text" type="text" name="system.ahnengabe" data-dtype="String">{{system.ahnengabe}}</textarea>
+            </div>
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "ITEM.TypeAhnengeschenk"}}</label>
+                <textarea class="input-text" type="text" name="system.ahnengeschenk" data-dtype="String">{{system.ahnengeschenk}}</textarea>
+            </div>
+            {{/if}} 
+
+
+        </div>
+    </section>
+</form>

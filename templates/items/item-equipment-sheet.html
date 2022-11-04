@@ -1,0 +1,53 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}} {{> systems/dsk/templates/items/item-equipment.html}}
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        {{#if containerContent}}<a class="item active" data-tab="containerContent">{{localize 'dsk.Equipment.bags'}}</a>{{/if}}
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+        <a class="item" data-tab="effects">{{localize "dsk.statuseffects"}}</a>
+    </nav>
+
+    <section class="content">
+        {{#if containerContent}}
+        <div class="tab containerContent" data-tab="containerContent">
+            <div class="bagUsage">
+                <div class="fillage {{weightExceeded}}" {{{weightWidth}}}></div>
+                <div class="center fillText">
+                    {{weightSum}} / {{system.capacity}} <i class="fas fa-weight-hanging"></i>
+                </div>
+            </div>
+            <div class="bags row-section wrap">
+                {{#each containerContent as |item i|}}
+                <div class="slot {{item.enchantClass}}" data-item-id="{{item.id}}" data-name="{{item.name}}" data-weight="{{item.weight}}" data-quantity="{{item.quantity}}">
+                    <div style="background-image:url('{{item.img}}')"></div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}} {{> systems/dsk/templates/items/item-description.html}}
+
+        <div class="tab details" data-tab="details">
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.equipmentType"}}</label>
+                <select name="system.category" data-dtype="String">
+                    {{selectOptions equipmentTypes selected=system.category localize=true}}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.wearable"}}</label>
+                <input type="checkbox" name="system.worn.wearable" value="{{system.worn.wearable}}" data-dtype="Boolean" {{checked system.worn.wearable}}/>
+            </div>
+
+            {{#if (eq system.category 'bags')}}
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.carrycapacity"}}</label>
+                <input class="input-text" type="text" name="system.capacity" value="{{system.capacity}}" data-dtype="Number" />
+            </div>
+            {{/if}}
+
+        </div>
+
+        {{> systems/dsk/templates/items/item-effects.html}} 
+    </section>
+</form>

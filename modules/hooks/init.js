@@ -23,7 +23,20 @@ export function initHooks(){
             "systems/dsk/templates/items/item-header.html",
             "systems/dsk/templates/items/item-description.html",
             "systems/dsk/templates/items/item-effects.html",
-            "systems/dsk/templates/items/item-stat.html"
+            "systems/dsk/templates/items/item-stat.html",
+            "systems/dsk/templates/actors/parts/healthbar.html",
+            "systems/dsk/templates/actors/actor-talents.html",
+            "systems/dsk/templates/actors/actor-combat.html",
+            "systems/dsk/templates/actors/actor-equipment.html",
+            "systems/dsk/templates/actors/parts/gearSearch.html",
+            "systems/dsk/templates/actors/parts/purse.html",
+            "systems/dsk/templates/actors/parts/status_effects.html",
+            "systems/dsk/templates/actors/parts/containerContent.html",
+            "systems/dsk/templates/actors/actor-notes.html",
+            "systems/dsk/templates/actors/character/actor-magic.html",
+            "systems/dsk/templates/actors/parts/characteristics-large.html",
+            "systems/dsk/templates/actors/actor-main.html",
+            "systems/dsk/templates/actors/parts/information.html"
         ])
     })
     Actors.unregisterSheet("core", ActorSheet);

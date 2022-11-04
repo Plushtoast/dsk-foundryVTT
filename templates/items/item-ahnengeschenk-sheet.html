@@ -1,0 +1,27 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}} {{> systems/dsk/templates/items/item-stat.html}}
+
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+    </nav>
+
+
+    <section class="content">
+
+        {{> systems/dsk/templates/items/item-description.html}}
+
+        <div class="tab details" data-tab="details">
+
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.range"}}</label>
+                <input class="input-text" type="text" name="system.range" value="{{system.range}}" data-dtype="String" />
+            </div>
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.duration"}}</label>
+                <input class="input-text" type="text" name="system.duration" value="{{system.duration}}" data-dtype="String" />
+            </div>
+        </div>
+    </section>
+</form>

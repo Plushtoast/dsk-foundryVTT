@@ -55,11 +55,13 @@
                     "LeP": {
                         "initial": 0,
                         "advances": 0,
+                        "value": 0,
                         "modifier": 0
                     },
                     "AeP": {
                         "initial": 0,
                         "advances": 0,
+                        "value": 0,
                         "modifier": 0
                     },
                     "sk": {
@@ -74,7 +76,8 @@
                     },
                     "schips": {
                         "initial": 0,
-                        "modifier": 0
+                        "modifier": 0,
+                        "current": 0
                     },
                     "gs": {
                         "initial": 0,
@@ -84,14 +87,13 @@
                         "initial": 0,
                         "modifier": 0,
                         "die": "1d6"
+                    },
+                    "regeneration": {
+                        "LePTemp": 0,
+                        "AePTemp": 0,
+                        "LePMod": 0,
+                        "AePMod": 0
                     }
-                },
-                "status": {
-                   "encumbered": 0,
-                   "stunned": 0,
-                   "feared": 0,
-                   "inpain": 0,
-                   "selfconfidence": 0
                 },
                 "details": {
                     "species": "",
@@ -104,6 +106,7 @@
                     "profession": "",
                     "culture": "",
                     "gender": "",
+                    "species": "",
                     "pack": "",
                     "age": ""
                 }                
@@ -120,6 +123,13 @@
                     "total": 0,
                     "spent": 0
                 }
+            },
+            "guidevalue": "-",
+            "notes": {
+                "owner": "",
+                "gm": "",
+                "description": "",
+                "biography": ""
             }
         },
         "creature": {
@@ -138,7 +148,14 @@
                 "stats",
                 "characteristics",
                 "heroStats"
-            ]
+            ],
+            "guidevalue": "-",
+            "notes": {
+                "owner": "",
+                "gm": "",
+                "description": "",
+                "biography": ""
+            }
         }
     }, 
     "Item": {
@@ -160,15 +177,14 @@
             "skill",
             "combatskill",
             "effectwrapper",
-            "information",
-            "trait"
+            "information"
         ],
         "templates": {
             "description": {
                 "value": "",
                 "gminfo": ""
             },
-            "gear": {
+            "gear": { 
                 "price": 0,
                 "weight": 0,
                 "quantity": 1
@@ -187,7 +203,7 @@
             "characteristic2": "ff",
             "encumbers": "no",
             "StF": "A",
-            "group": 1,
+            "group": "body",
             "level": 0
         },
         "combatskill": {
@@ -196,7 +212,7 @@
             },
             "characteristic1": "ff",
             "characteristic2": "ff",
-            "encumbers": "no",
+            "encumbers": "yes",
             "weapontype": "melee",
             "StF": "A",
             "level": 0
@@ -207,18 +223,11 @@
                 "description"
             ],
             "tp": "1d6",
-            "aw:": 0,
+            "aw": 0,
             "vw": 0,
-            "rw": 1,
-            "length": 0
-        },
-        "trait": {
-            "templates": [
-                "description"
-            ],
-            "traitType": {
-                "value": "meleeAttack"
-            }
+            "rw": "medium",
+            "length": "",
+            "combatskill": "Einhandwaffen"
         },
         "rangeweapon": {
             "templates": [
@@ -228,8 +237,9 @@
             "tp": "1d6",
             "lz": 1,
             "rw": "0/0/0",
-            "ammunitionType": "",
-            "length": 0
+            "ammunitionType": "-",
+            "length": 0,
+            "combatskill": "Schusswaffen"
         },
         "armor": {
             "templates": [
@@ -246,13 +256,15 @@
             "templates": [
                 "gear",
                 "description"
-            ]
+            ],
+            "ammunitionType": "-"
         },
         "equipment": {
             "templates": [
                 "gear",
                 "description"
             ],
+            "category": "misc",
             "worn": {
                 "value": false,
                 "wearable": false
@@ -266,7 +278,7 @@
             "sk": 0,
             "zk": 0,
             "gs": 0,
-            "sprint": 0
+            "advantages": ""
         },
         "culture": {
             "description": {
@@ -290,6 +302,7 @@
                 "advantage": "-",
                 "specialability": "-"
             },
+            "isAncestor": false,
             "ahnengabe": "",
             "ahnengeschenk": ""
         },
@@ -320,7 +333,8 @@
             "rule": "",
             "requirements": "",
             "ap": "",
-            "category": 0,
+            "category": "general",
+            "subcategory": 0,
             "combatskills": "",
             "level": 0,
             "max": 0
@@ -343,7 +357,8 @@
             "range": "",
             "targetCategory": "",
             "distribution": "",
-            "StF": "A"
+            "StF": "A",
+            "duration": ""
         },
         "poison": {
             "description": {
@@ -351,7 +366,7 @@
             },
             "level": 1,
             "category": "",
-            "resist": "sk",
+            "resist": "-",
             "effect": "",
             "start": "",
             "duration": "",

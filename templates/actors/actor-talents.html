@@ -1,0 +1,86 @@
+<div class="row-section skills table-header searchbox">
+    <div class="col two lineheight">
+    </div>
+    <div class="col fourty lineheight">
+        <i class="fas fa-search"></i>
+        <input type="search" data-dtype="String" class="talentSearch" placeholder="{{localize 'dsk.searchTalents'}}" />
+    </div>
+    <div class="col ten center lineheight">
+        <a><i class="fas fa-filter filterTalents"></i></a>
+    </div>
+</div>
+
+
+<div class="row-section wrap allTalents showAll">
+    <div class="col morph">
+        {{#each actor.allSkillsLeft}}
+        <div class="row-section skills table-header lineheight {{@key}}" style="margin-top:10px;">
+            <div class="col two">
+                {{localize (concat "dsk.SKILL." @key)}}
+            </div>
+            <div class="col two"></div>
+        </div>
+        <div class="row-section skills table-title">
+            <div class="col sixty">
+                {{localize "ITEM.TypeSkill"}}
+            </div>
+            <div class="col five">{{localize "dsk.probe"}}</div>
+            <div class="col ten" data-tooltip="{{localize 'dsk.FW'}}">{{localize "dsk.CHARAbbrev.FW"}}</div>
+            <div class="col ten center" data-tooltip="{{localize 'dsk.PW'}}">{{localize "dsk.CHARAbbrev.PW"}}</div>
+        </div>
+        {{#each this as |item i|}}
+        <div class="row-section wrap skills lineheight tableOdd item{{#if (eq item.system.level 0)}} notLearned{{/if}}" data-item-id="{{item._id}}">
+            <div class="col sixty">
+                <a class="item-edit talentName">{{item.name}}</a> {{#if item.canAdvance}}
+                <a class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
+                <a class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a> {{/if}}
+            </div>
+            <div class="col five">
+                <a class="skill-select">
+                    <span class="d20 diet-{{item.system.characteristic1}}">{{localize (concat "dsk.characteristics." item.system.characteristic1 ".abbr")}}</span>
+                    <span class="d20 diet-{{item.system.characteristic2}}">{{localize (concat "dsk.characteristics." item.system.characteristic2 ".abbr")}}</span>
+                </a>                
+            </div>
+            <div class="col ten"><input class="skill-advances" type="number" data-dtype="Number" value="{{item.system.level}}" /></div>
+            <div class="col ten center">{{item.PW}}</div>
+        </div>
+
+        {{/each}} {{/each}}
+    </div>
+    <div class="col morph">
+        {{#each actor.allSkillsRight}}
+        <div class="row-section skills table-header lineheight {{@key}}" style="margin-top:10px;">
+            <div class="col two">
+                {{localize (concat "dsk.SKILL." @key)}}
+            </div>
+            <div class="col two"></div>
+        </div>
+        <div class="row-section skills table-title">
+            <div class="col sixty">
+                {{localize "ITEM.TypeSkill"}}
+            </div>
+            <div class="col five">{{localize "dsk.probe"}}</div>
+            <div class="col ten" data-tooltip="{{localize 'dsk.FW'}}">{{localize "dsk.CHARAbbrev.FW"}}</div>
+            <div class="col ten center" data-tooltip="{{localize 'dsk.PW'}}">{{localize "dsk.CHARAbbrev.PW"}}</div>
+        </div>
+        {{#each this as |item i|}}
+        <div class="row-section wrap skills lineheight tableOdd item{{#if (eq item.system.level 0)}} notLearned{{/if}}" data-item-id="{{item._id}}">
+            <div class="col sixty">
+                <a class="item-edit talentName">{{item.name}}</a> {{#if item.canAdvance}}
+                <a class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
+                <a class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
+            </div>
+            <div class="col five">
+                <a class="skill-select">
+                    <span class="d20 diet-{{item.system.characteristic1}}">{{localize (concat "dsk.characteristics." item.system.characteristic1 ".abbr")}}</span>
+                    <span class="d20 diet-{{item.system.characteristic2}}">{{localize (concat "dsk.characteristics." item.system.characteristic2 ".abbr")}}</span>
+                </a>                
+            </div>
+            <div class="col ten"><input class="skill-advances" type="number" data-dtype="Number" value="{{item.system.level}}" /></div>
+            <div class="col ten center">{{item.PW}}</div>
+        </div>
+
+        {{/each}}
+       {{/each}}
+    </div>
+</div>

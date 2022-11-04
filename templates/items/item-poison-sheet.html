@@ -1,0 +1,52 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}} {{> systems/dsk/templates/items/item-equipment.html}}
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+        <a class="item" data-tab="effects">{{localize "dsk.statuseffects"}}</a>
+    </nav>
+
+
+    <section class="content">
+
+        {{> systems/dsk/templates/items/item-description.html}}
+
+        <div class="tab details" data-tab="details">
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.stepValue"}}</label>
+                <input class="input-text" type="number" name="system.level" value="{{system.level}}" data-dtype="Number" />
+            </div>
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.poisonType"}}</label>
+                <input class="input-text" type="text" name="system.category" value="{{system.category}}" data-dtype="String" />
+            </div>
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.resistanceModifier"}}</label>
+                <select name="system.resist" data-dtype="String">
+                    {{selectOptions resistances selected=system.resist localize=true}}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.effect"}}</label>
+                <input class="input-text" type="text" name="system.effect" value="{{system.effect}}" data-dtype="String" />
+            </div>
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.start"}}</label>
+                <input class="input-text" type="text" name="system.start" value="{{system.start}}" data-dtype="String" />
+            </div>
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.duration"}}</label>
+                <input class="input-text" type="text" name="system.duration" value="{{system.duration}}" data-dtype="String" />
+            </div>
+            <div class="form-group doubleInput">
+                <label class="label-text">{{localize "dsk.search"}} / {{localize "dsk.process"}}</label>
+                <input class="input-text" type="text" name="system.search" value="{{system.search}}" data-dtype="String" />
+                <input class="input-text" type="text" name="system.process" value="{{system.process}}" data-dtype="String" />
+            </div>
+
+            
+        </div>
+        {{> systems/dsk/templates/items/item-effects.html}}
+    </section>
+</form>

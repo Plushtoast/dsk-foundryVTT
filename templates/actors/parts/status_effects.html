@@ -1,0 +1,210 @@
+<div class="groupbox">
+    <div class="row-section">
+        <div class="col ten">
+
+        </div>
+        <div class="col eighty header-label lineheight">
+            <b>{{localize "dsk.statuseffects"}}</b>
+        </div>
+        <div class="col ten center">
+            <div class="statusEffectMenu">
+                <a class="status-create lineheight very-small" data-tooltip="{{localize 'dsk.CONDITION.add'}}"><i class="fas fa-plus"></i></a>
+                <ul>
+                    <li class="search">
+                        <input type="search" data-dtype="String" class="conditionSearch" placeholder="{{localize 'dsk.search'}}" />
+                        <a class="status-add" data-id="custom" data-tooltip="{{localize 'dsk.CONDITION.custom'}}"><i class="fas fa-plus"></i></a>
+                    </li>
+                    {{#each manualConditions as |item i|}}
+                    <li>
+                        <a class="status-add" data-id="{{item.id}}" data-tooltip="{{localize item.label}}"><img src="{{item.icon}}" /></a>
+                    </li>
+                    {{/each}}
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col effectDescription">
+
+        </div>
+    </div>
+    <div class="row-section mainEffects wrap">
+
+        <div class="col two row-section skills table-title">
+            <div class="col ten">
+
+            </div>
+            <div class="col two">
+                {{localize "dsk.condition"}}
+            </div>
+
+            <div class="col ten center">
+                {{localize "dsk.ABBR.modifiers"}}
+            </div>
+            <div class="col ten center" data-tooltip="{{localize 'dsk.value'}}">
+                {{localize "dsk.ABBR.value"}}
+            </div>
+            <div class="col five">
+
+            </div>
+        </div>
+        <div class="col two row-section skills table-title">
+            <div class="col ten">
+
+            </div>
+            <div class="col two">
+                {{localize "dsk.condition"}}
+            </div>
+
+            <div class="col ten center">
+                {{localize "dsk.ABBR.modifiers"}}
+            </div>
+            <div class="col ten center" data-tooltip="{{localize 'dsk.value'}}">
+                {{localize "dsk.ABBR.value"}}
+            </div>
+            <div class="col five">
+
+            </div>
+        </div>
+        {{#each conditions as |item i|}}
+        <div class="row-section col skills two statusEffect" data-id="{{item.id}}" {{#if item.descriptor}}data-descriptor="{{item.descriptor}}" {{/if}}>
+            <div class="col ten">
+                {{#if item.disabled}}
+                <img style="opacity:0.5;" src="{{item.icon}}" /> {{else}}
+                <img src="{{item.icon}}" /> {{/if}}
+            </div>
+            <div class="col two">
+                <a class="condition-show" data-id="{{item.id}}">{{localize item.label}}</a>
+            </div>
+            <div class="col ten center">
+                {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
+            </div>
+            <div class="col ten center" data-tooltip="{{localize 'value'}}">
+                <span>{{item.value}}</span>
+            </div>
+            <div class="col five right">
+                <a class="condition-edit" data-id="{{item.id}}"><i class="fa fa-edit"></i></a> {{#if item.disabled}}
+                <a class="condition-toggle" data-tooltip="{{localize 'dsk.SHEET.activate'}}"><i class="far fa-circle"></i></a> {{else}}
+                <a class="condition-toggle" data-tooltip="{{localize 'dsk.SHEET.deactivate'}}"><i class="far fa-check-circle"></i></a> {{/if}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+</div>
+
+<div class="groupbox">
+    <div class="row-section">
+        <div class="col ten">
+
+        </div>
+        <div class="col eighty header-label lineheight">
+            <b>{{localize "dsk.transferredStatusEffects"}}</b>
+        </div>
+        <div class="col ten center">
+
+        </div>
+    </div>
+
+    <div class="row-section  wrap">
+
+        <div class="col two row-section skills table-title">
+            <div class="col ten">
+
+            </div>
+            <div class="col two">
+                {{localize "dsk.condition"}}
+            </div>
+
+            <div class="col ten center">
+                {{localize "dsk.ABBR.modifiers"}}
+            </div>
+            <div class="col ten center" data-tooltip="{{localize 'dsk.value'}}">
+                {{localize "dsk.ABBR.value"}}
+            </div>
+            <div class="col five">
+
+            </div>
+        </div>
+        <div class="col two row-section skills table-title">
+            <div class="col ten">
+
+            </div>
+            <div class="col two">
+                {{localize "dsk.condition"}}
+            </div>
+
+            <div class="col ten center">
+                {{localize "dsk.ABBR.modifiers"}}
+            </div>
+            <div class="col ten center" data-tooltip="{{localize 'dsk.value'}}">
+                {{localize "dsk.ABBR.value"}}
+            </div>
+            <div class="col five">
+
+            </div>
+        </div>
+        {{#each transferedConditions as |item i|}}
+        <div class="row-section col skills two statusEffect" data-origin="{{item.system.origin}}" data-id="{{item.id}}" {{#if item.descriptor}}data-descriptor="{{item.descriptor}}" {{/if}}>
+            <div class="col ten">
+                {{#if item.disabled}}
+                <img style="opacity:0.5;" src="{{item.icon}}" /> {{else}}
+                <img src="{{item.icon}}" /> {{/if}}
+            </div>
+            <div class="col two">
+                <a class="condition-show" data-locked="true" data-id="{{item.id}}">{{localize item.label}}</a>
+            </div>
+            <div class="col ten center">
+                {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
+            </div>
+            <div class="col ten center" data-tooltip="{{localize 'value'}}">
+                <span>{{item.value}}</span>
+            </div>
+            <div class="col five right">
+                <a class="condition-edit" data-id="{{item.id}}"><i class="fa fa-edit"></i></a> {{#if item.disabled}}
+                <a class="condition-toggle" data-tooltip="{{localize 'dsk.SHEET.activate'}}"><i class="far fa-circle"></i></a> {{else}}
+                <a class="condition-toggle" data-tooltip="{{localize 'dsk.SHEET.deactivate'}}"><i
+                        class="far fa-check-circle"></i></a> {{/if}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+</div>
+
+
+<div class="groupbox">
+    <div class="row-section">
+        <div class="col header-label lineheight">
+            <b>{{localize "dsk.SHEET.actorConfig"}}</b>
+        </div>
+    </div>
+    <div class="row-section wrap">
+        {{#if actor.system.repeatingEffects.startOfRound.LeP}}
+        <div class="row-section skills col two">
+            <div class="col nintey">
+                {{localize 'dsk.regenerate'}} {{localize 'dsk.CHARAbbrev.CR'}} ({{localize 'LeP'}})
+            </div>
+            <div class="col five">
+                
+            </div>
+            <div class="col ten">
+                <a class="disableRegeneration" data-type="wounds">{{#if actor.system.repeatingEffects.disabled.LeP}}<i class="far fa-circle"></i>{{else}}<i class="far fa-check-circle"></i>{{/if}}</a>
+            </div>
+        </div>
+        {{/if}}
+
+        {{#if actor.system.repeatingEffects.startOfRound.AeP}}
+        <div class="row-section skills col two">
+            <div class="col nintey">
+                {{localize 'dsk.regenerate'}} {{localize 'dsk.CHARAbbrev.CR'}} ({{localize 'dsk.AeP'}})
+            </div>
+            <div class="col ten">
+                <a class="disableRegeneration" data-type="astralenergy">{{#if actor.system.repeatingEffects.disabled.AeP}}<i class="far fa-circle"></i>{{else}}<i class="far fa-check-circle"></i>{{/if}}</a>
+            </div>
+        </div>
+        {{/if}}
+        
+    </div>
+</div>

@@ -1,3 +1,6 @@
+import { conditionsMatcher } from "../hooks/texteditor.js";
+import DSK from "./config.js";
+
 export default class DSKUtility {
     static chatDataSetup(content, modeOverride, forceWhisper) {
         let chatData = {
@@ -18,13 +21,13 @@ export default class DSKUtility {
         return chatData;
     }
 
-    static async allSkills() {
+    static async allSkills(elems =  ["skill", "combatskill", "specialability"]) {
         const pack = game.i18n.lang == "de" ? "dsk.default" : "dsk.defaulten"
-        return await this.getCompendiumEntries(pack, ["skill", "combatskill", "specialability"])
+        return await this.getCompendiumEntries(pack, elems)
     }
 
-    static async allSkillsList() {
-        const data = await this.allSkills()
+    static async allSkillsList(elems =  ["skill", "combatskill", "specialability"]) {
+        const data = await this.allSkills(elems)
         const skills = []
         const rangeSkills = []
         const meleeSkills = []
@@ -40,6 +43,12 @@ export default class DSKUtility {
             rangeSkills: rangeSkills.sort((a,b) => a.localeCompare(b)),
             meleeSkills: meleeSkills.sort((a,b) => a.localeCompare(b))
         }
+    }
+
+    static replaceConditions(content) {
+        if (!content) return content
+
+        return content.replace(DSK.statusRegex.regex, (str) => conditionsMatcher([str]))
     }
 
     static moduleEnabled(id) {
@@ -77,6 +86,10 @@ export default class DSKUtility {
         } else elem.render(true);
     }
 
+    static _calculateAdvCost(currentAdvances, type, modifier = 1) {
+        return DSK.advancementCosts[type][Number(currentAdvances) + modifier]
+    }
+
     static async getCompendiumEntries(compendium, itemType) {
         const pack = await game.packs.get(compendium)
         if (!pack) {
@@ -85,7 +98,7 @@ export default class DSKUtility {
         }
 
         const search = Array.isArray(itemType) ? itemType : [itemType]
-        const items = (await pack.getDocuments({ type: search}))
+        const items = (await pack.getDocuments({ type: { $in: search} }))
         return items.map(x => x.toObject());
     }
 

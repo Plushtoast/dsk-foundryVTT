@@ -25,7 +25,6 @@ export default class ItemSheetDSK extends ItemSheet {
         Items.registerSheet("dsk", ItemSheetCombatskill, { makeDefault: true, types: ["combatskill"] });
         Items.registerSheet("dsk", ItemSheetInformation, { makeDefault: true, types: ["information"] });
         Items.registerSheet("dsk", ItemSheetEffectwrapper, { makeDefault: true, types: ["effectwrapper"] });
-        Items.registerSheet("dsk", ItemSheetTrait, { makeDefault: true, types: ["trait"] });
     }
 
     _getHeaderButtons() {
@@ -55,13 +54,14 @@ export default class ItemSheetDSK extends ItemSheet {
 
     async getData(options) {
         let data = super.getData(options).data;
-        data.isOwned = this.item.actor
-        data.editable = this.isEditable
-        data.item = this.item
-        data.isGM = game.user.isGM
-        
-        data.enrichedDescription = await TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: true, async: true})
-        data.enrichedGmdescription = await TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: true, async: true})
+        mergeObject(data, {
+            isOwned: this.item.actor,
+            editable: this.isEditable,
+            item: this.item,
+            isGM: game.user.isGM,
+            enrichedDescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: true, async: true}),
+            enrichedGmdescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: true, async: true})
+        })
         return data
     }
 
@@ -108,24 +108,70 @@ export default class ItemSheetDSK extends ItemSheet {
     }
 }
 
-class ItemSheetTrait extends ItemSheetDSK {
-    
-}
-
 class ItemSheetEffectwrapper extends ItemSheetDSK {
 
 }
 
 class ItemSheetInformation extends ItemSheetDSK {
-
+    async getData(options) {
+        const data = await super.getData(options)
+        mergeObject(data, {
+            allSkills: (await DSKUtility.allSkillsList(["skill"])).skills
+        })
+        return data
+    }
 }
 
 class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
+    async getData(options) {
+        const data = await super.getData(options);
+        let twoHanded = false
+        let wrongGripHint = ""
+        if (!twoHanded) {
+            wrongGripHint = "wrongGrip.yieldTwo"
+        } else {
+            const localizedCT = game.i18n.localize(`LocalizedCTs.${this.item.system.combatskill.value}`)
+            switch (localizedCT) {
+                case "Two-Handed Impact Weapons":
+                case "Two-Handed Swords":
+                    const reg = new RegExp(game.i18n.localize('wrongGrip.wrongGripBastardRegex'))
+                    if (reg.test(this.item.name))
+                        wrongGripHint = "wrongGrip.yieldOneBastard"
+                    else
+                        wrongGripHint = "wrongGrip.yieldOneSwordBlunt"
 
+                    break
+                default:
+                    wrongGripHint = "wrongGrip.yieldOnePolearms"
+            }
+        }
+        mergeObject(data, {
+            twoHanded,
+            wrongGripLabel: twoHanded ? "wrongGrip.oneHanded" : "wrongGrip.twoHanded",
+            wrongGripHint,
+            combatskills: await DSKUtility.allSkills(["combatskill"]).meleeSkills,
+            ranges: DSK.meleeRanges
+        })
+        if (this.item.actor) {
+            const combatSkill = this.item.actor.items.find(x => x.type == "combatskill" && x.name == this.item.system.combatskill.value)
+            data['canBeOffHand'] = combatSkill && !(combatSkill.system.weapontype.twoHanded) && this.item.system.worn.value
+            data['canBeWrongGrip'] = !["Daggers", "Fencing Weapons"].includes(game.i18n.localize(`LocalizedCTs.${this.item.system.combatskill.value}`))
+        }
+        data.canOnUseEffect = game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
+        return data
+    }
 }
 
 class ItemSheetRangeweapon extends ItemSheetObfuscation(ItemSheetDSK){
-
+    async getData(options) {
+        const data = await super.getData(options)
+        mergeObject(data, {
+            canOnUseEffect: game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro"),
+            ammunitiongroups: DSK.ammunitiongroups,
+            combatskills: await DSKUtility.allSkills(["combatskill"]).rangeSkills
+        })
+        return data
+    }
 }
 
 class ItemSheetArmor extends ItemSheetObfuscation(ItemSheetDSK){
@@ -133,35 +179,185 @@ class ItemSheetArmor extends ItemSheetObfuscation(ItemSheetDSK){
 }
 
 class ItemSheetAmmunition extends ItemSheetObfuscation(ItemSheetDSK){
-
+    async getData(options) {
+        const data = await super.getData(options)
+        mergeObject(data, {
+            ammunitiongroups: DSK.ammunitiongroups
+        })
+        return data
+    }
 }
 
 class ItemSheetEquipment extends ItemSheetObfuscation(ItemSheetDSK){
+    async getData(options) {
+        const data = await super.getData(options);
+        mergeObject(data, {
+            equipmentTypes: DSK.equipmentTypes,
+            canOnUseEffect: game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
+        })
+        if (this.isBagWithContents()) {
+            let weightSum = 0
+            mergeObject(data, {
+                containerContent: this.item.actor.items
+                .filter(x => DSK.equipmentCategories.includes(x.type) && x.system.parent_id == this.item.id)
+                .map(x => {
+                    x.weight = parseFloat((x.system.weight.value * x.system.quantity.value).toFixed(3));
+                    weightSum += Number(x.weight)
+                    return x
+                }),
+                weightSum: parseFloat(weightSum.toFixed(3)),
+                weightWidth: `style="width: ${Math.min(this.item.system.capacity ? weightSum / this.item.system.capacity * 100 : 0, 100)}%"`,
+                weightExceeded: weightSum > Number(this.item.system.capacity) ? "exceeded" : ""
+            })
+        }
+        return data
+    }
 
+    async breakOverflow(data, parent) {
+        let elm = $(await renderTemplate('systems/dsk/templates/items/baghover.html', data))
+
+        let top = parent.offset().top + 52;
+        let left = parent.offset().left - 75;
+        elm.appendTo($('body'));
+        elm.css({
+            position: 'absolute',
+            left: left + 'px',
+            top: top + 'px',
+            bottom: 'auto',
+            right: 'auto',
+            'z-index': 10000
+        });
+        return elm
+    }
+
+    activateListeners(html) {
+        super.activateListeners(html)
+        const slots = html.find('.slot')
+        slots.mouseenter(async(ev) => {
+            const item = $(ev.currentTarget)
+            let elm = await this.breakOverflow({
+                name: item.attr('data-name'),
+                weight: item.attr("data-weight"),
+                quantity: item.attr("data-quantity")
+            }, item)
+            elm.fadeIn()
+            item.mouseleave(() => {
+                elm.remove()
+                item.off('mouseleave')
+            })
+        })
+
+        slots.mousedown(async(ev) => {
+            let itemId = $(ev.currentTarget).attr("data-item-id")
+            let item = this.actor.items.get(itemId);
+
+            if (ev.button == 0)
+                item.sheet.render(true);
+            else if (ev.button == 2) {
+                $('.itemInfo').remove()
+                await item.update({ "system.parent_id": 0 });
+                this.render(true)
+            }
+        })
+    }
+
+    isBagWithContents() {
+        return this.item.actor && getProperty(this.item, "system.category") == "bags"
+    }
+
+    async _onDrop(event) {
+        if (this.isBagWithContents()) {
+            const dragData = JSON.parse(event.dataTransfer.getData("text/plain"))
+            const { item, typeClass, selfTarget } = await itemFromDrop(dragData, undefined)
+            const selfItem = this.item.id == item.id
+            const ownItem = this.item.parent.id == dragData.actorId
+
+            if (DSK.equipmentCategories.includes(typeClass) && !selfItem) {
+                item.system.parent_id = this.item.id
+                if (item.system.worn && item.system.worn.value)
+                    item.system.worn.value = false
+
+                if (ownItem) {
+                    await this.item.actor.updateEmbeddedDocuments("Item", [item])
+                } else {
+                    await this.item.actor.sheet._addLoot(item)
+                }
+                this.render(true)
+                return
+            }
+        }
+
+        await super._onDrop(event)
+    }
 }
 
 class ItemSheetSpecies extends ItemSheetDSK{
+    static get defaultOptions() {
+        const options = super.defaultOptions;
+        mergeObject(options, {
+            width: 530,
+            height: 570,
+        });
+        return options;
+    }
 
+    async getData(options) {
+        const data = await super.getData(options);
+        mergeObject(data, {
+            hasLocalization: game.i18n.has(`dsk.Racedescr.${this.item.name}`)
+        })
+        return data
+    }
 }
 
 class ItemSheetCulture extends ItemSheetDSK{
-
+    static get defaultOptions() {
+        const options = super.defaultOptions;
+        mergeObject(options, {
+            width: 700,
+            height: 700,
+        });
+        return options;
+    }
 }
 
 class ItemSheetProfession extends ItemSheetDSK{
+    static get defaultOptions() {
+        const options = super.defaultOptions;
+        mergeObject(options, {
+            width: 700,
+            height: 700,
+        });
+        return options;
+    }
 
+    async getData(options) {
+        const data = await super.getData(options);
+        mergeObject(data, {
+            enrichedClothing: await TextEditor.enrichHTML(getProperty(this.item.system, "description.gear"), {secrets: true, async: true})
+        })
+        return data
+    }
 }
 
 class ItemSheetAdvantage extends ItemSheetDSK{
 
 }
 
-class ItemSheetDisadvantage extends ItemSheetDSK{
+class ItemSheetDisadvantage extends ItemSheetAdvantage{
 
 }
 
 class ItemSheetSpecialability extends ItemSheetDSK{
-
+    async getData(options) {
+        const data = await super.getData(options);
+        mergeObject(data, {
+            categories: DSK.specialAbilityCategories,
+            subCategories: DSK.combatSkillSubCategories,
+            canOnUseEffect: game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
+        })
+        return data
+    }
 }
 
 class ItemSheetAhnengeschenk extends ItemSheetDSK{
@@ -169,11 +365,24 @@ class ItemSheetAhnengeschenk extends ItemSheetDSK{
 }
 
 class ItemSheetAhnengabe extends ItemSheetDSK{
-
+    async getData(options) {
+        const data = await super.getData(options)
+        mergeObject(data, {
+            characteristics: DSK.characteristics,
+            StFs: DSK.StFs   
+        })
+        return data
+    }
 }
 
 class ItemSheetPoison extends ItemSheetObfuscation(ItemSheetDSK){
-
+    async getData(options) {
+        const data = await super.getData(options);
+        mergeObject(data, {
+            resistances: DSK.magicResistanceModifiers
+        })
+        return data
+    }
 }
 
 class ItemSheetSkill extends ItemSheetDSK{
@@ -183,13 +392,20 @@ class ItemSheetSkill extends ItemSheetDSK{
             characteristics: DSK.characteristics,
             skillGroups: DSK.skillGroups,
             skillBurdens: DSK.skillBurdens,
-            hasLocalization: game.i18n.has(`SKILLdescr.${this.item.name}`),
+            hasLocalization: game.i18n.has(`dsk.SKILLdescr.${this.item.name}`),
             StFs: DSK.StFs   
         })
         return data
     }
 }
 
-class ItemSheetCombatskill extends ItemSheetDSK{
-
+class ItemSheetCombatskill extends ItemSheetSkill{
+    async getData(options) {
+        const data = await super.getData(options)
+        mergeObject(data, {
+            weapontypes: DSK.weapontypes,
+            hasLocalization: game.i18n.has(`dsk.Combatskilldescr.${this.item.name}`),
+        })
+        return data
+    }
 }

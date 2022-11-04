@@ -1,0 +1,64 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}} {{> systems/dsk/templates/items/item-stat.html}}
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+        <a class="item" data-tab="effects">{{localize "dsk.statuseffects"}}</a>
+    </nav>
+
+
+    <section class="content">
+
+        {{> systems/dsk/templates/items/item-description.html}}
+
+        <div class="tab details" data-tab="details">
+
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.APValue"}}</label>
+                <input class="input-text" type="text" name="system.ap" value="{{system.ap}}" data-dtype="String" />
+            </div>
+
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.requirements"}}</label>
+                <input class="input-text" type="text" name="system.requirements" value="{{system.requirements}}" data-dtype="String" />
+            </div>
+
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.category"}}</label>
+                <select name="system.category" data-dtype="String">
+                    {{selectOptions categories selected=system.category localize=true}}  
+                </select>
+            </div>
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "dsk.rule"}}</label>
+                <textarea class="input-text" type="text" name="system.rule" data-dtype="String">{{system.rule}}</textarea>
+            </div>
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.maxlevel"}}</label>
+                <input class="input-text" type="Number" name="system.max" value="{{system.max}}" data-dtype="Number" />
+            </div>
+
+            {{#if (eq system.category 'Combat')}}
+            <div class="form-group">
+                <label class="label-text">{{localize "ITEM.TypeCombatskill"}}</label>
+                <input class="input-text" type="text" name="system.combatskills" value="{{system.combatskills}}" data-dtype="String" />
+            </div>
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.COMBATSKILLCATEGORY.subcategory"}}</label>
+                <select name="system.subcategory" data-dtype="String">
+                    {{selectOptions subCategories selected=system.subcategory localize=true}}
+                </select>
+            </div>
+            {{/if}} {{#if isOwned}}
+            <div class="form-group">
+                <label class="label-text">{{#if canAdvance}}<a class="refund-step"><i class="fas fa-minus"></i></a> {{/if}}{{localize "dsk.stepValue"}}{{#if canAdvance}} <a class="advance-step"><i class="fas fa-plus"></i></a>{{/if}}</label>
+                <input class="input-text" type="number" name="system.level" value="{{system.level}}" data-dtype="Number" />
+            </div>
+            {{/if}}
+
+        </div>
+
+        {{> systems/dsk/templates/items/item-effects.html}}
+    </section>
+</form>

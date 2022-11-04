@@ -1,0 +1,36 @@
+<div class="row-section" style="margin-top:10px;">
+    <div class="col ten center lineheight" data-tooltip="{{localize 'dsk.LeP'}}">
+        {{localize 'dsk.CHARAbbrev.LeP'}}
+    </div>
+    <div class="col fourty">
+        <div class="healthbar barLeft{{#if actor.magic.hasSpells}}{{else}} soloBar{{/if}}" data-tooltip="{{localize 'dsk.LeP'}}">
+
+            <div class="bar LeP" style="--a: {{actor.system.stats.LeP.value}}; --b: {{actor.system.stats.LeP.max}}">
+            </div>
+            <div class="barLabel">
+                <input type="text" data-tooltip="{{localize 'dsk.Current'}}" name="system.stats.LeP.value" data-dtype="Number" value="{{actor.system.stats.LeP.value}}" /> /
+                <span data-tooltip="{{localize 'dsk.ABBR.max'}}">{{actor.system.stats.LeP.max}}</span>
+            </div>
+        </div>
+    </div>
+     {{#if actor.magic.hasSpells}}
+    <div class="col fourty">
+        <div class="healthbar barRight" data-tooltip="{{localize 'dsk.AeP'}}">
+            <div class="barLabel">
+                <input type="text" data-tooltip="{{localize 'dsk.Current'}}" name="system.stats.AeP.value" data-dtype="Number" value="{{actor.system.stats.AeP.value}}" /> /
+                <span data-tooltip="{{localize 'max'}}">{{actor.system.stats.AeP.max}}</span>
+            </div>
+            <div class="bar AsP" style="--a: {{actor.system.stats.AeP.value}}; --b: {{actor.system.stats.AeP.max}}">
+
+            </div>
+        </div>
+    </div>
+    <div class="col ten center lineheight" data-tooltip="{{localize 'dsk.AeP'}}">
+        {{localize 'dsk.CHARAbbrev.AeP'}}
+    </div>
+    {{else}}
+    <div class="col two">
+
+    </div>
+    {{/if}}
+</div>

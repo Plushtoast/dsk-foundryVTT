@@ -1,3 +1,5 @@
+import DSKUtility from "../system/dsk_utility.js"
+
 export function setupHandlebars(){
     Handlebars.registerHelper({
         roman: (a, max) => {
@@ -8,6 +10,10 @@ export function setupHandlebars(){
         },
         itemCategory: (a) => {
             return game.i18n.localize(`ITEM.Type${a.slice(0,1).toUpperCase()}${a.slice(1)}`)
-        }
+        },
+        concat: (...values) => { return HandlebarsHelpers.concat(...values).string },
+        replaceConditions: DSKUtility.replaceConditions,
+        attrLoc: (a, b) => { return game.i18n.localize(`dsk.characteristics.${a}.${b}`)},
+        floor: (a) => Math.floor(Number(a)),
     })
 }

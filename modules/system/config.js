@@ -150,6 +150,93 @@ DSK.characteristics = {
     "ge": "dsk.characteristics.ge.name",
     "ko": "dsk.characteristics.ko.name",
     "kk": "dsk.characteristics.kk.name"
+};
+
+DSK.advancementCosts = {
+    "A": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    "B": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28],
+    "C": [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42],
+    "D": [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56],
+    "E": [5, 5, 5, 5, 5 ,5 ,5 ,5 ,5 ,5 ,5 ,5 ,5 ,10, 15, 20, 25, 30, 35, 40 ,45 ,50, 55, 60, 65, 70],
+    "Eig": [20, 20, 20, 20, 20, 20, 20 ,20 ,20 ,20 ,20 ,20 ,20, 20, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240]
+}
+
+//TODO Revisit
+DSK.specialAbilityCategories = {
+    "general": "dsk.SPECIALABILITYCATEGORIES.general",
+    "Combat": "dsk.SPECIALABILITYCATEGORIES.combat",
+    "ahnen": "dsk.SPECIALABILITYCATEGORIES.ahnen"
+}
+
+//TODO Revisit
+DSK.combatSkillSubCategories = {
+    "0": "dsk.COMBATSKILLCATEGORY.0",
+    "1": "dsk.COMBATSKILLCATEGORY.1",
+    "2": "dsk.COMBATSKILLCATEGORY.2",
+    "3": "dsk.COMBATSKILLCATEGORY.3",
+    "4": "dsk.COMBATSKILLCATEGORY.4"
+}
+
+DSK.sizeCategories = {
+    "tiny": "dsk.SIZE.tiny",
+    "small": "dsk.SIZE.small",
+    "average": "dsk.SIZE.average",
+    "big": "dsk.SIZE.big",
+    "giant": "dsk.SIZE.giant"
+}
+
+DSK.equipmentTypes = {
+    "misc": "dsk.Equipment.misc",
+    "clothes": "dsk.Equipment.clothes",
+    "tools": "dsk.Equipment.tools",
+    "light": "dsk.Equipment.light",
+    "healing": "dsk.Equipment.healing",
+    "bags": "dsk.Equipment.bags",
+    "wealth": "dsk.Equipment.wealth",
+    "writing": "dsk.Equipment.writing",
+    "alchemy": "dsk.Equipment.alchemy",
+    "service": "dsk.Equipment.service",
+    "luxus": "dsk.Equipment.luxus",
+    "blessed": "dsk.Equipment.blessed"
+};
+
+DSK.ammunitiongroups = {
+    "-": "-",
+    "arrow": "dsk.ammunition.arrow",
+    "bolt": "dsk.ammunition.bolt",
+    "bullet": "dsk.ammunition.bullet",
+    "stone": "dsk.ammunition.stone",
+    "dart": "dsk.ammunition.dart",
+    "mag": "dsk.ammunition.mag",
+    "infinite": "dsk.ammunition.infinite"
+}
+
+DSK.meleeRanges = {
+    "short": "dsk.Range.short",
+    "medium": "dsk.Range.medium",
+    "long": "dsk.Range.long"
+};
+
+DSK.magicResistanceModifiers = {
+    "-": "-",
+    "sk": "dsk.soulpower",
+    "zk": "dsk.toughness"
+}
+
+DSK.weapontypes = {
+    "melee": "ITEM.TypeMeleeweapon",
+    "range": "ITEM.TypeRangeweapon"
+}
+
+DSK.characteristics = {
+    "mu": "dsk.characteristics.mu.name",
+    "kl": "dsk.characteristics.kl.name",
+    "in": "dsk.characteristics.in.name",
+    "ch": "dsk.characteristics.ch.name",
+    "ff": "dsk.characteristics.ff.name",
+    "ge": "dsk.characteristics.ge.name",
+    "ko": "dsk.characteristics.ko.name",
+    "kk": "dsk.characteristics.kk.name"
 }
 
 DSK.skillBurdens = {

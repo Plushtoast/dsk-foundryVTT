@@ -4,7 +4,7 @@
 <h2>{{localize 'Book.scenes'}}</h2>
 <div class="row-section table-title lineheight">
     <div class="col fourty">
-        {{localize 'Name'}}
+        {{localize 'dsk.name'}}
     </div>
     <div class="col ten center">
         {{localize 'SCENES.Activate'}}
@@ -32,17 +32,17 @@
     </div>
 </div>
 {{/each}} {{/if}} {{#if actors}}
-<h2>{{localize 'Book.actors'}}</h2>
+<h2>{{localize 'dsk.Book.actors'}}</h2>
 <div class="row-section wrap table-title lineheight">
     <div class="col ten ">
     </div>
     <div class="col fourty">
-        {{localize 'Name'}}
+        {{localize 'dsk.name'}}
     </div>
     <div class="col ten ">
     </div>
     <div class="col fourty">
-        {{localize 'Name'}}
+        {{localize 'dsk.name'}}
     </div>
 
 </div>
@@ -63,7 +63,7 @@
 {{/if}}
 
 <div class="toc">
-    <h2>{{localize 'Book.toc'}}</h2>
+    <h2>{{localize 'dsk.Book.toc'}}</h2>
     <ul>
         {{#each subChapters as |item i|}}
         <li class="fas fa-caret-right"><a class="subChapter" data-jid="{{item.id}}">{{item.name}}</a></li>

@@ -2,7 +2,7 @@
     "id": "dsk",
     "title": "Die Schwarze Katze",
     "description": "The \"Das Schwarze Auge\" system for Foundry VTT. Includes all relevant mechanisms to play in the wonderous world of Aventuria and Das Schwarze Auge/The Dark Eye.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "authors": [{
         "name": "Plushtoast"
     },{

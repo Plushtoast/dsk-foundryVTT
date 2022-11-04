@@ -1,0 +1,101 @@
+<div class="groupbox">
+    <div class="row-section header-label">
+        <div class="col  lineheight">
+            <b>{{localize "dsk.details"}}</b>
+        </div>
+    </div>
+    <div class="row-section">
+        <section class="general col">
+            <div class="row-section wrap">
+                <div class="col row-section">
+                    <div class="headerInput col four">
+                        <input class="input gender" name="system.details.gender" type="text" value="{{actor.system.details.gender}}" placeholder="{{localize 'dsk.Gender'}}" />
+                        <span class="label gender">{{localize "dsk.Gender"}}</span>
+                    </div>
+
+                    <div class="headerInput col four">
+                        <input class="input-details" name="system.details.culture" type="text" value="{{actor.system.details.culture}}" placeholder="{{localize 'ITEM.TypeCulture'}}" />
+                        <span class="label-details">{{localize "ITEM.TypeCulture"}}</span>
+                    </div>
+                    <div class="headerInput col four">
+                        <input class="input-details" name="system.details.family.value" type="text" value="{{actor.system.details.pack}}" placeholder="{{localize 'dsk.pack'}}" />
+                        <span class="label-details">{{localize "dsk.pack"}}</span>
+                    </div>
+
+                    <div class="headerInput col four">
+                        <input class="input-details" name="system.details.age" type="text" value="{{actor.system.details.age}}" placeholder="{{localize 'dsk.Age'}}" />
+                        <span class="label-details">{{localize "dsk.Age"}}<span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+</div>
+
+{{> systems/dsk/templates/actors/parts/information.html}}
+
+<div class="groupbox">
+    <div class="row-section header-label">
+        <div class="col ninety lineheight">
+            <b>{{localize "dsk.biography"}}</b>
+        </div>
+        <div class="col lineheight ten">
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col notes-box">
+            {{editor enrichedBiography target="system.notes.biography" button=true owner=owner editable=editable}}
+        </div>
+    </div>
+</div>
+<div class="groupbox">
+    <div class="row-section header-label">
+        <div class="col ninety lineheight">
+            <b>{{localize "dsk.notes"}}</b>
+        </div>
+        <div class="col lineheight ten">
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col notes-box">
+            {{editor enrichedNotes target="system.notes.description" button=true owner=owner editable=editable}}
+        </div>
+    </div>
+</div>
+{{#if actor.isOwner}}
+<div class="groupbox">
+    <div class="row-section header-label">
+        <div class="col ninety lineheight">
+            <b>{{localize "dsk.ownerNotes"}}</b>
+        </div>
+        <div class="col lineheight ten">
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="{{localize 'SHEET.collapse'}}"></i></a>
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col notes-box">
+            {{editor enrichedOwnerdescription target="system.notes.owner" button=true owner=owner editable=editable}}
+        </div>
+    </div>
+</div>
+{{/if}} {{#if isGM}}
+<div class="groupbox">
+    <div class="row-section header-label">
+        <div class="col ninety lineheight">
+            <b>{{localize "dsk.gmnotes"}}</b>
+        </div>
+        <div class="col lineheight ten">
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="{{localize 'SHEET.collapse'}}"></i></a>
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col notes-box">
+            {{editor enrichedGmdescription target="system.notes.gm" button=true owner=owner editable=editable}}
+        </div>
+    </div>
+</div>
+{{/if}}

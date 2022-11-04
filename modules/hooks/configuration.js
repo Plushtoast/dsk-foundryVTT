@@ -28,6 +28,27 @@ export function setupConfiguration(){
         default: false,
         type: Boolean
     })
+    game.settings.register("dsk", "scrollingFontsize", {
+        name: "dsk.SETTINGS.scrollingFontsize",
+        hint: "dsk.SETTINGS.scrollingFontsizeHint",
+        scope: "client",
+        config: true,
+        default: 16,
+        type: Number,
+        range: {
+            min: 6,
+            max: 50,
+            step: 1
+        }
+    });
+    game.settings.register("dsk", "playerCanEditSpellMacro", {
+        name: "dsk.SETTINGS.playerCanEditSpellMacro",
+        hint: "dsk.SETTINGS.playerCanEditSpellMacroHint",
+        scope: "world",
+        config: true,
+        default: false,
+        type: Boolean
+    });
     game.settings.register("dsk", "expansionPermissions", {
         name: "expansionPermissions",
         scope: "world",
@@ -36,8 +57,7 @@ export function setupConfiguration(){
         type: Object
     });
     game.settings.register("dsk", "breadcrumbs", {
-        name: "DSASETTINGS.breadcrumbs",
-        hint: "DSASETTINGS.breadcrumbsHint",
+        name: "DSKSETTINGS.breadcrumbs",
         scope: "client",
         config: false,
         default: "",

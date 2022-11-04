@@ -6,6 +6,7 @@
   --sheet-border:#968678;
   --boldFont:"Signika";
   --normalFont:"Signika";
+  --dskcolor: #582617;
 }
 
 @font-face {
@@ -517,11 +518,16 @@ select[multiple] option {
     }
   }
 
-  &:not(.monarch) .window-header > a {
+  &.item .window-header {
+    & > a {
+      margin-top: 10px;
+    }
+  }
+  
+  .window-header > a {
     width: 15px;
     height: 15px;
-    margin-top: 10px;
-
+   
     i {
       width: 22px;
       border: 1px solid #111;
@@ -591,10 +597,10 @@ select[multiple] option {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -13px;
+    left: 0px;
     right: 0;
     content: '';
-    background-image: url('../../icons/backgrounds/menu.webp');
+    background-color: white;
     background-repeat: repeat-y;
     background-size: 100%;
     z-index: -1;
@@ -1099,28 +1105,42 @@ a.img-entity-link {
     background-size: 101% 1400px;
   }
 
-  &.dskjournal .window-content {
-    background-image: url('../../icons/backgrounds/journalentry.webp');
-    background-size: 97% 1000px;
-    background-position: center;
-    background-repeat: repeat-y;
-    padding: 0 50px;
+  &.dskjournal {
+
+    .window-content {
+      background-image:none;
+      padding: 0 2px;
+
+      h1, h2, h3, h4, h5, h6{
+        color: var(--dskcolor);
+      }
+
+      .journal-entry-content{
+        background-image: url('../../icons/backgrounds/journhead.webp'), url('../../icons/backgrounds/journbot.webp');
+        background-size: 100% 150px, 100% 240px;
+        background-position: top, bottom;
+        background-repeat: no-repeat, no-repeat;
+        background-color: white;
+        border: none;
+      }
+
+      .journal-header {
+        background: url('../../icons/backgrounds/journtitle.webp') no-repeat;
+        background-size: cover;
+        border: 2px double var(--dskcolor);
+        border-radius: 5px;;
+        .title{
+          background: none;
+          border: none;
+          color: var(--dskcolor);
+        }
+      }
+    }
   }
 }
 
-.sheet.journal-entry:not(.dskjournal) .sidebar.directory {
+.sheet.journal-entry .sidebar.directory {
   background: rgba(0, 0, 0, 0.6);
-}
-
-.dskjournal {
-  &.sheet.journal-entry .journal-entry-content {
-    background: none;
-    border: none;
-  }
-
-  .header-search, &.sheet.journal-entry .pages-list .directory-item .page-number, .directory-item {
-    color: black;
-  }
 }
 
 .window-app {
@@ -1151,7 +1171,7 @@ form.dsk.item-sheet {
     top: 2px;
   }
 
-  &.npc-sheet:after, &.character-sheet:after, &.item:not(.monarch):after {
+  &.npc-sheet:after, &.character-sheet:after, &.item:after {
     background-image: url('../../icons/backgrounds/sidebar-bot.webp');
     bottom: 2px;
     content: '';
@@ -1160,14 +1180,30 @@ form.dsk.item-sheet {
   background: none;
   box-shadow: none;
 
-  &:not(.monarch) .window-header, &:after {
+  .window-header, &:after {
     background-repeat: no-repeat;
     position: relative;
-    min-height: 40px;
+    min-height: 25px;
     z-index: 1;
-    height: 40px;
+    height: 25px;
     width: 100%;
     background-size: 100% 40px;
+  }
+
+  &.item {
+    .window-header, &:after{
+      border:none;
+      min-height: 40px;
+    }
+
+    &:after{
+      background-size: 100% 40px;
+      background-position: 0;
+    }
+
+    .window-resizable-handle{
+      bottom: 11px;
+    }
   }
 }
 
@@ -1204,7 +1240,7 @@ form.dsk.item-sheet {
 
 .window-app .window-resizable-handle {
   z-index: 2;
-  bottom: 11px;
+  bottom: 3px;
   right: 25px;
 }
 
@@ -1214,10 +1250,20 @@ form.dsk.item-sheet {
 }
 
 .window-app {
+  .window-header {
+    background-image: url('../../icons/backgrounds/bottop.webp');
+    border: none;
+    background-size: calc(100% + 100px) 100%;
+    background-position: -60px;
+    border-radius: 5px;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    max-height: 25px;
+  }
+
   .window-header .window-title {
     text-align: center;
     margin-left: 15%;
-    margin-top: 5px;
     color: white;
     font-family: var(--boldFont);
     font-weight: bold;
@@ -1385,32 +1431,20 @@ form.dsk.item-sheet {
   color: black;
 }
 
-.initTracker button, .masterMenu button, .sheetButton {
-  background-image: linear-gradient(to right top, #be2020, #af1622, #9f0d22, #8f0522, #7f0021);
-  color: white;
-  border: 1px solid black;
-}
-
-.sidebar-popout {
-  button, .dice-tray button {
-    background-image: linear-gradient(to right top, #be2020, #af1622, #9f0d22, #8f0522, #7f0021);
+#sidebar button,
+.initTracker button, .masterMenu button, .sheetButton,
+.sidebar-popout button, 
+.sidebar-popout .dice-tray button  {
+    background-image: linear-gradient(90deg, rgba(125,51,29,1) 0%, rgba(88,38,23,1) 100%);
     color: white;
     border: 1px solid black;
-  }
-}
-
-#sidebar button {
-  background-image: linear-gradient(to right top, #be2020, #af1622, #9f0d22, #8f0522, #7f0021);
-  color: white;
-  border: 1px solid black;
-
-  &:active {
-    box-shadow: inset 0 0 5px black;
-  }
-
-  &:hover {
-    box-shadow: 0 0 5px white;
-  }
+    &:active {
+      box-shadow: inset 0 0 5px black;
+    }
+  
+    &:hover {
+      box-shadow: inset 0 0 3px white;
+    }
 }
 
 #combat li.combatant .roll {
@@ -1453,22 +1487,14 @@ form.dsk.item-sheet {
     box-shadow: none;
   }
 
-  &.monarch {
-    .window-header, &:after {
-      background-image: none;
-    }
-  }
-
-  .window-header {
-    background-image: url('../../icons/backgrounds/blackhat.webp');
-    top: 7px;
-    border: none;
-  }
-
-  &:not(.monarch):after {
-    background-image: url('../../icons/backgrounds/blackbook.webp');
-    bottom: 12px;
-    content: '';
+    &:after {
+    background-image: url('../../icons/backgrounds/bothead.webp');
+    content: "";
+    background-size: calc(100% + 100px) 100%;
+    background-position: -60px;
+    border-right: 2px solid black;
+    border-left: 2px solid black;
+    border-radius: 5px;
   }
 
   &.creature-sheet:after {
@@ -2070,7 +2096,7 @@ input[type="search"] {
   position: absolute;
   left: -20px;
   top: 2px;
-  background-image: url('../../icons/dsalist.webp');
+  background-image: url('../../icons/dsklist.webp');
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -2508,21 +2534,61 @@ a {
   }
 }
 
-.maskfield {
-  background: url('../../icons/backgrounds/mask.webp'), url('../../icons/backgrounds/maskfield.webp');
+.dskbox1 {
+  background: url('../../icons/backgrounds/dskborder1_top.webp'), url('../../icons/backgrounds/dskborder1_bot.webp');
   background-repeat: no-repeat, no-repeat;
-  background-size: 150px 50px, 100% calc(100% - 25px);
-  background-position: bottom center, center top;
-  padding: 10px 20px 60px 20px;
-  color: white;
+  background-size: 100% 41px, 100% 40px;
+  background-position: center 15px, center bottom;
+  padding: 35px 20px 25px 40px;
+  position: relative;
 
-  .editor .mce-content-body{
-    color: white
+  &:after{
+    content: '';
+    position: absolute;
+    top:46px;
+    right:0;
+    bottom:40px;
+    left:0;
+    background-image: url('../../icons/backgrounds/dskborder1_mid.webp');
+    background-size: 100% 60px;
+    background-repeat: repeat-y;
   }
+}
 
-  a.content-link{
-    color: black;
+.maskfield,
+.dskbox2 {
+  background: url('../../icons/backgrounds/dskborder2_top.webp'), url('../../icons/backgrounds/dskborder2_bot.webp');
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 21px, 100% 15px;
+  background-position: center 15px, center bottom;
+  padding: 35px 20px 25px 40px;
+  position: relative;
+
+  &:after{
+    content: '';
+    position: absolute;
+    top:36px;
+    right:0;
+    bottom:15px;
+    left:0;
+    background-image: url('../../icons/backgrounds/dskborder2_mid.webp');
+    background-size: 100% 400px;
+    background-repeat: repeat-y;
   }
+}
+
+
+.maskfield:before {
+  content: '';
+  top: 0;
+  right:0;
+  height: 35px;
+  width: 35px;
+  position: absolute;
+  background: url('../../icons/backgrounds/paw.webp');
+  background-repeat: no-repeat;
+  background-size: 35px 35px;
+  background-position: top right;
 }
 
 .dskjournal .window-content .maskfield tr:first-child {
@@ -2643,10 +2709,6 @@ select.noAppearance {
   top: 3px;
   font-size: 10px;
   color: #82817d;
-}
-
-.maskfield .documentName-link {
-  color: black;
 }
 
 .subChapter {
@@ -3334,10 +3396,6 @@ select.noAppearance {
   }
 }
 
-.maskfield .entity-link {
-  color: black;
-}
-
 .fa-dsk-player, .fa-dsk {
   position: relative;
   width: 100%;
@@ -3346,7 +3404,7 @@ select.noAppearance {
 
 .fa-dsk-player:before, .fa-dsk:before {
   content: '';
-  background-image: url('../../icons/categories/DSA-Auge.webp');
+  background-image: url('../../icons/categories/DSK-Auge.webp');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -3358,7 +3416,7 @@ select.noAppearance {
 }
 
 .fa-dsk-player:before {
-  background-image: url('../../icons/categories/DSA-Auge-Spieler.webp');
+  background-image: url('../../icons/categories/DSK-Auge-Spieler.webp');
 }
 
 .verticalFlex {
@@ -3784,6 +3842,10 @@ input[type="checkbox"].autoCheckbox {
   background-position: center;
   position: relative;
   top: 5px;
+}
+
+.settings-sidebar button{
+  margin: 3px 0;
 }
 
 #sidebar button.fshopButton {
