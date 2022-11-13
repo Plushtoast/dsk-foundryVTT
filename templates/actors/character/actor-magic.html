@@ -25,8 +25,8 @@
                 </div>
                 <div class="col four center">
                     <a class="spell-select">
-                        <span class="d20 diet-{{item.system.characteristic1}}">{{localize (concat "dsk.characteristics." item.system.characteristic1 ".abbr")}}</span>
-                        <span class="d20 diet-{{item.system.characteristic2}}">{{localize (concat "dsk.characteristics." item.system.characteristic2 ".abbr")}}</span>
+                        <span class="d20 diet-{{item.system.characteristic1}}">{{attrLoc item.system.characteristic1 "abbr"}}</span>
+                        <span class="d20 diet-{{item.system.characteristic2}}">{{attrLoc item.system.characteristic2 "abbr"}}</span>
                     </a>
                 </div>
                 <div class="col ten center">
@@ -71,7 +71,7 @@
     <div class="row-section wrap cards">
         {{#each actor.specAbs.ahnen as |item i|}}
         <div class="item" data-item-id="{{item._id}}">
-            {{#if item.OnUseEffect}}<a data-tooltip="{{localize 'SHEET.onUseEffect'}}" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+            {{#if item.OnUseEffect}}<a data-tooltip="{{ 'SHEET.onUseEffect'}}" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
         </div>
         {{/each}}
     </div>

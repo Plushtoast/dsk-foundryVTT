@@ -1,23 +1,20 @@
-//import DSA5CombatDialog from './dialog-combat-dsa5.js'
+import DSKCombatDialog from './dialog-combat-dsk.js'
 import DialogShared from './dialog-shared.js'
-//import DSA5SkillDialog from './dialog-skill-dsa5.js'
-//import DSA5SpellDialog from './dialog-spell-dsa5.js'
+import SkillDialogDSK from './dialog-skill-dsk.js'
+import DSKSpellDialog from './dialog-spell.js'
+
 
 export default class DSKDialog extends DialogShared {
     static getDialogForItem(type) {
         switch (type) {
             case "rangeweapon":
             case "meleeweapon":
-            case "dodge":
             case "trait":
-                return DSA5CombatDialog
-            case "spell":
-            case "ritual":
-            case "liturgy":
-            case "ceremony":
-                return DSA5SpellDialog
+                return DSKCombatDialog
+            case "ahnengabe":
+                return DSKSpellDialog
             case "skill":
-                return DSA5SkillDialog
+                return SkillDialogDSK
             
         }
         return DSKDialog
@@ -26,7 +23,7 @@ export default class DSKDialog extends DialogShared {
     static getRollButtons(testData, dialogOptions, resolve, reject){
         let buttons = {
             rollButton: {
-                label: game.i18n.localize("Roll"),
+                label: game.i18n.localize("dsk.check"),
                 callback: (html) => {
                     game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html)
                     resolve(dialogOptions.callback(html))
@@ -36,7 +33,7 @@ export default class DSKDialog extends DialogShared {
         if (game.user.isGM) {
             mergeObject(buttons, {
                 cheat: {
-                    label: game.i18n.localize("DIALOG.cheat"),
+                    label: game.i18n.localize("dsk.DIALOG.cheat"),
                     callback: (html) => {
                         game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html)
                         resolve(dialogOptions.callback(html, { cheat: true }))

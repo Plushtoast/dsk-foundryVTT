@@ -12,6 +12,15 @@ import DSKItemLibrary from "./system/itemlibrary.js"
 import DSKActiveEffect from "./status/dsk_active_effects.js"
 import DSKHotbar from "./system/hotbar.js"
 import DSKInitializer from "./system/initializer.js"
+import { DSKCombat, DSKCombatant, DSKCombatTracker } from "./hooks/combat_tracker.js"
+import DSKChatListeners from "./system/chat_listeners.js"
+import SpecialabilityRulesDSK from "./system/specialability-rules.js"
+import AdvantageRulesDSK from "./system/advantage-rules.js"
+import Migrakel from "./system/migrakel.js"
+import DSKStatusEffects from "./status/status_effects.js"
+import DPS from "./system/derepositioningsystem.js"
+import DiceDSK from "./system/dicedsk.js"
+import RollMemory from "./system/roll_memory.js"
 
 Hooks.once("init", () => {
     console.log("Initializing DSK system")
@@ -20,6 +29,14 @@ Hooks.once("init", () => {
     game.dsk = {
         apps: {
             DSKUtility,
+            DSKInitializer,
+            DSKChatListeners,
+            SpecialabilityRulesDSK,
+            AdvantageRulesDSK,
+            Migrakel,
+            DPS,
+            DiceDSK,
+            DSKStatusEffects,
             DSKInitializer
         },
         documents: {
@@ -34,13 +51,18 @@ Hooks.once("init", () => {
             ActorSheetNPC
         },
         config: DSK,
+        memory: new RollMemory(),
         itemLibrary: new DSKItemLibrary()
     }
 
     CONFIG.Actor.documentClass = ActorDSK
     CONFIG.Item.documentClass = ItemDSK
     CONFIG.ActiveEffect.documentClass = DSKActiveEffect
+    CONFIG.ui.combat = DSKCombatTracker
     CONFIG.ui.hotbar = DSKHotbar
+    CONFIG.Combat.documentClass = DSKCombat
+    CONFIG.Combatant.documentClass = DSKCombatant
+    CONFIG.ActiveEffect.documentClass = DSKActiveEffect
     CONFIG.ChatMessage.template = "systems/dsk/templates/chat/chat-message.html"
 })
 

@@ -8,15 +8,15 @@
         </div>
         <div class="col ten center">
             <div class="statusEffectMenu">
-                <a class="status-create lineheight very-small" data-tooltip="{{localize 'dsk.CONDITION.add'}}"><i class="fas fa-plus"></i></a>
+                <a class="status-create lineheight very-small" data-tooltip="dsk.CONDITION.add"><i class="fas fa-plus"></i></a>
                 <ul>
                     <li class="search">
                         <input type="search" data-dtype="String" class="conditionSearch" placeholder="{{localize 'dsk.search'}}" />
-                        <a class="status-add" data-id="custom" data-tooltip="{{localize 'dsk.CONDITION.custom'}}"><i class="fas fa-plus"></i></a>
+                        <a class="status-add" data-id="custom" data-tooltip="dsk.CONDITION.custom"><i class="fas fa-plus"></i></a>
                     </li>
                     {{#each manualConditions as |item i|}}
                     <li>
-                        <a class="status-add" data-id="{{item.id}}" data-tooltip="{{localize item.label}}"><img src="{{item.icon}}" /></a>
+                        <a class="status-add" data-id="{{item.id}}" data-tooltip="{{item.label}}"><img src="{{item.icon}}" /></a>
                     </li>
                     {{/each}}
 
@@ -42,7 +42,7 @@
             <div class="col ten center">
                 {{localize "dsk.ABBR.modifiers"}}
             </div>
-            <div class="col ten center" data-tooltip="{{localize 'dsk.value'}}">
+            <div class="col ten center" data-tooltip="{{'dsk.value'}}">
                 {{localize "dsk.ABBR.value"}}
             </div>
             <div class="col five">
@@ -60,7 +60,7 @@
             <div class="col ten center">
                 {{localize "dsk.ABBR.modifiers"}}
             </div>
-            <div class="col ten center" data-tooltip="{{localize 'dsk.value'}}">
+            <div class="col ten center" data-tooltip="dsk.value">
                 {{localize "dsk.ABBR.value"}}
             </div>
             <div class="col five">
@@ -80,13 +80,13 @@
             <div class="col ten center">
                 {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
             </div>
-            <div class="col ten center" data-tooltip="{{localize 'value'}}">
+            <div class="col ten center" data-tooltip="dsk.value">
                 <span>{{item.value}}</span>
             </div>
             <div class="col five right">
                 <a class="condition-edit" data-id="{{item.id}}"><i class="fa fa-edit"></i></a> {{#if item.disabled}}
-                <a class="condition-toggle" data-tooltip="{{localize 'dsk.SHEET.activate'}}"><i class="far fa-circle"></i></a> {{else}}
-                <a class="condition-toggle" data-tooltip="{{localize 'dsk.SHEET.deactivate'}}"><i class="far fa-check-circle"></i></a> {{/if}}
+                <a class="condition-toggle" data-tooltip="dsk.SHEET.activate"><i class="far fa-circle"></i></a> {{else}}
+                <a class="condition-toggle" data-tooltip="dsk.SHEET.deactivate"><i class="far fa-check-circle"></i></a> {{/if}}
             </div>
         </div>
         {{/each}}
@@ -120,7 +120,7 @@
             <div class="col ten center">
                 {{localize "dsk.ABBR.modifiers"}}
             </div>
-            <div class="col ten center" data-tooltip="{{localize 'dsk.value'}}">
+            <div class="col ten center" data-tooltip="dsk.value">
                 {{localize "dsk.ABBR.value"}}
             </div>
             <div class="col five">
@@ -138,7 +138,7 @@
             <div class="col ten center">
                 {{localize "dsk.ABBR.modifiers"}}
             </div>
-            <div class="col ten center" data-tooltip="{{localize 'dsk.value'}}">
+            <div class="col ten center" data-tooltip="dsk.value">
                 {{localize "dsk.ABBR.value"}}
             </div>
             <div class="col five">
@@ -158,13 +158,13 @@
             <div class="col ten center">
                 {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
             </div>
-            <div class="col ten center" data-tooltip="{{localize 'value'}}">
+            <div class="col ten center" data-tooltip="dsk.value">
                 <span>{{item.value}}</span>
             </div>
             <div class="col five right">
                 <a class="condition-edit" data-id="{{item.id}}"><i class="fa fa-edit"></i></a> {{#if item.disabled}}
-                <a class="condition-toggle" data-tooltip="{{localize 'dsk.SHEET.activate'}}"><i class="far fa-circle"></i></a> {{else}}
-                <a class="condition-toggle" data-tooltip="{{localize 'dsk.SHEET.deactivate'}}"><i
+                <a class="condition-toggle" data-tooltip="dsk.SHEET.activate"><i class="far fa-circle"></i></a> {{else}}
+                <a class="condition-toggle" data-tooltip="dsk.SHEET.deactivate"><i
                         class="far fa-check-circle"></i></a> {{/if}}
             </div>
         </div>
@@ -184,7 +184,7 @@
         {{#if actor.system.repeatingEffects.startOfRound.LeP}}
         <div class="row-section skills col two">
             <div class="col nintey">
-                {{localize 'dsk.regenerate'}} {{localize 'dsk.CHARAbbrev.CR'}} ({{localize 'LeP'}})
+                {{localize 'dsk.regenerate'}} {{localize 'dsk.CHARAbbrev.CR'}} ({{localize 'dsk.LeP'}})
             </div>
             <div class="col five">
                 

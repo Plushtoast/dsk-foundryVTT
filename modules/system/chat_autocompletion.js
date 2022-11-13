@@ -1,10 +1,10 @@
-import DSA5ChatListeners from "./chat_listeners.js"
+import DSKChatListeners from "./chat_listeners.js"
 import DSKUtility from "./dsk_utility.js"
 import RequestRoll from "./request-roll.js"
 
 export default class DSKChatAutoCompletion {
     static skills = []
-    static cmds = ["sk", "at", "pa", "sp", "li", "rq", "gc", "w", "ch"]
+    static cmds = ["sk", "at", "pa", "sp", "rq", "gc", "w", "ch"]
 
     constructor() {
         if (DSKChatAutoCompletion.skills.length == 0) {
@@ -12,15 +12,15 @@ export default class DSKChatAutoCompletion {
                 DSKChatAutoCompletion.skills = res.map(x => { return { name: x.name, type: "skill" } })
                     .concat(Object.values(game.dsk.config.characteristics).map(x => {
                         return { name: game.i18n.localize(x), type: "attribute" }
-                    }).concat({ name: game.i18n.localize('regenerate'), type: "regeneration" }))
+                    }).concat({ name: game.i18n.localize('dsk.regenerate'), type: "regeneration" }))
             })
         }
         this.regex
         this.filtering = false
         this.constants = {
-            dodge: game.i18n.localize("dodge"),
-            parryWeaponless: game.i18n.localize("parryWeaponless"),
-            attackWeaponless: game.i18n.localize("attackWeaponless")
+            dodge: game.i18n.localize("dsk.dodge"),
+            parryWeaponless: game.i18n.localize("dsk.parryWeaponless"),
+            attackWeaponless: game.i18n.localize("dsk.attackWeaponless")
         }
     }
 
@@ -87,7 +87,7 @@ export default class DSKChatAutoCompletion {
     }
 
     _filterAT(search) {
-        const { actor, tokenId } = DSA5ChatAutoCompletion._getActor()
+        const { actor, tokenId } = DSKChatAutoCompletion._getActor()
         if (actor) {
             let types = ["meleeweapon", "rangeweapon"]
             let traitTypes = ["meleeAttack", "rangeAttack"]
@@ -123,7 +123,7 @@ export default class DSKChatAutoCompletion {
     }
 
     _checkEmpty(result) {
-        if (!result.length) result.push({ name: game.i18n.localize("DSAError.noMatch"), type: "none" })
+        if (!result.length) result.push({ name: game.i18n.localize("dsk.DSKError.noMatch"), type: "none" })
     }
 
     _filterLI(search) {
@@ -245,7 +245,7 @@ export default class DSKChatAutoCompletion {
     }
 
     _quickCH(target){
-        DSA5ChatListeners.check3D20(target)
+        DSKChatListeners.check3D20(target)
         this._resetChatAutoCompletion()
     }
 
@@ -327,16 +327,7 @@ export default class DSKChatAutoCompletion {
         }
     }
     _quickSP(target, actor, tokenId) {
-        const types = ["ritual", "spell"]
-        const result = actor.items.find(x => { return types.includes(x.type) && x.name == target.text() })
-        if (result) {
-            actor.setupSpell(result, {}, tokenId).then(setupData => {
-                actor.basicTest(setupData)
-            });
-        }
-    }
-    _quickLI(target, actor, tokenId) {
-        const types = ["liturgy", "ceremony"]
+        const types = ["ahnengabe"]
         const result = actor.items.find(x => { return types.includes(x.type) && x.name == target.text() })
         if (result) {
             actor.setupSpell(result, {}, tokenId).then(setupData => {
@@ -375,7 +366,7 @@ export default class DSKChatAutoCompletion {
             return false
         })
         html.on('click', '.request-CH', ev => {
-            DSA5ChatListeners.check3D20(undefined, ev.currentTarget.dataset.name, { modifier: Number(ev.currentTarget.dataset.modifier) || 0 })
+            DSKChatListeners.check3D20(undefined, ev.currentTarget.dataset.name, { modifier: Number(ev.currentTarget.dataset.modifier) || 0 })
             ev.stopPropagation()
             return false
         })

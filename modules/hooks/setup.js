@@ -28,7 +28,7 @@ const showWrongLanguageDialog = (forceLanguage) => {
         buttons: {
             ok: {
                 icon: '<i class="fa fa-check"></i>',
-                label: game.i18n.localize("ok"),
+                label: game.i18n.localize("dsk.ok"),
                 callback: async() => { 
                     await game.settings.set("core", "language", forceLanguage) 
                     foundry.utils.debouncedReload()
@@ -36,7 +36,7 @@ const showWrongLanguageDialog = (forceLanguage) => {
             },
             cancel: {
                 icon: '<i class="fas fa-times"></i>',
-                label: game.i18n.localize("cancel"),
+                label: game.i18n.localize("dsk.cancel"),
 
             }
         }

@@ -10,12 +10,24 @@ import { setupMacros } from "./macro_support.js";
 import { initReady } from "./ready.js";
 import { initSetup } from "./setup.js";
 import { initSidebar } from "./sidebar.js";
+import { initActorHooks } from "./actor.js"
+import { initDSN } from "./dicesonice.js";
+import { initChatlogHooks } from "./chatlog.js"
+import { initTokenHook } from "./statuseffect.js"
+import { initTokenHUD } from "./tokenHUD.js"
+import { initRollsFunction } from "../system/dskrolls.js"
 
 export function initHooks(){
     setupJournal()
     setupHandlebars()
     setupMacros()
     initSidebar()
+    initActorHooks()
+    initDSN()
+    initChatlogHooks()
+    initTokenHook()
+    initTokenHUD()
+    initRollsFunction()
 
     Hooks.once("init", () => {
         loadTemplates([
@@ -33,9 +45,15 @@ export function initHooks(){
             "systems/dsk/templates/actors/parts/status_effects.html",
             "systems/dsk/templates/actors/parts/containerContent.html",
             "systems/dsk/templates/actors/actor-notes.html",
+            "systems/dsk/templates/dialog/default-dialog.html",
             "systems/dsk/templates/actors/character/actor-magic.html",
             "systems/dsk/templates/actors/parts/characteristics-large.html",
+            "systems/dsk/templates/actors/parts/rollhead.html",
             "systems/dsk/templates/actors/actor-main.html",
+            "systems/dsk/templates/chat/roll/test-card.html",
+            "systems/dsk/templates/dialog/parts/targets.html",
+            "systems/dsk/templates/dialog/default-combat-dialog.html",
+            "systems/dsk/templates/dialog/enhanced-default-dialog.html",
             "systems/dsk/templates/actors/parts/information.html"
         ])
     })

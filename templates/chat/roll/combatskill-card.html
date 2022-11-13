@@ -1,0 +1,12 @@
+<div class="dsk chat-card" data-actor-id="{{actorId}}" data-hide={{hideData}} data-hide-damage={{hideDamage}}>
+    {{> systems/dsk/templates/chat/roll/test-card.html}} {{#if (gt testData.successLevel 0)}} {{#if applyEffect}}
+    <div class="row-section {{#if hideDamage}}damageSecret{{/if}}" style="margin-top:10px">
+        <div class="col two center">
+            <button class="applyEffect selfButton" data-target="self" data-tooltip="dsk.TT.applyEffectCaster">{{localize 'dsk.ActiveEffects.applySelf'}}</button>
+        </div>
+        <div class="col two center">
+            <button class="applyEffect selfButton" data-target="target" data-tooltip="dsk.TT.applyEffectTargets">{{localize 'dsk.ActiveEffects.applyTarget'}}</button>
+        </div>
+    </div>
+    {{/if}} {{/if}}
+</div>

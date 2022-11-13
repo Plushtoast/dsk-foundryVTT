@@ -50,8 +50,18 @@
                 <textarea class="input-text" type="text" name="system.effect" data-dtype="String">{{system.effect}}</textarea>
             </div>
             <div class="form-group">
+                <label class="label-text">{{localize "dsk.effectFormula"}}</label>
+                <input class="input-text" type="text" name="system.effectFormula" value="{{system.effectFormula}}" data-dtype="String" />
+            </div>
+            <div class="form-group">
                 <label class="label-text">{{localize "dsk.distribution"}}</label>
                 <input class="input-text" type="text" name="system.distribution" value="{{system.distribution}}" data-dtype="String" />
+            </div>
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.resistanceModifier"}}</label>
+                <select name="system.resist" data-dtype="String">
+                    {{selectOptions resistances selected=system.resist localize=true}}
+                </select>
             </div>
             <div class="form-group">
                 <label class="label-text">{{localize "dsk.StF"}}</label>

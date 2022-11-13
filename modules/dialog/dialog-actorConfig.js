@@ -15,7 +15,7 @@ export default class DialogActorConfig extends Dialog {
             buttons: {
                 Save: {
                     icon: '<i class="fa fa-check"></i>',
-                    label: game.i18n.localize("Save"),
+                    label: game.i18n.localize("dsk.save"),
                     callback: dlg => {
                         actor.update({ 
                             "system.config.autoBar": dlg.find('[name="autoBar"]').is(":checked"),
@@ -25,7 +25,7 @@ export default class DialogActorConfig extends Dialog {
                 },
                 cancel: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: game.i18n.localize("cancel")
+                    label: game.i18n.localize("dsk.cancel")
                 }
             }
         }).render(true)

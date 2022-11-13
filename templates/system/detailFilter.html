@@ -3,7 +3,7 @@
     <div class="form-group">
         <label class="label-text">{{localize field.label}}</label>
         <select name="{{field.attr}}" data-dtype="String" data-notstrict="{{field.notStrict}}">
-            <option value="">{{localize 'Library.noFilter'}}</option>
+            <option value="">{{localize 'dsk.Library.noFilter'}}</option>
           {{#each options as |ch char|}}
           <option value="{{char}}">{{localize ch}}</option>
           {{/each}}
@@ -21,7 +21,7 @@
     </div>
     {{/if}} {{/each}}
     <div class="form-group">
-        <label class="label-text">{{localize 'Module'}}</label>
+        <label class="label-text">{{localize 'dsk.Module'}}</label>
         <input class="input-text" type="text" name="compendium" value="" data-dtype="String" />
     </div>
 </div>

@@ -145,7 +145,7 @@ export default class RequestRoll {
                 .sort((x, y) => x.name.localeCompare(y.name))
         })
         let data = {
-            title: game.i18n.localize("HELP.groupcheck"),
+            title: game.i18n.localize("dsk.HELP.groupcheck"),
             content,
             buttons: {
                 ok: {
@@ -164,7 +164,7 @@ export default class RequestRoll {
                 },
                 cancel: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: game.i18n.localize("cancel"),
+                    label: game.i18n.localize("dsk.cancel"),
 
                 }
             }

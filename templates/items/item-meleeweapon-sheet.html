@@ -29,10 +29,16 @@
                 </select>
             </div>
 
-            <div class="form-group doubleInput" data-tooltip="dsk.ABBR.awvw">
-                <label class="label-text">{{localize "dsk.CHARAbbrev.AW"}} / {{localize "dsk.CHARAbbrev.VW"}}</label>
-                <input class="input-text" type="text" name="system.aw" value="{{system.aw}}" data-dtype="Number" />
-                <input class="input-text" type="text" name="system.vw" value="{{system.vw}}" data-dtype="Number" />
+            <div class="form-group doubleInput">
+                <label class="label-text">{{localize "dsk.ABBR.AW"}}</label>
+                <input class="input-text" type="number" name="system.aw" value="{{system.aw}}" data-dtype="Number" />
+                <input class="input-text" type="number" name="system.awoffhand" value="{{system.awoffhand}}" data-dtype="Number" data-tooltip="dsk.ITEMSHEET.offHandMod" />
+            </div>
+
+            <div class="form-group doubleInput">
+                <label class="label-text">{{localize "dsk.ABBR.VW"}}</label>
+                <input class="input-text" type="number" name="system.vw" value="{{system.vw}}" data-dtype="Number" />
+                <input class="input-text" type="number" name="system.vwoffhand" value="{{system.vwoffhand}}" data-dtype="Number" data-tooltip="dsk.ITEMSHEET.offHandMod" />
             </div>
 
             <div class="form-group">
@@ -41,6 +47,14 @@
                     {{selectOptions ranges selected=system.rw localize=true}}
                 </select>
             </div>
+            {{#if isShield}}
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.shieldSize"}}</label>
+                <select name="system.shieldsize" data-dtype="String">
+                    {{selectOptions shieldSizes selected=system.shieldsize localize=true}}
+                </select>
+            </div>
+            {{/if}}
 
             <div class="form-group">
                 <label class="label-text">{{localize "dsk.length"}}</label>

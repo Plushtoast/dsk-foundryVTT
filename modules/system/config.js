@@ -6,130 +6,262 @@ DSK.statusEffects = [
         id: "dead",
         label: "dsk.CONDITION.defeated",
         description: "dsk.CONDITIONDESCRIPTION.defeated",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "inpain",
         label: "dsk.CONDITION.inpain",
         icon: "icons/svg/blood.svg",
         description: "dsk.CONDITIONDESCRIPTION.inpain",
+        flags: {
+            dsk: {
+                "value": 1,
+                "editable": true,
+                "max": 8
+            }
+        }
     },
     {
         id: "encumbered",
         label: "dsk.CONDITION.encumbered",
         icon: "icons/svg/anchor.svg",
         description: "dsk.CONDITIONDESCRIPTION.encumbered",
-        changes: [ { "key": "system.status.encumbered", "mode": 2, "value": -1 }]
+        changes: [ { "key": "system.status.encumbered", "mode": 2, "value": -1 }],
+        flags: {
+            dsk: {
+                "value": 1,
+                "editable": true,
+                "max": 8
+            }
+        }
     },
     {
         id: "stunned",
         label: "dsk.CONDITION.stunned",
         icon: "icons/svg/daze.svg",
         description: "dsk.CONDITIONDESCRIPTION.stunned",
-        changes: [ { "key": "system.status.stunned", "mode": 2, "value": -1 }]
+        changes: [ { "key": "system.status.stunned", "mode": 2, "value": -1 }],
+        flags: {
+            dsk: {
+                "value": 1,
+                "editable": true,
+                "max": 8
+            }
+        }
     },
     {
         id: "feared",
         label: "dsk.CONDITION.feared",
         icon: "icons/svg/terror.svg",
         description: "dsk.CONDITIONDESCRIPTION.feared",
-        changes: [ { "key": "system.status.feared", "mode": 2, "value": -1 }]
+        changes: [ { "key": "system.status.feared", "mode": 2, "value": -1 }],
+        flags: {
+            dsk: {
+                "value": 1,
+                "editable": true,
+                "max": 8
+            }
+        }
     },
     {
         id: "selfconfidence",
         label: "dsk.CONDITION.selfconfidence",
-        icon: "icons/svg/terror.svg",
+        icon: "icons/svg/up.svg",
         description: "dsk.CONDITIONDESCRIPTION.selfconfidence",
-        changes: [ { "key": "system.status.selfconfidence", "mode": 2, "value": 1 }]
+        changes: [ { "key": "system.status.selfconfidence", "mode": 2, "value": 1 }],
+        flags: {
+            dsk: {
+                "value": 1,
+                "editable": true,
+                "max": 8
+            }
+        }
     },
     {
         id: "prone",
         label: "dsk.CONDITION.prone",
         icon: "icons/svg/falling.svg",
-        description: "dsk.CONDITIONDESCRIPTION.prone"
+        description: "dsk.CONDITIONDESCRIPTION.prone",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "rooted",
         label: "dsk.CONDITION.rooted",
         icon: "icons/svg/net.svg",
-        description: "dsk.CONDITIONDESCRIPTION.rooted"
+        description: "dsk.CONDITIONDESCRIPTION.rooted",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "unconscious",
         label: "dsk.CONDITION.unconscious",
         icon: "icons/svg/unconscious.svg",
-        description: "dsk.CONDITIONDESCRIPTION.unconscious"
+        description: "dsk.CONDITIONDESCRIPTION.unconscious",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "blind",
-        label: "CONDITION.blind",
+        label: "dsk.CONDITION.blind",
         icon: "icons/svg/blind.svg",
-        description: "CONDITIONDESCRIPTION.blind"
+        description: "dsk.CONDITIONDESCRIPTION.blind",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "constricted",
         label: "dsk.CONDITION.constricted",
         icon: "icons/svg/cave.svg",
-        description: "dsk.CONDITIONDESCRIPTION.constricted"
+        description: "dsk.CONDITIONDESCRIPTION.constricted",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "fixated",
         label: "dsk.CONDITION.fixated",
         icon: "icons/svg/padlock.svg",
-        description: "dsk.CONDITIONDESCRIPTION.fixated"
+        description: "dsk.CONDITIONDESCRIPTION.fixated",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "hallucinating",
         label: "dsk.CONDITION.hallucinating",
         icon: "icons/svg/padlock.svg",
-        description: "dsk.CONDITIONDESCRIPTION.hallucinating"
+        description: "dsk.CONDITIONDESCRIPTION.hallucinating",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "incapacitated",
         label: "dsk.CONDITION.incapacitated",
         icon: "icons/svg/sleep.svg",
-        description: "dsk.CONDITIONDESCRIPTION.incapacitated"
+        description: "dsk.CONDITIONDESCRIPTION.incapacitated",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "panic",
         label: "dsk.CONDITION.panic",
         icon: "icons/svg/terror.svg",
-        description: "dsk.CONDITIONDESCRIPTION.panic"
+        description: "dsk.CONDITIONDESCRIPTION.panic",
+        flags: {
+            dsk: {
+                "value": 1,
+                "editable": true,
+                "max": 8
+            }
+        }
     },
     {
         id: "bloodrush",
         label: "dsk.CONDITION.rage",
         icon: "icons/svg/bones.svg",
-        description: "dsk.CONDITIONDESCRIPTION.rage"
+        description: "dsk.CONDITIONDESCRIPTION.rage",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "mute",
         label: "dsk.CONDITION.mute",
         icon: "icons/svg/silenced.svg",
-        description: "dsk.CONDITIONDESCRIPTION.mute"
+        description: "dsk.CONDITIONDESCRIPTION.mute",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "deaf",
         label: "dsk.CONDITION.deaf",
         icon: "icons/svg/deaf.svg",
-        description: "dsk.CONDITIONDESCRIPTION.deaf"
+        description: "dsk.CONDITIONDESCRIPTION.deaf",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "surprised",
         label: "dsk.CONDITION.surprised",
         icon: "icons/svg/hazard.svg",
-        description: "dsk.CONDITIONDESCRIPTION.surprised"
+        description: "dsk.CONDITIONDESCRIPTION.surprised",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "invisible",
-        label: "CONDITION.invisible",
+        label: "dsk.CONDITION.invisible",
         icon: "icons/svg/circle.svg",
-        description: "CONDITIONDESCRIPTION.invisible"
+        description: "dsk.CONDITIONDESCRIPTION.invisible",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     },
     {
         id: "poisoned",
         label: "dsk.CONDITION.poisoned",
         icon: "icons/svg/poison.svg",
-        description: "dsk.CONDITIONDESCRIPTION.poisoned"
+        description: "dsk.CONDITIONDESCRIPTION.poisoned",
+        flags: {
+            dsk: {
+                "value": null,
+                "editable": true
+            }
+        }
     }
 ]
 
@@ -140,6 +272,24 @@ DSK.StFs = {
     "D": "D",
     "E": "E"
 }
+
+DSK.meleeRangeVision = () => {
+    return {
+        "+0": "dsk.meleeVisionDisruption.0",
+        "-1": "dsk.meleeVisionDisruption.1",
+        "-2": "dsk.meleeVisionDisruption.2",
+        "-3": "dsk.meleeVisionDisruption.3",
+        "-5000": "dsk.meleeVisionDisruption.4"
+    }
+}
+
+DSK.addvantageRules = {}
+DSK.removevantageRules = {}
+DSK.vantagesNeedingAdaption = {}
+
+DSK.addAbilityRules = {}
+DSK.removeAbilityRules = {}
+DSK.AbilitiesNeedingAdaption = {}
 
 DSK.characteristics = {
     "mu": "dsk.characteristics.mu.name",
@@ -165,7 +315,14 @@ DSK.advancementCosts = {
 DSK.specialAbilityCategories = {
     "general": "dsk.SPECIALABILITYCATEGORIES.general",
     "Combat": "dsk.SPECIALABILITYCATEGORIES.combat",
-    "ahnen": "dsk.SPECIALABILITYCATEGORIES.ahnen"
+    "ahnen": "dsk.SPECIALABILITYCATEGORIES.ahnen",
+    "language": "dsk.SPECIALABILITYCATEGORIES.language",
+}
+
+DSK.shieldSizes = {
+    "short": "dsk.SIZE.small",
+    "medium": "dsk.SIZE.average",
+    "long": "dsk.SIZE.big"
 }
 
 //TODO Revisit
@@ -175,6 +332,134 @@ DSK.combatSkillSubCategories = {
     "2": "dsk.COMBATSKILLCATEGORY.2",
     "3": "dsk.COMBATSKILLCATEGORY.3",
     "4": "dsk.COMBATSKILLCATEGORY.4"
+}
+
+DSK.rangeWeaponModifiers = {
+    "short": "dsk.RangeMod.short",
+    "medium": "dsk.RangeMod.medium",
+    "long": "dsk.RangeMod.long",
+    "rangesense": "dsk.RangeMod.rangesense",
+    "extreme": "dsk.RangeMod.extreme"
+}
+
+DSK.rangeMods = {
+    "short": {
+        "damage": 1,
+        "attack": 2
+    },
+    "medium": {
+        "damage": 0,
+        "attack": 0
+    },
+    "long": {
+        "damage": -1,
+        "attack": -2
+    },
+    "rangesense": {
+        "damage": -1,
+        "attack": -1
+    },
+    "extreme": {
+        "damage": -2,
+        "attack": -4
+    }
+}
+
+DSK.rangeSizeModifier = {
+    "tiny": -8,
+    "small": -4,
+    "average": 0,
+    "big": 4,
+    "giant": 8
+}
+
+DSK.aimOptions = {
+    "0": "dsk.aimOptions.0",
+    "2": "dsk.aimOptions.1",
+    "4": "dsk.aimOptions.2"
+}
+
+DSK.rangeVision = {
+    "0": "dsk.VisionDisruption.step0",
+    "-2": "dsk.VisionDisruption.step1",
+    "-4": "dsk.VisionDisruption.step2",
+    "-6": "dsk.VisionDisruption.step3",
+    "-5000": "dsk.VisionDisruption.step4"
+}
+
+DSK.targetMomevementOptions = {
+    "0": "dsk.rangeMovementOptions.SLOW",
+    "-2": "dsk.rangeMovementOptions.FAST",
+    "2": "dsk.rangeMovementOptions.STATIONARY",
+}
+
+DSK.shooterMovementOptions = {
+    "0": "dsk.rangeMovementOptions.SHOOTERSTATIONARY",
+    "-2": "dsk.rangeMovementOptions.SHOOTERMOVING",
+    "-4": "dsk.rangeMovementOptions.SHOOTERRUNNING"
+}
+
+DSK.mountedRangeOptions = {
+    "0": "dsk.mountedRangeOptions.STATIONARY",
+    "-4": "dsk.mountedRangeOptions.SCHRITT",
+    "-8": "dsk.mountedRangeOptions.GALOPP",
+}
+
+DSK.rangeSizeCategories = {
+    "tiny": "dsk.RANGESIZE.tiny",
+    "small": "dsk.RANGESIZE.small",
+    "average": "dsk.RANGESIZE.average",
+    "big": "dsk.RANGESIZE.big",
+    "giant": "dsk.RANGESIZE.giant"
+},
+
+DSK.meleeSizeCategories = {
+    "tiny": "dsk.MELEESIZE.tiny",
+    "small": "dsk.MELEESIZE.small",
+    "average": "dsk.MELEESIZE.average",
+    "big": "dsk.MELEESIZE.big",
+    "giant": "dsk.MELEESIZE.giant"
+}
+
+DSK.narrowSpaceModifiers = {
+    "weaponshort": {
+        "attack": 2,
+        "parry": 0,
+        "label": "dsk.NarrowSpaceModifiers.weapon.short"
+    },
+    "weaponmedium": {
+        "attack": 0,
+        "parry": 0,
+        "label": "dsk.NarrowSpaceModifiers.weapon.medium"
+    },
+    "weaponlong": {
+        "attack": -2,
+        "parry": 0,
+        "label": "dsk.NarrowSpaceModifiers.weapon.long"
+    },
+    "shieldshort": {
+        "attack": 0,
+        "parry": 2,
+        "label": "dsk.NarrowSpaceModifiers.shield.short"
+    },
+    "shieldmedium": {
+        "attack": 0,
+        "parry": 0,
+        "label": "dsk.NarrowSpaceModifiers.shield.medium"
+    },
+    "shieldlong": {
+        "attack": -2,
+        "parry": -2,
+        "label": "dsk.NarrowSpaceModifiers.shield.long"
+    }
+}
+
+DSK.meleeSizeModifier = {
+    "tiny": -4,
+    "small": 0,
+    "average": 0,
+    "big": 0,
+    "giant": 0
 }
 
 DSK.sizeCategories = {

@@ -21,7 +21,7 @@ export default class DialogShared extends Dialog {
 
     setRollButtonWarning() {
         if (this.dialogData.mode == "attack") {
-            const noTarget = game.i18n.localize("DIALOG.noTarget")
+            const noTarget = game.i18n.localize("dsk.DIALOG.noTarget")
             return `<span class="missingTarget"><i class="fas fa-exclamation-circle"></i> ${noTarget}</span>`
         }
         return ""
@@ -29,7 +29,7 @@ export default class DialogShared extends Dialog {
 
     setMultipleTargetsWarning() {
         if (this.dialogData.mode == "attack") {
-            const noTarget = game.i18n.localize("DIALOG.multipleTarget")
+            const noTarget = game.i18n.localize("dsk.DIALOG.multipleTarget")
             return `<span class="multipleTarget"><i class="fas fa-exclamation-circle"></i> ${noTarget}</span>`
         }
         return ""
@@ -46,7 +46,7 @@ export default class DialogShared extends Dialog {
     }
 
     async updateRollButton(targets){
-        let rollTag = this.renderRollValueDie() + game.i18n.localize('Roll')
+        let rollTag = this.renderRollValueDie() + game.i18n.localize('dsk.Roll')
         if (targets.length > 0) {
             if(targets.length > 1){
                 rollTag += this.setMultipleTargetsWarning()

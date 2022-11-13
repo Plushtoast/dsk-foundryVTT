@@ -1,0 +1,60 @@
+<div class="card-content test-data" data-actor-id="{{actorId}}">
+    <b>{{title}}{{#if preData.routine}} ({{localize 'dsk.ROLL.routine'}}){{/if}}</b>
+    <div class="chat-buttons">
+        <a class="edit-toggle chat-button-gm" title='{{localize "dsk.CHATNOTIFICATION.editRoll"}}'><i class="fas fa-edit"></i></a>
+    </div>
+</div>
+
+<div class="card-content hide-option roll-result">
+    <b>{{localize "dsk.Roll"}}</b>: {{#each testData.characteristics as |item i|}}
+    <span data-tooltip="{{attrLoc item.char 'name'}}{{#if item.tar}} vs {{item.tar}}{{/if}}" class="display-toggle {{#if item.suc}}suc{{else}}fail{{/if}} die-{{item.char}} {{#if item.die}}{{item.die}}{{else}}d20{{/if}}">
+        {{item.res}}</span>
+
+    <input type="number" data-edit-type="roll" data-edit-id="{{i}}" data-tooltip="{{attrLoc item.char 'name'}}{{#if item.tar}} vs {{item.tar}}{{/if}}" value="{{item.res}}" style="display: none;" class="roll-edit display-toggle" /> {{/each}}
+</div>
+
+<div class="card-content chatModifiers">
+    <b>{{localize "dsk.Modifiers"}}</b>: <span class="display-toggle">{{testData.modifiers}}</span>
+    <input type="number" data-edit-type="mod" value="{{testData.modifiers}}" style="display:none;" class="display-toggle roll-edit" /> {{#if modifierList}}
+    <a class="expand-mods"><i class="fas fa-plus"></i></a>
+    <ul>
+        {{#each modifierList as |item i|}}
+        <li>{{item.name}}: {{item.value}}{{#if item.type}} {{localize (concat 'CHARAbbrev.' item.type)}}{{/if}}</li>
+        {{/each}}
+    </ul>
+    {{/if}}
+</div>
+{{#if testData.pw}}
+<div class="card-content">
+    <b>{{localize "dsk.PW"}}</b>: {{testData.pw}}
+</div>
+{{/if}}
+{{#if testData.result}}
+<div class="card-content">
+    <b>{{localize "dsk.FP"}}</b>: {{testData.result}}
+</div>
+{{/if}} {{#if testData.qualityStep}}
+<div class="card-content">
+    <b>{{localize "dsk.qualityStep"}}</b>: {{testData.qualityStep}}
+</div>
+{{/if}} {{#if testData.damage}}
+<div class="card-content damageSecret" data-tooltip="{{#if testData.calculatedEffectFormula}}{{testData.calculatedEffectFormula}}&#10;{{/if}}{{testData.damagedescription}}">
+    <b>{{localize "dsk.damage"}}</b>: {{testData.damage}}
+</div>
+{{/if}} {{#if testData.description}}
+<div class="card-content">
+    <b>{{localize "dsk.description"}}</b>: {{{testData.description}}} {{/if}}
+</div>
+{{#if testData.parsedEffect}}
+<div class="card-content">
+    <b>{{localize "dsk.effect"}}</b>: {{{testData.parsedEffect}}}
+</div>
+{{/if}} {{#if showDamageToGear}}
+<div class="card-content center selfButton" style="margin-top:10px">
+    <button class="gearDamaged" data-uuid="{{showDamageToGear}}">{{localize 'WEAR.checkShort'}}</button>
+</div>
+{{/if}} {{#each testData.other as |string index|}}
+<div>
+    {{{string}}}
+</div>
+{{/each}}

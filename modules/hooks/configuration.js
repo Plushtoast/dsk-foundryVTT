@@ -1,3 +1,5 @@
+import DSKSoundEffect from "../system/dsk-soundeffect.js";
+
 export function setupConfiguration(){
     game.settings.register("dsk", "migrationVersion", {
         name: "migrationVersion",
@@ -20,6 +22,43 @@ export function setupConfiguration(){
         default: false,
         type: Boolean
     })
+    game.settings.register("dsk", "expandChatModifierlist", {
+        name: "dsk.SETTINGS.expandChatModifierlist",
+        hint: "dsk.SETTINGS.expandChatModifierlistHint",
+        scope: "client",
+        config: true,
+        default: false,
+        type: Boolean
+    });
+    game.settings.register("dsk", "enableCombatFlow", {
+        name: "dsk.SETTINGS.enableCombatFlow",
+        hint: "dsk.SETTINGS.enableCombatFlowHint",
+        scope: "client",
+        config: true,
+        default: true,
+        type: Boolean,
+        onchange: ev => {
+            if (game.dsk.apps.initTracker) {
+                game.dsk.apps.initTracker.close()
+                game.dsk.apps.initTracker = undefined
+            }
+        }
+    });
+    game.settings.register("dsk", "sightAutomationEnabled", {
+        name: "sightAutomationEnabled",
+        scope: "world",
+        config: false,
+        default: false,
+        type: Boolean
+    });
+    game.settings.register("dsk", "inventorySound", {
+        name: "dsk.SETTINGS.inventorySound",
+        hint: "dsk.SETTINGS.inventorySoundHint",
+        scope: "client",
+        config: true,
+        default: true,
+        type: Boolean
+    });
     game.settings.register("dsk", "diceSetup", {
         name: "diceSetup",
         hint: "diceSetup",
@@ -57,11 +96,28 @@ export function setupConfiguration(){
         type: Object
     });
     game.settings.register("dsk", "breadcrumbs", {
-        name: "DSKSETTINGS.breadcrumbs",
+        name: "dsk.SETTINGS.breadcrumbs",
         scope: "client",
         config: false,
         default: "",
         type: String
+    });
+    game.settings.register("dsk", "soundConfig", {
+        name: "dsk.SETTINGS.soundConfig",
+        hint: "dsk.SETTINGS.soundConfigHint",
+        scope: "world",
+        config: true,
+        default: "",
+        type: String,
+        onChange: async() => { DSKSoundEffect.loadSoundConfig() }
+    });
+    game.settings.register("dsk", "allowPhysicalDice", {
+        name: "dsk.SETTINGS.allowPhysicalDice",
+        hint: "dsk.SETTINGS.allowPhysicalDiceHint",
+        scope: "world",
+        config: true,
+        default: false,
+        type: Boolean
     });
     game.settings.register("dsk", "enableItemDropToCanvas", {
         name: "dsk.SETTINGS.enableItemDropToCanvas",
@@ -120,6 +176,40 @@ export function setupConfiguration(){
             "none": "-",
             "de": "German"
         }
+    });
+
+    game.settings.register("dsk", "enableCombatPan", {
+        name: "dsk.SETTINGS.enableCombatPan",
+        hint: "dsk.SETTINGS.enableCombatPanHint",
+        scope: "client",
+        config: true,
+        default: true,
+        type: Boolean
+    });
+
+    game.settings.register("dsk", "iniTrackerSize", {
+        name: "dsk.SETTINGS.iniTrackerSize",
+        hint: "dsk.SETTINGS.iniTrackerSizeHint",
+        scope: "client",
+        config: true,
+        default: 70,
+        type: Number,
+        range: {
+            min: 30,
+            max: 140,
+            step: 5
+        },
+        onChange: async(val) => {
+            game.dsk.apps.tokenHotbar.constructor.defaultOptions.itemWidth = val
+        }
+    });
+
+    game.settings.register("dsk", "iniTrackerPosition", {
+        name: "tokenhotbarPosition",
+        scope: "client",
+        config: false,
+        default: {},
+        type: Object
     });
 
     game.settings.registerMenu("dsk", "changelog", {

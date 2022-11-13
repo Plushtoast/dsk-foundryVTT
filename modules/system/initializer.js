@@ -137,27 +137,27 @@ export default class DSKInitializer extends Dialog {
                     if (!resetAll && found) {
                         [resetScene, resetAll] = await new Promise((resolve, reject) => {
                             new Dialog({
-                                title: game.i18n.localize("Book.sceneReset"),
+                                title: game.i18n.localize("dsk.Book.sceneReset"),
                                 content: game.i18n.format("Book.sceneResetDescription", { name: entry.name }),
                                 default: 'yes',
                                 buttons: {
                                     Yes: {
                                         icon: '<i class="fa fa-check"></i>',
-                                        label: game.i18n.localize("yes"),
+                                        label: game.i18n.localize("dsk.yes"),
                                         callback: () => {
                                             resolve([true, false])
                                         }
                                     },
                                     all: {
                                         icon: '<i class="fa fa-check"></i>',
-                                        label: game.i18n.localize("LocalizedIDs.all"),
+                                        label: game.i18n.localize("dsk.LocalizedIDs.all"),
                                         callback: () => {
                                             resolve([true, true])
                                         }
                                     },
                                     cancel: {
                                         icon: '<i class="fas fa-times"></i>',
-                                        label: game.i18n.localize("cancel"),
+                                        label: game.i18n.localize("dsk.cancel"),
                                         callback: () => {
                                             resolve([false, false])
                                         }
@@ -284,7 +284,7 @@ export default class DSKInitializer extends Dialog {
         })
         this.lock = false
         initButton.find("i").remove()
-        ui.notifications.notify(game.i18n.localize("initComplete"))
+        ui.notifications.notify(game.i18n.localize("dsk.initComplete"))
         await this.close()
     }
 
@@ -292,7 +292,7 @@ export default class DSKInitializer extends Dialog {
         if (game.settings.settings.has(`${this.module}.initialized`))
             await game.settings.set(this.module, "initialized", true)
 
-        ui.notifications.notify(game.i18n.localize("initSkipped"))
+        ui.notifications.notify(game.i18n.localize("dsk.initSkipped"))
         await this.close()
     }
 

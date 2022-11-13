@@ -134,7 +134,7 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
             switch (localizedCT) {
                 case "Two-Handed Impact Weapons":
                 case "Two-Handed Swords":
-                    const reg = new RegExp(game.i18n.localize('wrongGrip.wrongGripBastardRegex'))
+                    const reg = new RegExp(game.i18n.localize('dsk.wrongGrip.wrongGripBastardRegex'))
                     if (reg.test(this.item.name))
                         wrongGripHint = "wrongGrip.yieldOneBastard"
                     else
@@ -149,8 +149,10 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
             twoHanded,
             wrongGripLabel: twoHanded ? "wrongGrip.oneHanded" : "wrongGrip.twoHanded",
             wrongGripHint,
-            combatskills: await DSKUtility.allSkills(["combatskill"]).meleeSkills,
-            ranges: DSK.meleeRanges
+            isShield: this.item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Shields"),
+            combatskills: (await DSKUtility.allSkillsList(["combatskill"])).meleeSkills,
+            ranges: DSK.meleeRanges,
+            shieldSizes: DSK.shieldSizes
         })
         if (this.item.actor) {
             const combatSkill = this.item.actor.items.find(x => x.type == "combatskill" && x.name == this.item.system.combatskill.value)
@@ -168,7 +170,7 @@ class ItemSheetRangeweapon extends ItemSheetObfuscation(ItemSheetDSK){
         mergeObject(data, {
             canOnUseEffect: game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro"),
             ammunitiongroups: DSK.ammunitiongroups,
-            combatskills: await DSKUtility.allSkills(["combatskill"]).rangeSkills
+            combatskills: (await DSKUtility.allSkillsList(["combatskill"])).rangeSkills
         })
         return data
     }
@@ -341,7 +343,11 @@ class ItemSheetProfession extends ItemSheetDSK{
 }
 
 class ItemSheetAdvantage extends ItemSheetDSK{
-
+    async getData(options){
+        const data = await super.getData(options)
+        data.enrichedRule = await TextEditor.enrichHTML(getProperty(this.item.system, "rule.owner"), { secrets: true, async: true })
+        return data
+    }
 }
 
 class ItemSheetDisadvantage extends ItemSheetAdvantage{
@@ -354,6 +360,7 @@ class ItemSheetSpecialability extends ItemSheetDSK{
         mergeObject(data, {
             categories: DSK.specialAbilityCategories,
             subCategories: DSK.combatSkillSubCategories,
+            enrichedRule: await TextEditor.enrichHTML(getProperty(this.item.system, "rule.owner"), { secrets: true, async: true }),
             canOnUseEffect: game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
         })
         return data
@@ -361,7 +368,31 @@ class ItemSheetSpecialability extends ItemSheetDSK{
 }
 
 class ItemSheetAhnengeschenk extends ItemSheetDSK{
+    async getData(options) {
+        const data = await super.getData(options)
+        data.canOnUseEffect = game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
+        return data
+    }
+    _getHeaderButtons() {
+        let buttons = super._getHeaderButtons();
+        if (this.item.isOwned) {
+            buttons.unshift({
+                class: "rolleffect",
+                icon: `fas fa-dice-d20`,
+                onclick: async ev => this.setupEffect(ev)
+            })
+        }
+        return buttons
+    }
+    async setupEffect(ev) {
+        if (this.item.actor.system.stats.AeP.value < 1)
+            return ui.notifications.error(game.i18n.localize("dsk.DSKError.NotEnoughAeP"))
 
+        const cantrip = game.dsk.config.ItemSubclasses.ahnengeschenk
+        await this.item.actor.update({ "system.system.stats.AeP.value": this.item.actor.system.ssystem.stats.AeP.value -= 1 })
+        const chatMessage = `<p><b>${this.item.name} - ${game.i18n.localize('ITEM.TypeAhnengeschenk')} ${game.i18n.localize('dsk.probe')}</b></p><p>${this.item.system.description.value}</p><p>${cantrip.chatData(this.item.system, "").join("</br>")}</p>`
+        await ChatMessage.create(DSKUtility.chatDataSetup(chatMessage));
+    }
 }
 
 class ItemSheetAhnengabe extends ItemSheetDSK{
@@ -369,7 +400,8 @@ class ItemSheetAhnengabe extends ItemSheetDSK{
         const data = await super.getData(options)
         mergeObject(data, {
             characteristics: DSK.characteristics,
-            StFs: DSK.StFs   
+            StFs: DSK.StFs,
+            resistances: DSK.magicResistanceModifiers  
         })
         return data
     }

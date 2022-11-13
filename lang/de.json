@@ -2,7 +2,7 @@
     "dsk": {
         "characteristics": {
             "mu": {
-                "abbr": "KO",
+                "abbr": "MU",
                 "name": "Mut"
             },
             "ff": {
@@ -50,7 +50,7 @@
             "selfconfidence": "Selbstvertrauen",
             "prone": "Auf dem Rücken",
             "rooted": "Bewegungsunfähig",
-            "unconcscious": "Bewusstlos",
+            "unconscious": "Bewusstlos",
             "blind": "Blind",
             "constricted": "Eingeengt",
             "fixated": "Fixiert",
@@ -74,7 +74,7 @@
             "selfconfidence": "Ein endlich entdeckter Hinweis, der Sieg über einen gefährlichen Gegner oder ein glitzernder Schatz in den Pfoten steigern das Selbstvertrauen ungemein. Aufgaben gehen nun leichter von der Hand, man ist konzentrierter und energischer. Im Gegensatz zu allen anderen Zuständen erleichtert der Zustand Selbstvertrauen Aufgaben. Der Spielleiter kann eine oder mehrere Stufen dieses Zustandes als Belohnung verwenden, wenn die Charaktere ein wichtiges Zwischenziel des Abenteuers erreicht oder einen besonderen Erfolg errungen haben. Wenn nichts anderes beim Auslöser angegeben ist, verschwinden alle Stufen des Zustandes Selbstver-rauen nach einer Ruhephase (siehe Seite 190). Pro Stufe erhält der Charakter eine Erleichterung von +1 auf alle Fertigkeiten",
             "prone": "Ob gerade geweckt oder zu Boden geworfen, der Charakter befindet sich Auf dem Rücken. Dies führt besonders im Kampf zu einigen Modifikationen. Solange man auf dem Rücken liegt, kann man sich nicht fortbewegen (GS 0). Verteidigungswerte fallen um 2, Angriffswerte um 4 (siehe Seite 150). Wer aufstehen möchte, braucht dazu 1 Aktion. Ist ein Gegner in Angriffsdistanz, kann dieser dabei einen Passierschlag ausführen (siehe Seite 158). Um keinen Passierschlag abzubekommen, kann der Aufstehende eine Probe auf Körperbeherrschung ablegen.",
             "rooted": "Stabile Fesseln oder lähmende Gifte können dazu führen, dass man sich nicht mehr bewegen kann. Man kann noch normal wahrnehmen und Hand lungen ausführen, für die man keine körperlichen Bewegungen benötigt. Beispiele hierfür wären die meisten Anwendungen von Geistesfertigkeiten oder das Wirken von Ahnengaben ohne Gesten und Formeln (siehe Seite 168).",
-            "unconcscious": "Wenn jemand schläft oder einen sehr harten Schlag auf den Kopf bekommen hat, zählt er als Bewusstlos. Zwar ist sein Körper nicht eingeschränkt, aber sein Geist ist entweder anderweitig beschäftigt oder inaktiv. Er erhält dazu automatisch den Status Handlungsunfähig.",
+            "unconscious": "Wenn jemand schläft oder einen sehr harten Schlag auf den Kopf bekommen hat, zählt er als Bewusstlos. Zwar ist sein Körper nicht eingeschränkt, aber sein Geist ist entweder anderweitig beschäftigt oder inaktiv. Er erhält dazu automatisch den Status Handlungsunfähig.",
             "blind": "Ein Erblindeter kann seinen Sehsinn nicht verwenden. Ursache hierfür können beispielsweise völlige Dunkelheit oder verbundene Augen sein. Inwieweit sich ein Erblindeter orientieren kann, ist von seinen anderen Sinnen abhängig. Selbst für einfache Aktionen können Proben auf Sinnesschärfe erforderlich sein. Manche Fertigkeiten kann ein Erblindeter gar nicht ausführen, viele sind oft deutlich erschwert. Welche Fertigkeiten gar nicht oder nur erschwert ausgeführt werden können, entscheidet der Spielleiter je nach Situation. Im Kampf muss sich ein blinder Kämpfer zumindest grob über die Position seines Gegners bewusst sein, beispielsweise, weil er ihn hören kann. Hierzu sind vergleichende Proben auf Sinnesschärfe und Verbergen nötig. Ist der blinde Kämpfer erfolgreich, darf er Angriffe gegen seinen Gegner ausführen. Sein Angriffswert im Nahkampf sinkt um -8, Angriffe im Fernkampf sind reine Glückstreffer (gewürfelte 2 auf 2W20). Der Verteidigungswert eines Erblindeten fällt auf 0 (siehe Seite 150). Ahnengaben, die auf Distanz gewirkt werden, können auf andere nur gewirkt werden, wenn der blinde Wirkende sein Ziel berührt.",
             "constricted": "Befindet sich ein Charakter beispielsweise in einer Zwischendecke, Rohrleitung oder in einem dichten Gedränge, gilt dies als beengte Umgebung. In einer solchen Situation erleidet er den Status Eingeengt. Er kann sich nur noch eingeschränkt bewegen, was sich besonders im Kampf negativ auswirkt. Je nach Länge der Waffe werden Angriffswert und Verteidigungswert wie in der Tabelle ersichtlich modifiziert (siehe auch Seite 150). Die Anwendung von Fertigkeiten kann in solchen Situationen um bis zu 8 erschwert sein. Das Wirken von Ahnengaben wird nicht negativ beeinflusst, wenn der Wirkende Eingeengt ist.",
             "fixated": "Wenn jemand am Boden festklebt oder von Ranken oder kräftigen Armen an Ort und Stelle gehalten wird, gilt er als Fixiert. Seine GS fällt auf 0, sein Verteidigungswert wird um 2 gesenkt.",
@@ -88,8 +88,59 @@
             "invisible": "Ein Unsichtbarer ist mit dem Sehsinn nicht mehr wahrnehmbar. Er ist natürlich trotzdem weiterhin hör-, riech- und ertastbar. Im Kampf kann ein Unsichtbarer nur angegriffen werden, wenn der Angreifer sich dessen Existenz und grober Position bewusst ist. Hierzu sind vergleichende Proben auf Sinnesschärfe und Verbergen nötig. Ist der Angreifer erfolgreich, darf er Angriffe gegen den Unsichtbaren ausführen. Sämtliche Angriffswerte im Nahkampf werden hierbei um -8 erschwert, Fernkampfangriffe sind reine Glückstreffer (gewürfelte 2 auf 2W20). Gegen Angriffe von Unsichtbaren fällt der Verteidigungswert des Angegriffenen auf 0 (siehe Seite 150). Ahnengaben, die auf Distanz gewirkt werden können, können nur auf einen Unsichtbaren gewirkt werden, wenn der Wirkende den Unsichtbaren berührt.",
             "poisoned": "Schlangen und anderes giftiges Getier ist im Umland Havenas nicht ungewöhnlich. Solange ein Gift wirkt, kann der Vergiftete nicht mehr durch eine normale Ruhephase (siehe Seite 190) regenerieren."
         },
+        "sight": "Sicht",
+        "MODS": {
+            "partChecks": "Teilprobenmodifikator",
+            "FP": "Fertigkeitspunktemodifikator",
+            "FW": "Fertigkeitswertmodifikator",
+            "combatTurmoil": "Schuss ins Kampfgetümmel",
+            "QS": "Qualitätsstufenmodifikator",
+            "damage": "Schadensmodifikator",
+            "defenseMalus": "Verteidigungsmalus",
+            "global": "Globaler Modifikator",
+            "armor": "Rüstungsmodifikator",
+            "range": "Reichweitenfaktor",
+            "creatureBonus": "Bonusschaden (Kreatur)",
+            "armorPen": "Rüstungsdurchdringung"
+        },
+        "opportunityAttack": "Passierschlag",
+        "narrowSpace": "Beengte Umgebung",
+        "wrongHand": "Schwache Pfote",
+        "advantageousPosition": "Vorteilhafte Position",
+        "doubleAttack": "Zwei Angriffe",
+        "opposingWeaponSize": "Waffengröße Gegner",
+        "meleeVisionDisruption": {
+            "0": "Klare Sicht",
+            "1": "Leichte Störung [-1]",
+            "2": "Silhouette [-2]",
+            "3": "Schemen [-3]",
+            "4": "Unsichtbar [Glückstreffer]"
+        },
+        "MELEESIZE": {
+            "tiny": "Winzig [-4]",
+            "small": "Klein [-0]",
+            "average": "Mittel",
+            "big": "Groß [0]",
+            "giant": "Riesig [0]"
+        },
+        "CONTROLS": {
+            "targetForUser": "Ziel für Spieler wählen"
+        },
         "DIALOG": {
             "firstTime": "Spracheinstellungen",
+            "onlyInCombatTargets": "Ziele werden nur im Kampf angezeigt.",
+            "setTargetToUserHint": "Aktuell markierte Ziele auf den User übertragen.",
+        "setTargetToUser": "Spielerziel setzen",
+            "noCombatskills": "Keine passenden Kampfsonderfertigkeiten",
+            "DeleteItemDetail": "Möchtest du <b>{item}</b> entfernen?",
+            "deleteConfirmation": "Löschen bestätigen",
+            "RollMode": "Würfelmodus",
+            "cheat": "SL-Willkür",
+            "noTarget": "Kein Ziel",
+            "addTarget": "Ziel hinzufügen",
+            "multipleTarget": "Mehrere Ziele",
+            "ItemRequiresAdoption": "Eintrag anpassen",
+            "ItemRequiresAdoptionDescription": "Das Hinzufügen benötigt zuerst eine Anpassung. Wähle den passenden Eintrag.",
             "firstTimeWarning": "Bitte wähle die passende Sprache. Kompendien verschiedener Sprachen sind nicht miteinander kompatibel und bestehende Charaktere können nicht in die andere Sprache migriert werden. Stelle sicher, dass alle User die gleiche Sprache verwenden, um Problemen vorzubeugen."
         },
         "ammunition": {
@@ -103,6 +154,23 @@
         },
         "ammunitionType": "Munitionsart",
         "reloadTime": "Ladezeit",
+        "shieldSize": "Schildgröße",
+        "Migrakel": {
+            "Migration": "Actor Migration",
+            "migrationDone": "Migration abgeschlossen",
+            "spells": "Aktualisiere Effekte und Effektformeln von allen Ahnengaben. ALLE MANUELLEN MODIFIKATIONEN WERDEN ÜBERSCHRIEBEN!",
+            "spellsShort": "Ahnengaben migrieren",
+            "abilities": "Aktualisiere Effekte und Effektformeln von allen Sonderfertigkeiten, Vor- und Nachteilen und Eigenschaften (Tier). ALLE MANUELLEN MODIFIKATIONEN WERDEN ÜBERSCHRIEBEN!",
+            "abilitiesShort": "Sonderfertigkeiten/Vor-/Nachteile migrieren",
+            "gearShort": "Ausrüstung migrieren",
+            "gear": "Aktualisiere Bilder, Effekte und Effektformeln von allen Ausrüstungsgegenständen, Waffen und Rüstungen. ALLE MANUELLEN MODIFIKATIONEN WERDEN ÜBERSCHRIEBEN!"
+        },
+        "SPELL": {
+            "loading": "Konzentrationsstatus: {status}",
+            "loaded": "Bereit",
+            "reload": "Konzentrieren",
+            "isReloading": "{actor} konzentriert sich auf {item} ({status})."
+        },
         "SHEET": {
             "PostItem": "Im Chat posten",
             "EditItem": "Editieren",
@@ -136,49 +204,136 @@
             "deobfuscateItem": "Abschnitt entschleieren",
             "obfuscateItem": "Abschnitt verschleiern"
         },
+        "ActorConfig": {
+            "autoSize": "Automatische Tokengröße",
+            "autoBar": "Automatische Ressourcenleiste"
+        },
+        "COMBATTRACKER": {
+            "noDefenses": "Anzahl Verteidigungen",
+            "ongoing": "Laufende Handlungen",
+            "waitInit": "Zurückstellen"
+        },
         "SETTINGS": {
+            "enableCombatPan": "Schwenke zu aktuellem Zug",
+        "enableCombatPanHint": "Schwenke die Sicht auf den aktuellen Zug und selektiere den Token sofern Besitzerrechte vorhanden.",
+            "iniTrackerSize": "DSA Kampftracker Größe",
+            "iniTrackerSizeHint": "Größe der Buttons im DSA Kampftracker",
+            "enableCombatFlow": "DSK Kampftracker",
+            "enableCombatFlowHint": "Aktiviere den DSK Kampftracker",
             "forceLanguage": "Sprache erzwingen",
             "forceLanguageHint": "Spieler erhalten beim Login einen Dialog, wenn deren Sprache falsch eingestellt ist. Unterschiedliche Spracheinstellungen können zu Problemen führen.",
             "disableDidYouKnow": "\"Wusstest du Schon?\" deaktivieren",
+            "allowPhysicalDice": "Wurf mit echten Würfeln",
+            "allowPhysicalDiceHint": "Erlaube die Eingabe des Ergebnis von selbst gewürfelten Würfeln",
             "disableDidYouKnowHint": "Sag NEIN zu Weiterbildung!",
+            "soundConfig": "Sound Effekt Konfiguration",
+            "soundConfigHint": "Töne für Talente und Angriffe (siehe Modul dsa5-communitysoundconfig)",
             "changelog": "Schau dir Änderungen und neue Inhalte an.",
             "enableDPS": "DPS aktivieren",
+            "rename": "Umbenennen",
             "enableDPSHint": "Aktiviere das \"Dere Positioning System\".\nMit Händlern und Türen kann nur noch aus direkter Nähe interagiert werden.\nDer Distanzmodifikator für Fernkampfwaffen wird automatisch gesetzt.",
             "dicesonicesettings": "Wähle Farbschemen für Würfeltypen",
             "hideEffects": "Status Effekte verbergen",
             "hideEffectsHint": "Zeige Status Effekte an Tokens nur deren Besitzer",
             "enableItemDropToCanvas": "Items auf die Map legen",
+            "obfuscateTokenNames": "Verberge Token Namen",
+            "obfuscateTokenNamesHint": "Generische Ersetzung des Namens unbekannter Kreaturen oder NSC",
             "enableItemDropToCanvasHint": "Lege Gegenstände per drag & drop auf die Karte als Schatztoken.",
             "playerCanEditSpellMacro": "Effekt Makros durch Spieler editierbar",
             "playerCanEditSpellMacroHint": "Spieler können z.B. Zaubermakros editieren (Unsicher)",
             "scrollingFontsize": "Kampftext Schriftgröße",
             "scrollingFontsizeHint": "Die Schriftgröße für einige der scrollenden Token Texte (z.B. +- LeP)",
-            "NotEnoughAeP": "Nicht genug Ahnenergie"
+            "expandChatModifierlist": "Modifikatoren Liste ausgeklappt",
+        "expandChatModifierlistHint": "Zeige die Modifikatorenliste im Chat immer ausgeklappt.",
+            "inventorySound": "Inventar Geräusche",
+            "inventorySoundHint": "Aktiviere Interface Geräusche im Inventar (benötigt game audio bundles)"
         },
         "WELCOME": "<p><h2>Willkommen zu DSK<br> für Foundry VTT</h2></p><p>Wir wünschen dir viel Spaß beim Spielen von DSK.</p><h3>Erste Schritte</h3><p>Für einen einfachen und schnellen Start empfehlen wir das Grundregelmodul in deinem System zu installieren. So kannst du unverzüglich Aventurien erkunden. Wenn du das Grundregelmodul nicht hast, musst du alle Gegenstände, Ahnengeschenke, Sonderfertigkeiten, Charaktere, etc. selbst anlegen.</p><p>Das Modul kannst du im <a href=\"https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/\" target=\"_blank\">F-Shop/</a> erwerben.</p><p>Für die Charaktererstellung stelle sicher, dass du per Drag and Drop die Spezies auf dein Charakterblatt ziehst (zur Berechnung der Attribute).</p><h3>Hilfe</h3><p>Bei Problemen benutze die Hilfe (/help im Chat), besuche den ulisses-dsa Channel im <a target=\"_blank\" href=\"https://discord.gg/foundryvtt\">Foundry Discord.</p><p>Diese Nachricht wird nur einmal angezeigt.</p>",
         "didyouknow": "Wusstest du schon?",
         "price": "Preis",
         "Experience": "Erfahrungsgrad",
+        "unknown": "Unbekannt",
         "sizeCategory": "Größenkategorie",
         "requiredAdvantages": "Benötigte Vorteile",
         "requiredSpecialabilities": "Benötigte Sonderfertigkeiten",
         "attributes": "Eigenschaften",
         "guidevalue": "Leitwert",
+        "AstoundingSuccess": "Spektakulärer Erfolg",
+        "AstoundingFailure": "Schreckliches Missgeschick",
+        "CriticalSuccess": "Kritischer Erfolg",
+        "CriticalFailure": "Patzer",
+        "Success": "Erfolg",
+        "Failure": "Misserfolg",
+        "Roll": "Wurf",
+        "Opposed": "Vergleichsprobe",
+        "distance": "Distanz",
+        "FP": "Fertigkeitspunkte",
         "regenerate": "Regeneration",
+        "LocalizedIDs": {
+            "Shields": "Schilde"
+        },
         "fshopLink": "https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/",
         "UNITS": {
             "weight": "Gewicht in Zehntstein",
             "money": "Wert in Mondglöckchen"
         },
+        "Racedescr": {
+            "Scheunenkatze": "<p>Scheunenkatzen stellen die Mehrheit der Katzen Havenas. Sie sind Mischlinge unterschiedlichster Herkunft in allen erdenklichen Farben, ob grau getigert, schwarz mit oder ohne wei&szlig;e Flecken oder wei&szlig; mit r&ouml;tlichen und schwarzen Flecken. Auch ihr Fell varriiert zwischen kurz und lang, ebenso wie ihre K&ouml;rpergr&ouml;&szlig;e ganz unterschiedlich ausfallen kann.</p>\n<p>Menschen sch&auml;tzen sie als M&auml;usef&auml;nger, wobei manche eine r&auml;tselhafte Angst vor schwarzen Scheunenkatzen entwickelt haben. Viele Menschen messen Scheunenkatzen dar&uuml;ber hinaus keinen sonderlichen Wert zu, weshalb sie manchmal liebkost und manchmal gequ&auml;lt oder mit Steinen beworfen werden.</p>",
+            "Aranier": "<p>Aranierkatzen gelten unter Menschen als Edelkatzen, die bei einer entsprechend nachweisbaren Abstammung und perfekter Fellfarbe und Fellzeichnung stattliche Summen wert sein k&ouml;nnen. Sie werden seit Jahrhunderten von den Herrschern des fernen Aranien gez&uuml;chtet und erfreuen sich seit einiger Zeit auch in der Oberschicht Havenas einer wachsenden Beliebtheit. Entsprechend hat eine reinrassige Aranierkatze gute Chancen, von wohlhabenden Menschen verh&auml;tschelt und umsorgt zu werden, was Araniern in der Katzengemeinde den Ruf arroganter Nichtsnutze eingebracht hat. Typische Aranier sind gro&szlig; und hochbeinig, haben relativ kurzes und meist seidiges, rotgetigertes Fell mit wei&szlig;en Zeichnungen auf Brust und Unterseite. Hinzu kommen oft gr&uuml;ne oder blaue Augen. Sollten sie das Pech haben, auch wei&szlig;e Pfoten oder Schwanzspitzen zu besitzen, gelten sie in den Augen der Menschen jedoch nicht mehr als reinrassig, wodurch ihr finanzieller Wert deutlich sinkt. Entsprechend finden sich gerade solche Aranier auch au&szlig;erhalb der Oberfluren und treiben sich sogar vereinzelt in der Tiefe herum.</p>",
+            "Firunsbärchen": "<p>Die bei Menschen als Firunsb&auml;rchen oder Burgenkatz bekannten Katzen stammen urspr&uuml;nglich aus dem kalten Bornland im fernen Nordosten Aventuriens. Viele Menschen halten Firunsb&auml;rchen f&uuml;r eher schlichte Gem&uuml;ter, kennen sie aber auch als z&auml;he M&auml;use- und Rattenf&auml;nger. Sie sind eher kurzbeinig, st&auml;mmig und zeichnen sich durch einen rundlichen Kopf und sehr dichtes, wei&szlig;es Fell aus. Ihre Augen gl&auml;nzen oftmals bernsteinfarben. Trotz ihrer geringen K&ouml;rpergr&ouml;&szlig;e sind sie ausgesprochen z&auml;h und hart im Nehmen. Ihr fluffiges, warmes Fell macht sie beliebt als Scho&szlig;katze, wobei Besitzer eines Firunb&auml;rchens leicht an den wei&szlig;en Haaren auf so ziemlich allen Textilien zu erkennen sind. Ansonsten sind Firunsb&auml;rchen, reinrassig oder als Mischlinge, so ziemlich &uuml;berall in Havena zu finden.</p>"
+        },
+        "DSKREGEX": {
+            "combatRounds": "( )?(in )?(Kampfrunde(n)?|KR(s)?)",
+            "minutes": "( )?(in )?(minute(n)?|min)",
+            "hours": "( )?(in )?(stunde(n)?)",
+            "days": "( )?(in )?tag(e)?",
+            "weeks": "( )?(in )?woche(n)?",
+            "months": "( )?(in )?monat(e)?",
+            "years": "( )?(in )?jahr(e)?"
+        },
+        "DSKREGEXmaintain": {
+            "combatRounds": "(Kampfrunde(n)?|KR(s)?)",
+            "seconds": "(sekunden(n)?)",
+            "minutes": "(minute(n)?|min)",
+            "hours": "(stunde(n)?)",
+            "days": "tag(e)?"
+        },
+        "PAYMENT": {
+            "pay": "<b>{actor}</b> bezahlt seine/ihre Schulden von {amount}.",
+            "getPaid": "<b>{actor}</b> erhält seine/ihre Bezahlung von {amount}.",
+            "payexample": "Gib /pay und die Anzahl der Mondglöckchen die zu bezahlen sind ein. Z.B.: /pay 13,45",
+            "getPaidexample": "Gib /getPaid und die Anzahl der Mondglöckchen die zu erhalten sind ein. Z.B.: /getPaid 13,45",
+            "error": "Falsche Eingabe",
+            "bill": "Offene Rechnung",
+            "paySum": "{amount} sind zu bezahlen.",
+            "getPaidSum": "{amount} wird ausbezahlt.",
+            "wage": "Bezahlung erhalten",
+            "payButton": "Bezahlen",
+            "getPaidButton": "Auszahlen",
+            "noActor": "Dein Charakter wurde nicht gefunden",
+            "onlyActors": "Nur Spieler können bezahlen/bezahlt werden oder dir wurde kein Charakter zugeordnet.",
+            "cannotpay": "<b>{actor}</b> kann seine/ihre Schulden von {amount} nicht bezahlen."
+        },
         "DSKError": {
             "reportBug": "Fehler melden",
+            "unknownCombatSkill": "Das Kampftalent {skill} der Waffe {item} ist unbekannt. Bitte die Waffe anpassen.",
+            "NotEnoughXP": "Nicht genug Abenteuerpunkte",
+            "macroNotFound": "Das Macro {name} konnte nicht gefunden werden...sorry.",
             "wrongLanguage": "Deine Spracheinstellung passt nicht zur vorgegebenen Einstellung ({lang}). Möchtest du die Sprache ändern?",
             "notInRangeToLoot": "Zu weit entfernt für eine Interaktion.",
             "sceneNotInitialized": "Szene nicht gefunden. Schon initialisiert?",
+            "shouldTimesUp": "Für automatische auslaufende Effekte wird das Modul Times-Up benötigt.",
+            "MacroItemMissing": "Dein Charakter hat kein Item namens {item}. Stelle sicher, dass dir entweder ein Charakter zugeordnet ist oder du einen Token für den Wurf markierst.",
             "MissingChoices": "Noch nicht alle Optionen ausgefüllt.",
+            "noMatch": "Keine Übereinstimmung",
+            "nestedEffectNotSupported": "Foundry unterstützt das Hinzufügen von Effekten derzeit nur im Item Directory.",
             "notUnderstood": "Folgende Einträge  konnten nicht umgesetzt bzw. in der Datenbank gefunden werden. Bitte manuell anpassen/hinzufügen.",
             "itemNotFound": "Dieser Eintrag wurde nicht in der Datenbank gefunden, bitte manuell anlegen",
-            "PreparationError": "Die Initialisierung es Akteurs {name} ist fehlgeschlagen."
+            "canNotBeAdded": "{item} der Kategory {category} kann nicht hinzugefügt werden. Dies ist keine unterstützte Kategorie.",
+            "PreparationError": "Die Initialisierung es Akteurs {name} ist fehlgeschlagen.",
+            "NoAmmo": "Nicht genug Munition.",
+            "zeroXP": "Der Charakter hat noch keine Abenteuerpunkte. Möchtest du welche hinzufügen?",
+            "NotEnoughAeP": "Nicht genug Ahnenergie"
         },
         "gridUnits": "Schritt",
         "name": "Name",
@@ -196,10 +351,13 @@
         "category": "Kategorie",
         "quantity": "Anzahl",
         "duration": "Wirkungsdauer",
+        "castingTime": "Wirkdauer",
         "resistanceModifier": "Widerstand",
         "cancel": "Abbrechen",
+        "save": "Speichern",
         "check": "Probe",
         "search": "Suchen",
+        "effectFormula": "Effektformel",
         "process": "Verarbeiten",
         "start": "Beginn",
         "poisonType": "Art",
@@ -224,6 +382,7 @@
         "ok": "Ok",
         "StF": "StF",
         "Modifiers": "Modifikatoren",
+        "Modifier": "Modifikator",
         "yes": "Ja",
         "weapontype": "Waffengattung",
         "no": "Nein",
@@ -235,10 +394,66 @@
         "rule": "Regel",
         "zoo": "Zoo",
         "maxlevel": "Maximale Stufe",
+        "attacktest": "Angriffsprobe",
         "SPECIALABILITYCATEGORIES": {
             "general": "Allgemein",
             "combat": "Kampf",
-            "ahnen": "Ahnenkind"
+            "ahnen": "Ahnenkind",
+            "language": "Sprache"
+        },
+        "RangeMod": {
+            "short": "Nah [+2 auf FK, +1 TP]",
+            "medium": "Mittel [+/–0 auf FK]",
+            "long": "Weit [–2 auf FK, –1 TP]",
+            "rangesense": "Weit [–1 auf FK, –1 TP]",
+            "extreme": "Extrem [–4 auf FK, –2 TP]"
+        },
+        "mountedRangeOptions": {
+            "STATIONARY": "steht",
+            "SCHRITT": "im Schritt",
+            "GALOPP": "im Galopp"
+        },
+        "rangeMovementOptions": {
+            "STATIONARY": "steht still (+2)",
+            "SLOW": "bewegt sich leicht (+-0)",
+            "FAST": "bewegt sich schnell (-2)",
+            "QUICKCHANGE": "Ziel schlägt Haken (-4)",
+            "SHOOTERMOVING": "geht (-2)",
+            "SHOOTERRUNNING": "rennt (-4)",
+            "SHOOTERSTATIONARY": "ist stationär (+-0)"
+        },
+        "aimOptions": {
+            "0": "Ungezielt",
+            "1": "1 Aktion zielen",
+            "2": "2 Aktionen zielen"
+        },
+        "RANGESIZE": {
+            "tiny": "Winzig [-8]",
+            "small": "Klein [-4]",
+            "average": "Mittel",
+            "big": "Groß [+4]",
+            "giant": "Riesig [+8]"
+        },
+        "VisionDisruption": {
+            "step0": "Klare Sicht",
+            "step1": "Leichte Störung [-2]",
+            "step2": "Silhouette [-4]",
+            "step3": "Schemen [-6]",
+            "step4": "Unsichtbar [Glückstreffer]"
+        },
+        "aim": "Zielen",
+        "target": "Ziel",
+        "mount": "Reittier",
+        "shooter": "Schütze",
+        "WEAPON": {
+            "loading": "Ladestatus: {status}",
+            "loaded": "Geladen",
+            "reload": "Nachladen",
+            "isReloading": "{actor} läd {item} nach ({status}).",
+            "improvised": "Improvisierte Waffe",
+            "vulnerableTo": "Empfindlich ({name})",
+            "resistantTo": "Resistent ({name})",
+            "dropped": "Der Gegenstand fliegt {distance} Schritt davon."
         },
         "SPECIALABILITYNAMES": {
             "general": "Allgemeine Sonderfertigkeiten",
@@ -260,7 +475,7 @@
             "advances": "Zukauf",
             "max": "Max", 
             "AoE": "Größe in Schritt, Template",
-            "awvw": "Modifikator für Angriffswert / Verteidigungswert",
+            "awvw": "AW/VW",
             "AW": "Angriffswert",
             "VW": "Verteidigungswert"
         },
@@ -305,7 +520,7 @@
             "home": "Hauptverzeichnis",
             "foundryUsage": "Foundry & DSK",
             "search": "Durchsuchen",
-            "foundryUsagedesc": "<p>Den Journalbrowser verwenden:<ul class=\"dsalist\"><li>Mit einem Rechtsklick auf Bilder kannst du diese separat anzeigen und deinen Spielern zeigen</li><li>Da die Module Kopien der Printausgaben sind, können Verweise und Formulierungen auf das jeweilige Printprodukt hinweisen und im Spiel abweichen.</li><li>Einge der Akteure der Abenteuer haben möglicherweise keinen Token und keine Statistiken, da diese nur eine sehr kleine erzählerische Rolle einnehmen. Falls Würfelwürfe notwendig sind, kannst du diese über das Chatcommand <b>/ch</b> improvisieren.</li><li>Wichtige Kreaturen und Charaktere haben gewöhnlicherweise noch extra Informationen im Charakterblatt.</li><li>Die zusätzlichen Werte und Fertigkeiten der Nscs in Abenteuern sind ergänzt worden und entsprechen nicht zwingendermaßen dem Inhalt des gedruckten Abenteuers. Sie dienen der breiteren Nutzung der Nscs, sind aber nicht notwendigerweise regelkonform.</li></ul></p>",
+            "foundryUsagedesc": "<p>Den Journalbrowser verwenden:<ul class=\"dsklist\"><li>Mit einem Rechtsklick auf Bilder kannst du diese separat anzeigen und deinen Spielern zeigen</li><li>Da die Module Kopien der Printausgaben sind, können Verweise und Formulierungen auf das jeweilige Printprodukt hinweisen und im Spiel abweichen.</li><li>Einge der Akteure der Abenteuer haben möglicherweise keinen Token und keine Statistiken, da diese nur eine sehr kleine erzählerische Rolle einnehmen. Falls Würfelwürfe notwendig sind, kannst du diese über das Chatcommand <b>/ch</b> improvisieren.</li><li>Wichtige Kreaturen und Charaktere haben gewöhnlicherweise noch extra Informationen im Charakterblatt.</li><li>Die zusätzlichen Werte und Fertigkeiten der Nscs in Abenteuern sind ergänzt worden und entsprechen nicht zwingendermaßen dem Inhalt des gedruckten Abenteuers. Sie dienen der breiteren Nutzung der Nscs, sind aber nicht notwendigerweise regelkonform.</li></ul></p>",
             "fulltextsearch": "Volltextsuche",
             "sceneReset": "Szene aktualisieren",
             "sceneResetDescription": "Die Szene <b>{name}</b> wurde bereits importiert. Möchtest du diese zurücksetzen?<br/> Es werden alle Änderungen und Token entfernt.",
@@ -319,6 +534,7 @@
         "notes": "Notizen",
         "gmnotes": "SL Notizen",
         "Advances": "Steigerungen",
+        "awvw": "Modifikator für Angriffswert / Verteidigungswert",
         "ownerNotes": "Private Notizen",
         "status": "Status",
         "damage": "Trefferpunkte",
@@ -335,8 +551,20 @@
         "Current": "Aktuell",
         "equipped": "Ausgerüstet",
         "purse": "Geldbeutel",
+        "wrongGrip": {
+            "oneHanded": "Einhändig geführt",
+            "twoHanded": "Beidhändig geführt"
+        },
+        "ITEMSHEET": {
+            "offHandMod": "Bonus/Malus als Nebenhand (z.b. Parierwaffe)"
+        },
         "money": "Mondglöckchen",
+        "removeGesture": "Geste weglassen",
+        "removeFormula": "Formel/Gebet weglassen",
         "Spent": "Ausgegeben",
+        "cost": "Kosten",
+        "damagetest": "Schadensprobe",
+        "qualityStep": "Qualitätsstufe",
         "Total": "Gesamt",
         "SIZE": {
             "tiny": "Winzig",
@@ -348,11 +576,24 @@
         "CHATNOTIFICATION": {
             "BlindRoll": "Blinder Wurf",
             "whisper": "Private Nachricht",
-            "requestInformation": "Was weiß mein Held über..."
+            "regenerates": "regeneriert",
+            "getsHurt": "verliert",
+            "requestInformation": "Was weiß mein Held über...",
+            "burning": {
+                "1": "{actor} <a class=\"chatButton chat-condition\" data-id=\"burning\" draggable=\"true\"><img src=\"icons/svg/fire.svg\">brennt</a> ein bisschen und erhält {damage} Schadenspunkt(e).",
+                "2": "{actor} <a class=\"chatButton chat-condition\" data-id=\"burning\" draggable=\"true\"><img src=\"icons/svg/fire.svg\">brennt</a> und erhält {damage} Schadenspunkt(e).",
+                "3": "{actor} steht komplett in <a class=\"chatButton chat-condition\" data-id=\"burning\" draggable=\"true\"><img src=\"icons/svg/fire.svg\">Flammen</a> und erhält {damage} Schadenspunkte."
+            }
         },
         "TT": {
             "onlyGM": "Nur für den Spielleiter sichtbar.",
-            "dragLink": "Drag & drop actor e.g. for shapeshifting and summoning"
+            "dragLink": "Drag & drop actor e.g. for shapeshifting and summoning",
+            "zkModifer": "Die Zähigkeit/Seelenkraft des Ziels muss als Malus eingerechnet werden (Vorzeichen beachten)",
+            "applyEffectCaster": "Effekt auf Wirkenden übertragen",
+            "applyEffectTargets": "Effekt auf Ziele übertragen",
+            "assignCharacter": "Charaktere können in der Spielerliste unten links per Rechtsclick zugewiesen werden.",
+            "placeTemplate": "Flächeneffekt Template platzieren",
+            "resizer": "Drag zum Verschieben<br/>Mausrad um zu verkleinern/vergrößern<br/>ggf. Rechte Maustaste Ausrichtung"
         },
         "Combatskilldescr": {
             "Wurfwaffen": "<div>\n<p>Zwar leiden Wurfwaffen unter der gleichen geringen Reichweite wie Schusswaffen, aber in manchen Situationen ist es hilfreich, von einer erh&ouml;hten Position aus missliebige Katzen, Ratten oder Hunde mit Speeren oder schlichten Steinen einzudecken, statt sich gleich in den Kampf zu st&uuml;rzen.</p>\n</div>\n<div>\n<p><strong>Anwendungsbeispiele:</strong> Wurfspeere, Steine</p>\n</div>",
@@ -402,7 +643,11 @@
             "service": "Dienstleistungen",
             "luxus": "Genussmittel und Luxus",
             "armor": "Rüstung",
-            "blessed": "Geweiht"
+            "blessed": "Geweiht",
+            "meleeweapons": "Nahkampfwaffen",
+            "rangeweapons": "Fernkampfwaffen",
+            "poison": "Gift",
+            "ammunition": "Munition"
         },
         "Library": {
             "searchPlaceholder": "Durchsuche die Bibliothek",

@@ -14,4 +14,29 @@ export default class ActorSheetCharacter extends ActorSheetDSK{
         if (this.showLimited()) return "systems/dsk/templates/actors/npc-limited.html";
         return "systems/dsk/templates/actors/actor-sheet.html";
     }
+
+    async _manageDragItems(item, typeClass) {
+        switch (typeClass) {
+            case "aggregatedTest":
+                await this.actor.createEmbeddedDocuments("Item", [item]);
+                break;
+            case "species":
+                let spwizard = new SpeciesWizard()
+                await spwizard.addSpecies(this.actor, item)
+                spwizard.render(true)
+                break;
+            case "culture":
+                let cuwizard = new CultureWizard()
+                await cuwizard.addCulture(this.actor, item)
+                cuwizard.render(true)
+                break
+            case "profession":
+                let cwizard = new CareerWizard()
+                await cwizard.addCareer(this.actor, item)
+                cwizard.render(true)
+                break;
+            default:
+                return super._manageDragItems(item, typeClass)
+        }
+    }
 }

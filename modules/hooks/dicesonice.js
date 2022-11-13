@@ -1,6 +1,6 @@
-import DSKUtility from "./dsk_utility.js";
+import DSKUtility from "../system/dsk_utility.js";
 
-export default function() {
+export function initDSN() {
     Hooks.once('init', () => {
         game.dsk.apps.DiceSoNiceCustomization = new DiceSoNiceCustomization()
     })

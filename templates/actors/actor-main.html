@@ -73,7 +73,7 @@
                     {{localize "dsk.LeP"}} {{#if actor.canAdvance}}<a data-attr="LeP" class="advance refund-points"><i data-tooltip="{{actor.system.stats.LeP.refund}}" class="fas fa-minus"></i></a>
                     <a data-attr="LeP" class="advance advance-points"><i data-tooltip="{{actor.system.stats.LeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
                     <span class="buttons">
-                        <a data-char="regenerate" class="ch-regenerate item" data-mod="regenerate" data-tooltip="{{localize 'dsk.regenerate'}}">&nbsp;<i class="fas fa-moon"></i></a>
+                        <a data-char="regenerate" class="ch-regenerate item" data-mod="regenerate" data-tooltip="dsk.regenerate">&nbsp;<i class="fas fa-moon"></i></a>
                     </span>
                 </div>
                 <div class="col eight lineheight center">
@@ -108,7 +108,7 @@
                 </div>
             </div>
            
-           
+            {{#if actor.magic.hasSpells}}
             <div class="derivedAttrs row-section">
                 <div class="col two lineheight">
                     {{localize "dsk.AeP"}} {{#if actor.canAdvance}}<a data-attr="AeP" class="advance refund-points"><i data-tooltip="{{actor.system.stats.AeP.refund}}" class="fas fa-minus"></i></a>
@@ -136,16 +136,16 @@
 
                 </div>
                 <div class="col eight center inputTooltipAvailable">
-                    <input name="system.stats.regeneration.AePMod" type="text" value="{{actor.system.stats.regeneration.AePMod}}" data-dtype="Number" data-tooltip="{{localize 'SHEET.permRegeneration'}}" />
+                    <input name="system.stats.regeneration.AePMod" type="text" value="{{actor.system.stats.regeneration.AePMod}}" data-dtype="Number" data-tooltip="dsk.SHEET.permRegeneration" />
                 </div>
                 <div class="col eight center inputTooltipAvailable">
-                    <input name="system.stats.regeneration.AePTemp" type="text" value="{{actor.system.stats.regeneration.AePTemp}}" data-dtype="Number" data-tooltip="{{localize 'SHEET.tempRegeneration'}}" />
+                    <input name="system.stats.regeneration.AePTemp" type="text" value="{{actor.system.stats.regeneration.AePTemp}}" data-dtype="Number" data-tooltip="dsk.SHEET.tempRegeneration" />
                 </div>
                 <div class="col eight lineheight center">
                     {{actor.system.stats.regeneration.AePmax}}
                 </div>
             </div>
-           
+            {{/if}}
             
             <div class="derivedAttrs row-section">
                 <div class="col two lineheight">

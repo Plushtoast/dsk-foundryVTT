@@ -99,6 +99,10 @@
                     "species": "",
                     "size": ""
                 },
+                "config": {
+                    "autoBar": true,
+                    "autoSize": true
+                },
                 "money": 0 
             },
             "heroStats": {
@@ -181,8 +185,10 @@
         ],
         "templates": {
             "description": {
-                "value": "",
-                "gminfo": ""
+                "description": {
+                    "value": "",
+                    "gminfo": ""
+                }
             },
             "gear": { 
                 "price": 0,
@@ -224,10 +230,14 @@
             ],
             "tp": "1d6",
             "aw": 0,
+            "awoffhand": 0,
+            "vwoffhand": 0,
             "vw": 0,
             "rw": "medium",
+            "shieldsize": "medium",
             "length": "",
-            "combatskill": "Einhandwaffen"
+            "combatskill": "Einhandwaffen",
+            "worn": { "value": false }
         },
         "rangeweapon": {
             "templates": [
@@ -239,7 +249,10 @@
             "rw": "0/0/0",
             "ammunitionType": "-",
             "length": 0,
-            "combatskill": "Schusswaffen"
+            "combatskill": "Schusswaffen",
+            "currentAmmo": "",
+            "reloadTimeprogress": 0,
+            "worn": { "value": false }
         },
         "armor": {
             "templates": [
@@ -257,7 +270,12 @@
                 "gear",
                 "description"
             ],
-            "ammunitionType": "-"
+            "ammunitionType": "-",
+            "length": "",
+            "mag": {
+                "max": 0,
+                "value": 0
+            }
         },
         "equipment": {
             "templates": [
@@ -312,7 +330,7 @@
             },
             "rule": "",
             "requirements": "",
-            "ap": "",
+            "ap": "0",
             "level": 0,
             "max": 0
         },
@@ -322,7 +340,7 @@
             },
             "rule": "",
             "requirements": "",
-            "ap": "",
+            "ap": "0",
             "level": 0,
             "max": 0
         },
@@ -332,7 +350,7 @@
             },
             "rule": "",
             "requirements": "",
-            "ap": "",
+            "ap": "0",
             "category": "general",
             "subcategory": 0,
             "combatskills": "",
@@ -355,10 +373,13 @@
             "effect": "",
             "AeP": "",
             "range": "",
+            "duration": "",
             "targetCategory": "",
             "distribution": "",
+            "effectFormula": "",
             "StF": "A",
-            "duration": ""
+            "resist": "-",
+            "level": 0
         },
         "poison": {
             "description": {

@@ -386,25 +386,61 @@ select[multiple] option:checked {
   display: flex;
 }
 
-.skills.body {
+.skills.row-section:before {
+  left: -10px;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: -10px;
+  border-radius: 50%;
+}
+.skills.row-section.body {
+  position: relative;
+  padding-left: 55px;
   background: rgb(79, 109, 101);
   background: linear-gradient(90deg, rgb(79, 109, 101) 0%, rgba(255, 255, 255, 0) 100%);
 }
-.skills.social {
+.skills.row-section.body:before {
+  content: "";
+  background: url("../../icons/categories/ko.webp") no-repeat;
+  background-size: cover;
+  background-color: rgb(79, 109, 101);
+}
+.skills.row-section.social {
+  position: relative;
+  padding-left: 55px;
   background: rgb(133, 48, 46);
   background: linear-gradient(90deg, rgb(133, 48, 46) 0%, rgba(255, 255, 255, 0) 100%);
 }
-.skills.knowledge {
+.skills.row-section.social:before {
+  content: "";
+  background: url("../../icons/categories/ch.webp") no-repeat;
+  background-size: cover;
+  background-color: rgb(133, 48, 46);
+}
+.skills.row-section.knowledge {
+  position: relative;
+  padding-left: 55px;
   background: rgb(75, 101, 133);
   background: linear-gradient(90deg, rgb(75, 101, 133) 0%, rgba(255, 255, 255, 0) 100%);
 }
-.skills.trade {
+.skills.row-section.knowledge:before {
+  content: "";
+  background: url("../../icons/categories/kl.webp") no-repeat;
+  background-size: cover;
+  background-color: rgb(75, 101, 133);
+}
+.skills.row-section.trade {
+  position: relative;
+  padding-left: 55px;
   background: rgb(205, 162, 94);
   background: linear-gradient(90deg, rgb(205, 162, 94) 0%, rgba(255, 255, 255, 0) 100%);
 }
-.skills.nature {
-  background: rgb(83, 88, 41);
-  background: linear-gradient(90deg, rgb(83, 88, 41) 0%, rgba(255, 255, 255, 0) 100%);
+.skills.row-section.trade:before {
+  content: "";
+  background: url("../../icons/categories/ff.webp") no-repeat;
+  background-size: cover;
+  background-color: rgb(205, 162, 94);
 }
 
 .bookWizardsheet .window-content table tr:first-child, .dskjournal .window-content table tr:first-child, .table-title, .label-text {
@@ -540,6 +576,38 @@ select[multiple] option:checked {
 
 .chat-buttons {
   float: right;
+}
+
+.icon-mu {
+  background-image: url("../../icons/categories/MU2.webp");
+}
+
+.icon-ch {
+  background-image: url("../../icons/categories/CH2.webp");
+}
+
+.icon-kl {
+  background-image: url("../../icons/categories/KL2.webp");
+}
+
+.icon-in {
+  background-image: url("../../icons/categories/IN2.webp");
+}
+
+.icon-ge {
+  background-image: url("../../icons/categories/GE2.webp");
+}
+
+.icon-ff {
+  background-image: url("../../icons/categories/FF2.webp");
+}
+
+.icon-kk {
+  background-image: url("../../icons/categories/KK2.webp");
+}
+
+.icon-ko {
+  background-image: url("../../icons/categories/KO2.webp");
 }
 
 .die-attack, .die-mu, .diet-mu:after {
@@ -1062,7 +1130,24 @@ form.dsk.item-sheet {
   opacity: 0.2;
 }
 
-.statusEffectMenu, .dsklist li, #chat-form, .browser-item, .effect-change .key, .inputTooltipAvailable, .journalHeader, .tokenQuickHot > ul > li, .bags, .hero, .window-app .window-content {
+.dskheadericon {
+  position: relative;
+}
+.dskheadericon a {
+  position: absolute;
+  z-index: 1;
+  left: -10px;
+}
+.dskheadericon span {
+  min-width: 50px;
+  padding-left: 15px;
+  background-color: var(--dskcolor);
+  border-radius: 15px;
+  color: white;
+  font-size: smaller;
+}
+
+.dskrelative, .statusEffectMenu, .dsklist li, #chat-form, .browser-item, .effect-change .key, .inputTooltipAvailable, .journalHeader, .tokenQuickHot > ul > li, .bags, .hero, .window-app .window-content {
   position: relative;
 }
 
@@ -3117,7 +3202,7 @@ select.noAppearance {
   float: left;
 }
 .patchviewer .table-title {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--dskcolor);
   border-radius: 10px;
 }
 
@@ -3473,6 +3558,43 @@ input[type=checkbox].autoCheckbox {
 /* End Foundry9 fixes */
 .select2-results__option[role=group]:hover {
   background-color: transparent;
+}
+
+.skills .d20.shown:after {
+  border-radius: 100%;
+  opacity: 1;
+}
+.skills .d20.icont-mu:after {
+  background-image: url("../../icons/categories/mu.webp");
+  background-color: rgba(179, 36, 26, 0.7019607843);
+}
+.skills .d20.icont-ch:after {
+  background-image: url("../../icons/categories/ch.webp");
+  background-color: rgba(13, 13, 13, 0.7019607843);
+}
+.skills .d20.icont-kl:after {
+  background-image: url("../../icons/categories/kl.webp");
+  background-color: rgba(130, 89, 163, 0.7019607843);
+}
+.skills .d20.icont-in:after {
+  background-image: url("../../icons/categories/in.webp");
+  background-color: rgba(56, 136, 52, 0.7019607843);
+}
+.skills .d20.icont-ge:after {
+  background-image: url("../../icons/categories/ge.webp");
+  background-color: rgba(104, 142, 196, 0.7019607843);
+}
+.skills .d20.icont-ff:after {
+  background-image: url("../../icons/categories/ff.webp");
+  background-color: rgba(213, 180, 103, 0.7019607843);
+}
+.skills .d20.icont-kk:after {
+  background-image: url("../../icons/categories/kk.webp");
+  background-color: rgba(214, 168, 120, 0.7019607843);
+}
+.skills .d20.icont-ko:after {
+  background-image: url("../../icons/categories/ko.webp");
+  background-color: rgba(163, 163, 163, 0.7019607843);
 }
 
 /*# sourceMappingURL=dsk.css.map */

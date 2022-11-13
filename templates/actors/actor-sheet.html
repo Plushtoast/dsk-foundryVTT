@@ -3,7 +3,7 @@
     <header class="sheet-header">
         <div class="charname headerInput">
             <input class="input name" name="name" style="width:90%" type="text" value="{{actor.name}}" placeholder="{{localize 'dsk.name'}}" />
-            <a class="actorDrag" data-tooltip="{{localize 'dsk.TT.dragLink'}}"><i class="fas fa-link"></i></a>
+            <a class="actorDrag" data-tooltip="dsk.TT.dragLink"><i class="fas fa-link"></i></a>
             <span class="label name">{{localize "dsk.name"}}</span>
         </div>
 
@@ -22,18 +22,7 @@
 
         <div class="row-section" style="width: 100%;margin-bottom: 20px">
             <div class="col">
-                <div class="row-section wrap charBtns">
-                    {{#each actor.system.characteristics as |ch c|}}
-                    <div data-tooltip="{{attrLoc @key 'name'}}" class="col eight center">
-                        {{attrLoc @key 'abbr'}}
-                    </div>
-                    {{/each}}
-                </div>
-                <div class="row-section wrap charBtns">
-                    {{#each actor.system.characteristics as |ch c|}}
-                    <div class="ch-value col eight center" data-char="{{c}}"><a class="d20 die-{{c}}">{{ch.value}}</a></div>
-                    {{/each}}
-                </div>
+                {{> systems/dsk/templates/actors/parts/rollhead.html}}
 
                 {{> systems/dsk/templates/actors/parts/healthbar.html}}
                 <div class="row-section">

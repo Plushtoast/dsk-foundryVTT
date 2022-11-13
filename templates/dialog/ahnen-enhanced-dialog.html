@@ -1,0 +1,84 @@
+<form class="skill-test">
+    <div class="row-section">
+        <div class="col sixty" style="max-width:60%">
+
+            {{> systems/dsk/templates/dialog/enhanced-default-dialog.html}}
+
+            {{#if hasSKModifier}}
+            <div class="form-group" data-tooltip="TT.zkModifer">
+                <label>{{localize "skModifier"}}</label>
+                <input type="number" class="quantity-click" name="skModifier" value="{{SKModifier}}" />
+            </div>
+            {{/if}} {{#if hasZKModifier}}
+            <div class="form-group" data-tooltip="TT.zkModifer">
+                <label>{{localize "zkModifier"}}</label>
+                <input type="number" class="quantity-click" name="zkModifier" value="{{ZKModifier}}" />
+            </div>
+            {{/if}}                     
+
+            <div class="form-group custom-select">
+                <label>{{localize "dsk.removeGesture"}} (-4)</label>
+                <input type="checkbox" id="removeGesture" class="spellModifier" name="removeGesture" value="-4">
+            </div>
+
+            <div class="form-group custom-select">
+                <label>{{localize "dsk.removeFormula"}} (-4)</label>
+                <input type="checkbox" id="removeFormula" class="spellModifier" name="removeFormula" value="-4">
+            </div>
+
+            <hr>
+            <div class="row-section wrap" style="margin-top:20px">
+                <div class="col">
+                    <div class="row-section table-title">
+                        <div class="col four center">
+                            {{localize "dsk.castingTime"}}
+                        </div>
+                        <div class="col four center">
+                            {{localize "dsk.cost"}}
+                        </div>
+                        <div class="col four center">
+                            {{localize "dsk.range"}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row-section lineheight">
+                        <div class="col four center">
+                            <span class="castingTime" data-mod="0" data-base="{{spellCastingTime}}">{{spellCastingTime}}</span>
+                        </div>
+                        <div class="col four center row-section">
+                            <input data-tooltip="variableCost" class="{{#unless variableBaseCost}}dskhidden{{/unless}} col two variableBaseCost" type="number" data-mod="0" data-base="{{spellCost}}" name="variableBaseCost" value="{{spellCost}}" />
+                            <span class="col {{#if variableBaseCost}}two {{/if}}aspcost" data-mod="0" data-base="{{spellCost}}">{{spellCost}}</span>
+                        </div>
+                        <div class="col four center">
+                            <span class="reach" data-mod="0" data-base="{{spellReach}}">{{spellReach}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col fourty">
+            <div class="targets row-section wrap item">
+                {{> systems/dsk/templates/dialog/parts/targets.html}}
+            </div>
+            <div class="specAbsContainer">
+                {{#unless extensions}}
+                <div class="row-section">
+                    <div class="col extImg" style="height: 120px" data-tooltip="dsk.DIALOG.noExtensions">
+                    </div>
+                </div>
+
+                {{else}} {{#each extensions as |item i|}}
+                <div class="row-section specAbs" data-name="{{item.shortName}}" data-uuid="{{item.uuid}}" data-tooltip="{{item.descr}}">
+                    <div class="extImg col ten">
+                    </div>
+                    <div class="col ninety">
+                        <a>&nbsp;{{item.shortName}}</a>
+                    </div>
+                </div>
+                {{/each}} {{/unless}}
+            </div>
+        </div>
+    </div>
+    <div class="roll-dialog-tag">spell</div>
+</form>

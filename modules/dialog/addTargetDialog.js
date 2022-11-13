@@ -19,7 +19,7 @@ export class AddTargetDialog extends Dialog{
             })
         }
         return new AddTargetDialog({
-            title: game.i18n.localize("DIALOG.addTarget"),
+            title: game.i18n.localize("dsk.DIALOG.addTarget"),
             content: await renderTemplate('systems/dsk/templates/dialog/addTarget-dialog.html', { selectables }),
             default: "yes",
                 buttons: {},
@@ -80,7 +80,7 @@ export class SelectUserDialog extends Dialog{
     static async getDialog(){
         const users = game.users.filter(x => x.active && !x.isGM)
         return new SelectUserDialog({
-            title: game.i18n.localize("DIALOG.setTargetToUser"),
+            title: game.i18n.localize("dsk.DIALOG.setTargetToUser"),
             content: await renderTemplate('systems/dsk/templates/dialog/selectForUserDialog.html', { users }),
             default: "yes",
             buttons: {},
@@ -93,7 +93,7 @@ export class SelectUserDialog extends Dialog{
 
             const userSelect = {
                 name: "targetUser",
-                title: game.i18n.localize("CONTROLS.targetForUser"),
+                title: game.i18n.localize("dsk.CONTROLS.targetForUser"),
                 icon: "fa fa-bullseye",
                 button: true,
                 onClick: async() => { (await SelectUserDialog.getDialog()).render(true) }

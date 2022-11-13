@@ -21,9 +21,33 @@ export default class DSKUtility {
         return chatData;
     }
 
+    static isActiveGM(){
+        //Prevent double update with multiple GMs, still unsafe
+        const activeGM = game.users.find((u) => u.active && u.isGM);
+        
+        return activeGM && game.user.id == activeGM.id
+    }
+
     static async allSkills(elems =  ["skill", "combatskill", "specialability"]) {
         const pack = game.i18n.lang == "de" ? "dsk.default" : "dsk.defaulten"
         return await this.getCompendiumEntries(pack, elems)
+    }
+
+    static escapeRegex(input) {
+        const source = typeof input === 'string' || input instanceof String ? input : '';
+        return source.replace(/[-[/\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    }
+
+    static replaceDies(content, inlineRoll = false) {
+        let regex = /( |^)(\d{1,2})?[wWdD][0-9]+((\+|-)[0-9]+)?/g
+        let roll = inlineRoll ? "" : "/roll "
+        return content.replace(regex, function(str) {
+            return ` [[${roll}${str.replace(/[DwW]/,"d")}]]`
+        })
+    }
+
+    static toObjectIfPossible(source) {
+        return typeof source.toObject === 'function' ? source.toObject(false) : duplicate(source)
     }
 
     static async allSkillsList(elems =  ["skill", "combatskill", "specialability"]) {

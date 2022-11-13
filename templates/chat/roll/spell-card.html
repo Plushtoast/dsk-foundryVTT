@@ -1,0 +1,47 @@
+<div class="dsk chat-card" data-actor-id="{{actorId}}" data-hide={{hideData}}>
+    {{> systems/dsk/templates/chat/roll/test-card.html}} {{#if (gt testData.successLevel 0)}}
+
+    <div class="card-content chatModifiers">
+        <b>{{localize "dsk.effect"}}</b>: ...
+        <a class="expand-mods"><i class="fas fa-plus"></i></a>
+        <div>
+            {{{replaceConditions (diceThingsUp preData.source.system.effect)}}}
+        </div>
+    </div>
+    <div class="card-content">
+        <b>{{localize "dsk.castingTime"}}</b>: {{preData.calculatedSpellModifiers.castingTime}}
+    </div>
+    <div class="card-content">
+        <b>{{localize "dsk.duration"}}</b>: {{preData.source.system.duration}}
+    </div>
+    <div class="card-content">
+        <b>{{localize "dsk.range"}}</b>: {{preData.calculatedSpellModifiers.reach}}
+    </div>
+    {{/if}}
+    <div class="card-content" data-tooltip="{{preData.calculatedSpellModifiers.description}}">
+        <b>{{localize "dsk.cost"}}</b>: {{preData.calculatedSpellModifiers.finalcost}} <span class="costCheck"></span>
+    </div>
+    {{#if preData.extensions }}
+    <div class="card-content">
+        <b>{{localize 'extensions'}}</b>: {{#each preData.extensions as |item|}}
+        <a class="entity-link content-link" data-tooltip="{{item.title}}" draggable="true" data-type="Item" data-entity="Item" data-uuid="{{item.uuid}}">{{item.name}}</a>
+        {{/each}}
+    </div>
+    {{/if}} {{#if (or hasAreaTemplate applyEffect)}}
+    <div class="row-section" style="margin-top:10px">
+        {{#if applyEffect}}
+        <div class="col two center">
+            <button class="applyEffect selfButton" data-target="self" data-tooltip="TT.applyEffectCaster">{{localize 'ActiveEffects.applySelf'}}</button>
+        </div>
+        <div class="col two center">
+            <button class="applyEffect selfButton" data-target="target" data-tooltip="TT.applyEffectTargets">{{localize 'ActiveEffects.applyTarget'}}</button>
+        </div>
+        {{/if}}
+        {{#if hasAreaTemplate}}
+        <div class="col two center">
+            <button class="placeTemplate selfButton" data-tooltip="TT.placeTemplate">{{localize 'AoE'}}</button>
+        </div>
+        {{/if}}
+    </div>
+    {{/if}}
+</div>

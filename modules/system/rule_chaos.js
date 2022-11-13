@@ -1,13 +1,9 @@
 
-import DSKStatusEffects from "../status/status_effects.js";
 import DSKUtility from "./dsk_utility.js";
+import SpecialabilityRulesDSK from "./specialability-rules.js";
 
 export default class RuleChaos {
     static regex2h = /\(2H/;
-
-    static async bleedingMessage(actor) {
-        await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format('CHATNOTIFICATION.applyBleeding', { actor: actor.name, actorId: actor.id, tokenId: actor.token ? actor.token.id : "" })))
-    }
 
     static _getFunctionData(ev) {
         return {
@@ -18,6 +14,19 @@ export default class RuleChaos {
                 scene: canvas.scene ? canvas.scene.id : null
             })
         }
+    }
+
+    static multipleDefenseValue(actor, item) {
+        let multipleDefense = -2
+
+        if ((item.type == "dodge" || getProperty(item, "system.combatskill.value") == game.i18n.localize("dsk.dsk.LocalizedIDs.wrestle")) && SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.masterfulDodge")))
+            multipleDefense = -2
+        else if (SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.mightyMasterfulParry")))
+            multipleDefense = -1
+        else if (SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.masterfulParry")))
+            multipleDefense = -2
+
+        return Math.min(0, multipleDefense)
     }
 
     static isYieldedTwohanded(item){
@@ -51,39 +60,6 @@ export default class RuleChaos {
             })
         }
         return update
-    }
-
-    static async calcBleeding(ev) {
-        const { data, actor } = RuleChaos._getFunctionData(ev)
-        if (!actor) return
-
-        const skill = actor.items.find(i => i.name == game.i18n.localize('LocalizedIDs.selfControl') && i.type == "skill");
-        actor.setupSkill(skill, {}, data.token).then(async(setupData) => {
-            const result = await actor.basicTest(setupData)
-
-            if (result.result.successLevel < 2) {
-                const qs = result.result.qualityStep || 0
-                let duration = 7
-                if (result.result.successLevel == 1) {
-                    duration -= Number(qs)
-                } else if (result.successLevel < 1) {
-                    duration += duration
-                }
-                const existing = actor.hasCondition("bleeding")
-                const durationUpdate = RuleChaos._buildDuration(duration)
-
-                if (existing) {
-                    const remaining = game.combat ? (existing.data.duration.startRound || 1) + existing.data.duration.rounds - game.combat.round : existing.data.duration.rounds
-                    if (duration > remaining) await existing.update(durationUpdate)
-                } else {
-                    const bleeding = duplicate(CONFIG.statusEffects.find(x => x.id == "bleeding"))
-                    mergeObject(bleeding, durationUpdate)
-                    await DSKStatusEffects.addCondition(actor, bleeding, 1, false, true)
-                    await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format('CHATNOTIFICATION.gotBleeding', { actor: actor.name })))
-                }
-            }
-
-        });
     }
 
     static increment(ev, item, path, limit = undefined) {

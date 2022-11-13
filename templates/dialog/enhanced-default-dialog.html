@@ -1,0 +1,77 @@
+<div class="row-section">
+    <div class="col fourty"></div>
+    <div class="row-section col sixty">
+        <div class="col five">
+        </div>
+        {{#each characteristics as |item i|}}
+        <div class="col five center" style="max-width: 16.66%;" data-tooltip="{{attrLoc item 'name'}}">
+            <select class="noAppearance" name="characteristics{{i}}">
+                {{#select item}}
+                <option value="mu"> {{localize 'dsk.characteristics.mu.abbr'}}</option>
+                <option value="kl"> {{localize 'dsk.characteristics.kl.abbr'}}</option>
+                <option value="in"> {{localize 'dsk.characteristics.in.abbr'}}</option>
+                <option value="ch"> {{localize 'dsk.characteristics.ch.abbr'}}</option>
+                <option value="ff"> {{localize 'dsk.characteristics.ff.abbr'}}</option>
+                <option value="ge"> {{localize 'dsk.characteristics.ge.abbr'}}</option>
+                <option value="ko"> {{localize 'dsk.characteristics.ko.abbr'}}</option>
+                <option value="kk"> {{localize 'dsk.characteristics.kk.abbr'}}</option>
+                {{/select}}
+            </select>
+        </div>
+        {{/each}}
+        <div class="col five center" data-tooltip="dsk.FW">
+            {{localize 'dsk.CHARAbbrev.FW'}}
+        </div>
+        <div class="col five center" data-tooltip="dsk.qualityStep">
+            {{localize 'dsk.CHARAbbrev.QS'}}
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label>{{localize "dsk.Modifier"}}</label>
+    <div class="row-section">
+        <div class="col five">
+            <input class="quantity-click" type="number" name="testModifier" value="{{testModifier}}" />
+        </div>
+        {{#each characteristics as |item i|}}
+        <div class="col five" data-tooltip="dsk.MODS.partChecks">
+            <input class="quantity-click" type="number" name="ch{{i}}" value="0" />
+        </div>
+        {{/each}}
+        <div class="col five" data-tooltip="dsk.MODS.FW">
+            <input class="quantity-click" type="number" name="fw" value="0" />
+        </div>
+        <div class="col five" data-tooltip="dsk.MODS.QS">
+            <input class="quantity-click" type="number" name="qs" value="0" />
+        </div>
+    </div>
+</div>
+{{#if difficultyLabels}}
+<div class="form-group custom-select">
+    <label>{{localize "Difficulty"}}</label>
+    <select name="testDifficulty">
+        {{selectOptions difficultyLabels selected=testDifficulty localize=true}}  
+    </select>
+</div>
+{{/if}}
+<div class="form-group custom-select">
+    <label>{{localize "dsk.DIALOG.RollMode"}}</label>
+    <select name="rollMode">
+        {{selectOptions rollModes selected=rollMode localize=true}}  
+    </select>
+</div>
+{{#if hasSituationalModifiers}}
+<div class="modifiers form-group custom-select">
+    <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>
+    <select name="situationalModifiers" multiple data-tooltip="dsk.DIALOG.deselectWithStrg">
+        {{#select selectedModifiers}}
+        {{#each situationalModifiers as |mod t|}}
+        <option data-tooltip="{{situationalTooltip mod}}" data-type="{{mod.type}}" {{#if mod.armorPen}}data-armorPen="{{mod.armorPen}}"{{/if}} value="{{mod.value}}" {{#if
+            mod.selected}}selected{{/if}}>
+            {{localize mod.name}} [{{mod.value}} {{mod.type}}]
+        </option>
+        {{/each}}
+        {{/select}}
+    </select>
+</div>
+{{/if}}

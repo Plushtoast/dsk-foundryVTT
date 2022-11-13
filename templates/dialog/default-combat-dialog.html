@@ -1,0 +1,52 @@
+<div class="row-section">
+    <div class="col fourty"></div>
+    <div class="row-section col sixty">
+        <div class="col five">
+        </div>
+        {{#if (or showAttack rangeOptions)}}
+        <div class="col five center" data-tooltip="dsk.MODS.damage">
+            {{localize 'dsk.damage'}}
+        </div>
+        {{/if}}
+    </div>
+</div>
+<div class="form-group">
+    <label>{{localize "dsk.Modifier"}}</label>
+    <div class="row-section">
+        <div class="col five">
+            <input class="quantity-click" type="number" name="testModifier" value="{{testModifier}}" />
+        </div>
+        {{#if (or showAttack rangeOptions)}}
+        <div class="col five">
+            <input type="text" name="damageModifier" value="0" />
+        </div>
+        {{/if}}
+    </div>
+</div>
+<div class="form-group custom-select">
+    <label>{{localize "dsk.DIALOG.RollMode"}}</label>
+    <select name="rollMode">
+        {{selectOptions rollModes selected=rollMode localize=true}}  
+    </select>
+</div>
+{{#if hasSituationalModifiers}}
+<div class="modifiers form-group custom-select">
+    <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>
+    <select name="situationalModifiers" multiple data-tooltip="DIALOG.deselectWithStrg">
+      {{#select selectedModifiers}}
+      {{#each situationalModifiers as |mod t|}}
+      <option data-tooltip="{{situationalTooltip mod}}"  data-type="{{mod.type}}" {{#if mod.specAbId}}data-specAbId="{{mod.specAbId}}"{{/if}} {{#if mod.armorPen}}data-armorPen="{{mod.armorPen}}"{{/if}} value="{{mod.value}}" {{#if mod.selected}}selected{{/if}}>
+        {{localize mod.name}} [{{mod.value}}]
+      </option>
+      {{/each}}
+      {{/select}}
+    </select>
+</div>
+{{/if}} {{#if visionOptions}}
+<div class="form-group custom-select">
+    <label>{{localize "dsk.sight"}}</label>
+    <select name="vision">
+        {{selectOptions visionOptions selected="0" localize=true}}
+    </select>
+</div>
+{{/if}}

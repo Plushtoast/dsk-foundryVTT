@@ -37,6 +37,17 @@
             "type": "RollTable",
             "private": false,
             "flags": { "dsklang": "de"}
+        },
+        {
+            "name": "species",
+            "label": "Rassen",
+            "system": "dsk",
+            "path": "packs/species.db",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "dsklang": "de"
+            }
         }
      ],
     "languages": [
@@ -48,7 +59,7 @@
     ],
     "background": "systems/dsk/icons/githublogo.webp",
     "socket": true,
-    "initiative": "@stats.initiative.value + @stats.initiative.die",
+    "initiative": "@stats.ini.value + @stats.ini.die",
     "gridDistance": 1,
     "gridUnits": "Schritt",
     "primaryTokenAttribute": "stats.LeP",

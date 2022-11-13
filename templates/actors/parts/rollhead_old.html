@@ -1,0 +1,12 @@
+<div class="row-section wrap charBtns">
+    {{#each actor.system.characteristics as |ch c|}}
+    <div data-tooltip="{{attrLoc @key 'name'}}" class="col eight center">
+        {{attrLoc @key 'abbr'}}
+    </div>
+    {{/each}}
+</div>
+<div class="row-section wrap charBtns">
+    {{#each actor.system.characteristics as |ch c|}}
+    <div class="ch-value col eight center" data-char="{{c}}"><a class="d20 die-{{c}}">{{ch.value}}</a></div>
+    {{/each}}
+</div>

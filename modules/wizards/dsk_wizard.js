@@ -1,4 +1,7 @@
+import AdvantageRulesDSK from "../system/advantage-rules.js"
 import DSKUtility from "../system/dsk_utility.js"
+import ItemRulesDSK from "../system/item-rules.js"
+import SpecialabilityRulesDSK from "../system/specialability-rules.js"
 
 export default class WizardDSK extends Application {
     constructor(app) {
@@ -63,7 +66,7 @@ export default class WizardDSK extends Application {
             } else {
                 item = duplicate(item)
                 item.tooltip = game.i18n.localize("dsk.details")
-                item = ItemRulesDSA5.reverseAdoptionCalculation(this.actor, parsed, item)
+                item = ItemRulesDSK.reverseAdoptionCalculation(this.actor, parsed, item)
                 if (item.system.APValue) {
                     item.APunparseable = isNaN(item.system.APValue.value)
                     item.apCost = item.APunparseable ? item.system.APValue.value : parsed.step * Number(item.system.APValue.value)
@@ -109,18 +112,18 @@ export default class WizardDSK extends Application {
                 case "advantage":
                 case "disadvantage":
                     item.system.step.value = Number($(k).attr("data-step"))
-                    item = ItemRulesDSA5.reverseAdoptionCalculation(this.actor, parsed, item)
+                    item = ItemRulesDSK.reverseAdoptionCalculation(this.actor, parsed, item)
 
-                    if (!this.mergeLevels(itemsToAdd, item)) AdvantageRulesDSA5.vantageAdded(this.actor, item)
+                    if (!this.mergeLevels(itemsToAdd, item)) AdvantageRulesDSK.vantageAdded(this.actor, item)
                     break
                 case "specialability":
                     item.system.step.value = Number($(k).attr("data-step"))
 
                     if ($(k).attr("data-free")) item.system.APValue.value = 0
 
-                    item = ItemRulesDSA5.reverseAdoptionCalculation(this.actor, parsed, item)
+                    item = ItemRulesDSK.reverseAdoptionCalculation(this.actor, parsed, item)
 
-                    if (!this.mergeLevels(itemsToAdd, item)) SpecialabilityRulesDSA5.abilityAdded(this.actor, item)
+                    if (!this.mergeLevels(itemsToAdd, item)) SpecialabilityRulesDSK.abilityAdded(this.actor, item)
                     break
                 case "magictrick":
                     this.mergeLevels(itemsToAdd, item)

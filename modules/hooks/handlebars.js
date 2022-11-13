@@ -9,8 +9,9 @@ export function setupHandlebars(){
             return roman[a - 1]
         },
         itemCategory: (a) => {
-            return game.i18n.localize(`ITEM.Type${a.slice(0,1).toUpperCase()}${a.slice(1)}`)
+            return game.i18n.localize(`ITEM.Type${a.slice(0,1).toUpperCase()}${a.slice(1).toLowerCase()}`)
         },
+        diceThingsUp: (a, b) => DSKUtility.replaceDies(a, false),
         concat: (...values) => { return HandlebarsHelpers.concat(...values).string },
         replaceConditions: DSKUtility.replaceConditions,
         attrLoc: (a, b) => { return game.i18n.localize(`dsk.characteristics.${a}.${b}`)},

@@ -1,5 +1,14 @@
+import ItemDSK from "../item/item_dsk.js";
+import DSKStatusEffects from "../status/status_effects.js";
+import AdvantageRulesDSK from "../system/advantage-rules.js";
 import DSK from "../system/config.js";
+import DiceDSK from "../system/dicedsk.js";
+import DSKSoundEffect from "../system/dsk-soundeffect.js";
 import DSKUtility from "../system/dsk_utility.js";
+import RuleChaos from "../system/rule_chaos.js";
+import { tinyNotification } from "../system/view_helper.js";
+import OpposedDSK from "../system/opposeddsk.js";
+import SpecialabilityRulesDSK from "../system/specialability-rules.js";
 
 export default class ActorDSK extends Actor {
     static async create(data, options) {
@@ -33,8 +42,7 @@ export default class ActorDSK extends Actor {
 
             if (this.type == "character" || this.type == "npc") {
                 data.stats.LeP.current = data.stats.LeP.initial + data.characteristics.ko.value * 2;
-                console.log(data.guidevalue)
-                data.stats.AeP.current = (!data.guidevalue || data.guidevalue == "-") ? 0 : this._attrFromCharacteristic(data.guidevalue)
+                data.stats.AeP.current = (!data.guidevalue || data.guidevalue == "-") ? 0 : ActorDSK._attrFromCharacteristic(data.guidevalue, data)
                 data.stats.sk.value =
                     (data.stats.sk.initial || 0) +
                     Math.round((data.characteristics.mu.value + data.characteristics.kl.value + data.characteristics.in.value) / 3) - 10;
@@ -64,7 +72,6 @@ export default class ActorDSK extends Actor {
                 (data.stats.LeP.current + data.stats.LeP.modifier + data.stats.LeP.advances) * data.stats.LeP.multiplier +
                 data.stats.LeP.gearmodifier
             );
-            console.log(data.stats.AeP)
             data.stats.AeP.max =
                 data.stats.AeP.current +
                 data.stats.AeP.modifier +
@@ -77,6 +84,12 @@ export default class ActorDSK extends Actor {
             data.stats.zk.max =
                 data.stats.zk.value + data.stats.zk.modifier + data.stats.zk.gearmodifier;
 
+            let encumbrance = 0
+            data.stats.ini.value += data.stats.ini.gearmodifier - Math.min(4, encumbrance);
+            const baseInit = Number((0.01 * data.stats.ini.value).toFixed(2));
+            data.stats.ini.value *= data.stats.ini.multiplier || 1;
+            data.stats.ini.value = Math.round(data.stats.ini.value) + baseInit;
+
 
         } catch (error) {
             console.error("Something went wrong with preparing actor data: " + error + error.stack);
@@ -84,8 +97,8 @@ export default class ActorDSK extends Actor {
         }
     }
 
-    _calculateCombatSkillValues(i, actorData) {
-        i = this._calculatePW(i, actorData)
+    static _calculateCombatSkillValues(i, actorData) {
+        i = ActorDSK._calculatePW(i, actorData)
         i.system.attack = i.PW
         if (i.system.weapontype == "melee") {
             i.system.parry = Math.round(i.PW * 0.25);
@@ -169,14 +182,45 @@ export default class ActorDSK extends Actor {
 
         mergeObject(system, {
             skillModifiers: {
-
-            },
+                FP: [],
+                step: [],
+                QL: [],
+                TPM: [],
+                FW: [],
+                botch: 20,
+                crit: 1,
+                global: [],
+                conditional: {
+                  AsPCost: [],
+                  KaPCost: [],
+                },
+                feature: {
+                  FP: [],
+                  step: [],
+                  QL: [],
+                  TPM: [],
+                  FW: [],
+                  KaPCost: [],
+                  AsPCost: [],
+                },
+                ...["ahnengabe", "skill"].reduce((prev, x) => {
+                  prev[x] = {
+                    FP: [],
+                    step: [],
+                    QL: [],
+                    TPM: [],
+                    FW: [],
+                  };
+                  return prev;
+                }, {}),
+              },
             repeatingEffects: {
                 startOfRound: {
                     LeP: [],
                     AeP: []
                 },
             },
+            aepModifier: 0,
             stats: {
                 initiative: {
                     multiplier: 1,
@@ -196,9 +240,27 @@ export default class ActorDSK extends Actor {
                 inpain: 0,
                 selfconfidence: 0
             },
+            spellStats: {
+                damage: "0",
+            },
+            meleeStats: {
+                parry: 0,
+                attack: 0,
+                damage: "0",
+                defenseMalus: 0,
+                botch: 20,
+                crit: 1,
+            },
+            rangeStats: {
+                attack: 0,
+                damage: "0",
+                defenseMalus: 0,
+                botch: 20,
+                crit: 1,
+            },
             totalArmor: 0,
             carryModifier: 0,
-            
+
         })
         for (const k of Object.values(system.stats)) k.gearmodifier = 0;
 
@@ -230,33 +292,201 @@ export default class ActorDSK extends Actor {
         return preparedData;
     }
 
-    _perpareItemAdvancementCost(item, systemData) {
+    _perpareItemAdvancementCost(item) {
         item.cost = game.i18n.format("dsk.advancementCost", {
             cost: DSKUtility._calculateAdvCost(item.system.level, item.system.StF),
         });
         item.refund = game.i18n.format("dsk.refundCost", {
             cost: DSKUtility._calculateAdvCost(item.system.level, item.system.StF, 0),
         });
-        item.canAdvance = ActorDSK.canAdvance(systemData);
+        item.canAdvance = this.system.canAdvance;
         return item;
     }
+
+    static _prepareRangeWeapon(item, ammunitions, combatskills, actor) {
+        let skill = combatskills.find((i) => i.name == item.system.combatskill);
+        item.calculatedRange = item.system.rw;
+    
+        let currentAmmo;
+        if (skill) {
+         item.attack = Number(skill.system.attack)  //+ Number(item.system.aw);
+
+   
+          if (item.system.ammunitionType != "-") {
+            if (!ammunitions) ammunitions = actorData.inventory.ammunition.items;
+            item.ammo = ammunitions.filter((x) => x.system.ammunitionType == item.system.ammunitionType);
+    
+            currentAmmo = ammunitions.find((x) => x._id == item.system.currentAmmo);
+            if (currentAmmo) {
+              const rangeMultiplier = Number(currentAmmo.system.rangeMultiplier) || 1;
+              item.calculatedRange = item.calculatedRange
+                .split("/")
+                .map((x) => Math.round(Number(x) * rangeMultiplier))
+                .join("/");
+              item.attack += Number(currentAmmo.system.atmod) || 0;
+              if (currentAmmo.system.ammunitiongroup.value == "mag") {
+                item.ammoMax = currentAmmo.system.mag.max;
+                item.ammoCurrent = currentAmmo.system.mag.value;
+              }
+            }
+          }
+          item.LZ = ActorDSK.calcLZ(item, actor);
+          if (item.LZ > 0) ActorDSK.buildReloadProgress(item);
+        } else {
+          ui.notifications.error(
+            game.i18n.format("dsk.DSKError.unknownCombatSkill", {
+              skill: item.system.combatskill,
+              item: item.name,
+            })
+          );
+        }
+    
+        return this._parseDmg(item, currentAmmo);
+      }
+
+    static _prepareMeleeWeapon(item, combatskills, actorData, wornWeapons = null) {
+        let skill = combatskills.find((i) => i.name == item.system.combatskill);
+        if (skill) {
+          item.attack = Number(skill.system.attack) + Number(item.system.aw);
+          item.parry = skill.system.parry + Number(item.system.vw) +
+            (item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Shields") ? Number(item.system.vw) : 0);
+    
+          item.yieldedTwoHand = RuleChaos.isYieldedTwohanded(item)
+          if (!item.yieldedTwoHand) {
+            if (!wornWeapons)
+              wornWeapons = duplicate(actorData.items).filter(
+                (x) => x.type == "meleeweapon" && x.system.worn.value && x._id != item._id && !RuleChaos.isYieldedTwohanded(x)
+              );
+    
+            if (wornWeapons.length > 0) {
+              item.parry += Math.max(...wornWeapons.map((x) => x.system.vwoffhand));
+              item.attack += Math.max(...wornWeapons.map((x) => x.system.awoffhand));
+            }
+          }
+    
+          let extra = 0
+          if (item.system.worn.wrongGrip) {
+            if (item.yieldedTwoHand) {
+              item.parry -= 1
+              extra += 1
+            }
+          }
+    
+          item = this._parseDmg(item);
+
+          if (extra > 0) {
+            item.extraDamage = extra;
+            item.damageAdd = Roll.safeEval(item.damageAdd + " + " + Number(extra));
+            item.damageAdd = (item.damageAdd > 0 ? "+" : "") + item.damageAdd;
+          }
+        } else {
+          ui.notifications.error(
+            game.i18n.format("dsk.DSKError.unknownCombatSkill", {
+              skill: item.system.combatskill,
+              item: item.name,
+            })
+          );
+        }
+        
+        return item;
+      }
+
+      static _parseDmg(item, modification = undefined) {
+        let parseDamage = new Roll(item.system.tp.replace(/[Ww]/g, "d"), { async: false });
+    
+        let damageDie = "",
+          damageTerm = "",
+          lastOperator = "+";
+        for (let k of parseDamage.terms) {
+          if (k.faces) damageDie = k.number + "d" + k.faces;
+          else if (k.operator) lastOperator = k.operator;
+          else if (k.number) damageTerm += Number(`${lastOperator}${k.number}`);
+        }
+        if (modification) {
+          let damageMod = getProperty(modification, "system.damageMod");
+          if (Number(damageMod)) damageTerm += `+${Number(damageMod)}`;
+          else if (damageMod)
+            item.damageBonusDescription = `, ${damageMod} ${game.i18n.localize("CHARAbbrev.damage")} ${modification.name}`;
+        }
+        if (damageTerm) damageTerm = Roll.safeEval(damageTerm);
+    
+        item.damagedie = damageDie ? damageDie : "0d6";
+        item.damageAdd = damageTerm != "" ? (Number(damageTerm) >= 0 ? "+" : "") + damageTerm : "";
+    
+        return item;
+      }
+
+      static calcLZ(item, actor) {
+        let factor = 1;
+        let modifier = 0;
+        if (item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Throwing Weapons"))
+          modifier = SpecialabilityRulesDSK.abilityStep(actor, game.i18n.localize("dsk.LocalizedIDs.quickdraw")) * -1;
+        else if (
+          item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Crossbows") &&
+          SpecialabilityRulesDSK.hasAbility(
+            actor,
+            `${game.i18n.localize("dsk.LocalizedIDs.quickload")} (${game.i18n.localize("dsk.LocalizedIDs.Crossbows")})`
+          )
+        )
+          factor = 0.5;
+        else {
+          modifier =
+          SpecialabilityRulesDSK.abilityStep(
+              actor,
+              `${game.i18n.localize("dsk.LocalizedIDs.quickload")} (${game.i18n.localize(item.system.combatskill)})`
+            ) * -1;
+        }
+    
+        let reloadTime = `${item.system.lz}`.split("/");
+        if (item.system.ammunitionType == "mag") {
+          let currentAmmo = actor.items.find((x) => x.id == item.system.currentAmmo || x._id == item.system.currentAmmo);
+          let reloadType = 0;
+          if (currentAmmo) {
+            currentAmmo =  DSKUtility.toObjectIfPossible(currentAmmo)
+            if (currentAmmo.system.mag.value <= 0) reloadType = 1;
+          }
+          reloadTime = reloadTime[reloadType] || reloadTime[0];
+        } else {
+          reloadTime = reloadTime[0];
+        }
+    
+        return Math.max(0, Math.round(Number(reloadTime) * factor) + modifier);
+      }
 
     _setOnUseEffect(item) {
         if (getProperty(item, "flags.dsk.onUseEffect")) item.OnUseEffect = true;
     }
 
-    static canAdvance(systemData) {
-        return systemData.canAdvance;
+    static _attrFromCharacteristic(char, actorData) {
+        return actorData.characteristics[char].value
     }
 
-    _attrFromCharacteristic(char) {
-        return this.system.characteristics[char].value
-    }
-
-    _calculatePW(item) {
-        item.PW = this._attrFromCharacteristic(item.system.characteristic1) + this._attrFromCharacteristic(item.system.characteristic2) + 5
+    static _calculatePW(item, actorData) {
+        item.PW = ActorDSK._attrFromCharacteristic(item.system.characteristic1, actorData) + ActorDSK._attrFromCharacteristic(item.system.characteristic2, actorData) + 5 + (item.system.level || 0)
         return item
     }
+
+    static buildReloadProgress(item) {
+        const progress = item.system.reloadTimeprogress / item.LZ;
+        item.title = game.i18n.format("dsk.WEAPON.loading", {
+          status: `${item.system.reloadTimeprogress}/${item.LZ}`,
+        });
+        item.progress = `${item.system.reloadTimeprogress}/${item.LZ}`;
+        if (progress >= 1) {
+          item.title = game.i18n.localize("dsk.WEAPON.loaded");
+        }
+        this.progressTransformation(item, progress);
+      }
+
+      static progressTransformation(item, progress) {
+        if (progress >= 0.5) {
+          item.transformRight = "181deg";
+          item.transformLeft = `${Math.round(progress * 360 - 179)}deg`;
+        } else {
+          item.transformRight = `${Math.round(progress * 360 + 1)}deg`;
+          item.transformLeft = 0;
+        }
+      }
 
     prepareItems(sheetInfo) {
         let actorData = this.toObject(false)
@@ -273,7 +503,7 @@ export default class ActorDSK extends Actor {
         const specAbs = Object.fromEntries(Object.keys(DSK.specialAbilityCategories).map((x) => [x, []]));
 
         const magic = {
-            hasSpells: this.system.isMage,
+            hasSpells: true, //this.system.isMage,
             ahnengabe: [],
             ahnengeschenk: []
         };
@@ -357,20 +587,19 @@ export default class ActorDSK extends Actor {
 
                 switch (i.type) {
                     case "skill":
-                        skills[i.system.group].push(this._calculatePW(this._perpareItemAdvancementCost(i, actorData.system)));
-
+                        skills[i.system.group].push(ActorDSK._calculatePW(this._perpareItemAdvancementCost(i, actorData.system), actorData.system));
                         break;
                     case "information":
                         information.push(i)
                         break
                     case "ahnengabe":
-                        magic[i.type].push(this._perpareItemAdvancementCost(i));
+                        magic[i.type].push(ActorDSK._calculatePW(this._perpareItemAdvancementCost(i), actorData.system));
                         break
                     case "ahnengeschenk":
                         magic[i.type].push(i);
                         break;
                     case "combatskill":
-                        combatskills.push(this._calculateCombatSkillValues(this._perpareItemAdvancementCost(i, actorData.system), this.system));
+                        combatskills.push(ActorDSK._calculateCombatSkillValues(this._perpareItemAdvancementCost(i, actorData.system), actorData.system));
                         break;
                     case "ammunition":
                         i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
@@ -380,7 +609,7 @@ export default class ActorDSK extends Actor {
                         break;
                     case "meleeweapon":
                         i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
-                        i.toggleValue = i.system.worn.value || false;
+                        i.toggleValue = getProperty(i.system, "worn.value") || false;
                         i.toggle = true;
                         this._setOnUseEffect(i);
                         inventory.meleeweapons.items.push(ActorDSK._prepareitemStructure(i));
@@ -390,7 +619,7 @@ export default class ActorDSK extends Actor {
                         break;
                     case "rangeweapon":
                         i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
-                        i.toggleValue = i.system.worn.value || false;
+                        i.toggleValue = getProperty(i.system, "worn.value") || false;
                         i.toggle = true;
                         this._setOnUseEffect(i);
                         inventory.rangeweapons.items.push(ActorDSK._prepareitemStructure(i));
@@ -398,7 +627,7 @@ export default class ActorDSK extends Actor {
                         totalWeight += Number(i.weight);
                         break;
                     case "armor":
-                        i.toggleValue = i.system.worn.value || false;
+                        i.toggleValue = getProperty(i.system, "worn.value") || false;
                         inventory.armor.items.push(ActorDSK._prepareitemStructure(i));
                         inventory.armor.show = true;
                         i.toggle = true;
@@ -425,11 +654,11 @@ export default class ActorDSK extends Actor {
                         i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
                         i.toggle = getProperty(i, "system.worn.wearable") || false;
 
-                        if (i.toggle) i.toggleValue = i.system.worn.value || false;
+                        if (i.toggle) i.toggleValue = getProperty(i.system, "worn.value") || false
 
                         this._setOnUseEffect(i);
-                        inventory[i.system.equipmentType.value].items.push(ActorDSK._prepareitemStructure(i));
-                        inventory[i.system.equipmentType.value].show = true;
+                        inventory[i.system.category].items.push(ActorDSK._prepareitemStructure(i));
+                        inventory[i.system.category].show = true;
                         totalWeight += Number(i.weight);
                         break;
                     case "advantage":
@@ -488,9 +717,9 @@ export default class ActorDSK extends Actor {
             totalWeight,
             armorSum: totalArmor,
             carrycapacity,
-            wornRangeWeapons: rangeweapons,
+            wornRangedWeapons: rangeweapons,
             guidevalues,
-            wornMeleeweapons: meleeweapons,
+            wornMeleeWeapons: meleeweapons,
             advantages,
             disadvantages,
             specAbs,
@@ -498,7 +727,7 @@ export default class ActorDSK extends Actor {
             combatskills,
             wornArmor: armor,
             inventory,
-            canAdvance: ActorDSK.canAdvance(actorData),
+            canAdvance: this.system.canAdvance,
             sheetLocked: actorData.system.sheetLocked,
             magic,
             allSkillsLeft: {
@@ -512,6 +741,291 @@ export default class ActorDSK extends Actor {
             schips
         }
     }
+
+    setupWeapon(item, mode, options, tokenId) {
+        options["mode"] = mode;
+        return ItemDSK.getSubClass(item.type).setupDialog(null, options, item, this, tokenId);
+      }
+
+    setupSpell(spell, options = {}, tokenId) {
+        return ItemDSK.getSubClass(spell.type).setupDialog(null, options, spell, this, tokenId);
+      }
+
+    static _prepareitemStructure(item) {
+        const enchants = getProperty(item, "flags.dsk.enchantments");
+        if (enchants && enchants.length > 0) {
+            item.enchantClass = "rar";
+        } else if (item.effects.length > 0) {
+            item.enchantClass = "common"
+        }
+        return item;
+    }
+
+    async checkEnoughXP(cost) {
+        if (!this.system.canAdvance) return true;
+        if (isNaN(cost) || cost == null) return true;
+
+        if (Number(this.system.details.experience.total) - Number(this.system.details.experience.spent) >= cost) {
+            return true;
+        } else if (Number(this.system.details.experience.total == 0)) {
+            let template = `<p>${game.i18n.localize("dsk.DSKError.zeroXP")}</p><label>${game.i18n.localize(
+                "dsk.APValue"
+            )}: </label><input type="number" name="APsel" value="150"/>`;
+            let newXp = 0;
+            let result = false;
+
+            [result, newXp] = await new Promise((resolve, reject) => {
+                new Dialog({
+                    title: game.i18n.localize("dsk.DSKError.NotEnoughXP"),
+                    content: template,
+                    default: "yes",
+                    buttons: {
+                        Yes: {
+                            icon: '<i class="fa fa-check"></i>',
+                            label: game.i18n.localize("dsk.yes"),
+                            callback: (dlg) => {
+                                resolve([true, dlg.find('[name="APsel"]')[0].value]);
+                            },
+                        },
+                        cancel: {
+                            icon: '<i class="fas fa-times"></i>',
+                            label: game.i18n.localize("dsk.cancel"),
+                            callback: () => {
+                                resolve([false, 0]);
+                            },
+                        },
+                    },
+                }).render(true);
+            });
+            if (result) {
+                await this.update({ "system.details.experience.total": Number(newXp) });
+                return true;
+            }
+        }
+        ui.notifications.error(game.i18n.localize("dsk.DSKError.NotEnoughXP"));
+        return false;
+    }
+
+    getSkillModifier(name, sourceType) {
+        let result = [];
+        const keys = ["FP", "step", "QL", "TPM", "FW"];
+        for (const k of keys) {
+          const type = k == "step" ? "" : k;
+          result.push(
+            ...this.system.skillModifiers[k]
+              .filter((x) => x.target == name)
+              .map((f) => {
+                return {
+                  name: f.source,
+                  value: f.value,
+                  type,
+                };
+              })
+          );
+          if (this.system.skillModifiers[sourceType]) {
+            result.push(
+              ...this.system.skillModifiers[sourceType][k].map((f) => {
+                return {
+                  name: f.source,
+                  value: f.value,
+                  type,
+                };
+              })
+            );
+          }
+        }
+        return result;
+      }
+
+    setupSkill(skill, options = {}, tokenId) {
+        return ItemDSK.getSubClass(skill.type).setupDialog(null, options, skill, this, tokenId);
+      }
+
+    static prepareMag(item) {
+        if (item.system.ammunitiongroup == "mag") {
+            item.structureMax = item.system.mag.max;
+            item.structureCurrent = item.system.mag.value;
+        }
+        return item;
+    }
+
+    async _updateAPs(APValue, dataUpdate = {}) {
+        if (this.system.canAdvance) {
+            if (!isNaN(APValue) && !(APValue == null)) {
+                const ap = Number(APValue);
+                dataUpdate["system.details.experience.spent"] = Number(this.system.details.experience.spent) + ap;
+                await this.update(dataUpdate);
+                const msg = game.i18n.format(ap > 0 ? "dsk.advancementCost" : "dsk.refundCost", { cost: Math.abs(ap) });
+                tinyNotification(msg);
+            } else {
+                ui.notifications.error(game.i18n.localize("dsk.DSKError.APUpdateError"));
+            }
+        }
+    }
+
+    setupCharacteristic(characteristicId, options = {}, tokenId) {
+        let char = this.system.characteristics[characteristicId];
+        let title = game.i18n.localize(`dsk.characteristics.${characteristicId}.name`) + " " + game.i18n.localize("dsk.probe");
+    
+        let testData = {
+          opposable: false,
+          source: {
+            type: "char",
+            system: {
+                characteristic1: characteristicId,
+                characteristic2: characteristicId
+            },
+          },
+          extra: {
+            characteristicId,
+            actor: this.toObject(false),
+            options,
+            speaker: ItemDSK.buildSpeaker(this, tokenId)
+          },
+        };
+    
+        let dialogOptions = {
+          title,
+          template: "/systems/dsk/templates/dialog/characteristic-dialog.html",
+          data: {
+            rollMode: options.rollMode,
+            modifier: options.modifier || 0,
+          },
+          callback: (html, options = {}) => {
+            cardOptions.rollMode = html.find('[name="rollMode"]').val();
+            testData.situationalModifiers = ActorDSK._parseModifiers(html);
+            mergeObject(testData.extra.options, options);
+            return { testData, cardOptions };
+          },
+        };
+    
+        let cardOptions = this._setupCardOptions("systems/dsk/templates/chat/roll/characteristic-card.html", title, tokenId);
+    
+        return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions });
+      }
+
+      _setupCardOptions(template, title, tokenId) {
+        const token = game.canvas.tokens.get(tokenId)
+        let cardOptions = {
+          speaker: {
+            alias: token ? token.name : this.prototypeToken.name,
+            actor: this.id,
+          },
+          title,
+          template,
+          flags: {
+            img: this.prototypeToken.randomImg ? this.img : this.prototypeToken.img,
+          },
+        };
+        if (this.token) {
+          cardOptions.speaker.alias = this.token.name;
+          cardOptions.speaker.token = this.token.id;
+          cardOptions.speaker.scene = canvas.scene.id;
+          cardOptions.flags.img = this.token.img;
+        } else {
+          let speaker = ChatMessage.getSpeaker();
+          if (speaker.actor == this.id) {
+            cardOptions.speaker.alias = speaker.alias;
+            cardOptions.speaker.token = speaker.token;
+            cardOptions.speaker.scene = speaker.scene;
+            cardOptions.flags.img = speaker.token ? canvas.tokens.get(speaker.token).img : cardOptions.flags.img;
+          }
+        }
+        return cardOptions;
+      }
+
+      static _parseModifiers(html, search) {
+        let res = [];
+        html.find('[name="situationalModifiers"] option:selected').each(function () {
+          const val = $(this).val();
+          let data = {
+            name: $(this).text().trim().split("[")[0],
+            value: isNaN(val) ? val : Number(val),
+            type: $(this).attr("data-type"),
+          };
+          if (data.type == "dmg") {
+            data.damageBonus = data.value;
+            data.value = 0;
+          }
+          if ($(this).attr("data-specAbId")) data.specAbId = $(this).attr("data-specAbId");
+          if ($(this).attr("data-armorPen")) data.armorPen = $(this).attr("data-armorPen");
+    
+          res.push(data);
+        });
+        res.push({
+          name: game.i18n.localize("dsk.manual"),
+          value: Number(html.find('[name="testModifier"]').val()),
+          type: "",
+        });
+        return res;
+      }
+
+      async consumeAmmunition(testData) {
+        if (testData.extra.ammo && !testData.extra.ammoDecreased) {
+          testData.extra.ammoDecreased = true;
+    
+          if (testData.extra.ammo._id) {
+            let ammoUpdate = { _id: testData.extra.ammo._id };
+            if (testData.extra.ammo.system.ammunitionType == "mag") {
+              if (testData.extra.ammo.system.mag.value <= 0) {
+                testData.extra.ammo.system.quantity--;
+                ammoUpdate["system.quantity"] = testData.extra.ammo.system.quantity;
+                ammoUpdate["system.mag.value"] = testData.extra.ammo.system.mag.max - 1;
+              } else {
+                ammoUpdate["system.mag.value"] = testData.extra.ammo.system.mag.value - 1;
+              }
+            } else {
+              testData.extra.ammo.system.quantity--;
+              ammoUpdate["system.quantity"] = testData.extra.ammo.system.quantity;
+            }
+            await this.updateEmbeddedDocuments("Item", [ammoUpdate, { _id: testData.source._id, "system.reloadTimeprogress": 0 }]);
+          }
+        } else if (
+          (testData.source.type == "rangeweapon" ||
+            (testData.source.type == "trait" && testData.source.system.traitType.value == "rangeAttack")) &&
+          !testData.extra.ammoDecreased
+        ) {
+          testData.extra.ammoDecreased = true;
+          await this.updateEmbeddedDocuments("Item", [{ _id: testData.source._id, "system.reloadTimeprogress": 0 }]);
+        } else if (["ahnengabe"].includes(testData.source.type) && testData.extra.speaker.token != "emptyActor") {
+          await this.updateEmbeddedDocuments("Item", [
+            {
+              _id: testData.source._id,
+              "system.castingTime.progress": 0,
+              "system.castingTime.modified": 0,
+            },
+          ]);
+        }
+      }
+
+      async basicTest({ testData, cardOptions }, options = {}) {
+        testData = await DiceDSK.rollDices(testData, cardOptions);
+        let result = await DiceDSK.rollTest(testData);
+    
+        if (testData.extra.options.other) {
+          if (!result.other) result.other = [];
+    
+          result.other.push(...testData.extra.options.other);
+        }
+    
+        result.postFunction = "basicTest";
+    
+        if (game.user.targets.size) {
+          cardOptions.isOpposedTest = testData.opposable;
+          const opposed = ` - ${game.i18n.localize("dsk.Opposed")}`;
+          if (cardOptions.isOpposedTest && cardOptions.title.match(opposed + "$") != opposed) cardOptions.title += opposed;
+        }
+    
+        await this.consumeAmmunition(testData);
+    
+        if (!options.suppressMessage) {
+          const msg = await DiceDSK.renderRollCard(cardOptions, result, options.rerenderMessage);
+          await OpposedDSK.handleOpposedTarget(msg);
+          result.messageId = msg.id;
+        }
+    
+        return { result, cardOptions, options };
+      }
 
     tokenScrollingText(texts) {
         const tokens = this.isToken ? [this.token?.object] : this.getActiveTokens(true);
@@ -651,5 +1165,55 @@ export default class ActorDSK extends Actor {
         for (let token of tokens) {
             if (token.combatant) await token.combatant.update({ defeated: dead });
         }
+    }
+
+    async _dependentEffects(statusId, effect, delta) {
+        const effectData = duplicate(effect);
+    
+        if (effectData.flags.dsk.value == 4) {
+          if (statusId == "inpain")
+            await this.initResistPainRoll()
+          else if (["encumbered", "stunned", "feared", "confused", "trance"].includes(statusId))
+            await this.addCondition("incapacitated");
+          else if (statusId == "paralysed")
+            await this.addCondition("rooted");
+          else if (["drunken", "exhaustion"].includes(statusId)) {
+            await this.addCondition("stunned");
+            await this.removeCondition(statusId);
+          }
+        }
+    
+        if (statusId == "dead" && game.combat) await this.markDead(true);
+    
+        if (statusId == "unconscious") await this.addCondition("prone");
+    
+        if (
+          delta > 0 &&
+          statusId == "inpain" &&
+          !this.hasCondition("bloodrush") &&
+          AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.frenzy"))
+        ) {
+          await this.addCondition("bloodrush");
+          const msg = DSKUtility.replaceConditions(
+            `${game.i18n.format("CHATNOTIFICATION.gainsBloodrush", {
+              character: "<b>" + this.name + "</b>",
+            })}`
+          );
+          ChatMessage.create(DSKUtility.chatDataSetup(msg));
+        }
+      }
+
+    async addCondition(effect, value = 1, absolute = false, auto = true) {
+        if (effect == "bleeding") return await RuleChaos.bleedingMessage(this);
+    
+        return await DSKStatusEffects.addCondition(this, effect, value, absolute, auto);
+      }
+
+    async removeCondition(effect, value = 1, auto = true, absolute = false) {
+        return await DSKStatusEffects.removeCondition(this, effect, value, auto, absolute);
+    }
+    
+    hasCondition(conditionKey) {
+        return DSKStatusEffects.hasCondition(this, conditionKey);
     }
 }

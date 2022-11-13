@@ -8,7 +8,7 @@ import RuleChaos from "./rule_chaos.js"
 export default class DSKChatListeners {
     static chatListeners(html) {
         html.on('click', '.openJournalBrowser', () => game.dsk.apps.journalBrowser.render(true))
-        let helpButton = $(`<a class="button showHelp" data-tooltip="${game.i18n.localize('HELP.showHelp')}"><i class="fas fa-question"></i></a>`)
+        let helpButton = $(`<a class="button showHelp" data-tooltip="${game.i18n.localize('dsk.HELP.showHelp')}"><i class="fas fa-question"></i></a>`)
         helpButton.click(() => { DSKChatListeners.getHelp() })
         $(html.find('.control-buttons')).prepend(helpButton)
         html.on('click', '.showPatchViewer', () => showPatchViewer())
@@ -35,10 +35,10 @@ export default class DSKChatListeners {
 
     static getHelp() {
             let msg = DSK.helpContent.map(x => `<h2>${game.i18n.localize(`HELP.${x.name}`)}</h2>
-            <p><b>${game.i18n.localize("HELP.command")}</b>: ${x.command}</p>
-            <p><b>${game.i18n.localize("HELP.example")}</b>: ${x.example}</p>
-            <p><b>${game.i18n.localize("Description")}</b>: ${game.i18n.localize(`HELP.descr${x.name}`)}`).join("") + `<br>
-            <p>${game.i18n.localize("HELP.default")}</p>`
+            <p><b>${game.i18n.localize("dsk.HELP.command")}</b>: ${x.command}</p>
+            <p><b>${game.i18n.localize("dsk.HELP.example")}</b>: ${x.example}</p>
+            <p><b>${game.i18n.localize("dsk.description")}</b>: ${game.i18n.localize(`HELP.descr${x.name}`)}`).join("") + `<br>
+            <p>${game.i18n.localize("dsk.HELP.default")}</p>`
         ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
     }
 

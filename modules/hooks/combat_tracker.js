@@ -38,8 +38,8 @@ export class DSKCombatTracker extends CombatTracker {
                 let remainders = []
                 if (combatant.actor) {
                     for (const x of combatant.actor.items) {
-                        if (x.type == "rangeweapon" && x.system.worn.value && x.system.reloadTime.progress > 0) {
-                            const wpn = { name: x.name, remaining: ActorDSK.calcLZ(x, combatant.actor) - x.system.reloadTime.progress }
+                        if (x.type == "rangeweapon" && x.system.worn.value && x.system.reloadTimeprogress > 0) {
+                            const wpn = { name: x.name, remaining: ActorDSK.calcLZ(x, combatant.actor) - x.system.reloadTimeprogress }
                             if (wpn.remaining > 0) remainders.push(wpn)
                         } else if (["spell", "liturgy"].includes(x.type) && x.system.castingTime.modified > 0) {
                             const wpn = { name: x.name, remaining: x.system.castingTime.modified - x.system.castingTime.progress }
@@ -50,7 +50,7 @@ export class DSKCombatTracker extends CombatTracker {
                 remainders = remainders.sort((a, b) => a.remaining - b.remaining)
 
                 if (remainders.length > 0) {
-                    turn.ongoings = `${game.i18n.localize('COMBATTRACKER.ongoing')}\n${remainders.map((x) => `${x.name} - ${x.remaining}`).join("\n")}`
+                    turn.ongoings = `${game.i18n.localize('dsk.COMBATTRACKER.ongoing')}\n${remainders.map((x) => `${x.name} - ${x.remaining}`).join("\n")}`
 
                 turn.ongoing = remainders[0].remaining
             }
@@ -145,6 +145,11 @@ export class DSKCombatant extends Combatant {
     }
 }
 
+Hooks.on("preCreateCombatant", (data, options, user) => {
+    const actor = DSKUtility.getSpeaker({actor: data.actorId, scene: data.sceneId, token: data.token_id})
+    if(getProperty(actor.system, "merchant.merchantType") == "loot") return false
+})
+
 class RepeatingEffectsHelper {
     static async updateCombatHook(combat, updateData, x, y) {
         if (!updateData.round && !updateData.turn)
@@ -175,19 +180,19 @@ class RepeatingEffectsHelper {
     }
 
     static async startOfRoundEffects(turn){
-        const regenerationAttributes = ["wounds", "astralenergy", "karmaenergy"]
+        const regenerationAttributes = ["LeP", "AeP"]
         for(const attr of regenerationAttributes){
             for (const ef of turn.actor.system.repeatingEffects.startOfRound[attr]){
                 if(getProperty(turn.actor.system.repeatingEffects, `disabled.${attr}`)) continue
 
                 const damageRoll = await new Roll(ef.value).evaluate({ async: true })
                 const damage = await damageRoll.render()
-                const type = game.i18n.localize(damageRoll.total > 0 ? "CHATNOTIFICATION.regenerates" : "CHATNOTIFICATION.getsHurt")
+                const type = game.i18n.localize(damageRoll.total > 0 ? "dsk.CHATNOTIFICATION.regenerates" : "dsk.CHATNOTIFICATION.getsHurt")
                 const applyDamage = `${turn.actor.name} ${type} ${game.i18n.localize(attr)} ${damage}`
                 await ChatMessage.create(DSKUtility.chatDataSetup(applyDamage))
 
                 if (attr == "wounds") await turn.actor.applyDamage(damageRoll.total * -1)
-                else await turn.actor.applyMana(damageRoll.total * -1, attr == "astralenergy" ? "AsP" : "KaP")
+                else await turn.actor.applyMana(damageRoll.total * -1)
             }
         }
     }
@@ -195,7 +200,7 @@ class RepeatingEffectsHelper {
     static async applyBleeding(turn) {
         if(turn.actor.system.status.wounds.value <= 0) return 
 
-        await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format('CHATNOTIFICATION.bleeding', { actor: turn.actor.name })))
+        await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format('dsk.CHATNOTIFICATION.bleeding', { actor: turn.actor.name })))
         await turn.actor.applyDamage(1)
     }
 
@@ -208,7 +213,7 @@ class RepeatingEffectsHelper {
         const damageRoll = await new Roll(die).evaluate({ async: true })
         const damage = await damageRoll.render()
 
-        await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format(`CHATNOTIFICATION.burning.${step}`, { actor: turn.actor.name, damage })))
+        await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format(`dsk.CHATNOTIFICATION.burning.${step}`, { actor: turn.actor.name, damage })))
         await turn.actor.applyDamage(damageRoll.total)
     }
 }
