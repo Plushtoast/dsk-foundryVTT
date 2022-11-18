@@ -1,0 +1,99 @@
+<form class="skill-test">
+    <div class="row-section">
+        <div class="col fourty"></div>
+        <div class="row-section col sixty">
+            <div class="col">
+
+            </div>
+            <div class="col center">
+                {{localize 'dsk.LeP'}}
+            </div>
+            {{#if showAepModifier}}
+            <div class="col center">
+                {{localize 'dsk.AsP'}}
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>{{localize "dsk.Modifier"}}</label>
+        <div class="row-section">
+            <div class="col">
+                <input class="quantity-click" type="number" name="testModifier" value="{{testModifier}}" />
+            </div>
+            <div class="col">
+                <input class="quantity-click" type="number" name="LePModifier" value="0" />
+            </div>
+            {{#if showAepModifier}}
+            <div class="col">
+                <input class="quantity-click" type="number" name="AsPModifier" value="0" />
+            </div>
+            {{/if}} 
+        </div>
+
+    </div>
+
+    <div class="form-group custom-select">
+        <label>{{localize "dsk.DIALOG.RollMode"}}</label>
+        <select name="rollMode">
+            {{selectOptions rollModes selected=rollMode localize=true}}
+        </select>
+    </div>
+
+    <div class="form-group custom-select">
+        <label>{{localize "dsk.camplocation"}}</label>
+        <select name="regnerationCampLocations">
+            {{selectOptions regnerationCampLocations selected=0 localize=true}}  
+        </select>
+    </div>
+
+    <div class="form-group custom-select">
+        <label>{{localize "dsk.interruption"}}</label>
+        <select name="regenerationInterruptOptions">
+            {{selectOptions regenerationInterruptOptions selected=0 localize=true}}  
+        </select>
+    </div>
+
+    <div class="form-group custom-select">
+        <label>{{localize "dsk.badEnvironment"}} (x 0.5)</label>
+        <input type="checkbox" name="badEnvironment" value="1">
+    </div>
+    {{#if hasSituationalModifiers}}
+    <div class="modifiers form-group custom-select">
+        <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>
+        <select name="situationalModifiers" multiple data-tooltip="dsk.DIALOG.deselectWithStrg">
+        {{#select selectedModifiers}}
+        {{#each situationalModifiers as |mod t|}}
+        <option data-tooltip="{{situationalTooltip mod}}" data-type="{{mod.type}}" value="{{mod.value}}" {{#if
+            mod.selected}}selected{{/if}}>
+            {{localize mod.name}} [{{mod.value}} {{mod.type}}]
+        </option>
+        {{/each}}
+        {{/select}}
+    </select>
+    </div>
+    {{/if}}
+
+    {{#if showAepModifier}}
+        <div class="form-group custom-select">
+            <label>{{localize 'dsk.CHARAbbrev.LEP'}}</label>
+            <input type="checkbox" name="regenerateLeP" value="1" checked="checked">
+        </div>
+    {{else}}
+        <div class="form-group custom-select" hidden>
+            <label hidden>nur LeP</label>
+            <input type="checkbox" name="regenerateLeP" value="1" checked="checked" hidden>
+        </div>    
+    {{/if}}
+    
+    {{#if showAepModifier}}
+        <div class="form-group custom-select">
+            <label>{{localize 'dsk.CHARAbbrev.AeP'}}</label>
+            <input type="checkbox" name="regenerateAeP" value="1" checked="checked">
+        </div>    
+    {{/if}}
+
+
+    <div class="roll-dialog-tag">regeneration</div>
+</form>

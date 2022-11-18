@@ -1,0 +1,16 @@
+<div class="card-content test-data" data-actor-id="{{actorId}}">
+    <b><i class="fas fa-dice"></i> {{title}}</b>
+    <div class="card-content hideAnchor">
+        <b>{{localize "dsk.description"}}</b>: {{{result}}}
+    </div>
+    {{#if hasEffect}}
+    <!--div class="row-section" style="margin-top:10px">
+        <div class="col center">
+            <button class="applyTableEffect selfButton" data-target="self">{{localize 'dsk.ActiveEffects.apply'}}</button>
+        </div>
+        <div class="col two center">
+            <button class="applyTableEffect selfButton" data-target="target" data-tooltip="dsk.TT.applyEffectTargets">{{localize 'dsk.ActiveEffects.applyTarget'}}</button>
+        </div>
+    </div-->
+    {{/if}}
+</div>

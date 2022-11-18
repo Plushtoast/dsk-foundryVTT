@@ -52,16 +52,16 @@ export default class DSKPayment {
         for (let m of money) {
             switch (m.name) {
                 case "Money-D":
-                    m.system.quantity.value = coins.D
+                    m.system.quantity = coins.D
                     break
                 case "Money-S":
-                    m.system.quantity.value = coins.S
+                    m.system.quantity = coins.S
                     break
                 case "Money-H":
-                    m.system.quantity.value = coins.H
+                    m.system.quantity = coins.H
                     break
                 case "Money-K":
-                    m.system.quantity.value = coins.K
+                    m.system.quantity = coins.K
                     break
             }
         }
@@ -175,7 +175,7 @@ export default class DSKPayment {
 
             for (const [key, value] of Object.entries(coins)) {
                 if (value > 0)
-                    res.push(`<span class="nobr">${value} <span data-tooltip="${game.i18n.localize(`Money-${key}`)}" class="chatmoney money-${key}"></span></span>`)
+                    res.push(`<span class="nobr">${value} <span data-tooltip="Money-${key}" class="chatmoney money-${key}"></span></span>`)
         }
         return res.join(", ")
     }

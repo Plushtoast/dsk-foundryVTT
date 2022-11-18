@@ -2,6 +2,7 @@ import ActorDSK from "../actor/actor_dsk.js"
 import DSKDialog from "../dialog/dialog-dsk.js"
 import DSKActiveEffectConfig from "../status/active_effects.js"
 import DSKStatusEffects from "../status/status_effects.js"
+import DSKTables from "../tables/dsktables.js"
 import AdvantageRulesDSK from "./advantage-rules.js"
 import DSK from "./config.js"
 import DSKSoundEffect from "./dsk-soundeffect.js"
@@ -135,9 +136,11 @@ export default class DiceDSK{
             case "regenerate":
                 rollResults = await this.rollRegeneration(testData)
                 break
+            case "trait":
+                rollResults = testData.mode == "damage" ? await this.rollDamage(testData) : await this.rollCombatTrait(testData)
+                break
             case "meleeweapon":
             case "rangeweapon":
-                if (testData.mode == "parry") await this.updateDefenseCount(testData)
                 rollResults = testData.mode == "damage" ? await this.rollDamage(testData) : await this.rollWeapon(testData)
                 break
             case "poison":
@@ -149,6 +152,8 @@ export default class DiceDSK{
         mergeObject(rollResults, deepClone(testData.extra))
         return rollResults
     }
+
+    
 
     static async rollAttribute(testData) {
         this._appendSituationalModifiers(testData, game.i18n.localize("dsk.Difficulty"), testData.testDifficulty)
@@ -298,48 +303,20 @@ export default class DiceDSK{
     }
 
     static async detailedWeaponResult(result, testData, source) {
-        const isAttack = testData.mode == "attack"
-        const isMelee = source.type == "meleeweapon" || getProperty(source, "system.traitType.value") == "meleeAttack"
-        switch (result.successLevel) {
-            case 3:
-                if (isAttack) {
-                    if(await DSKTables.tableEnabledFor("criticalAttack")){
-                        result.description += DSKTables.rollCritBotchButton("criticalAttack", false, testData)
-                    }else{
-                        result.description += DSKTables.defaultAttackCrit(true)
-                        result.doubleDamage = true
-                    }
-                    result.halfDefense = true
-                } else {
-                    if (testData.isRangeDefense && await DSKTables.tableEnabledFor("criticalRangeDefense")){
-                        result.description += DSKTables.rollCritBotchButton("criticalRangeDefense", false, testData)
-                    }
-                    else if(await DSKTables.tableEnabledFor("criticalMeleeDefense")){
-                        result.description += DSKTables.rollCritBotchButton("criticalMeleeDefense", false, testData)
-                    }else{
-                        result.description += DSKTables.defaultParryCrit()
-                    }
-                }
-                break
-            case -3:
-                const isWeaponless = getProperty(source, "system.combatskill") == game.i18n.localize("dsk.LocalizedIDs.wrestle") || source.type == "trait"
-                if (isAttack && isMelee && await DSKTables.tableEnabledFor("Melee"))
-                    result.description += DSKTables.rollCritBotchButton("Melee", isWeaponless, testData)
-                else if (isAttack && await DSKTables.tableEnabledFor("Range"))
-                    result.description += DSKTables.rollCritBotchButton("Range", false, testData)
-                else if (!isAttack && await DSKTables.tableEnabledFor("Defense"))
-                    result.description += DSKTables.rollCritBotchButton("Defense", isWeaponless, testData)
-                else
-                    result.description += await DSKTables.defaultBotch()
-                break
-            case 2:
-                if (isAttack) {
-                    result.description += DSKTables.defaultAttackCrit(false)
-                    result.halfDefense = true
-                }
-                break
-            case -2:
-                break
+        if(testData.mode != "attack") return
+            switch (result.successLevel) {
+                case 2:
+                    result.description += DSKTables.defaultAttackCrit(true)
+                    result.doubleDamage = true                    
+                    break
+                case -2:
+                    const isMelee = source.type == "meleeweapon" || getProperty(source, "system.traitType") == "meleeAttack"
+                    const isWeaponless = getProperty(source, "system.combatskill") == game.i18n.localize("dsk.LocalizedIDs.wrestle") || source.type == "trait"
+                    if (isMelee)
+                        result.description += DSKTables.rollCritBotchButton("Melee", isWeaponless, testData)
+                    else
+                        result.description += DSKTables.rollCritBotchButton("Range", false, testData)
+                    break
         }
     }
 
@@ -437,8 +414,13 @@ export default class DiceDSK{
             }
         }
 
+        if(result.qualityStep > 0){
+            damage+= result.qualityStep
+            damageBonusDescription.push(game.i18n.localize("dsk.qualityStep") + " " + result.qualityStep)
+        }
+
         if (doubleDamage) {
-            damage = damage * 2
+            damage = damage * 3
             damageBonusDescription.push(game.i18n.localize("dsk.doubleDamage"))
         }
         for (const el of dmgMultipliers) {
@@ -493,8 +475,7 @@ export default class DiceDSK{
 
         let modifiers = this._situationalModifiers(testData)
         const pcms = this._situationalPartCheckModifiers(testData, "TPM")
-        console.log(testData.source)
-        let basePW = testData.source.attack || ((testData.source.system.level == undefined ? -5 : testData.source.system.level + 5)
+        let basePW = testData.source.attack || Number(testData.source.system.at) || ((testData.source.system.level == undefined ? -5 : testData.source.system.level + 5)
             + testData.extra.actor.system.characteristics[testData.source.system.characteristic1].value
             + testData.extra.actor.system.characteristics[testData.source.system.characteristic2].value)
         let pw = basePW + this._situationalModifiers(testData, "FW") 
@@ -577,7 +558,7 @@ export default class DiceDSK{
                 return {
                     char: testData.source.system[`characteristic${x + 1}`],
                     res: roll.terms[x * 2].results[0].result,
-                    tar: testData.extra.actor.system.characteristics[testData.source.system[`characteristic${x + 1}`]].value
+                    tar: testData.extra.actor.system.characteristics[testData.source.system[`characteristic${x + 1}`]]?.value
                 }
             }),
             qualityStep,
@@ -699,7 +680,8 @@ export default class DiceDSK{
     }
 
     static getSuccessDescription(successLevel) {
-        return game.i18n.localize(["dsk.AstoundingFailure", "dsk.CriticalFailure", "dsk.Failure", "", "dsk.Success", "dsk.CriticalSuccess", "dsk.AstoundingSuccess"][successLevel + 3])
+        console.log(successLevel)
+        return game.i18n.localize(["dsk.CriticalFailure", "dsk.Failure", "", "dsk.Success", "dsk.CriticalSuccess"][successLevel + 2])
     }
 
     static async showDiceSoNice(roll, rollMode) {
@@ -791,6 +773,40 @@ export default class DiceDSK{
         }
     }
 
+
+    static async rollCombatTrait(testData) {
+        let source = testData.source //.system == undefined ? testData.source : testData.source.system
+        const isMelee = source.system.traitType == "meleeAttack"
+        let weapon = source
+        if (isMelee) {
+
+            this._appendSituationalModifiers(
+                testData,
+                game.i18n.localize("dsk.narrowSpace"),
+                this._getNarrowSpaceModifier(weapon, testData)
+            )
+        } else {
+            this._appendSituationalModifiers(
+                testData,
+                game.i18n.localize("dsk.distance"),
+                DSK.rangeMods[testData.rangeModifier || "medium"].attack
+            )
+        }
+        let result = await this._roll2D20(testData)
+
+        await this.detailedWeaponResult(result, testData, source)
+        
+        if (testData.mode == "attack" && result.successLevel > 0)
+            await DiceDSK.evaluateDamage(testData, result, weapon, !isMelee, result.doubleDamage)
+
+        result["rollType"] = "weapon"
+        const effect = DiceDSK.parseEffect(weapon)
+
+        if (effect) result["parsedEffect"] = effect
+
+        return result
+    }
+
     static async rollWeapon(testData) {
         let weapon
 
@@ -837,6 +853,85 @@ export default class DiceDSK{
         return result
     }
 
+    static async rollRegeneration(testData) {
+        let modifier = this._situationalModifiers(testData)
+        let roll = testData.roll
+        let chars = []
+
+        let result = {
+            rollType: "regenerate",
+            preData: testData,
+            modifiers: modifier,
+            extra: {},
+        }
+
+        const attrs = []
+        if (testData.regenerateLeP) attrs.push("LeP")
+        if (testData.extra.actor.system.isMage && testData.regenerateAsP) attrs.push("AeP")
+        let index = 0
+
+        const isSick = testData.extra.actor.effects.some((x) => getProperty(x, "flags.core.statusId") == "sick")
+        if (isSick) {
+            this._appendSituationalModifiers(testData, game.i18n.localize("dsk.CONDITION.sick"), "*0")
+            for (let k of attrs) {
+                chars.push({ char: k, res: 0, die: "d6" })
+                result[k] = 0
+                index += 2
+            }
+        } else {
+            for (let k of attrs) {
+                this._appendSituationalModifiers(
+                    testData,
+                    game.i18n.localize(`dsk.LocalizedIDs.regeneration${k}`),
+                    AdvantageRulesDSK.vantageStep(testData.extra.actor, game.i18n.localize(`dsk.LocalizedIDs.regeneration${k}`)),
+                    k
+                )
+                this._appendSituationalModifiers(
+                    testData,
+                    game.i18n.localize(`dsk.LocalizedIDs.weakRegeneration${k}`),
+                    AdvantageRulesDSK.vantageStep(
+                        testData.extra.actor,
+                        game.i18n.localize(`dsk.LocalizedIDs.weakRegeneration${k}`)
+                    ) * -1,
+                    k
+                )
+                this._appendSituationalModifiers(
+                    testData,
+                    game.i18n.localize(`dsk.LocalizedIDs.advancedRegeneration${k}`),
+                    SpecialabilityRulesDSK.abilityStep(
+                        testData.extra.actor,
+                        game.i18n.localize(`dsk.LocalizedIDs.advancedRegeneration${k}`)
+                    ),
+                    k
+                )
+                this._appendSituationalModifiers(
+                        testData,
+                        `${game.i18n.localize(`CHARAbbrev.${k}`)} ${game.i18n.localize("dsk.Modifier")}`,
+                testData[`${k}Modifier`],
+                k
+            )
+            this._appendSituationalModifiers(
+                testData,
+                `${game.i18n.localize(`CHARAbbrev.${k}`)} ${game.i18n.localize("dsk.regenerate")}`,
+                testData[`regeneration${k}`],
+                k
+            )
+
+            chars.push({ char: k, res: roll.terms[index].results[0].result, die: "d6" })
+            result[k] = Math.round(
+                Math.max(
+                    0,
+                    Number(roll.terms[index].results[0].result) + Number(modifier) + this._situationalModifiers(testData, k)
+                ) * Number(testData.regenerationFactor)
+            )
+            index += 2
+        }
+    }
+
+    result["characteristics"] = chars
+    return result
+}
+
     static async rollDices(testData, cardOptions) {
         if (!testData.roll) {
             const d3dColors = game.dsk.apps.DiceSoNiceCustomization.getAttributeConfiguration
@@ -853,7 +948,7 @@ export default class DiceDSK{
                 case "regenerate":
                     const leDie = []
 
-                    if (testData.regenerateLeP ) leDie.push([game.settings.get("dsk", "lessRegeneration") ? "1d3" : "1d6"])
+                    if (testData.regenerateLeP ) leDie.push("1d6")
                     if (testData.extra.actor.isMage && testData.regenerateAsP) leDie.push("1d6")
 
                     roll = await new Roll(leDie.join("+")).evaluate({ async: true })
@@ -863,6 +958,17 @@ export default class DiceDSK{
                 case "meleeweapon":
                 case "rangeweapon":
                 case "combatskill":
+                    if (testData.mode == "damage") {
+                        let rollFormula = await this.damageFormula(testData)
+                        roll = await new Roll(rollFormula).evaluate({ async: true })
+                        for (let i = 0; i < roll.dice.length; i++) mergeObject(roll.dice[i].options, d3dColors("damage"))
+                    } else {
+                        roll = await new Roll(`1d20+1d20`).evaluate({ async: true })
+                        mergeObject(roll.dice[0].options, d3dColors("attack"))
+                        mergeObject(roll.dice[1].options, d3dColors("attack"))
+                    }
+                    break
+                case "trait":
                     if (testData.mode == "damage") {
                         let rollFormula = await this.damageFormula(testData)
                         roll = await new Roll(rollFormula).evaluate({ async: true })

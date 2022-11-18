@@ -19,7 +19,7 @@ export default class RuleChaos {
     static multipleDefenseValue(actor, item) {
         let multipleDefense = -2
 
-        if ((item.type == "dodge" || getProperty(item, "system.combatskill.value") == game.i18n.localize("dsk.dsk.LocalizedIDs.wrestle")) && SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.masterfulDodge")))
+        if ((item.type == "dodge" || getProperty(item, "system.combatskill") == game.i18n.localize("dsk.dsk.LocalizedIDs.wrestle")) && SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.masterfulDodge")))
             multipleDefense = -2
         else if (SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.mightyMasterfulParry")))
             multipleDefense = -1

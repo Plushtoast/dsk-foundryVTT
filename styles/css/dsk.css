@@ -151,7 +151,7 @@ h1, h2, h3, h4, h5, h6, h7 {
   margin-bottom: 20px;
 }
 
-.character-sheet .general, .npc-sheet .general {
+.character-sheet .general, .npc-sheet .general, .creature-sheet .general {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -625,6 +625,20 @@ select[multiple] option:checked {
   color: white;
 }
 
+.diet-shield:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  opacity: 0.35;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("../../icons/backgrounds/shield2.webp");
+}
+
 .die-ch, .diet-ch:after {
   background-image: url("../../icons/dice/d20ch.svg");
   color: white;
@@ -1039,6 +1053,9 @@ a.img-entity-link:hover {
   background-repeat: no-repeat, no-repeat;
   background-color: white;
   border: none;
+}
+.window-app.dskjournal .window-content .journal-entry-content .scrollable {
+  margin-bottom: 70px;
 }
 .window-app.dskjournal .window-content .journal-header {
   background: url("../../icons/backgrounds/journtitle.webp") no-repeat;

@@ -273,6 +273,47 @@ DSK.StFs = {
     "E": "E"
 }
 
+DSK.helpContent = [{
+    name: "pay",
+    command: "/pay [0-9]+",
+    example: "/pay 5.03",
+}, {
+    name: "getPaid",
+    command: "/getPaid [0-9]+",
+    example: "/getPaid 5.03",
+},
+{
+    name: "quickAbility",
+    command: "/sk [a-z]*, /sp [a-z]*, /li [a-z]*, /at [a-z]*, /pa [a-z]*",
+    example: "/sk betören",
+},
+{
+    name: "conditions",
+    command: "/conditions",
+    example: "/conditions"
+},
+{
+    name: "tables",
+    command: "/tables",
+    example: "/tables"
+},
+{
+    name: "request",
+    command: "/rq",
+    example: "/rq betören"
+},
+{
+    name: "twoD20Check",
+    command: "/ch",
+    example: "/ch"
+},
+{
+    name: "groupcheck",
+    command: "/gc",
+    example: "/gc"
+}
+]
+
 DSK.meleeRangeVision = () => {
     return {
         "+0": "dsk.meleeVisionDisruption.0",
@@ -364,6 +405,20 @@ DSK.rangeMods = {
         "attack": -4
     }
 }
+
+DSK.regnerationCampLocations = {
+    "0": "dsk.regnerationCampLocations.normal",
+    "-1": "dsk.regnerationCampLocations.bad",
+    "1": "dsk.regnerationCampLocations.good"
+}
+
+DSK.regenerationInterruptOptions = {
+    "0": "dsk.regenerationInterruptOptions.none",
+    "-1": "dsk.regenerationInterruptOptions.small",
+    "-2": "dsk.regenerationInterruptOptions.big"
+}
+
+DSK.equipmentCategories = ["meleeweapon", "rangeweapon", "equipment", "ammunition", "armor", "poison"]
 
 DSK.rangeSizeModifier = {
     "tiny": -8,
@@ -482,8 +537,24 @@ DSK.equipmentTypes = {
     "alchemy": "dsk.Equipment.alchemy",
     "service": "dsk.Equipment.service",
     "luxus": "dsk.Equipment.luxus",
-    "blessed": "dsk.Equipment.blessed"
+    "blessed": "dsk.Equipment.blessed",
+    "food": "dsk.Equipment.food",
+    "animals": "dsk.Equipment.animals"
 };
+
+DSK.systemTables = [
+    { name: "Melee", attrs: "data-weaponless=\"false\"", roll: "botch-roll", pack: { de: "dsk.patzer", en: "dsk.botch" }, setting: { module: "", key: "" } },
+    { name: "Range", attrs: "data-weaponless=\"false\"", roll: "botch-roll", pack: { de: "dsk.patzer", en: "dsk.botch" }, setting: { module: "", key: "" } },
+    { name: "Ahnen", attrs: "", roll: "botch-roll", pack: { de: "dsk.patzer", en: "dsk.botch" }, setting: { module: "", key: "" } },
+]
+
+DSK.tokenSizeCategories = {
+    "tiny": 0.5,
+    "small": 0.8,
+    "average": 1,
+    "big": 2,
+    "giant": 4
+}
 
 DSK.ammunitiongroups = {
     "-": "-",
@@ -494,6 +565,12 @@ DSK.ammunitiongroups = {
     "dart": "dsk.ammunition.dart",
     "mag": "dsk.ammunition.mag",
     "infinite": "dsk.ammunition.infinite"
+}
+
+DSK.traitCategories = {
+    "meleeAttack": "dsk.closeCombatAttacks",
+    "rangeAttack": "dsk.rangeCombatAttacks",
+    "armor": "ITEM.TypeArmor",
 }
 
 DSK.meleeRanges = {

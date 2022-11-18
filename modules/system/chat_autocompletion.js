@@ -4,7 +4,7 @@ import RequestRoll from "./request-roll.js"
 
 export default class DSKChatAutoCompletion {
     static skills = []
-    static cmds = ["sk", "at", "pa", "sp", "rq", "gc", "w", "ch"]
+    static cmds = ["sk", "at", "pa", "ah", "rq", "gc", "w", "ch"]
 
     constructor() {
         if (DSKChatAutoCompletion.skills.length == 0) {
@@ -92,7 +92,7 @@ export default class DSKChatAutoCompletion {
             let types = ["meleeweapon", "rangeweapon"]
             let traitTypes = ["meleeAttack", "rangeAttack"]
             let result = actor.items.filter(x => {
-                    return ((types.includes(x.type) && x.system.worn.value == true) || (x.type == "trait" && traitTypes.includes(x.system.traitType.value))) &&
+                    return ((types.includes(x.type) && x.system.worn.value == true) || (x.type == "trait" && traitTypes.includes(x.system.traitType))) &&
                         x.name.toLowerCase().trim().indexOf(search) != -1
                 }).slice(0, 5).map(x => { return { name: x.name, type: "item" } })
                 .concat([{ name: this.constants.attackWeaponless, type: "item" }].filter(x => x.name.toLowerCase().trim().indexOf(search) != -1))
@@ -112,10 +112,10 @@ export default class DSKChatAutoCompletion {
         }
     }
 
-    _filterSP(search) {
+    _filterAH(search) {
         const { actor, tokenId } = DSKChatAutoCompletion._getActor()
         if (actor) {
-            let types = ["spell", "ritual"]
+            let types = ["ahnengabe"]
             let result = actor.items.filter(x => { return types.includes(x.type) && x.name.toLowerCase().trim().indexOf(search) != -1 }).slice(0, 5).map(x => { return { name: x.name, type: "item" } })
             this._checkEmpty(result)
             this._setList(result, "SP")
@@ -126,23 +126,12 @@ export default class DSKChatAutoCompletion {
         if (!result.length) result.push({ name: game.i18n.localize("dsk.DSKError.noMatch"), type: "none" })
     }
 
-    _filterLI(search) {
-        const { actor, tokenId } = DSKChatAutoCompletion._getActor()
-        if (actor) {
-            let types = ["liturgy", "ceremony"]
-            let result = actor.items.filter(x => { return types.includes(x.type) && x.name.toLowerCase().trim().indexOf(search) != -1 }).slice(0, 5).map(x => { return { name: x.name, type: "item" } })
-            this._checkEmpty(result)
-            this._setList(result, "LI")
-        }
-    }
-
     _getSkills(search, type = undefined) {
         search = search.replace(/(-|\+)?\d+/g, '').trim()
         let result = DSKChatAutoCompletion.skills.filter(x => { return x.name.toLowerCase().trim().indexOf(search) != -1 && (type == undefined || type == x.type) }).slice(0, 5)
         this._checkEmpty(result)
         return result
     }
-
 
     _filterCH(search) {
         this._setList(this._getSkills(search), "CH")
@@ -317,7 +306,7 @@ export default class DSKChatAutoCompletion {
             const types = ["meleeweapon", "rangeweapon"]
             const traitTypes = ["meleeAttack", "rangeAttack"]
             let result = actor.items.find(x => { return types.includes(x.type) && x.name == target.text() })
-            if(!result) result = actor.items.find(x => { return x.type == "trait" && x.name == target.text() && traitTypes.includes(x.system.traitType.value) })
+            if(!result) result = actor.items.find(x => { return x.type == "trait" && x.name == target.text() && traitTypes.includes(x.system.traitType) })
 
             if (result) {
                 actor.setupWeapon(result, "attack", {}, tokenId).then(setupData => {
@@ -326,6 +315,7 @@ export default class DSKChatAutoCompletion {
             }
         }
     }
+    
     _quickSP(target, actor, tokenId) {
         const types = ["ahnengabe"]
         const result = actor.items.find(x => { return types.includes(x.type) && x.name == target.text() })

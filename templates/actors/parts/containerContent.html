@@ -2,7 +2,7 @@
     <li class="main-row">
         <div class="row-section wrap rowtable inventory">
             {{#each children as |item i|}}
-            <div class="col item" data-item-id="{{item._id}}" data-category="{{item.system.equipmentType.value}}">
+            <div class="col item" data-item-id="{{item._id}}" data-category="{{item.system.category}}">
                 <div class="row-section">
                     <div class="col eight image {{item.enchantClass}}">
                         <div class="image" style="background-image: url('{{item.img}}')">
@@ -12,7 +12,7 @@
                         <a class="item-edit {{#if item.consumable}}consume-item{{/if}}">{{item.name}}</a>
                     </div>
                     <div class="col eight"></div>
-                    {{#if (eq item.system.equipmentType 'bags')}}
+                    {{#if (eq item.system.category 'bags')}}
                     <div class="col five center">
                         {{item.bagweight}}
                     </div>

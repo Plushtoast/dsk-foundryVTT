@@ -192,7 +192,7 @@ export default class DSKCombatDialog extends DialogShared {
         if (this.dialogData.mode == "damage") return
 
         const source = this.dialogData.source
-        const isMelee = source.type == "trait" && getProperty(source, "system.traitType.value") || source.type == "meleeweapon"
+        const isMelee = (source.type == "trait" && getProperty(source, "system.traitType") == "meleeAttack") || source.type == "meleeweapon"
         const testData = { source: this.dialogData.source, extra: { options: {} } }
         const actor = DSKUtility.getSpeaker(this.dialogData.speaker)
         isMelee ? DSKCombatDialog.resolveMeleeDialog(testData, {}, this.element, actor, {}, -3, this.dialogData.mode) :
@@ -320,11 +320,11 @@ export default class DSKCombatDialog extends DialogShared {
         let buttons = DSKDialog.getRollButtons(testData, dialogOptions, resolve, reject);
         if (
             testData.source.type == "rangeweapon" ||
-            (testData.source.type == "trait" && testData.source.system.traitType.value == "rangeAttack")
+            (testData.source.type == "trait" && testData.source.system.traitType == "rangeAttack")
         ) {
             const LZ =
                 testData.source.type == "trait" ?
-                Number(testData.source.system.reloadTime.value) :
+                Number(testData.source.system.lz) :
                 ActorDSK.calcLZ(testData.source, testData.extra.actor)
             const progress = testData.source.system.reloadTimeprogress
             if (progress < LZ) {

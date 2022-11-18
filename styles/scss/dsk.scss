@@ -174,11 +174,15 @@ h1, h2, h3, h4, h5, h6, h7 {
   margin-bottom: 20px;
 }
 
-.character-sheet .general, .npc-sheet .general {
+.character-sheet .general, .npc-sheet .general, .creature-sheet .general {
   display: flex;
   flex-direction: row;
   width: 100%;
   margin: 0;
+}
+
+.popoutImage{
+  cursor:pointer;
 }
 
 #field-distinguishingmark {
@@ -668,10 +672,6 @@ overflow: initial;
   float: right;
 }
 
-
-
-
-
 .icon-mu {
   background-image: url('../../icons/categories/MU2.webp');
 }
@@ -717,6 +717,20 @@ overflow: initial;
 .die-dodge, .die-parry, .die-in, .die-poison, .die-disease, .diet-in:after {
   background-image: url('../../icons/dice/d20in.svg');
   color: white;
+}
+
+.diet-shield:after{
+  content: '';
+  position: absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  top:0;
+  opacity: 0.35;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('../../icons/backgrounds/shield2.webp');
 }
 
 .die-ch, .diet-ch:after {
@@ -1194,6 +1208,10 @@ a.img-entity-link {
         background-repeat: no-repeat, no-repeat;
         background-color: white;
         border: none;
+
+        .scrollable{
+          margin-bottom: 70px;
+        }
       }
 
       .journal-header {

@@ -1,0 +1,64 @@
+{{> systems/dsk/templates/actors/parts/information.html}}
+
+<div class="groupbox">
+    <div class="row-section header-label">
+        <div class="col ninety lineheight">
+            <b>{{localize "dsk.description"}}</b>
+        </div>
+        <div class="col lineheight ten">
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col notes-box">
+            {{editor enrichedDescription target="system.notes.description" button=true owner=owner editable=editable}}
+        </div>
+    </div>
+</div>
+<div class="groupbox">
+    <div class="row-section header-label">
+        <div class="col ninety lineheight">
+            <b>{{localize "dsk.fight"}}</b>
+        </div>
+        <div class="col lineheight ten">
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col notes-box">
+            {{editor enrichedBehaviour target="system.notes.fight" button=true owner=owner editable=editable}}
+        </div>
+    </div>
+</div>
+<div class="groupbox">
+    <div class="row-section header-label">
+        <div class="col ninety lineheight">
+            <b>{{localize "dsk.specialRules"}}</b>
+        </div>
+        <div class="col lineheight ten">
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col notes-box">
+            {{editor enrichedSpecialrules target="system.notes.specialRules" button=true owner=owner editable=editable}}
+        </div>
+    </div>
+</div>
+{{#if actor.isOwner}}
+<div class="groupbox">
+    <div class="row-section header-label">
+        <div class="col ninety lineheight">
+            <b>{{localize "dsk.ownerNotes"}}</b>
+        </div>
+        <div class="col lineheight ten">
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col notes-box">
+            {{editor enrichedOwnerdescription target="system.notes.owner" button=true owner=owner editable=editable}}
+        </div>
+    </div>
+</div>
+{{/if}}

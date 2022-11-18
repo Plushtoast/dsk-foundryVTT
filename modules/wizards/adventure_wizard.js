@@ -200,7 +200,7 @@ export default class BookWizard extends Application {
         for (let elem of target.getElementsByTagName("div")) {
             breadcrumbs[elem.dataset.uuid] = elem.innerText
         }
-        await game.settings.set("dsk", "breadcrumbs", JSON.stringify(breadcrumbs))
+        await game.settings.set("dsk", `breadcrumbs_${game.world.id}`, JSON.stringify(breadcrumbs))
     }
 
 
@@ -457,14 +457,14 @@ export default class BookWizard extends Application {
         let breadcrumbs = this.readBreadCrumbs()
         if (!name) name = (await fromUuid(uuid))?.name || ""
         breadcrumbs[uuid] = name
-        game.settings.set("dsk", "breadcrumbs", JSON.stringify(breadcrumbs))
+        game.settings.set("dsk", `breadcrumbs_${game.world.id}`, JSON.stringify(breadcrumbs))
         this.render(true)
     }
 
     unpinJournal(uuid) {
         let breadcrumbs = this.readBreadCrumbs()
         delete breadcrumbs[uuid]
-        game.settings.set("dsk", "breadcrumbs", JSON.stringify(breadcrumbs))
+        game.settings.set("dsk", `breadcrumbs_${game.world.id}`, JSON.stringify(breadcrumbs))
         this.render(true)
     }
 
@@ -487,7 +487,7 @@ export default class BookWizard extends Application {
     readBreadCrumbs() {
         let breadcrumbs = {}
         try {
-            breadcrumbs = JSON.parse(game.settings.get("dsk", "breadcrumbs"))
+            breadcrumbs = JSON.parse(game.settings.get("dsk", `breadcrumbs_${game.world.id}`))
         } catch (e) {
             console.log("No Journalbrowser notes found")
         }
@@ -498,7 +498,7 @@ export default class BookWizard extends Application {
         const breadcrumbs = this.readBreadCrumbs()
         const btns = Object.entries(breadcrumbs).map(x => `<div data-tooltip="${x[1]}" data-uuid="${x[0]}" class="openPin item">${x[1]}</div>`)
 
-        if (btns.length > 0) return `<div id"breadcrumbs" class="breadcrumbs wrap row-section">${btns.join("")}</div>`
+        if (btns.length > 0) return `<div id="breadcrumbs" class="breadcrumbs wrap row-section">${btns.join("")}</div>`
 
         return ""
     }

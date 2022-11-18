@@ -138,8 +138,8 @@ export default class DSKInitializer extends Dialog {
                         [resetScene, resetAll] = await new Promise((resolve, reject) => {
                             new Dialog({
                                 title: game.i18n.localize("dsk.Book.sceneReset"),
-                                content: game.i18n.format("Book.sceneResetDescription", { name: entry.name }),
-                                default: 'yes',
+                                content: game.i18n.format("dsk.Book.sceneResetDescription", { name: entry.name }),
+                                default: 'Yes',
                                 buttons: {
                                     Yes: {
                                         icon: '<i class="fa fa-check"></i>',

@@ -1,0 +1,47 @@
+<form class="{{cssClass}} lock{{actor.sheetLocked}}" autocomplete="off">
+
+    {{> systems/dsk/templates/actors/parts/normalhead.html}}
+    <!-- TABS -->
+    <section id="tab-sections">
+        <nav id="dsk-primarytabs" class="sheet-tabs tabs">
+            {{#if (ne merchantType 'loot')}}
+            <a class="item" data-tab="skills">{{localize "ITEM.TypeSkill"}}</a>
+            <a class="item" data-tab="combat">{{localize "dsk.SPECIALABILITYCATEGORIES.combat"}}</a> 
+            {{#if actor.magic.hasSpells}}
+            <a class="item" data-tab="magic">{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</a> 
+            {{/if}}
+            <a class="item" data-tab="main">{{localize "dsk.attributes"}}</a>
+            {{/if}}
+            <a class="item active" data-tab="inventory">{{invName}}</a> 
+            {{#if (ne merchantType 'loot')}}
+            <a class="item" data-tab="status">{{localize "dsk.status"}}</a>
+            <a class="item" data-tab="notes">{{localize "dsk.notes"}}</a> {{/if}}
+        </nav>
+
+        <section class="content">
+            <div class="tab skills save-scroll" data-tab="skills">
+                {{> systems/dsk/templates/actors/actor-talents.html}}
+            </div>
+            <div class="tab combat save-scroll" data-tab="combat">
+                {{> systems/dsk/templates/actors/actor-combat.html}}
+            </div>
+            <div class="tab inventory save-scroll" data-tab="inventory">
+                {{> systems/dsk/templates/actors/merchant/merchant-commerce.html}}
+            </div>
+            <div class="tab status save-scroll" data-tab="status">
+                {{> systems/dsk/templates/actors/parts/status_effects.html}}
+            </div>
+            <div class="tab save-scroll" data-tab="notes">
+                {{> systems/dsk/templates/actors/actor-notes.html}}
+            </div>
+            {{#if actor.magic.hasSpells}}
+            <div class="tab magic save-scroll" data-tab="magic">
+                {{> systems/dsk/templates/actors/character/actor-magic.html}}
+            </div>
+            {{/if}}
+            <div class="tab main save-scroll" data-tab="main">
+                {{> systems/dsk/templates/actors/actor-main.html}}
+            </div>
+        </section>
+    </section>
+</form>

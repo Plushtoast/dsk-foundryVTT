@@ -1,4 +1,5 @@
 import DSKSoundEffect from "../system/dsk-soundeffect.js";
+import { showPatchViewer } from "../system/migrator.js";
 
 export function setupConfiguration(){
     game.settings.register("dsk", "migrationVersion", {
@@ -22,6 +23,19 @@ export function setupConfiguration(){
         default: false,
         type: Boolean
     })
+    game.settings.register("dsk", "merchantNotification", {
+        name: "dsk.SETTINGS.merchantNotification",
+        hint: "dsk.SETTINGS.merchantNotificationHint",
+        scope: "world",
+        config: true,
+        default: "0",
+        type: String,
+        choices: {
+            0: game.i18n.localize('dsk.no'),
+            1: game.i18n.localize('dsk.yes'),
+            2: game.i18n.localize('dsk.MERCHANT.onlyGM'),
+        }
+    });
     game.settings.register("dsk", "expandChatModifierlist", {
         name: "dsk.SETTINGS.expandChatModifierlist",
         hint: "dsk.SETTINGS.expandChatModifierlistHint",
@@ -95,7 +109,7 @@ export function setupConfiguration(){
         default: {},
         type: Object
     });
-    game.settings.register("dsk", "breadcrumbs", {
+    game.settings.register("dsk", `breadcrumbs_${game.world.id}`, {
         name: "dsk.SETTINGS.breadcrumbs",
         scope: "client",
         config: false,
@@ -205,6 +219,14 @@ export function setupConfiguration(){
     });
 
     game.settings.register("dsk", "iniTrackerPosition", {
+        name: "iniTrackerPosition",
+        scope: "client",
+        config: false,
+        default: {},
+        type: Object
+    });
+
+    game.settings.register("dsk", "tokenhotbarPosition", {
         name: "tokenhotbarPosition",
         scope: "client",
         config: false,
@@ -228,10 +250,67 @@ export function setupConfiguration(){
         type: Boolean
     });
 
+    game.settings.register("dsk", "tokenhotbarSize", {
+        name: "dsk.SETTINGS.tokenhotbarSize",
+        hint: "dsk.SETTINGS.tokenhotbarSizeHint",
+        scope: "client",
+        config: true,
+        default: 35,
+        type: Number,
+        range: {
+            min: 15,
+            max: 100,
+            step: 5
+        },
+        onChange: async(val) => {
+            game.dsk.apps.tokenHotbar.constructor.defaultOptions.itemWidth = val
+        }
+    });
+
+    game.settings.register("dsk", "obfuscateTokenNames", {
+        name: "dsk.SETTINGS.obfuscateTokenNames",
+        hint: "dsk.SETTINGS.obfuscateTokenNamesHint",
+        scope: "world",
+        config: true,
+        default: "0",
+        type: String,
+        choices: {
+            "0": game.i18n.localize('dsk.no'),
+            "1": game.i18n.localize('dsk.SETTINGS.yesNumbered'),
+            "2": game.i18n.localize('dsk.SETTINGS.renameNumbered'),
+            "3": game.i18n.localize('dsk.yes'),
+            "4": game.i18n.localize('dsk.SETTINGS.rename')
+        }
+    });
+
+    game.settings.register("dsk", "tokenhotbarLayout", {
+        name: "dsk.SETTINGS.tokenhotbarLayout",
+        hint: "dsk.SETTINGS.tokenhotbarLayoutHint",
+        scope: "client",
+        config: true,
+        default: 0,
+        type: Number,
+        choices: {
+            0: game.i18n.localize('dsk.SETTINGS.tokenhotbarLayout0'),
+            2: game.i18n.localize('dsk.SETTINGS.tokenhotbarLayout1'),
+            1: game.i18n.localize('dsk.SETTINGS.tokenhotbarLayout2'),
+            3: game.i18n.localize('dsk.SETTINGS.tokenhotbarLayout3')
+        }
+    });
 }
 
 class ChangelogForm extends FormApplication {
     render() {
-        //showPatchViewer()
+        showPatchViewer()
+    }
+}
+
+class ResetTokenbar extends FormApplication {
+    async render() {
+        await game.settings.set("dsk", "tokenhotbarPosition", {})
+        await game.settings.set("dsk", "tokenhotbarLayout", 0)
+        await game.settings.set("dsk", "tokenhotbarSize", 35)
+        game.dsk.apps.tokenHotbar.resetPosition()
+        game.dsk.apps.tokenHotbar.render(true)
     }
 }

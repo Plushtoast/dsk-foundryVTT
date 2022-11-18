@@ -1,3 +1,4 @@
+import ActorDSK from "../actor/actor_dsk.js";
 import { conditionsMatcher } from "../hooks/texteditor.js";
 import DSK from "./config.js";
 
@@ -19,6 +20,10 @@ export default class DSKUtility {
         }
 
         return chatData;
+    }
+
+    static categoryLocalization(a){
+        return game.i18n.localize(`ITEM.Type${a.slice(0,1).toUpperCase()}${a.slice(1).toLowerCase()}`)
     }
 
     static isActiveGM(){
@@ -108,6 +113,68 @@ export default class DSKUtility {
             if (elem._minimized) elem.maximize();
             else elem.close()
         } else elem.render(true);
+    }
+
+    static async skillByName(name) {
+        const pack = game.packs.get(game.i18n.lang == "de" ? "dsk.default" : "dsk.defaulten")
+        await pack.getIndex();
+        const entry = pack.index.find(i => i.name === name);
+        return await pack.getDocument(entry._id)
+    }
+
+    static async emptyActor(attrs = 12) {
+        if (!Array.isArray(attrs)) {
+            attrs = [attrs, attrs, attrs, attrs, attrs, attrs, attrs, attrs]
+        }
+
+        const actor = await ActorDSK.create({
+            name: "Alricat",
+            type: "npc",
+            items: [],
+            system: {
+                stats: { LeP: { value: 50 }, fatePoints: {} },
+                characteristics: {
+                    mu: { initial: attrs[0] },
+                    kl: { initial: attrs[1] },
+                    in: { initial: attrs[2] },
+                    ch: { initial: attrs[3] },
+                    ff: { initial: attrs[4] },
+                    ge: { initial: attrs[5] },
+                    ko: { initial: attrs[6] },
+                    kk: { initial: attrs[7] }
+                },
+
+            }
+        }, { temporary: true, noHook: true })
+        actor.prepareData()
+        return actor
+    }
+
+    static calcTokenSize(actorData, data) {
+        let tokenSize = game.dsk.config.tokenSizeCategories[actorData.system.details.size]
+        if (tokenSize) {
+            if (tokenSize < 1) {
+                mergeObject(data, {
+                    texture: {
+                        scaleX: tokenSize,
+                        scaleY: tokenSize
+                    },
+                    width: 1,
+                    height: 1
+                })
+            } else {
+                const int = Math.floor(tokenSize);
+                const scale = Math.max(tokenSize / int, 0.25)
+                mergeObject(data, {
+                    width: int,
+                    height: int,
+                    texture: {
+                        scaleX: scale,
+                        scaleY: scale
+                    }
+                })
+            }
+        }
     }
 
     static _calculateAdvCost(currentAdvances, type, modifier = 1) {

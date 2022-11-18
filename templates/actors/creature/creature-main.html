@@ -1,0 +1,338 @@
+{{#if actor.canAdvance}} {{> systems/dsk/templates/actors/parts/characteristics-large.html}} {{else}} {{> systems/dsk/templates/actors/parts/characteristics-small.html}} {{/if}}
+
+<div class="main-row">
+    <div class="column1">
+        <div class="groupbox">
+            <div class="advantages row-section">
+                <div class="col header-label lineheight">
+                    <b>{{localize "ITEM.TypeAdvantage"}}</b>
+                </div>
+            </div>
+            <div class="row-section wrap cards">
+                {{#each actor.advantages as |item i|}}
+                <div class="item" data-item-id="{{item._id}}">
+                    <a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="groupbox">
+            <div class="disadvantages row-section">
+                <div class="col header-label lineheight">
+                    <b>{{localize "ITEM.TypeDisadvantage"}}</b>
+                </div>
+            </div>
+            <div class="row-section wrap cards">
+                {{#each actor.disadvantages as |item i|}}
+                <div class="item" data-item-id="{{item._id}}">
+                    <a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="groupbox">
+            <div class="generalSpecialAbilities row-section">
+                <div class="col header-label lineheight">
+                    <b>{{localize "dsk.SPECIALABILITYNAMES.general"}}</b>
+                </div>
+            </div>
+            <div class="row-section wrap cards">
+                {{#each actor.specAbs.general as |item i|}}
+                <div class="item" data-item-id="{{item._id}}">
+                    {{#if item.OnUseEffect}}<a data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="groupbox">
+            <div class="generalSpecialAbilities row-section">
+                <div class="col header-label lineheight">
+                    <b>{{localize "dsk.SPECIALABILITYCATEGORIES.language"}}</b>
+                </div>
+            </div>
+            <div class="row-section wrap cards">
+                {{#each actor.specAbs.language as |item i|}}
+                <div class="item" data-item-id="{{item._id}}">
+                    {{#if item.OnUseEffect}}<a data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="groupbox">
+            <div class="generalSpecialAbilities row-section">
+                <div class="col header-label lineheight">
+                    <b>{{localize "ITEM.TypeTrait"}}</b>
+                    <a class="item-create very-small" data-tooltip="dsk.SHEET.addItem" item-section="trait" data-type="trait"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="row-section wrap cards">
+                {{#each actor.traits as |trait i|}} {{#each trait as |item i|}}
+                <div class="item" data-item-id="{{item._id}}">
+                    <a class="item-edit">{{item.name}}</a>
+                </div>
+                {{/each}} {{/each}}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="column2">
+        <div class="groupbox" id="derivedAttrs">
+            <div class="derivedAttrs row-section">
+                <div class="col two">
+                </div>
+                <div class="col eight very-small center" data-tooltip="dsk.value">
+                    {{localize "dsk.ABBR.value"}}
+                </div>
+                <div class="col eight very-small center" data-tooltip="dsk.Modifiers">
+                    {{localize "dsk.ABBR.modifiers"}}
+                </div>
+                <div class="col eight very-small center" data-tooltip="dsk.Advances">
+                    {{localize "dsk.ABBR.advances"}}
+                </div>
+                <div class="col eight very-small center" data-tooltip="dsk.max">
+                    {{localize "dsk.ABBR.max"}}
+                </div>
+            </div>
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.LeP"}} {{#if actor.canAdvance}}<a data-attr="LeP" class="advance refund-points"><i data-tooltip="{{actor.system.stats.LeP.refund}}" class="fas fa-minus"></i></a>
+                    <a data-attr="LeP" class="advance advance-points"><i data-tooltip="{{actor.system.stats.LeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                    <span class="buttons">
+                        <a data-char="regenerate" class="ch-regenerate item" data-mod="regenerate" data-tooltip="dsk.regenerate">&nbsp;<i class="fas fa-moon"></i></a>
+                    </span>
+                </div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.LeP.current}}
+                </div>
+                <div class="col eight center">
+                    <input name="system.stats.LeP.modifier" type="text" value="{{actor.system.stats.LeP.modifier}}" data-dtype="Number" />
+                </div>
+                <div class="col eight center">
+                    <input name="system.stats.LeP.advances" type="text" value="{{actor.system.stats.LeP.advances}}" data-dtype="Number" />
+                </div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.LeP.max}}
+                </div>
+            </div>
+            
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.CHARAbbrev.LeP"}} {{localize 'dsk.regenerate'}}
+                </div>
+                <div class="col eight lineheight center">
+
+                </div>
+                <div class="col eight center inputTooltipAvailable">
+                    <input name="system.stats.regeneration.LePMod" type="text" value="{{actor.system.stats.regeneration.LePMod}}" data-dtype="Number" data-tooltip="dsk.SHEET.permRegeneration" />
+                </div>
+                <div class="col eight center inputTooltipAvailable">
+                    <input name="system.stats.regeneration.LePTemp" type="text" value="{{actor.system.stats.regeneration.LePTemp}}" data-dtype="Number" data-tooltip="dsk.SHEET.tempRegeneration" />
+                </div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.regeneration.LePmax}}
+                </div>
+            </div>
+           
+            {{#if actor.magic.hasSpells}}
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.AeP"}} {{#if actor.canAdvance}}<a data-attr="AeP" class="advance refund-points"><i data-tooltip="{{actor.system.stats.AeP.refund}}" class="fas fa-minus"></i></a>
+                    <a data-attr="AeP" class="advance advance-points"><i data-tooltip="{{actor.system.stats.AeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                </div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.AeP.current}}
+                </div>
+                <div class="col eight center">
+                    <input name="system.stats.AeP.modifier" type="text" value="{{actor.system.stats.AeP.modifier}}" data-dtype="Number" />
+                </div>
+                <div class="col eight center">
+                    <input name="system.stats.AeP.advances" type="text" value="{{actor.system.stats.AeP.advances}}" data-dtype="Number" />
+                </div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.AeP.max}}
+                </div>
+            </div>
+           
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.CHARAbbrev.AeP"}} {{localize 'dsk.regenerate'}}
+                </div>
+                <div class="col eight lineheight center">
+
+                </div>
+                <div class="col eight center inputTooltipAvailable">
+                    <input name="system.stats.regeneration.AePMod" type="text" value="{{actor.system.stats.regeneration.AePMod}}" data-dtype="Number" data-tooltip="dsk.SHEET.permRegeneration" />
+                </div>
+                <div class="col eight center inputTooltipAvailable">
+                    <input name="system.stats.regeneration.AePTemp" type="text" value="{{actor.system.stats.regeneration.AePTemp}}" data-dtype="Number" data-tooltip="dsk.SHEET.tempRegeneration" />
+                </div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.regeneration.AePmax}}
+                </div>
+            </div>
+            {{/if}}
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.soulpower"}}
+                </div>
+                <div class="col eight lineheight center">
+                    <input name="system.stats.sk.value" type="text" value="{{actor.system.stats.sk.value}}" data-dtype="Number" />
+                </div>
+                <div class="col eight center">
+                    <input name="system.stats.sk.modifier" type="text" value="{{actor.system.stats.sk.modifier}}" data-dtype="Number" />
+        
+                </div>
+                <div class="col eight"></div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.sk.max}}
+        
+                </div>
+            </div>
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.toughness"}}
+                </div>
+                <div class="col eight lineheight center">
+                    <input name="system.stats.zk.value" type="text" value="{{actor.system.stats.zk.value}}" data-dtype="Number" />
+                </div>
+                <div class="col eight center">
+                    <input name="system.stats.zk.modifier" type="text" value="{{actor.system.stats.zk.modifier}}" data-dtype="Number" />
+                </div>
+                <div class="col eight"></div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.zk.max}}
+                </div>
+            </div>
+
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.actionCount"}}
+                </div>
+                <div class="col eight lineheight center">
+                </div>
+                <div class="col eight center">
+                </div>
+                <div class="col eight"></div>
+                <div class="col eight lineheight center">
+                    <input class="input-text" type="text" name="system.actionCount" value="{{actor.system.actionCount}}" data-dtype="String" />
+                </div>
+            </div>
+
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.count"}}
+                </div>
+                <div class="col two lineheight center">
+                    <input class="input-text" type="text" name="system.count" value="{{actor.system.count}}" data-dtype="String" />
+                </div>
+            </div>
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.sizeCategory"}}
+                </div>
+                <div class="col two lineheight center">
+                    <select name="system.details.size" data-dtype="String" style="width:100%">
+                        {{selectOptions sizeCategories selected=actor.system.details.size localize=true}}
+                    </select>
+                </div>
+            </div>
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.speed"}}
+                </div>
+                <div class="col eight lineheight center">
+                    <input name="system.stats.gs.initial" type="text" value="{{actor.system.stats.gs.initial}}" data-dtype="Number" />
+                </div>
+                <div class="col eight center">
+                    <input name="system.stats.gs.modifier" type="text" value="{{actor.system.stats.gs.modifier}}" data-dtype="Number" />
+                </div>
+                <div class="col eight">
+                </div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.gs.max}}
+                </div>
+            </div>
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.initiative"}}
+                </div>
+                <div class="col eight lineheight center">
+                    <input name="system.stats.ini.current" type="text" value="{{actor.system.stats.ini.current}}" data-dtype="Number" />
+                </div>
+                <div class="col eight center">
+                    <input name="system.stats.ini.modifier" type="text" value="{{actor.system.stats.ini.modifier}}" data-dtype="Number" />
+                </div>
+                <div class="col eight">
+                </div>
+                <div class="col eight lineheight center">
+                    {{floor actor.system.stats.ini.value}}
+                </div>
+            </div>
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.initDie"}}
+                </div>
+                <div class="col two lineheight center">
+                    <select name="system.stats.initiative.die" data-dtype="String" style="width:100%">
+                        {{selectOptions initDies selected=actor.system.stats.ini.die localize=false}}
+                    </select>
+                </div>
+            </div>
+            <div class="derivedAttrs row-section">
+                <div class="col two lineheight">
+                    {{localize "dsk.fatePoints"}}
+                </div>
+                <div class="col eight lineheight center">
+                    <input name="system.stats.schips.current" type="text" value="{{actor.system.stats.schips.current}}" data-dtype="Number" />
+                </div>
+                <div class="col eight center">
+                    <input name="system.stats.schips.modifier" type="text" value="{{actor.system.stats.schips.modifier}}" data-dtype="Number" />
+                </div>
+                <div class="col eight">
+        
+                </div>
+                <div class="col eight lineheight center">
+                    {{actor.system.stats.schips.max}}
+                </div>
+            </div>
+        </div>
+        {{#if actor.canAdvance}}
+        <div class="groupbox">
+            <div class="experience row-section">
+                <div class="col header-label lineheight">
+                    <b>{{localize "dsk.Experience"}}</b>
+                </div>
+            </div>
+            <div class="experience row-section">
+                <div class="col three header-label">
+                    {{localize "dsk.Current"}}
+                </div>
+                <div class="col three header-label">
+                    {{localize "dsk.Spent"}}
+                </div>
+                <div class="col three header-label">
+                    {{localize "dsk.Total"}}
+                </div>
+            </div>
+            <div class="experience row-section">
+                <div class="col three lineheight center">
+                    {{actor.system.details.experience.current}}
+                </div>
+                <div class="col three center">
+                    <input name="system.details.experience.spent" type="text" value="{{actor.system.details.experience.spent}}" data-dtype="Number" />
+                </div>
+                <div class="col three center">
+                    <input name="system.details.experience.total" type="text" value="{{actor.system.details.experience.total}}" data-dtype="Number" />
+                </div>
+
+            </div>
+        </div>
+        {{/if}}
+
+    </div>
+</div>

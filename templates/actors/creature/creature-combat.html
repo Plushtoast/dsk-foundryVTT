@@ -1,0 +1,389 @@
+<div class="groupbox">
+    <div class="row-section table-title lineheight">
+        <div class="col fourty">
+            <b>{{localize "ITEM.TypeMeleeweapon"}}</b>
+        </div>
+        <div class="col five center small">
+            {{localize "dsk.Group"}}
+        </div>
+        <div class="col ten center small" data-tooltip="dsk.ABBR.AW">
+            {{localize "dsk.CHARAbbrev.AW"}}
+        </div>
+        <div class="col ten center small" data-tooltip="dsk.ABBR.VW">
+            {{localize "dsk.CHARAbbrev.VW"}}
+        </div>
+
+        <div class="col ten center small" data-tooltip="dsk.damage">
+            {{localize "dsk.CHARAbbrev.damage"}}
+        </div>
+        <div class="col ten center small">
+            {{localize "dsk.range"}}
+        </div>
+    </div>
+    <div class="row-section wrap rowtable inventory">
+        {{#each actor.wornMeleeWeapons as |item i|}}
+        <div class="col item" data-item-id="{{item._id}}">
+            <div class="row-section">
+                <div class="col ten image" style="background-image: url('{{item.img}}')">
+                </div>
+                <div class="col third">
+                    <a class="item-edit">{{item.name}}</a>
+                </div>
+                <div class="col five center small">
+                    {{item.system.combatskill}}
+                </div>
+                <div class="col ten center item" data-item-id="{{item._id}}" data-mod="attack">
+                    <a data-mode="attack" class="ch-rollCombat d20 die-attack">{{item.attack}}</a>
+                </div>
+                <div class="col ten center item dskrelative diet-shield d20height" data-item-id="{{item._id}}" data-mod="parry">
+                    {{item.parry}}
+                </div>
+
+                <div class="col ten center">
+                    <a data-mode="damage" class="ch-rollCombat d6 die-damage">{{item.damagedie}}</a><span data-tooltip="{{item.gripDamageText}}">{{item.damageAdd}}</span>
+                </div>
+                <div class="col row-section ten center small">
+                    <div class="col nintey center">
+                        {{localize (concat "dsk.Range." item.system.rw)}}
+                    </div>
+                    <div class="col ten center very-small">
+                        <a class="swapWeaponHand lineheight">
+                        {{#if item.yieldedTwoHand}}
+                        <i data-tooltip="dsk.wrongGrip.twoHanded" class="fas fa-hands"></i>
+                        {{else}}
+                        <i data-tooltip="dsk.wrongGrip.oneHanded" class="fas fa-hand"></i>
+                        {{/if}}
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        {{/each}} {{#each actor.traits.meleeAttack as |item i|}}
+        <div class="col item" data-item-id="{{item._id}}">
+            <div class="row-section">
+                <div class="col ten image" style="background-image: url('{{item.img}}')">
+                </div>
+                <div class="col third">
+                    <a class="item-edit">{{item.name}}</a>
+                </div>
+                <div class="col five center small">
+                    {{localize "ITEM.TypeTrait"}}
+                </div>
+                <div class="col ten center item" data-item-id="{{item._id}}" data-mod="attack">
+                    <a data-mode="attack" class="ch-rollCombat d20 die-attack">{{item.attack}}</a>
+                </div>
+           
+                {{#if item.parry}}
+                <div class="col ten center item dskrelative diet-shield d20height" data-item-id="{{item._id}}" data-mod="parry">
+                    {{item.parry}}
+                </div>
+                {{else}}
+                <div class="col ten center item" data-item-id="{{item._id}}" data-mod="parry">
+                </div>
+                {{/if}}
+                <div class="col ten center">
+                    <a data-mode="damage" class="ch-rollCombat d6 die-damage">{{item.damagedie}}</a><span data-tooltip="damageOverThreshold">{{item.damageAdd}}</span>
+                </div>
+                <div class="col ten center small">
+                    {{localize (concat "dsk.Range." item.system.range)}}
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<div class="groupbox">
+    <div class="row-section table-title lineheight">
+        <div class="col thirtyfive">
+            <b>{{localize "ITEM.TypeRangeweapon"}}</b>
+        </div>
+        <div class="col five center small">
+            {{localize "dsk.Group"}}
+        </div>
+        <div class="col ten center small" data-tooltip="dsk.ABBR.AW">
+            {{localize "dsk.CHARAbbrev.AW"}}
+        </div>
+        <div class="col ten center small" data-tooltip="dsk.damage">
+            {{localize "dsk.CHARAbbrev.damage"}}
+        </div>
+
+        <div class="col five center small max20">
+            {{localize "ITEM.TypeAmmunition"}}
+        </div>
+        <div class="col zerofive center">
+
+        </div>
+    </div>
+    <div class="row-section wrap rowtable inventory">
+        {{#each actor.wornRangedWeapons as |item i|}}
+        <div class="col item" data-item-id="{{item._id}}">
+            <div class="row-section">
+                <div class="col ten image" style="background-image: url('{{item.img}}')">
+                </div>
+                <div class="col four">
+                    <a class="item-edit">{{item.name}}</a>
+                </div>
+                <div class="col five center small">
+                    {{item.system.combatskill}}
+                </div>
+
+                <div class="col ten center item" data-item-id="{{item._id}}" data-mod="attack">
+                    <a data-mode="attack" class="ch-rollCombat d20 die-attack">{{item.attack}}</a>
+                </div>
+                <div class="col ten center">
+                    <a data-mode="damage" class="ch-rollCombat d6 die-damage">{{item.damagedie}}</a><span data-tooltip="item.damageBonusDescription">{{item.damageAdd}}</span>
+                </div>
+
+                <div class="col five center max20">
+                    {{#if (ne item.system.ammunitionType "-")}}
+                    <div class="row-section">
+
+                        <div class="magazinContainer">
+                            {{#if item.ammoMax}}
+                            <div class="item-structure" style="--a: {{item.ammoMax}}; --b: {{item.ammoCurrent}}">
+                                <div class="inner"></div>
+                            </div>
+                            {{/if}}
+                        </div>
+
+                        <select name="currentAmmo-{{item._id}}" class="ammo-selector" data-item-id="{{item._id}}" data-dtype="String">
+                                {{#select item.system.currentAmmo}}
+                                <option class="ammo-option" value="">None</option>
+                                {{#each item.ammo as |ammo a|}}
+                                <option class="ammo-option" value="{{ammo._id}}"> ({{ammo.system.quantity}})
+                                    {{ammo.name}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select> {{#if (ne item.LZ 0)}}
+                        <a class="loadWeapon" data-tooltip="{{item.title}}">
+                            <div class="progress blue">
+                                <span class="progress-left" style="--transformLeft:{{item.transformLeft}}">
+                                    <span class="progress-bar"></span>
+                                </span>
+                                <span class="progress-right" style="--transformRight:{{item.transformRight}}">
+                                    <span class="progress-bar"></span>
+                                </span>
+                                <div class="progress-value">{{item.progress}}</div>
+                            </div>
+                        </a> {{/if}}
+                    </div>
+                    {{else}}
+                    <div class="no-ammo">
+                        - {{#if (ne item.LZ 0)}}
+                        <a class="loadWeapon" data-tooltip="{{item.title}}">
+                            <div class="progress blue">
+                                <span class="progress-left" style="--transformLeft:{{item.transformLeft}}">
+                                    <span class="progress-bar"></span>
+                                </span>
+                                <span class="progress-right" style="--transformRight:{{item.transformRight}}">
+                                    <span class="progress-bar"></span>
+                                </span>
+                                <div class="progress-value">{{item.progress}}</div>
+                            </div>
+                        </a> {{/if}}
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="col zerofive very-small center">
+                    <a class="item-dropdown" data-tooltip="dsk.SHEET.Dropdown"><i class="fas fa-chevron-down"></i></a> {{#if item.ammoMax}}
+                    <a class="item-swapMag" data-tooltip="dsk.SHEET.swapMag"><i class="fas fa-retweet"></i></a> {{/if}}
+                </div>
+            </div>
+            <div class="row-section lineheight expandDetails {{item.detailed}}">
+                <div class="col">
+                    <ul>
+                        <li><b>{{localize "dsk.range"}}</b>: {{item.calculatedRange}}</li>
+                        <li><b>{{localize "dsk.reloadTime"}}</b>: {{item.LZ}} ({{item.system.reloadTimeprogress}})</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {{/each}} {{#each actor.traits.rangeAttack as |item i|}}
+        <div class="col item" data-item-id="{{item._id}}">
+            <div class="row-section">
+                <div class="col ten image" style="background-image: url('{{item.img}}')">
+                </div>
+                <div class="col thirtyfive">
+                    <a class="item-edit">{{item.name}}</a>
+                </div>
+                <div class="col five center small">
+                    {{localize "ITEM.TypeTrait"}}
+                </div>
+                <div class="col ten center item" data-item-id="{{item._id}}" data-mod="attack">
+                    <a data-mode="attack" class="ch-rollCombat d20 die-attack">{{item.attack}}</a>
+                </div>
+                <div class="col eight center">
+                    <a data-mode="damage" class="ch-rollCombat d6 die-damage">{{item.damagedie}}</a><span data-tooltip="dsk.damageOverThreshold">{{item.damageAdd}}</span>
+                </div>
+                <div class="col ten">
+                    {{#if (ne item.LZ 0)}}
+                    <a class="loadWeapon" data-tooltip="{{item.title}}">
+                        <div class="progress blue">
+                            <span class="progress-left" style="--transformLeft:{{item.transformLeft}}">
+                            <span class="progress-bar"></span>
+                            </span>
+                            <span class="progress-right" style="--transformRight:{{item.transformRight}}">
+                            <span class="progress-bar"></span>
+                            </span>
+                            <div class="progress-value">{{item.progress}}</div>
+                        </div>
+                    </a> {{/if}}
+                </div>
+                <div class="col zerofive very-small center">
+                    <a class="item-dropdown" data-tooltip="dsk.SHEET.Dropdown"><i class="fas fa-chevron-down"></i></a>
+                </div>
+            </div>
+            <div class="row-section lineheight expandDetails {{item.detailed}}">
+                <div class="col">
+                    <ul>
+                        <li><b>{{localize "dsk.range"}}</b>: {{item.system.range}}</li>
+                        <li><b>{{localize "dsk.reloadTime"}}</b>: {{item.LZ}} ({{item.system.reloadTimeprogress}})</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<div class="groupbox">
+    <div class="row-section table-title lineheight">
+        <div class="col two">
+            <b>{{localize "ITEM.TypeArmor"}}</b>
+        </div>
+        <div class="col four center small">{{localize "dsk.protection"}} ({{actor.armorSum}})</div>
+        <div class="col four center small">{{localize "dsk.CONDITION.encumbered"}}</div>
+    </div>
+    <div class="row-section wrap rowtable inventory">
+        {{#each actor.wornArmor as |item i|}}
+        <div class="col item" data-item-id="{{item._id}}">
+            <div class="row-section">
+                <div class="col ten image" style="background-image: url('{{item.img}}')">
+                </div>
+                <div class="col fourty">
+                    <a class="item-edit">{{item.name}}</a>
+                </div>
+                <div class="col four center">
+                    {{item.system.rs}}
+                </div>
+                <div class="col four center">
+                    {{item.calculatedEncumbrance}}
+                </div>
+            </div>
+        </div>
+        {{/each}} {{#each actor.traits.armor as |item i|}}
+        <div class="col item" data-item-id="{{item._id}}">
+            <div class="row-section">
+                <div class="col ten image" style="background-image: url('{{item.img}}')">
+                </div>
+                <div class="col fourty">
+                    <a class="item-edit">{{item.name}}</a>
+                </div>
+                <div class="col four center">
+                    {{item.system.at}}
+                </div>
+                <div class="col four center">
+                    -
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<div class="groupbox">
+    <div class="row-section">
+        <div class="col header-label lineheight">
+            <b>{{localize "dsk.SPECIALABILITYNAMES.combat"}}</b>
+        </div>
+    </div>
+    <div class="row-section wrap cards">
+        {{#each actor.specAbs.Combat as |item i|}}
+        <div class="item" data-item-id="{{item._id}}">
+            {{#if item.OnUseEffect}}<a data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+
+<div class="groupbox">
+    <div class="row-section">
+        <div class="col nintey header-label lineheight">
+            <b>{{localize "ITEM.TypeCombatskill"}}</b>
+        </div>
+        <div class="col lineheight ten center">
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
+        </div>
+    </div>
+    <div class="row-section wrap">
+        <div class="col two">
+            <div class="row-section skills table-title">
+                <div class="col fourty">
+                    {{localize "ITEM.TypeCombatskill"}}
+                </div>
+                <div class="col five center">
+                    
+                </div>
+
+                <div class="col eight center" data-tooltip="dsk.FW">
+                    {{localize "dsk.CHARAbbrev.FW"}}
+                </div>
+                <div class="col eight center" data-tooltip="dsk.ABBR.AW">
+                    {{localize "dsk.CHARAbbrev.AW"}}
+                </div>
+                <div class="col eight center" data-tooltip="dsk.ABBR.VW">
+                    {{localize "dsk.CHARAbbrev.VW"}}
+                </div>
+            </div>
+        </div>
+        <div class="col two">
+            <div class="row-section skills table-title">
+                <div class="col fourty">
+                    {{localize "ITEM.TypeCombatskill"}}
+                </div>
+                <div class="col five center">
+
+                </div>
+
+                <div class="col eight center" data-tooltip="dsk.FW">
+                    {{localize "dsk.CHARAbbrev.FW"}}
+                </div>
+                <div class="col eight center" data-tooltip="dsk.ABBR.AW">
+                    {{localize "dsk.CHARAbbrev.AW"}}
+                </div>
+                <div class="col eight center" data-tooltip="dsk.ABBR.VW">
+                    {{localize "dsk.CHARAbbrev.VW"}}
+                </div>
+            </div>
+        </div>
+        {{#each actor.combatskills as |item i|}}
+        <div class="col two">
+            <div class="row-section item skills lineheight" data-item-id="{{item._id}}">
+                <div class="col fourty">
+                    <a class="item-edit">{{item.name}}</a> {{#if item.canAdvance}}
+                    <a class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
+                    <a class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                </div>
+                <div class="col five">
+                    <span class="d20 diet-{{item.system.characteristic1}}">{{attrLoc item.system.characteristic1 "abbr"}}</span>
+                    <span class="d20 diet-{{item.system.characteristic2}}">{{attrLoc item.system.characteristic2 "abbr"}}</span>
+                </div>
+
+                <div class="col eight center">
+                    <input class="skill-advances" type="text" data-dtype="Number" value="{{item.system.level}}" />
+                </div>
+                <div class="col eight center item" data-item-id="{{item._id}}" data-mod="attack">
+                    <span data-mode="attack" class="d20 diet-mu">{{item.system.attack}}</span>
+                </div>
+                <div class="col eight center item" data-item-id="{{item._id}}" data-mod="parry">
+                    {{#if (eq item.system.weapontype 'melee')}} <span data-mode="parry" class="d20 diet-shield">{{item.system.parry}}</span> {{else}}- {{/if}}
+                </div>
+            </div>
+
+        </div>
+        {{/each}}
+    </div>
+</div>

@@ -40,7 +40,7 @@ export default class SpecialabilityRulesDSK extends ItemRulesDSK {
             item.name = `${item.name.replace(' ()', '')} (${adoption.name}${adoption.customEntry ? ", " + adoption.customEntry : ''})`
             
             if (adoption.data && adoption.system.StF && /\//.test(item.system.ap))
-                item.system.ap = item.system.ap.split("/")[adoption.system.StF.value.charCodeAt(0) - 65].trim()
+                item.system.ap = item.system.ap.split("/")[adoption.system.StF.charCodeAt(0) - 65].trim()
         }
         let res = actor.items.find(i => {
             return i.type == typeClass && i.name == item.name

@@ -33,7 +33,7 @@ export default class DPS {
 
         if (maxDist.unit == game.i18n.localize("dsk.gridUnits")) {
             const rangeMultiplier = Number(getProperty(currentAmmo, "system.rangeMultiplier")) || 1
-            const rangeBands = rangeweapon.system.reach.value.split("/").map(x => Number(x) * rangeMultiplier)
+            const rangeBands = rangeweapon.system.rw.split("/").map(x => Number(x) * rangeMultiplier)
             let index = 0
             while (index < 2 && rangeBands[index] < maxDist.distanceSum) { index++ }
 

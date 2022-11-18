@@ -26,7 +26,7 @@
     </div>
     <div class="row-section wrap rowtable inventory">
         {{#each section.items as |item i|}}
-        <div class="col item" data-item-id="{{item._id}}" data-category="{{item.system.equipmentType.value}}">
+        <div class="col item" data-item-id="{{item._id}}" data-category="{{item.system.category}}">
             <div class="row-section">
                 <div class="col eight image {{item.enchantClass}}">
                     <div class="image" style="background-image: url('{{item.img}}')">
@@ -35,12 +35,12 @@
                 <div class="col">
                     <a class="item-edit {{#if item.consumable}}consume-item{{/if}}">{{item.name}}</a>
                 </div>
-                {{#if (eq item.system.equipmentType 'bags')}}
+                {{#if (eq item.system.category 'bags')}}
                 <div class="col five center">
                     {{item.bagweight}}
                 </div>
                 {{/if}}
-                <div class="col eight center" {{#if (eq item.system.equipmentType 'bags')}} data-tooltip="dsk.SHEET.weightOnActor" {{/if}}>
+                <div class="col eight center" {{#if (eq item.system.category 'bags')}} data-tooltip="dsk.SHEET.weightOnActor" {{/if}}>
                     {{#if item.toggle}} {{#if item.toggleValue}}
                     <a class="item-toggle"><i class="far fa-check-circle"></i></a> {{else}}
                     <a class="item-toggle"><i class="far fa-circle"></i></a> {{/if}} {{/if}}

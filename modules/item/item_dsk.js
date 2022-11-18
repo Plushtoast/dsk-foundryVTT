@@ -8,6 +8,7 @@ import DSKCombatDialog from "../dialog/dialog-combat-dsk.js"
 import RuleChaos from "../system/rule_chaos.js"
 import SpecialabilityRulesDSK from "../system/specialability-rules.js"
 import DPS from "../system/derepositioningsystem.js"
+import CreatureType from "../system/creature-type.js"
 
 export default class ItemDSK extends Item{
     static defaultImages(type, subtype = ""){
@@ -78,7 +79,6 @@ export default class ItemDSK extends Item{
             combatSpecAbs: combatskills,
             aimOptions: DSK.aimOptions,
         })
-        console.log(data)
     }
 
     static prepareMeleeAttack(situationalModifiers, actor, data, source, combatskills, wrongHandDisabled) {
@@ -89,10 +89,10 @@ export default class ItemDSK extends Item{
                 const defWeapon = target.actor.items.filter((x) => {
                     return (
                         (x.type == "meleeweapon" && x.system.worn.value) ||
-                        (x.type == "trait" && x.system.traitType.value == "meleeAttack" && x.system.pa)
+                        (x.type == "trait" && x.system.traitType == "meleeAttack" && x.system.pa)
                     )
                 })
-                if (defWeapon.length > 0) targetWeaponSize = defWeapon[0].system.reach.value
+                if (defWeapon.length > 0) targetWeaponSize = defWeapon[0].system.rw
             }
         })
         
@@ -377,7 +377,8 @@ export default class ItemDSK extends Item{
             skill: ItemSkill,
             combatskill: ItemCombatskill,
             effectwrapper: ItemEffectwrapper,
-            information: ItemInformation
+            information: ItemInformation,
+            trait: ItemTrait
         }
     }
 
@@ -391,13 +392,18 @@ export default class ItemDSK extends Item{
 
     static async _postItem(item) {
         let chatData = duplicate(item)
-        const properties = ItemDSK.getSubClass(item.type).chatData(duplicate(chatData.system), item.name)
+        
+        const detailsObfuscated = getProperty(chatData, "system.obfuscation.details")
+        const descriptionObfuscated = getProperty(chatData, "system.obfuscation.description")
+        
+        mergeObject(chatData, {
+            properties: detailsObfuscated ? [] : ItemDSK.getSubClass(item.type).chatData(duplicate(chatData.system), item.name),
+            descriptionObfuscated
+        })
 
-        chatData["properties"] = properties
-
-        chatData.hasPrice = "price" in chatData.system
+        chatData.hasPrice = ("price" in chatData.system) && !detailsObfuscated
         if (chatData.hasPrice) {
-            properties.push(`<b>${game.i18n.localize("dsk.price")}</b>: ${chatData.system.price}`)
+            chatData.properties.push(`<b>${game.i18n.localize("dsk.price")}</b>: ${chatData.system.price}`)
         }
 
         if (item.pack) chatData.itemLink = item.link
@@ -419,7 +425,105 @@ class ItemInformation extends ItemDSK {
 }
 
 class ItemEffectwrapper extends ItemDSK {
+    
+}
 
+class ItemTrait extends ItemDSK {
+    static chatData(data, name) {
+        let res = []
+        switch (data.traitType.value) {
+            case "meleeAttack":
+                res = [
+                    this._chatLineHelper("dsk.ABBR.AW", data.at),
+                    this._chatLineHelper("dsk.damage", data.damage),
+                    this._chatLineHelper("dsk.range", data.rw),
+                ]
+                break
+            case "rangeAttack":
+                res = [
+                    this._chatLineHelper("dsk.ABBR.AW", data.at),
+                    this._chatLineHelper("dsk.damage", data.damage),
+                    this._chatLineHelper("dsk.range", data.rw),
+                    this._chatLineHelper("dsk.reloadTime", data.lz),
+                ]
+                break
+            case "armor":
+                res = [this._chatLineHelper("dsk.protection", data.damage)]
+                break
+           
+        }
+
+        return res
+    }
+
+    static getSituationalModifiers(situationalModifiers, actor, data, source, tokenId) {
+        source = DSKUtility.toObjectIfPossible(source)
+        const traitType = source.system.traitType
+        const combatskills = ItemDSK.buildCombatSpecAbs(actor, ["Combat", "animal"], undefined, data.mode)
+
+        if (data.mode == "attack" && traitType == "meleeAttack") {
+            this.prepareMeleeAttack(situationalModifiers, actor, data, source, combatskills, false)
+        } else if (data.mode == "attack" && traitType == "rangeAttack") {
+            this.prepareRangeAttack(situationalModifiers, actor, data, source, tokenId, combatskills)
+        } 
+
+        this.attackStatEffect(
+            situationalModifiers,
+            Number(actor.system[traitType == "meleeAttack" ? "meleeStats" : "rangeStats"][data.mode])
+        )
+    }
+
+    static setupDialog(ev, options, item, actor, tokenId) {
+        let mode = options["mode"]
+        let title = item.name + " " + game.i18n.localize(mode + "test")
+        mergeObject(item.system,{
+            characteristic1: "attack",
+            characteristic2: "attack",
+        })
+        console.log(item)
+        let testData = {
+            opposable: true,
+            source: item,
+            mode,
+            extra: {
+                actor: actor.toObject(false),
+                options,
+                speaker: ItemDSK.buildSpeaker(actor, tokenId),
+            },
+        }
+        const multipleDefenseValue = RuleChaos.multipleDefenseValue(actor, item.toObject())
+        let data = {
+            rollMode: options.rollMode,
+            mode,
+            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: multipleDefenseValue }),
+        }
+
+        const traitType = getProperty(item, "system.traitType")
+
+        let situationalModifiers = actor ? DSKStatusEffects.getRollModifiers(actor, item, { mode }) : []
+        this.getSituationalModifiers(situationalModifiers, actor, data, item, tokenId)
+        data["situationalModifiers"] = situationalModifiers
+
+        let dialogOptions = {
+            title,
+            template: "/systems/dsk/templates/dialog/combatskill-enhanced-dialog.html",
+            data,
+            callback: (html, options = {}) => {
+                if (traitType == "meleeAttack") {
+                    DSKCombatDialog.resolveMeleeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue, mode)
+                } else {
+                    DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options)
+                }
+                testData.isRangeDefense = data.isRangeDefense
+                Hooks.call("callbackDialogCombatDSK", testData, actor, html, item, tokenId)
+                return { testData, cardOptions }
+            },
+        }
+
+        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/combatskill-card.html", title, tokenId)
+
+        return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions })
+    }
 }
 
 class ItemMeleeweapon extends ItemDSK{
@@ -443,9 +547,8 @@ class ItemMeleeweapon extends ItemDSK{
 
         if (data.mode == "attack") {
             this.prepareMeleeAttack(situationalModifiers, actor, data, source, combatskills, wrongHandDisabled)
-        } else if (data.mode == "parry") {
-            this.prepareMeleeParry(situationalModifiers, actor, data, source, combatskills, wrongHandDisabled)
         }
+
         this.attackStatEffect(situationalModifiers, Number(actor.system.meleeStats[data.mode]))
     }
 
@@ -472,7 +575,7 @@ class ItemMeleeweapon extends ItemDSK{
         let data = {
             rollMode: options.rollMode,
             mode,
-            defenseCountString: game.i18n.format("defenseCount", { malus: multipleDefenseValue }),
+            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: multipleDefenseValue }),
         }
         let situationalModifiers = actor ? DSKStatusEffects.getRollModifiers(actor, item, { mode }) : []
         this.getSituationalModifiers(situationalModifiers, actor, data, item)
@@ -529,7 +632,7 @@ class ItemRangeweapon extends ItemDSK{
                         name: `${currentAmmo.name} - ${game.i18n.localize("dsk.atmod")}`,
                         value: currentAmmo.system.atmod,
                         selected: true,
-                        specAbId: source.system.currentAmmo.value,
+                        specAbId: source.system.currentAmmo,
                     })
                 }
                 if (currentAmmo.system.damageMod || currentAmmo.system.armorMod) {
@@ -651,7 +754,7 @@ class ItemAmmunition extends ItemDSK{
 
 class ItemEquipment extends ItemDSK{
     static chatData(data, name) {
-        return [this._chatLineHelper("dsk.equipmentType", game.i18n.localize(`dsk.Equipment.${data.equipmentType.value}`))]
+        return [this._chatLineHelper("dsk.equipmentType", game.i18n.localize(`dsk.Equipment.${data.category}`))]
     }
 }
 

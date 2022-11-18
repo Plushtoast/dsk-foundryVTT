@@ -1,0 +1,82 @@
+<form class="{{cssClass}} lock{{actor.sheetLocked}}" autocomplete="off">
+
+
+    <header class="sheet-header">
+
+        <div class="headerInput">
+            <input class="input name" name="name" style="width:90%" type="text" value="{{actor.name}}" placeholder="{{localize 'dsk.name'}}" />
+            <a class="actorDrag" data-tooltip="dsk.TT.dragLink"><i class="fas fa-link"></i></a>
+            <span class="label name">{{localize "dsk.name"}}</span>
+        </div>
+        <div class="headerInput">
+            <input class="input creatureClass" data-dtype="String" name="system.details.species" type="text" value="{{actor.system.details.species}}" placeholder="{{localize ITEM.TypeSpecies}}" />
+            <span class="label creatureClass ">{{localize "ITEM.TypeSpecies"}}</span>
+        </div>
+
+    </header>
+    <div class="general">
+        <img class="charimg profile" src="{{actor.img}}" data-tooltip="{{actor.name}}" data-edit="img">
+    
+        <div class="row-section" style="width: 100%;margin-bottom: 20px">
+            <div class="col">
+                {{> systems/dsk/templates/actors/parts/rollhead.html}}
+    
+                {{> systems/dsk/templates/actors/parts/healthbar.html}}
+                {{#if actor.schips}}
+                <div class="row-section">
+                    <div class="col ten lineheight center" data-tooltip="dsk.fatePoints">
+                        {{localize 'dsk.CHARAbbrev.fatePoints'}}
+                    </div>
+                    <div class="col eighty center" data-tooltip="dsk.fatePoints">
+                        <input class="dskhidden" type="text" name="system.stats.schips.value" data-dtype="Number" value="{{actor.system.stats.schips.value}}" /> 
+                        {{#each actor.schips as |item i|}}
+                        <a class="schip {{item.cssClass}}" data-val="{{item.value}}"></a>
+                        {{/each}}
+                    </div>
+                    <div class="col ten center">
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    <section id="tab-sections ">
+        <nav id="dsk-primarytabs" class="sheet-tabs tabs">
+            <a class="item active" data-tab="skills">{{localize "ITEM.TypeSkill"}}</a>
+            <a class="item" data-tab="combat">{{localize "dsk.SPECIALABILITYCATEGORIES.combat"}}</a> 
+            {{#if actor.magic.hasSpells}}
+            <a class="item" data-tab="magic">{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</a> 
+            {{/if}}
+            <a class="item" data-tab="main">{{localize "dsk.attributes"}}</a>
+            <a class="item" data-tab="inventory">{{localize "ITEM.TypeEquipment"}}</a>
+            <a class="item" data-tab="status">{{localize "dsk.status"}}</a>
+            <a class="item" data-tab="notes">{{localize "dsk.notes"}}</a>
+        </nav>
+
+        <section class="content ">
+            <div class="tab main save-scroll" data-tab="main">
+                {{> systems/dsk/templates/actors/creature/creature-main.html}}
+            </div>
+            <div class="tab skills save-scroll" data-tab="skills">
+                {{> systems/dsk/templates/actors/actor-talents.html}}
+            </div>
+            <div class="tab combat save-scroll" data-tab="combat">
+                {{> systems/dsk/templates/actors/creature/creature-combat.html}}
+            </div>
+            {{#if actor.magic.hasSpells}}
+            <div class="tab magic save-scroll" data-tab="magic">
+                {{> systems/dsk/templates/actors/creature/creature-magic.html}}
+            </div>
+            {{/if}}
+            <div class="tab inventory save-scroll" data-tab="inventory">
+                {{> systems/dsk/templates/actors/creature/creature-loot.html}}
+            </div>
+            <div class="tab status save-scroll" data-tab="status">
+                {{> systems/dsk/templates/actors/parts/status_effects.html}}
+            </div>
+            <div class="tab save-scroll" data-tab="notes">
+                {{> systems/dsk/templates/actors/creature/creature-notes.html}}
+            </div>
+        </section>
+    </section>
+</form>

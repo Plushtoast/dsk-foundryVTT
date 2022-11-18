@@ -38,6 +38,24 @@ export function initActorHooks() {
         }
     }) 
 
+    Hooks.on("createActiveEffect", (effect, options, user) => {
+        checkIniChange(effect)
+    })
+
+    Hooks.on("deleteActiveEffect", (effect, options, user) => {
+        checkIniChange(effect)
+    })
+
+    function checkIniChange(effect){
+        if(!game.user.isGM) return
+
+        if(game.combat && effect.changes.some(x => /(system\.stats\.ini|system\.characteristics.mu|system\.characteristics\.ge)/.test(x.key))){
+            const actorId = effect.parent.id
+            const combatant = game.combat.combatants.find(x => x.actor.id == actorId)
+            if(combatant) combatant.recalcInitiative()
+        }
+    }
+
     const askForName = async (tokenObject, setting) => {
         const dialogConstructor = game.dsk.apps.AskForNameDialog || AskForNameDialog
         dialogConstructor.getDialog(tokenObject, setting)

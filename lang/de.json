@@ -32,6 +32,9 @@
             "kk": {
                 "abbr": "KK",
                 "name": "Körperkraft"
+            },
+            "attack": {
+                "name": "Angriff"
             }
         },
         "SKILL": {
@@ -106,9 +109,17 @@
         "opportunityAttack": "Passierschlag",
         "narrowSpace": "Beengte Umgebung",
         "wrongHand": "Schwache Pfote",
+        "attackOfOpportunity": "Der Kämpfer kann einen Passierschlag ausführen.",
         "advantageousPosition": "Vorteilhafte Position",
         "doubleAttack": "Zwei Angriffe",
         "opposingWeaponSize": "Waffengröße Gegner",
+        "halfDefense": "der Verteidigungswert des Gegners muss für diesen Angriff halbiert werden",
+        "doubleDamage": "dreifacher Schaden",
+        "TABLENAMES": {
+            "Melee": "Patzertabelle Nahkampf",
+            "Range": "Patzertabelle Fernkampf",
+            "Spell": "Patzertabelle für Ahnengaben"
+        },
         "meleeVisionDisruption": {
             "0": "Klare Sicht",
             "1": "Leichte Störung [-1]",
@@ -130,7 +141,7 @@
             "firstTime": "Spracheinstellungen",
             "onlyInCombatTargets": "Ziele werden nur im Kampf angezeigt.",
             "setTargetToUserHint": "Aktuell markierte Ziele auf den User übertragen.",
-        "setTargetToUser": "Spielerziel setzen",
+            "setTargetToUser": "Spielerziel setzen",
             "noCombatskills": "Keine passenden Kampfsonderfertigkeiten",
             "DeleteItemDetail": "Möchtest du <b>{item}</b> entfernen?",
             "deleteConfirmation": "Löschen bestätigen",
@@ -154,6 +165,7 @@
         },
         "ammunitionType": "Munitionsart",
         "reloadTime": "Ladezeit",
+        "traitType": "Eigenschaftskategorie",
         "shieldSize": "Schildgröße",
         "Migrakel": {
             "Migration": "Actor Migration",
@@ -214,10 +226,20 @@
             "waitInit": "Zurückstellen"
         },
         "SETTINGS": {
+            "tokenhotbarLayout": "Tokenhotbar Layout",
+            "tokenhotbarLayoutHint": "Layout und Ausklappausrichtung der Tokenhotbar",
+            "tokenhotbarLayout0": "Horizontal, nach oben",
+            "tokenhotbarLayout1": "Horizontal, nach unten",
+            "tokenhotbarLayout2": "Vertikal, nach links",
+            "tokenhotbarLayout3": "Vertikal, nach rechts",
+            "merchantNotification": "Benachrichtigung bei Handel",
+            "merchantNotificationHint": "Zeige Transfers zwischen Akteuren (Händler/Schatz) im Chat.",
+            "tokenhotbarSize": "Tokenhotbar Größe",
+            "tokenhotbarSizeHint": "Größe der Buttons in der Tokenhotbar.",
             "enableCombatPan": "Schwenke zu aktuellem Zug",
-        "enableCombatPanHint": "Schwenke die Sicht auf den aktuellen Zug und selektiere den Token sofern Besitzerrechte vorhanden.",
-            "iniTrackerSize": "DSA Kampftracker Größe",
-            "iniTrackerSizeHint": "Größe der Buttons im DSA Kampftracker",
+            "enableCombatPanHint": "Schwenke die Sicht auf den aktuellen Zug und selektiere den Token sofern Besitzerrechte vorhanden.",
+            "iniTrackerSize": "DSK Kampftracker Größe",
+            "iniTrackerSizeHint": "Größe der Buttons im DSK Kampftracker",
             "enableCombatFlow": "DSK Kampftracker",
             "enableCombatFlowHint": "Aktiviere den DSK Kampftracker",
             "forceLanguage": "Sprache erzwingen",
@@ -244,33 +266,74 @@
             "scrollingFontsize": "Kampftext Schriftgröße",
             "scrollingFontsizeHint": "Die Schriftgröße für einige der scrollenden Token Texte (z.B. +- LeP)",
             "expandChatModifierlist": "Modifikatoren Liste ausgeklappt",
-        "expandChatModifierlistHint": "Zeige die Modifikatorenliste im Chat immer ausgeklappt.",
+            "expandChatModifierlistHint": "Zeige die Modifikatorenliste im Chat immer ausgeklappt.",
+            
             "inventorySound": "Inventar Geräusche",
-            "inventorySoundHint": "Aktiviere Interface Geräusche im Inventar (benötigt game audio bundles)"
+            "inventorySoundHint": "Aktiviere Interface Geräusche im Inventar (benötigt game audio bundles)",
+            "yesNumbered": "Ja (Nummeriert)",
+            "renameNumbered": "Umbenennen (Nummeriert)"
+        },
+        "HELP": {
+            "showHelp": "Hilfe anzeigen",
+            "default": "Weiterführende Hilfe und Informationen gibt es hier: <a href=\"https://youtube.com/c/VTTom\" target=\"_blank\"><button>VTTom's YouTube Kanal</button></a><a href=\"https://github.com/Plushtoast/dsa5-foundryVTT/wiki\" target=\"_blank\"><button>Wiki & FAQ</button></a><a href=\"https://discord.gg/foundryvtt\" target=\"_blank\"><button>Foundry Discord (ulisses-dsa)</button></a><a href=\"https://discord.gg/foundryvtt\" target=\"_blank\"><a href=\"https://discord.com/invite/SnqCgcvPzR\" target=\"_blank\"><button>Ulisses Discord</button></a>",
+            "command": "Befehl",
+            "example": "Beispiel",
+            "pay": "Bezahlen",
+            "descrpay": "Der Spielleiter kann einen Betrag Mondglöckchen von den Spielern verlangen. Die Spieler können einen Betrag Mondglöckchen bezahlen.",
+            "getPaid": "Auszahlen",
+            "descrgetPaid": "Der Spielleiter kann den Spielern Mondglöckchen auszahlen. Die Spieler können sich selbst Mondglöckchen zuweisen.",
+            "quickAbility": "Fähigkeits-Schnellzugriff",
+            "descrquickAbility": "Lass einen Token oder deinen Charakter über ein Chatkommando Talente (/sk), Ahngengaben (/ah) und Attacke (/at) würfeln.",
+            "conditions": "Zustände",
+            "descrconditions": "Zeigt alle Zustände und Status.",
+            "tables": "Tabellen",
+            "descrtables": "Zeige alle würfelbaren Tabellen.",
+            "request": "Wurf anfordern",
+            "descrrequest": "Fordere einen Talentwurf an. (Tab + Zahl = mit Modifikator)",
+            "twoD20Check": "2W20 Probe",
+            "descrtwoD20Check": "Würfle eine 2W20 Probe ohne Charakter (Attribute 12)",
+            "groupcheck": "Gruppenprobe",
+            "descrgroupcheck": "Fordere eine Gruppenprobe an. (Tab + Zahl = mit Modifikator)"
         },
         "WELCOME": "<p><h2>Willkommen zu DSK<br> für Foundry VTT</h2></p><p>Wir wünschen dir viel Spaß beim Spielen von DSK.</p><h3>Erste Schritte</h3><p>Für einen einfachen und schnellen Start empfehlen wir das Grundregelmodul in deinem System zu installieren. So kannst du unverzüglich Aventurien erkunden. Wenn du das Grundregelmodul nicht hast, musst du alle Gegenstände, Ahnengeschenke, Sonderfertigkeiten, Charaktere, etc. selbst anlegen.</p><p>Das Modul kannst du im <a href=\"https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/\" target=\"_blank\">F-Shop/</a> erwerben.</p><p>Für die Charaktererstellung stelle sicher, dass du per Drag and Drop die Spezies auf dein Charakterblatt ziehst (zur Berechnung der Attribute).</p><h3>Hilfe</h3><p>Bei Problemen benutze die Hilfe (/help im Chat), besuche den ulisses-dsa Channel im <a target=\"_blank\" href=\"https://discord.gg/foundryvtt\">Foundry Discord.</p><p>Diese Nachricht wird nur einmal angezeigt.</p>",
         "didyouknow": "Wusstest du schon?",
         "price": "Preis",
         "Experience": "Erfahrungsgrad",
         "unknown": "Unbekannt",
+        "Module": "Modul",
         "sizeCategory": "Größenkategorie",
         "requiredAdvantages": "Benötigte Vorteile",
         "requiredSpecialabilities": "Benötigte Sonderfertigkeiten",
         "attributes": "Eigenschaften",
         "guidevalue": "Leitwert",
-        "AstoundingSuccess": "Spektakulärer Erfolg",
-        "AstoundingFailure": "Schreckliches Missgeschick",
         "CriticalSuccess": "Kritischer Erfolg",
         "CriticalFailure": "Patzer",
         "Success": "Erfolg",
         "Failure": "Misserfolg",
+        "camplocation": "Lagerplatz",
+        "regenerationTest": "Erholungsprobe",
         "Roll": "Wurf",
         "Opposed": "Vergleichsprobe",
         "distance": "Distanz",
         "FP": "Fertigkeitspunkte",
         "regenerate": "Regeneration",
+        "interruption": "Unterbrechung",
+        "badEnvironment": "Schlechte Umgebung",
+        "regnerationCampLocations": {
+            "normal": "Normal",
+            "bad": "Schlechter Lagerplatz (-1)",
+            "good": "Gute Unterkunft (+1)"
+        },
+        "regenerationInterruptOptions": {
+            "small": "Klein - Wache/Ruhestörung (-1)",
+            "big": "Groß - Überfall/Hundswache (-2)",
+            "none": "Keine (+-0)"
+        },
+        
         "LocalizedIDs": {
-            "Shields": "Schilde"
+            "Shields": "Schilde",
+            "wrestle": "Raufen",
+            "perception": "Sinnesschärfe"
         },
         "fshopLink": "https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/",
         "UNITS": {
@@ -317,6 +380,7 @@
         "DSKError": {
             "reportBug": "Fehler melden",
             "unknownCombatSkill": "Das Kampftalent {skill} der Waffe {item} ist unbekannt. Bitte die Waffe anpassen.",
+            "noProperActor": "Dir wurde noch kein Charakter zugewiesen oder du hast keinen Token markiert.",
             "NotEnoughXP": "Nicht genug Abenteuerpunkte",
             "macroNotFound": "Das Macro {name} konnte nicht gefunden werden...sorry.",
             "wrongLanguage": "Deine Spracheinstellung passt nicht zur vorgegebenen Einstellung ({lang}). Möchtest du die Sprache ändern?",
@@ -369,6 +433,8 @@
         "effect": "Wirkung",
         "targetCategory": "Zielkategorie",
         "specialAdvantage": "Besonderer Vorteil",
+        "specialRules": "Sonderregeln",
+        "fight": "Kampfverhalten",
         "toughness": "Zähigkeit",
         "baseValue": "Grundwert",
         "speed": "Geschwindigkeit",
@@ -389,6 +455,8 @@
         "maybe": "Evtl.",
         "weight": "Gewicht",
         "ItemLibrary": "Bibliothek",
+        "count": "Anzahl",
+        "actionCount": "Aktionen",
         "condition": "Zustand",
         "value": "Wert",
         "rule": "Regel",
@@ -407,6 +475,9 @@
             "long": "Weit [–2 auf FK, –1 TP]",
             "rangesense": "Weit [–1 auf FK, –1 TP]",
             "extreme": "Extrem [–4 auf FK, –2 TP]"
+        },
+        "WIZARD": {
+            "generalTab": "Allgemein"
         },
         "mountedRangeOptions": {
             "STATIONARY": "steht",
@@ -468,6 +539,9 @@
             "3": "Passiv",
             "4": "Allgemein"
         },
+        "Difficulty": "Schwierigkeit",
+        "skModifier": "Seelenkraft (Ziel)",
+        "zkModifier": "Zähigkeit (Ziel)",
         "importDefault": "<div class=\"detailbox\"><p>DAS SCHWARZE AUGE, AVENTURIEN, DERE, MYRANOR, RIESLAND, THARUN, UTHURIA und THE DARK EYE sind eingetragene Marken der Ulisses Spiele GmbH, Waldems.</p><p>Copyright © 2021 by Ulisses Spiele GmbH. Alle Rechte vorbehalten.</p><p>Titel und Inhalte dieses Werkes sind urheberrechtlich geschützt. Der Nachdruck, auch auszugsweise, die Bearbeitung, Verarbeitung, Verbreitung und Vervielfältigung des Werkes in jedweder Form, insbesondere die Vervielfältigung auf photomechanischem, elektronischem oder ähnlichem Weg, sind nur mit schriftlicher Genehmigung der Ulisses Spiele GmbH, Waldems, gestattet.</p></div>",
         "ABBR": {
             "value": "Wert",
@@ -501,6 +575,40 @@
             "short": "Kurz",
             "medium": "Mittel",
             "long": "Lang"
+        },
+        "MERCHANT": {
+            "buy": "Kaufen",
+            "sell": "Verkaufen",
+            "exchange": "Tauschen",
+            "commerce": "Handel",
+            "Factor": "Faktor",
+            "hidePlayer": "Für Spieler verbergen",
+            "hidePlayerHint": "Im Aktuerverzeichnis den Spielern nicht anzeigen. Setzen bevor Spieler Berechtigungen erhalten.",
+            "buyingFactor": "Kauffaktor",
+            "sellingFactor": "Verkaufsfaktor",
+            "typeMerchant": "Händler",
+            "hideMoney": "Geld verbergen",
+            "hideMoneyHint": "Dem Spieler wird die Kaufkraft des Händlers nicht mehr angezeigt",
+            "typeEpic": "Garadan",
+            "typeLoot": "Schatz",
+            "typeNone": "Normale Person",
+            "randomGoods": "Zufällige Auswahl",
+            "clearInventory": "Zurücksetzen",
+            "deleteAllGoods": "Alle Waren entfernen?",
+            "select": "Auswahl",
+            "locked": "Abgeschlossen",
+            "selectRandomGoods": "Wähle Kategorien und Anzahl an zusätzlichen zufälligen Waren. Das Hinzufügen dauert einen Moment, wenn der Index der Bibliothek noch nicht erstellt wurde.",
+            "dropGround": "{name} auf dem Boden ablegen?",
+            "onlyGM": "Nur GM",
+            "buyNotification": "<b>{source}</b> kauft {amount}x {item} von <b>{target}</b> für {price} Silberstücke.",
+            "sellNotification": "<b>{source}</b> verkauft {amount}x {item} an <b>{target}</b> für {price} Silberstücke.",
+            "buyLootNotification": "<b>{source}</b> nimmt {amount}x {item} aus <b>{target}</b>.",
+            "sellLootNotification": "<b>{source}</b> legt {amount}x {item} in <b>{target}</b>.",
+            "emptyDestroy": "Temporär",
+            "emptyDestroyHint": "Löscht den Akteur, wenn das Inventar beim Handel geleert wird",
+            "untradable": "Gegenstand nicht handelbar",
+            "otherTradeFriend": "Ziehe einen Akteur für den du Ownerrechte hast auf das Charakterblatt um den Handelspartner zu ändern.",
+            "priceMod": "Grundpreis / Modifizierter Preis (Doppelclick für eigenen Preis)"
         },
         "Book": {
             "Wizard": "Journal Browser",
@@ -553,12 +661,16 @@
         "purse": "Geldbeutel",
         "wrongGrip": {
             "oneHanded": "Einhändig geführt",
+            "wrongGripped": "Einhändig/Beidhändig geführt",
             "twoHanded": "Beidhändig geführt"
         },
         "ITEMSHEET": {
             "offHandMod": "Bonus/Malus als Nebenhand (z.b. Parierwaffe)"
         },
         "money": "Mondglöckchen",
+        "each": "je",
+        "closeCombatAttacks": "Nahkampfangriffe",
+        "rangeCombatAttacks": "Fernkampfangriffe",
         "removeGesture": "Geste weglassen",
         "removeFormula": "Formel/Gebet weglassen",
         "Spent": "Ausgegeben",
@@ -566,6 +678,10 @@
         "damagetest": "Schadensprobe",
         "qualityStep": "Qualitätsstufe",
         "Total": "Gesamt",
+        "ROLL": {
+            "Targeting": "gegen",
+            "failed": "ist gescheitert"
+        },
         "SIZE": {
             "tiny": "Winzig",
             "small": "Klein",
@@ -578,6 +694,7 @@
             "whisper": "Private Nachricht",
             "regenerates": "regeneriert",
             "getsHurt": "verliert",
+            "requestRoll": "{user} fordert einen Wurf in {item}",
             "requestInformation": "Was weiß mein Held über...",
             "burning": {
                 "1": "{actor} <a class=\"chatButton chat-condition\" data-id=\"burning\" draggable=\"true\"><img src=\"icons/svg/fire.svg\">brennt</a> ein bisschen und erhält {damage} Schadenspunkt(e).",
@@ -647,7 +764,9 @@
             "meleeweapons": "Nahkampfwaffen",
             "rangeweapons": "Fernkampfwaffen",
             "poison": "Gift",
-            "ammunition": "Munition"
+            "ammunition": "Munition",
+            "food": "Lebensmittel",
+            "animals": "Lebende Tiere"
         },
         "Library": {
             "searchPlaceholder": "Durchsuche die Bibliothek",
@@ -662,6 +781,7 @@
             "loading": "Lade {item}..."
         }
     },
+    
     "ITEM.TypeMeleeweapon": "Nahkampfwaffe",
     "ITEM.TypeRangeweapon": "Fernkampfwaffe",
     "ITEM.TypeArmor": "Rüstung",

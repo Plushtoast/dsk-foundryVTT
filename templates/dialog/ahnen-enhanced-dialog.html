@@ -5,13 +5,13 @@
             {{> systems/dsk/templates/dialog/enhanced-default-dialog.html}}
 
             {{#if hasSKModifier}}
-            <div class="form-group" data-tooltip="TT.zkModifer">
-                <label>{{localize "skModifier"}}</label>
+            <div class="form-group" data-tooltip="dsk.TT.zkModifer">
+                <label>{{localize "dsk.skModifier"}}</label>
                 <input type="number" class="quantity-click" name="skModifier" value="{{SKModifier}}" />
             </div>
             {{/if}} {{#if hasZKModifier}}
-            <div class="form-group" data-tooltip="TT.zkModifer">
-                <label>{{localize "zkModifier"}}</label>
+            <div class="form-group" data-tooltip="dsk.TT.zkModifer">
+                <label>{{localize "dsk.zkModifier"}}</label>
                 <input type="number" class="quantity-click" name="zkModifier" value="{{ZKModifier}}" />
             </div>
             {{/if}}                     
@@ -47,7 +47,7 @@
                             <span class="castingTime" data-mod="0" data-base="{{spellCastingTime}}">{{spellCastingTime}}</span>
                         </div>
                         <div class="col four center row-section">
-                            <input data-tooltip="variableCost" class="{{#unless variableBaseCost}}dskhidden{{/unless}} col two variableBaseCost" type="number" data-mod="0" data-base="{{spellCost}}" name="variableBaseCost" value="{{spellCost}}" />
+                            <input data-tooltip="dsk.variableCost" class="{{#unless variableBaseCost}}dskhidden{{/unless}} col two variableBaseCost" type="number" data-mod="0" data-base="{{spellCost}}" name="variableBaseCost" value="{{spellCost}}" />
                             <span class="col {{#if variableBaseCost}}two {{/if}}aspcost" data-mod="0" data-base="{{spellCost}}">{{spellCost}}</span>
                         </div>
                         <div class="col four center">

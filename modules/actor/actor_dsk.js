@@ -90,6 +90,10 @@ export default class ActorDSK extends Actor {
             data.stats.ini.value *= data.stats.ini.multiplier || 1;
             data.stats.ini.value = Math.round(data.stats.ini.value) + baseInit;
 
+            if(DSKUtility.isActiveGM()){
+              if (this.isMerchant()) this.prepareMerchant()
+            }
+
 
         } catch (error) {
             console.error("Something went wrong with preparing actor data: " + error + error.stack);
@@ -109,6 +113,39 @@ export default class ActorDSK extends Actor {
             cost: DSKUtility._calculateAdvCost(i.system.level, i.system.StF),
         });
         return i;
+    }
+
+    async prepareMerchant() {
+      if (getProperty(this, "system.merchant.merchantType") == "loot") {
+        if (getProperty(this, "system.merchant.locked") && !this.hasCondition("locked")) {
+          await this.addCondition(ActorDSK.lockedCondition());
+        } else if (!getProperty(this, "system.merchant.locked")) {
+          let ef = this.effects.find((x) => getProperty(x, "flags.core.statusId") == "locked");
+          if (ef) await this.deleteEmbeddedDocuments("ActiveEffect", [ef.id]);
+        }
+      }
+    }
+
+    static lockedCondition() {
+      return {
+        label: game.i18n.localize("dsk.MERCHANT.locked"),
+        icon: "icons/svg/padlock.svg",
+        flags: {
+          core: { statusId: "locked" },
+          dsk: {
+            value: null,
+            editable: true,
+            noEffect: true,
+            hidePlayers: true,
+            description: game.i18n.localize("dsk.MERCHANT.locked"),
+            custom: true,
+          },
+        },
+      };
+    }
+
+    isMerchant() {
+      return ["merchant", "loot"].includes(getProperty(this, "system.merchant.merchantType"));
     }
 
     applyActiveEffects() {
@@ -221,6 +258,7 @@ export default class ActorDSK extends Actor {
                 },
             },
             aepModifier: 0,
+            creatureBonus: [],
             stats: {
                 initiative: {
                     multiplier: 1,
@@ -303,6 +341,14 @@ export default class ActorDSK extends Actor {
         return item;
     }
 
+    static _prepareRangeTrait(item) {
+      item.attack = Number(item.system.at);
+      item.LZ = Number(item.system.lz);
+      if (item.LZ > 0) ActorDSK.buildReloadProgress(item);
+  
+      return this._parseDmg(item);
+    }
+
     static _prepareRangeWeapon(item, ammunitions, combatskills, actor) {
         let skill = combatskills.find((i) => i.name == item.system.combatskill);
         item.calculatedRange = item.system.rw;
@@ -324,7 +370,7 @@ export default class ActorDSK extends Actor {
                 .map((x) => Math.round(Number(x) * rangeMultiplier))
                 .join("/");
               item.attack += Number(currentAmmo.system.atmod) || 0;
-              if (currentAmmo.system.ammunitiongroup.value == "mag") {
+              if (currentAmmo.system.ammunitionType == "mag") {
                 item.ammoMax = currentAmmo.system.mag.max;
                 item.ammoCurrent = currentAmmo.system.mag.value;
               }
@@ -343,6 +389,13 @@ export default class ActorDSK extends Actor {
     
         return this._parseDmg(item, currentAmmo);
       }
+
+    static _prepareMeleetrait(item) {
+      item.attack = Number(item.system.at);
+      if (item.system.pa != 0) item.parry = item.system.pa;
+  
+      return this._parseDmg(item);
+    }
 
     static _prepareMeleeWeapon(item, combatskills, actorData, wornWeapons = null) {
         let skill = combatskills.find((i) => i.name == item.system.combatskill);
@@ -406,7 +459,7 @@ export default class ActorDSK extends Actor {
           let damageMod = getProperty(modification, "system.damageMod");
           if (Number(damageMod)) damageTerm += `+${Number(damageMod)}`;
           else if (damageMod)
-            item.damageBonusDescription = `, ${damageMod} ${game.i18n.localize("CHARAbbrev.damage")} ${modification.name}`;
+            item.damageBonusDescription = `, ${damageMod} ${game.i18n.localize("dsk.CHARAbbrev.damage")} ${modification.name}`;
         }
         if (damageTerm) damageTerm = Roll.safeEval(damageTerm);
     
@@ -501,7 +554,7 @@ export default class ActorDSK extends Actor {
         let availableAmmunition = [];
         let schips = [];
         const specAbs = Object.fromEntries(Object.keys(DSK.specialAbilityCategories).map((x) => [x, []]));
-
+        const traits = Object.fromEntries(Object.keys(DSK.traitCategories).map((x) => [x, []]));
         const magic = {
             hasSpells: true, //this.system.isMage,
             ahnengabe: [],
@@ -571,6 +624,7 @@ export default class ActorDSK extends Actor {
 
         let totalArmor = actorData.system.totalArmor || 0;
         let totalWeight = 0;
+        let hasTrait = false;
 
         for (let i of this.items) {
             try {
@@ -643,6 +697,21 @@ export default class ActorDSK extends Actor {
                             totalArmor += Number(i.system.rs);
                             armor.push(i);
                         }
+                        break;
+                    case "trait":
+                        switch (i.system.traitType) {
+                          case "rangeAttack":
+                            i = ActorDSK._prepareRangeTrait(i);
+                            break;
+                          case "meleeAttack":
+                            i = ActorDSK._prepareMeleetrait(i);
+                            break;
+                          case "armor":
+                            totalArmor += Number(i.system.at);
+                            break;
+                        }
+                        traits[i.system.traitType].push(i);
+                        hasTrait = true;
                         break;
                     case "poison":
                         i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
@@ -725,6 +794,8 @@ export default class ActorDSK extends Actor {
             specAbs,
             information,
             combatskills,
+            hasTrait,
+            traits,
             wornArmor: armor,
             inventory,
             canAdvance: this.system.canAdvance,
@@ -861,6 +932,79 @@ export default class ActorDSK extends Actor {
                 ui.notifications.error(game.i18n.localize("dsk.DSKError.APUpdateError"));
             }
         }
+    }
+
+    setupRegeneration(statusId, options = {}, tokenId) {
+      let title = game.i18n.localize("dsk.regenerationTest");
+  
+      let testData = {
+        source: {
+          type: "regenerate",
+          system: {},
+        },
+        opposable: false,
+        extra: {
+          statusId,
+          actor: this.toObject(false),
+          options,
+          speaker: ItemDSK.buildSpeaker(this.actor, tokenId),
+        },
+      };
+  
+      testData.extra.actor.isMage = this.system.isMage;
+      let situationalModifiers = DSKStatusEffects.getRollModifiers(testData.extra.actor, testData.source);
+      let dialogOptions = {
+        title,
+        template: "/systems/dsk/templates/dialog/regeneration-dialog.html",
+        data: {
+          rollMode: options.rollMode,
+          regenerationInterruptOptions: DSK.regenerationInterruptOptions,
+          regnerationCampLocations: DSK.regnerationCampLocations,
+          showAepModifier: this.system.isMage,
+          situationalModifiers,
+          modifier: options.modifier || 0,
+        },
+        callback: (html, options = {}) => {
+          testData.situationalModifiers = ActorDSK._parseModifiers(html);
+          cardOptions.rollMode = html.find('[name="rollMode"]').val();
+          testData.situationalModifiers.push(
+            {
+              name:
+                game.i18n.localize("dsk.camplocation") + " - " + html.find('[name="regnerationCampLocations"] option:selected').text(),
+              value: html.find('[name="regnerationCampLocations"]').val(),
+            },
+            {
+              name:
+                game.i18n.localize("dsk.interruption") +
+                " - " +
+                html.find('[name="regenerationInterruptOptions"] option:selected').text(),
+              value: html.find('[name="regenerationInterruptOptions"]').val(),
+            }
+          );
+          testData.regenerationFactor = html.find('[name="badEnvironment"]').is(":checked") ? 0.5 : 1;
+          const attrs = ["LeP", "AeP"]
+          const update = {}
+          for (let k of attrs) {
+            testData[`${k}Modifier`] = Number(html.find(`[name="${k}Modifier"]`).val() || 0);
+            testData[`regeneration${k}`] = Number(this.system.stats.regeneration[`${k}max`])
+            const regenerate = html.find(`[name="regenerate${k}"]`).is(":checked") ? 1 : 0
+            testData[`regenerate${k}`] = regenerate
+            if (regenerate) update[`system.status.regeneration.${k}Temp`] = 0
+          }
+  
+          mergeObject(testData.extra.options, options);
+          this.update(update);
+          return { testData, cardOptions };
+        },
+      };
+  
+      let cardOptions = this._setupCardOptions("systems/dsk/templates/chat/roll/regeneration-card.html", title, tokenId);
+  
+      return DiceDSK.setupDialog({
+        dialogOptions,
+        testData,
+        cardOptions,
+      });
     }
 
     setupCharacteristic(characteristicId, options = {}, tokenId) {
@@ -1195,7 +1339,7 @@ export default class ActorDSK extends Actor {
         ) {
           await this.addCondition("bloodrush");
           const msg = DSKUtility.replaceConditions(
-            `${game.i18n.format("CHATNOTIFICATION.gainsBloodrush", {
+            `${game.i18n.format("dsk.CHATNOTIFICATION.gainsBloodrush", {
               character: "<b>" + this.name + "</b>",
             })}`
           );

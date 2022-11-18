@@ -25,6 +25,7 @@ export default class ItemSheetDSK extends ItemSheet {
         Items.registerSheet("dsk", ItemSheetCombatskill, { makeDefault: true, types: ["combatskill"] });
         Items.registerSheet("dsk", ItemSheetInformation, { makeDefault: true, types: ["information"] });
         Items.registerSheet("dsk", ItemSheetEffectwrapper, { makeDefault: true, types: ["effectwrapper"] });
+        Items.registerSheet("dsk", ItemSheetTrait, { makeDefault: true, types: ["trait"] });
     }
 
     _getHeaderButtons() {
@@ -112,6 +113,17 @@ class ItemSheetEffectwrapper extends ItemSheetDSK {
 
 }
 
+class ItemSheetTrait extends ItemSheetDSK {
+    async getData(options) {
+        const data = await super.getData(options)
+        mergeObject(data, {
+            traitCategories: DSK.traitCategories,
+            ranges: DSK.meleeRanges
+        })
+        return data
+    }
+}
+
 class ItemSheetInformation extends ItemSheetDSK {
     async getData(options) {
         const data = await super.getData(options)
@@ -130,7 +142,7 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
         if (!twoHanded) {
             wrongGripHint = "wrongGrip.yieldTwo"
         } else {
-            const localizedCT = game.i18n.localize(`LocalizedCTs.${this.item.system.combatskill.value}`)
+            const localizedCT = game.i18n.localize(`LocalizedCTs.${this.item.system.combatskill}`)
             switch (localizedCT) {
                 case "Two-Handed Impact Weapons":
                 case "Two-Handed Swords":
@@ -155,9 +167,9 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
             shieldSizes: DSK.shieldSizes
         })
         if (this.item.actor) {
-            const combatSkill = this.item.actor.items.find(x => x.type == "combatskill" && x.name == this.item.system.combatskill.value)
+            const combatSkill = this.item.actor.items.find(x => x.type == "combatskill" && x.name == this.item.system.combatskill)
             data['canBeOffHand'] = combatSkill && !(combatSkill.system.weapontype.twoHanded) && this.item.system.worn.value
-            data['canBeWrongGrip'] = !["Daggers", "Fencing Weapons"].includes(game.i18n.localize(`LocalizedCTs.${this.item.system.combatskill.value}`))
+            data['canBeWrongGrip'] = !["Daggers", "Fencing Weapons"].includes(game.i18n.localize(`LocalizedCTs.${this.item.system.combatskill}`))
         }
         data.canOnUseEffect = game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
         return data
@@ -203,7 +215,7 @@ class ItemSheetEquipment extends ItemSheetObfuscation(ItemSheetDSK){
                 containerContent: this.item.actor.items
                 .filter(x => DSK.equipmentCategories.includes(x.type) && x.system.parent_id == this.item.id)
                 .map(x => {
-                    x.weight = parseFloat((x.system.weight.value * x.system.quantity.value).toFixed(3));
+                    x.weight = parseFloat((x.system.weight * x.system.quantity).toFixed(3));
                     weightSum += Number(x.weight)
                     return x
                 }),

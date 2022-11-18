@@ -16,6 +16,10 @@ import { initChatlogHooks } from "./chatlog.js"
 import { initTokenHook } from "./statuseffect.js"
 import { initTokenHUD } from "./tokenHUD.js"
 import { initRollsFunction } from "../system/dskrolls.js"
+import DSKActiveEffectConfig from "../status/active_effects.js";
+import MerchantSheetDSK from "../actor/merchant-sheet.js"
+import CreatureMerchantSheetDSK from "../actor/creature-merchant-sheet.js"
+import CharacterSheetMerchantDSK from "../actor/character-merchant-sheet.js"
 
 export function initHooks(){
     setupJournal()
@@ -42,26 +46,40 @@ export function initHooks(){
             "systems/dsk/templates/actors/actor-equipment.html",
             "systems/dsk/templates/actors/parts/gearSearch.html",
             "systems/dsk/templates/actors/parts/purse.html",
+            "systems/dsk/templates/actors/parts/characteristics-small.html",
             "systems/dsk/templates/actors/parts/status_effects.html",
             "systems/dsk/templates/actors/parts/containerContent.html",
             "systems/dsk/templates/actors/actor-notes.html",
+            "systems/dsk/templates/actors/creature/creature-combat.html",
+            "systems/dsk/templates/actors/creature/creature-main.html",
+            "systems/dsk/templates/actors/creature/creature-magic.html",
+            "systems/dsk/templates/actors/creature/creature-loot.html",
             "systems/dsk/templates/dialog/default-dialog.html",
             "systems/dsk/templates/actors/character/actor-magic.html",
             "systems/dsk/templates/actors/parts/characteristics-large.html",
+            "systems/dsk/templates/actors/npc/npc-main.html",
             "systems/dsk/templates/actors/parts/rollhead.html",
             "systems/dsk/templates/actors/actor-main.html",
             "systems/dsk/templates/chat/roll/test-card.html",
             "systems/dsk/templates/dialog/parts/targets.html",
             "systems/dsk/templates/dialog/default-combat-dialog.html",
+            "systems/dsk/templates/actors/creature/creature-notes.html",
             "systems/dsk/templates/dialog/enhanced-default-dialog.html",
-            "systems/dsk/templates/actors/parts/information.html"
+            "systems/dsk/templates/actors/parts/information.html",
+            "systems/dsk/templates/actors/merchant/merchant-commerce.html",
+            "systems/dsk/templates/actors/parts/normalhead.html"
         ])
     })
     Actors.unregisterSheet("core", ActorSheet);
     Actors.registerSheet("dsk", ActorSheetCharacter, { types: ["character"], makeDefault: true });
     Actors.registerSheet("dsk", ActorSheetCreature, { types: ["creature"], makeDefault: true });
     Actors.registerSheet("dsk", ActorSheetNPC, { types: ["npc"], makeDefault: true });
+    Actors.registerSheet("dsk", MerchantSheetDSK, { types: ["npc"] });
+    Actors.registerSheet("dsk", CreatureMerchantSheetDSK, { types: ["creature"] })
+    Actors.registerSheet("dsk", CharacterSheetMerchantDSK, { types: ["character"] })
+    DocumentSheetConfig.registerSheet(ActiveEffect, "dsk", DSKActiveEffectConfig, { makeDefault: true })
     Journal.registerSheet("dsk", DSKJournalSheet, {makeDefault: true})
+
 
     ItemSheetDSK.setupSheets()
 

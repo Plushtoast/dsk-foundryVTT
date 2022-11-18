@@ -60,7 +60,7 @@ export default class Migrakel {
             const bagsToCreate = [];
             for (let item of actor.items.filter(
                     (x) =>
-                    x.type == "equipment" && x.system.equipmentType.value == "bags"
+                    x.type == "equipment" && x.system.category == "bags"
                 )) {
                 let find = await itemLibrary.findCompendiumItem(item.name, item.type);
                 if (find.length > 0) {
@@ -85,7 +85,7 @@ export default class Migrakel {
         for (let item of actor.items.filter(
                 (x) =>
                 condition(x) &&
-                !(x.type == "equipment" && x.system.equipmentType.value == "bags")
+                !(x.type == "equipment" && x.system.category == "bags")
             )) {
             let find = await itemLibrary.findCompendiumItem(item.name, item.type);
             if (find.length > 0) {
@@ -116,7 +116,7 @@ export default class Migrakel {
                     effects: find.effects.toObject()
                 }
                 if(find.type != "spellextension")
-                    upd.system = { effectFormula: { value: find.system.effectFormula.value } }
+                    upd.system = { effectFormula: find.system.effectFormula }
                     
                 return upd
             };
@@ -128,7 +128,7 @@ export default class Migrakel {
         if (await this.showDialog(game.i18n.localize("dsk.Migrakel.abilities"))) {
             const updator = (find) => {
                 let update = {
-                    system: { effect: { value: find.system.effect.value } },
+                    system: { effect: { value: find.system.effect } },
                     effects: find.effects.toObject(),
                 };
                 if (find.type == "specialability") {

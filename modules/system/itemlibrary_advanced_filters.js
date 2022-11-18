@@ -1,4 +1,5 @@
 import DSKUtility from "./dsk_utility.js"
+import DSK from "./config.js"
 
 let ADVANCEDFILTERS = {}
 
@@ -12,31 +13,53 @@ Hooks.once("ready", () => {
 
     mergeObject(ADVANCEDFILTERS, {
       ammunition: [
+        { label: "dsk.ammunitionType", attr: "ammunitionType", type: "select", options: DSK.ammunitiongroups }
       ],
       equipment: [
+        { label: "dsk.category", attr: "category", type: "select", options: DSK.equipmentTypes }
       ],
       rangeweapon: [
+        { label: "ITEM.TypeCombatskill", attr: "combatskill", type: "select", options: range },
+        { label: "dsk.ammunitionType", attr: "ammunitionType", type: "select", options: DSK.ammunitiongroups }
       ],
       meleeweapon: [
+        { label: "ITEM.TypeCombatskill", attr: "combatskill", type: "select", options: melee },
+        { label: "dsk.range", attr: "rw", type: "select", options: DSK.meleeRanges }
       ],
       poison: [
+        { label: "dsk.resistanceModifier", attr: "resist", type: "select", options: DSK.magicResistanceModifiers },
       ],
       trait: [
       ],
       profession: [
       ],
       specialability: [
+        { label: "dsk.category", attr: "category", type: "select", options: DSK.specialAbilityCategories },
+        { label: "ITEM.TypeCombatskill", attr: "subcategory", type: "select", options: allCombat, notStrict: true }
       ],
-      ahnengabe: [],
+      ahnengabe: [
+        { label: "dsk.resistanceModifier", attr: "resist", type: "select", options: DSK.magicResistanceModifiers },
+        { label: "dsk.targetCategory", attr: "targetCategory", type: "text" },
+        { label: "dsk.distribution", attr: "distribution", type: "text" }
+      ],
       ahnengeschenk: [],
-
+     
       npc: [
+        { label: "ITEM.TypeSpecies", attr: "details.species", type: "text" },
+        { label: "ITEM.TypeProfession", attr: "details.profession", type: "text" },
+        { label: "ITEM.TypeCulture", attr: "details.culture", type: "text" }
       ],
       character: [
+        { label: "ITEM.TypeSpecies", attr: "details.species", type: "text" },
+        { label: "ITEM.TypeProfession", attr: "details.profession", type: "text" },
+        { label: "ITEM.TypeCulture", attr: "details.culture", type: "text" }
       ],
       creature: [
+        { label: "ITEM.TypeSpecies", attr: "details.species", type: "text" },
+        { label: "dsk.sizeCategory", attr: "details.size", type: "select", options: DSK.sizeCategories }
       ],
       armor: [ 
+        { label: "dsk.protection", attr: "rs", type: "select", options: { "0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7" } },
       ],
 
     })

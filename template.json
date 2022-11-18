@@ -67,17 +67,20 @@
                     "sk": {
                         "initial": 0,
                         "advances": 0,
-                        "modifier": 0
+                        "modifier": 0,
+                        "value": 0
                     },
                     "zk": {
                         "initial": 0,
                         "advances": 0,
-                        "modifier": 0
+                        "modifier": 0,
+                        "value": 0
                     },
                     "schips": {
                         "initial": 0,
                         "modifier": 0,
-                        "current": 0
+                        "current": 0,
+                        "value": 0
                     },
                     "gs": {
                         "initial": 0,
@@ -86,7 +89,8 @@
                     "ini": {
                         "initial": 0,
                         "modifier": 0,
-                        "die": "1d6"
+                        "die": "1d6",
+                        "value": 0
                     },
                     "regeneration": {
                         "LePTemp": 0,
@@ -97,7 +101,7 @@
                 },
                 "details": {
                     "species": "",
-                    "size": ""
+                    "size": "average"
                 },
                 "config": {
                     "autoBar": true,
@@ -110,7 +114,6 @@
                     "profession": "",
                     "culture": "",
                     "gender": "",
-                    "species": "",
                     "pack": "",
                     "age": ""
                 }                
@@ -145,7 +148,9 @@
                 "description": "",
                 "fight": "",
                 "specialRules": ""
-            }
+            },
+            "actionCount": 1,
+            "count": "1"
         },
         "npc": {
             "templates": [
@@ -181,7 +186,8 @@
             "skill",
             "combatskill",
             "effectwrapper",
-            "information"
+            "information",
+            "trait"
         ],
         "templates": {
             "description": {
@@ -354,8 +360,21 @@
             "category": "general",
             "subcategory": 0,
             "combatskills": "",
+            "effect": "",
             "level": 0,
             "max": 0
+        },
+        "trait": {
+            "description": {
+                "value": ""
+            },
+            "traitType": "meleeAttack",
+            "at": "",
+            "pa": "",
+            "rw": "medium",
+            "tp": "1d6",
+            "reloadTimeprogress": 0,
+            "lz": 1
         },
         "ahnengeschenk": {
             "description": {

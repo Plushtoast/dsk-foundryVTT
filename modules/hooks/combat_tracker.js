@@ -143,11 +143,32 @@ export class DSKCombatant extends Combatant {
         })
         super(data, context);
     }
+
+    async recalcInitiative(){
+        if(this.initiative){
+            const roll = await this.getFlag("dsk", "baseRoll") || 0
+            const update = { "initiative": roll + this.actor.system.stats.ini.value}
+            await this.update(update)
+        }
+    }
 }
 
 Hooks.on("preCreateCombatant", (data, options, user) => {
     const actor = DSKUtility.getSpeaker({actor: data.actorId, scene: data.sceneId, token: data.token_id})
     if(getProperty(actor.system, "merchant.merchantType") == "loot") return false
+})
+
+Hooks.on("updateCombatant", (combatant, change, user) => {
+    if(change.initiative){
+        const baseRoll = combatant.getFlag("dsk", "baseRoll")
+        if(!baseRoll) {
+            const parts = `${change.initiative}`.split(".")
+            const roll = Number(parts[0]) - Math.round(combatant.actor.system.stats.ini.value)
+            combatant.setFlag("dsk", "baseRoll", roll)
+        }
+    } else if("initiative" in change && change.initiative == null){
+        combatant.update({ [`flags.dsk.-=baseRoll`]: null }).then(x => console.log(combatant))
+    }
 })
 
 class RepeatingEffectsHelper {
@@ -198,14 +219,14 @@ class RepeatingEffectsHelper {
     }
 
     static async applyBleeding(turn) {
-        if(turn.actor.system.status.wounds.value <= 0) return 
+        if(turn.actor.system.stats.LeP.value <= 0) return 
 
         await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format('dsk.CHATNOTIFICATION.bleeding', { actor: turn.actor.name })))
         await turn.actor.applyDamage(1)
     }
 
     static async applyBurning(turn, effect) {
-        if(turn.actor.system.status.wounds.value <= 0) return 
+        if(turn.actor.system.stats.LeP.value <= 0) return 
         
         const step = Number(effect.getFlag("dsk", "value"))
         const protection = DSKStatusEffects.resistantToEffect(turn.actor, effect)

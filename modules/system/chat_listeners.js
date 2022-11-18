@@ -1,5 +1,6 @@
 
 
+import { showPopout } from "../hooks/imagepopouttochat.js"
 import DSK from "./config.js"
 import DSKUtility from "./dsk_utility.js"
 import { showPatchViewer } from "./migrator.js"
@@ -8,12 +9,13 @@ import RuleChaos from "./rule_chaos.js"
 export default class DSKChatListeners {
     static chatListeners(html) {
         html.on('click', '.openJournalBrowser', () => game.dsk.apps.journalBrowser.render(true))
-        let helpButton = $(`<a class="button showHelp" data-tooltip="${game.i18n.localize('dsk.HELP.showHelp')}"><i class="fas fa-question"></i></a>`)
+        let helpButton = $('<a class="button showHelp" data-tooltip="dsk.HELP.showHelp"><i class="fas fa-question"></i></a>')
         helpButton.click(() => { DSKChatListeners.getHelp() })
         $(html.find('.control-buttons')).prepend(helpButton)
         html.on('click', '.showPatchViewer', () => showPatchViewer())
         html.on('click', '.functionswitch', (ev) => RuleChaos[ev.currentTarget.dataset.function](ev))
         html.on('click', '.panToToken', ev => DSKChatListeners.panToToken(ev))
+        html.on('click', '.popoutImage', ev => showPopout(ev))
     }
 
     static async panToToken(ev) {
@@ -34,10 +36,10 @@ export default class DSKChatListeners {
     }
 
     static getHelp() {
-            let msg = DSK.helpContent.map(x => `<h2>${game.i18n.localize(`HELP.${x.name}`)}</h2>
+            let msg = DSK.helpContent.map(x => `<h2>${game.i18n.localize(`dsk.HELP.${x.name}`)}</h2>
             <p><b>${game.i18n.localize("dsk.HELP.command")}</b>: ${x.command}</p>
             <p><b>${game.i18n.localize("dsk.HELP.example")}</b>: ${x.example}</p>
-            <p><b>${game.i18n.localize("dsk.description")}</b>: ${game.i18n.localize(`HELP.descr${x.name}`)}`).join("") + `<br>
+            <p><b>${game.i18n.localize("dsk.description")}</b>: ${game.i18n.localize(`dsk.HELP.descr${x.name}`)}`).join("") + `<br>
             <p>${game.i18n.localize("dsk.HELP.default")}</p>`
         ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
     }
@@ -64,15 +66,13 @@ export default class DSKChatListeners {
 
         if(!skill){
             skill = {
-                name: "3d20",
+                name: "2d20",
                 type: "skill",
                 system: {
-                    "talentValue": { "value": 0 },
-                    "characteristic1": { "value": "mu" },
-                    "characteristic2": { "value": "kl" },
-                    "characteristic3": { "value": "in" },
-                    "RPr": { "value": "no" },
-                    "burden": { "value": "no" }
+                    "level": 0,
+                    "characteristic1": "mu",
+                    "characteristic2": "kl",
+                    "encumbers": "no"
                 }
             }
         }

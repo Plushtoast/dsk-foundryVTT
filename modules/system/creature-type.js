@@ -28,7 +28,7 @@ export default class CreatureType {
     }
 
     static detectCreatureType(actor) {
-        const creatureClass = actor.type == "creature" ? actor.system.creatureClass.value : actor.system.details.species.value
+        const creatureClass = actor.system.details.species
         const types = Object.keys(CreatureType.creatureData.types).filter((x) => creatureClass.indexOf(x) >= 0)
         return types.map((x) => this.getClass(CreatureType.creatureData.types[x], creatureClass))
     }
@@ -58,11 +58,11 @@ export default class CreatureType {
 
     static creatureTypeName(actor){
         if(actor.type == "creature"){
-            const creatureClass = actor.system.creatureClass.value
+            const creatureClass = actor.system.species
             return Object.keys(CreatureType.creatureData.types).filter((x) => creatureClass.indexOf(x) >= 0)[0]
         }
         else
-            return actor.system.details.species.value
+            return actor.system.details.species
     }
 
     static addCreatureTypeModifiers(actorData, source, situationalModifiers, attacker) {
@@ -88,12 +88,12 @@ export default class CreatureType {
                 const toCombatskills = getProperty(vulnerabilities, "combatskill")
 
                 toCombatskills.reduce((prev, x) => {
-                    if (x.target == source.system.combatskill.value) {
+                    if (x.target == source.system.combatskill) {
                         const isBonus = /\*/.test(x.value) ? Number(x.value.replace("*", "")) > 1 : Number(x.value) > 0
                         const key = isBonus ? "WEAPON.vulnerableTo" : "WEAPON.resistantTo"
                         situationalModifiers.push(
                             ...CreatureType.buildDamageMod(
-                                `${game.i18n.format(key, { name: source.system.combatskill.value })} (${x.source})`,
+                                `${game.i18n.format(key, { name: source.system.combatskill })} (${x.source})`,
                                 x.value
                             )
                         )

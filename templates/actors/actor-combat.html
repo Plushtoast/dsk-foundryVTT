@@ -35,7 +35,7 @@
                 <div class="col ten center item" data-item-id="{{item._id}}" data-mod="attack">
                     <a data-mode="attack" class="ch-rollCombat d20 die-attack">{{item.attack}}</a>
                 </div>
-                <div class="col ten center item" data-item-id="{{item._id}}" data-mod="parry">
+                <div class="col ten center item dskrelative diet-shield d20height" data-item-id="{{item._id}}" data-mod="parry">
                     {{item.parry}}
                 </div>
 
@@ -106,7 +106,7 @@
                 </div>
 
                 <div class="col five center max20">
-                    {{#if (ne item.system.ammunitiongroup.value "-")}}
+                    {{#if (ne item.system.ammunitionType "-")}}
                     <div class="row-section">
 
                         <div class="magazinContainer">
@@ -118,10 +118,10 @@
                         </div>
 
                         <select name="currentAmmo-{{item._id}}" class="ammo-selector" data-item-id="{{item._id}}" data-dtype="String">
-                                {{#select item.system.currentAmmo.value}}
+                                {{#select item.system.currentAmmo}}
                                 <option class="ammo-option" value="">None</option>
                                 {{#each item.ammo as |ammo a|}}
-                                <option class="ammo-option" value="{{ammo._id}}"> ({{ammo.system.quantity.value}})
+                                <option class="ammo-option" value="{{ammo._id}}"> ({{ammo.system.quantity}})
                                     {{ammo.name}}</option>
                                 {{/each}}
                                 {{/select}}
@@ -215,7 +215,6 @@
         </div>
         {{/each}}
     </div>
-
 </div>
 
 <div class="groupbox">
@@ -224,7 +223,7 @@
             <b>{{localize "ITEM.TypeCombatskill"}}</b>
         </div>
         <div class="col lineheight ten center">
-            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="{{'dsk.SHEET.collapse'}}"></i></a>
+            <a class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
         </div>
     </div>
     <div class="row-section wrap">
@@ -285,10 +284,10 @@
                     <input class="skill-advances" type="text" data-dtype="Number" value="{{item.system.level}}" />
                 </div>
                 <div class="col eight center item" data-item-id="{{item._id}}" data-mod="attack">
-                    <a data-mode="attack" class="ch-rollCombat d20 diet-mu">{{item.system.attack}}</a>
+                    <span data-mode="attack" class="d20 diet-mu">{{item.system.attack}}</span>
                 </div>
                 <div class="col eight center item" data-item-id="{{item._id}}" data-mod="parry">
-                    {{#if (eq item.system.weapontype 'melee')}} <a data-mode="parry" class="ch-rollCombat d20 diet-in">{{item.system.parry}}</a> {{else}}- {{/if}}
+                    {{#if (eq item.system.weapontype 'melee')}} <span data-mode="parry" class="d20 diet-shield">{{item.system.parry}}</span> {{else}}- {{/if}}
                 </div>
             </div>
 

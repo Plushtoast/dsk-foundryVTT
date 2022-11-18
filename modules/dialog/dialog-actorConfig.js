@@ -32,6 +32,9 @@ export default class DialogActorConfig extends Dialog {
     }
 
     async updateWrapper(fnct, ev) {
+        return ui.notifications.warn("There is nothing to migrate yet.")
+
+
         if (this.lock) return
 
         const upd = async() => {

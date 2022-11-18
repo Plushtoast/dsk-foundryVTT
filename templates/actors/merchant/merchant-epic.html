@@ -1,0 +1,45 @@
+<form class="{{cssClass}} lock{{actor.sheetLocked}}" autocomplete="off">
+    <fieldset disabled>
+        <header class="sheet-header row-section" ondragstart="return false;" ondrop="return false;">
+
+        </header>
+        <section id="tab-sections">
+            <nav id="dsk-primarytabs" class="sheet-tabs tabs" ondragstart="return false;" ondrop="return false;">
+                <a class="item active" data-tab="main">{{localize "dsk.WIZARD.generalTab"}}</a>
+                <a class="item" data-tab="notes">{{localize "dsk.notes"}}</a>
+            </nav>
+
+            <section class="content">
+                <div class="tab main save-scroll" data-tab="main">
+                    <div class="row-section">
+                        <div class="col center">
+                            <img src="{{actor.img}}" style="min-height: 200px;max-width:50%;border:none;" />
+                        </div>
+                    </div>
+                    <div class="row-section">
+                        <div class="col center">
+                            <div class="garadanborder">
+                                <div class="row-section">
+                                    <div class="col five">
+                                        <div class="garadanicon" style="background-image:url(systems/dsk/icons/Garadan{{actor.system.merchant.garadan}}.webp);"></div>
+                                    </div>
+                                    <div class="col eighty">
+                                        <h1>{{actor.name}}</h1>
+                                        <h2>{{actor.system.details.profession}}</h2>
+                                    </div>
+                                    <div class="col five">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab save-scroll" data-tab="notes">
+                    {{> systems/dsk/templates/actors/actor-notes.html}}
+                </div>
+            </section>
+        </section>
+    </fieldset>
+</form>

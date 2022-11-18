@@ -68,8 +68,8 @@ export default class WizardDSK extends Application {
                 item.tooltip = game.i18n.localize("dsk.details")
                 item = ItemRulesDSK.reverseAdoptionCalculation(this.actor, parsed, item)
                 if (item.system.APValue) {
-                    item.APunparseable = isNaN(item.system.APValue.value)
-                    item.apCost = item.APunparseable ? item.system.APValue.value : parsed.step * Number(item.system.APValue.value)
+                    item.APunparseable = isNaN(item.system.ap)
+                    item.apCost = item.APunparseable ? item.system.ap : parsed.step * Number(item.system.ap)
                 }
             }
             item.replaceName = parsed.original
@@ -87,9 +87,9 @@ export default class WizardDSK extends Application {
         let existing = itemsToAdd.find(x => x.name == item.name && x.type == item.type)
         if (existing) {
             merged = true
-            const level = Number(getProperty(item, "system.step.value"))
+            const level = Number(getProperty(item, "system.level"))
             if (level) {
-                existing.system.step.value += level
+                existing.system.level += level
             }
         } else {
             itemsToAdd.push(item)
@@ -111,15 +111,15 @@ export default class WizardDSK extends Application {
             switch (item.type) {
                 case "advantage":
                 case "disadvantage":
-                    item.system.step.value = Number($(k).attr("data-step"))
+                    item.system.level = Number($(k).attr("data-step"))
                     item = ItemRulesDSK.reverseAdoptionCalculation(this.actor, parsed, item)
 
                     if (!this.mergeLevels(itemsToAdd, item)) AdvantageRulesDSK.vantageAdded(this.actor, item)
                     break
                 case "specialability":
-                    item.system.step.value = Number($(k).attr("data-step"))
+                    item.system.level = Number($(k).attr("data-step"))
 
-                    if ($(k).attr("data-free")) item.system.APValue.value = 0
+                    if ($(k).attr("data-free")) item.system.ap = 0
 
                     item = ItemRulesDSK.reverseAdoptionCalculation(this.actor, parsed, item)
 
@@ -172,7 +172,7 @@ export default class WizardDSK extends Application {
             let res = this.actor.items.find(i => { return i.type == itemType && i.name == parsed.name });
             if (res) {
                 let skillUpdate = duplicate(res)
-                skillUpdate.system.talentValue.value = Math.max(0, factor * parsed.step + (bonus ? Number(skillUpdate.system.talentValue.value) : 0))
+                skillUpdate.system.level = Math.max(0, factor * parsed.step + (bonus ? Number(skillUpdate.system.level) : 0))
                 itemsToUpdate.push(skillUpdate)
             } else {
                 console.warn(`Could not find ${itemType} ${skill}`)

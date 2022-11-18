@@ -41,7 +41,7 @@ export default class DSKpellDialog extends DialogShared {
                                 reloadUpdate["system.castingTime.modified"] = modified;
                             }
                             await actor.updateEmbeddedDocuments("Item", [reloadUpdate]);
-                            const infoMsg = game.i18n.format("SPELL.isReloading", {
+                            const infoMsg = game.i18n.format("dsk.SPELL.isReloading", {
                                 actor: testData.extra.actor.name,
                                 item: testData.source.name,
                                 status: `${progress + 1}/${modified}`,

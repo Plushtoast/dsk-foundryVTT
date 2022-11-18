@@ -207,7 +207,7 @@ export default class ActorSheetDSK extends ActorSheet {
 
             const update = {_id: itemId}
             if (ev.button == 0){
-                const lz = item.type == "trait" ? item.system.reloadTime.value : ActorDSK.calcLZ(item, this.actor)
+                const lz = item.type == "trait" ? item.system.lz : ActorDSK.calcLZ(item, this.actor)
                 update["system.reloadTimeprogress"] = Math.min(item.system.reloadTimeprogress + 1, lz)
             }                
             else if (ev.button == 2)
@@ -478,6 +478,28 @@ export default class ActorSheetDSK extends ActorSheet {
             await this[funct](param)
             i.removeClass("fa-spin fa-spinner")
         }
+    }
+
+    _onItemCreate(event) {
+        event.preventDefault();
+        let header = event.currentTarget,
+            data = duplicate(header.dataset);
+
+        if (DSK.equipmentTypes[data.type]) {
+            data.type = "equipment"
+            data = mergeObject(data, {
+                "system.category": event.currentTarget.attributes["item-section"].value,
+                "system.effect": ""
+            })
+        }
+        if(!["aggregatedTest", "ahnengabe"].includes(data.type)){
+            data["system.weight"] = 0
+            data["system.quantity"] = 0
+        }
+
+        ItemDSK.defaultIcon(data)
+        data["name"] = DSKUtility.categoryLocalization(data.type)
+        this.actor.createEmbeddedDocuments("Item", [data]);
     }
 
     _onMacroUseItem(ev) {

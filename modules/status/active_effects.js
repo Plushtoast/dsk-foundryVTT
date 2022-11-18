@@ -88,8 +88,8 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
                     "meleeweapon",
                     "rangeweapon",
                 ].includes(itemType) ||
-                (["specialability"].includes(itemType) && getProperty(this.object, "parent.system.category.value") == "Combat") ||
-                (itemType == "trait" && ["meleeAttack", "rangeAttack"].includes(getProperty(this.object, "parent.system.traitType.value")))
+                (["specialability"].includes(itemType) && getProperty(this.object, "parent.system.category") == "Combat") ||
+                (itemType == "trait" && ["meleeAttack", "rangeAttack"].includes(getProperty(this.object, "parent.system.traitType")))
                 ,
             hasDamageTransformation: ["ammunition"].includes(itemType),
         };
@@ -299,7 +299,7 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
                     options.skipResistRolls || false
                 );
                 if (effectApplied) {
-                    const appliedEffect = game.i18n.format("ActiveEffects.appliedEffect", { target: actor.token?.name || actor.name, source: effectNames.join(", ") });
+                    const appliedEffect = game.i18n.format("dsk.ActiveEffects.appliedEffect", { target: actor.token?.name || actor.name, source: effectNames.join(", ") });
                     const infoMsg = `${appliedEffect}${msg || ""}`;
                     await ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
                 }
@@ -348,7 +348,7 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
             effects.push(...specEffects);
         }
 
-        let duration = getProperty(source, "system.duration.value") || "";
+        let duration = getProperty(source, "system.duration") || "";
         duration = duration.replace(" x ", " * ").replace(game.i18n.localize("dsk.CHARAbbrev.QS"), testData.qualityStep);
         try {
             const regexes = [
@@ -393,7 +393,7 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
         const QS = game.i18n.localize("MODS.QS");
         const partChecks = game.i18n.localize("MODS.partChecks");
         const demo = `${game.i18n.localize("LocalizedIDs.perception")} 1`;
-        const democs = `${game.i18n.localize("LocalizedIDs.wrestle")} 1`;
+        const democs = `${game.i18n.localize("dsk.LocalizedIDs.wrestle")} 1`;
         const closeCombat = game.i18n.localize("closeCombatAttacks");
         const rangeCombat = game.i18n.localize("rangeCombatAttacks");
         const combatReg = `${game.i18n.localize("regenerate")} (${game.i18n.localize("CHARAbbrev.CR")})`;

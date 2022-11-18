@@ -21,25 +21,19 @@
     <div class="card-content" data-tooltip="{{preData.calculatedSpellModifiers.description}}">
         <b>{{localize "dsk.cost"}}</b>: {{preData.calculatedSpellModifiers.finalcost}} <span class="costCheck"></span>
     </div>
-    {{#if preData.extensions }}
-    <div class="card-content">
-        <b>{{localize 'extensions'}}</b>: {{#each preData.extensions as |item|}}
-        <a class="entity-link content-link" data-tooltip="{{item.title}}" draggable="true" data-type="Item" data-entity="Item" data-uuid="{{item.uuid}}">{{item.name}}</a>
-        {{/each}}
-    </div>
-    {{/if}} {{#if (or hasAreaTemplate applyEffect)}}
+    {{#if (or hasAreaTemplate applyEffect)}}
     <div class="row-section" style="margin-top:10px">
         {{#if applyEffect}}
         <div class="col two center">
-            <button class="applyEffect selfButton" data-target="self" data-tooltip="TT.applyEffectCaster">{{localize 'ActiveEffects.applySelf'}}</button>
+            <button class="applyEffect selfButton" data-target="self" data-tooltip="dsk.TT.applyEffectCaster">{{localize 'dsk.ActiveEffects.applySelf'}}</button>
         </div>
         <div class="col two center">
-            <button class="applyEffect selfButton" data-target="target" data-tooltip="TT.applyEffectTargets">{{localize 'ActiveEffects.applyTarget'}}</button>
+            <button class="applyEffect selfButton" data-target="target" data-tooltip="dsk.TT.applyEffectTargets">{{localize 'dsk.ActiveEffects.applyTarget'}}</button>
         </div>
         {{/if}}
         {{#if hasAreaTemplate}}
         <div class="col two center">
-            <button class="placeTemplate selfButton" data-tooltip="TT.placeTemplate">{{localize 'AoE'}}</button>
+            <button class="placeTemplate selfButton" data-tooltip="dsk.TT.placeTemplate">{{localize 'dsk.AoE'}}</button>
         </div>
         {{/if}}
     </div>
