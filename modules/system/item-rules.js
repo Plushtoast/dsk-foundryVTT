@@ -38,7 +38,7 @@ export default class ItemRulesDSK {
             if (elem[parsed.name]) {
                 let adoption = actor.items.find(x => elem[parsed.name].items.includes(x.type) && x.name == parsed.special)
                 if (adoption) {
-                    item.system.ap = item.system.ap.split("/")[adoption.system.StF.value.charCodeAt(0) - 65]
+                    item.system.ap = item.system.ap.split("/")[adoption.system.StF.charCodeAt(0) - 65]
                     ItemRulesDSK.simpleAdoption(item, adoption, parsed.name, elem)
                 }
                 break

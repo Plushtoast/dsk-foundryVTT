@@ -1,11 +1,12 @@
 import ActorSheetDSK from "./actor_sheet_dsk.js";
+import SpeciesWizard from "../wizards/species_wizard.js"
 
 export default class ActorSheetCharacter extends ActorSheetDSK{
     static get defaultOptions() {
         const options = super.defaultOptions;
         mergeObject(options, {
             classes: options.classes.concat(["dsk", "actor", "character-sheet"]),
-            width: 784,
+            width: 795,
         });
         return options;
     }

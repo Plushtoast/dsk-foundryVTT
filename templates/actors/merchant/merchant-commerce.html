@@ -15,24 +15,7 @@
                     </select>
                 </div>
             </div>
-            {{#if (eq actor.system.merchant.merchantType "epic")}}
-            <div class="row-section">
-                <div class="col fourty">
-                    Garadan
-                </div>
-                <div class="col sixty">
-                    <select name="system.merchant.garadan" data-dtype="String" style="width:100%">
-                    {{#select actor.system.merchant.garadan}}
-                    <option value="1">{{localize "dsk.GARADAN.1"}}</option>
-                    <option value="2">{{localize "dsk.GARADAN.2"}}</option>
-                    <option value="3">{{localize "dsk.GARADAN.3"}}</option>
-                    <option value="4">{{localize "dsk.GARADAN.4"}}</option>
-                    <option value="6">{{localize "dsk.GARADAN.6"}}</option>
-                    {{/select}}
-                  </select>
-                </div>
-            </div>
-            {{/if}} {{#if (eq actor.system.merchant.merchantType "merchant")}}
+            {{#if (eq actor.system.merchant.merchantType "merchant")}}
             <div class="row-section">
                 <div class="col fourty">
                     {{localize "dsk.MERCHANT.Factor"}}

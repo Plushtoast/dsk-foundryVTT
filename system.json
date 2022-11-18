@@ -1,7 +1,7 @@
 {
     "id": "dsk",
     "title": "Die Schwarze Katze",
-    "description": "The \"Das Schwarze Auge\" system for Foundry VTT. Includes all relevant mechanisms to play in the wonderous world of Aventuria and Das Schwarze Auge/The Dark Eye.",
+    "description": "",
     "version": "0.0.2",
     "authors": [{
         "name": "Plushtoast"
@@ -13,7 +13,7 @@
         "libs/select2.min.js"
     ],
     "esmodules": [
-        "modules/dsk.js"
+        "bundle/dsk.bundle.js"
     ],
     "styles": [
         "styles/css/select2.min.css",
@@ -70,8 +70,8 @@
         "maximum": "10"
     },
     "url": "https://github.com/Plushtoast/dsk-foundryVTT",
-    "manifest": "https://raw.githubusercontent.com/Plushtoast/dsk-foundryVTT/foundry10/system.json",
-    "download": "https://github.com/Plushtoast/dsk-foundryVTT/releases/download/4.1.11/dsk-foundryVTT-4.1.11.zip",
+    "manifest": "https://raw.githubusercontent.com/Plushtoast/dsk-foundryVTT/master/system.json",
+    "download": "https://github.com/Plushtoast/dsk-foundryVTT/releases/download/0.0.2/dsk-foundryVTT-0.0.2.zip",
     "name": "dsk",
     "minimumCoreVersion": "10.286"
 }

@@ -81,6 +81,20 @@ export default class ItemDSK extends Item{
         })
     }
 
+    async addCondition(effect, value = 1, absolute = false, auto = true) {
+        return await DSKStatusEffects.addCondition(this, effect, value, absolute, auto)
+    }
+
+    async _dependentEffects(statusId, effect, delta) {}
+
+    async removeCondition(effect, value = 1, auto = true, absolute = false) {
+        return DSKStatusEffects.removeCondition(this, effect, value, auto, absolute)
+    }
+
+    hasCondition(conditionKey) {
+        return DSKStatusEffects.hasCondition(this, conditionKey)
+    }
+
     static prepareMeleeAttack(situationalModifiers, actor, data, source, combatskills, wrongHandDisabled) {
         let targetWeaponSize = "short"
         
@@ -253,7 +267,7 @@ export default class ItemDSK extends Item{
             }
         } else {
             for (let com of combatSpecAbs) {
-                const effects = ItemDSK.parseEffect(com.system.effect.value, actor)
+                const effects = ItemDSK.parseEffect(com.system.effect, actor)
                 const pabonus = effects[pa] || 0
                 if (pabonus != 0) {
                     const subCategory = game.i18n.localize(DSK.combatSkillSubCategories[com.system.subcategory])
@@ -386,6 +400,30 @@ export default class ItemDSK extends Item{
         ItemDSK.getSubClass(this.type)._postItem(this)
     }
 
+    static parseEffect(effect, actor) {
+        let itemModifiers = {}
+        let regex = new RegExp(game.i18n.localize("dsk.CHARAbbrev.GS"), "gi")
+        for (let mod of effect.split(/,|;/).map((x) => x.trim())) {
+            let vals = mod.replace(/(\s+)/g, " ").trim().split(" ")
+            vals[0] = vals[0].replace(regex, actor.system.stats.gs.max)
+            if (vals.length == 2) {
+                if (!isNaN(vals[0]) ||
+                    /(=)?[+-]\d([+-]\d)?/.test(vals[0]) ||
+                    /(=)?\d[dDwW]\d/.test(vals[0]) ||
+                    /=\d+/.test(vals[0]) ||
+                    /\*\d(\.\d)*/.test(vals[0])
+                ) {
+                    if (itemModifiers[vals[1].toLowerCase()] == undefined) {
+                        itemModifiers[vals[1].toLowerCase()] = [vals[0]]
+                    } else {
+                        itemModifiers[vals[1].toLowerCase()].push(vals[0])
+                    }
+                }
+            }
+        }
+        return itemModifiers
+    }
+
     static chatData(data, name) {
         return []
     }
@@ -431,7 +469,7 @@ class ItemEffectwrapper extends ItemDSK {
 class ItemTrait extends ItemDSK {
     static chatData(data, name) {
         let res = []
-        switch (data.traitType.value) {
+        switch (data.traitType) {
             case "meleeAttack":
                 res = [
                     this._chatLineHelper("dsk.ABBR.AW", data.at),

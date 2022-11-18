@@ -226,10 +226,10 @@ class DemonType extends CreatureType {
         return CreatureType.buildDamageMod(this.getTypeByClass("DemonType"), "*0.5")
     }
     spellArmorModifier(actorData) {
-        return Number(actorData.system.status.soulpower.max)
+        return Number(actorData.system.stats.soulpower.max)
     }
     spellResistanceModifier(actorData) {
-        return Number(actorData.system.status.soulpower.max)
+        return Number(actorData.system.stats.soulpower.max)
     }
     ignoredCondition(condition) {
         return true
@@ -252,10 +252,10 @@ class ElementalType extends CreatureType {
         return CreatureType.buildDamageMod(this.getTypeByClass("ElementalType"), "*0.5")
     }
     spellArmorModifier(actorData) {
-        return Number(actorData.system.status.soulpower.max)
+        return Number(actorData.system.stats.soulpower.max)
     }
     spellResistanceModifier(actorData) {
-        return Number(actorData.system.status.soulpower.max)
+        return Number(actorData.system.stats.soulpower.max)
     }
     ignoredCondition(condition) {
         return true

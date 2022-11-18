@@ -93,12 +93,10 @@ export function initActorHooks() {
         if (getProperty(actor, "system.merchant.merchantType") == "loot") {
             mergeObject(modify, { displayBars: 0 })
         } else if (getProperty(actor, "system.config.autoBar")) {
-            mergeObject(modify, { bar1: { attribute: "status.wounds" } })
+            mergeObject(modify, { bar1: { attribute: "status.LeP" } })
             
             if (actor.system.isMage) {
-                mergeObject(modify, { bar2: { attribute: "status.astralenergy" } })
-            } else if (actor.system.isPriest) {
-                mergeObject(modify, { bar2: { attribute: "status.karmaenergy" } })
+                mergeObject(modify, { bar2: { attribute: "status.AeP" } })
             } else {
                 mergeObject(modify, { bar2: { attribute: "tbd" } })
             }

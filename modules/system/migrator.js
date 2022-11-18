@@ -37,6 +37,7 @@ export default function migrateWorld() {
     Hooks.once("ready", async function() {
         if (!game.user.isGM) return
 
+        betaWarning()
         await setupDefaulTokenConfig()
         const currentVersion = await game.settings.get("dsk", "migrationVersion")
         const NEEDS_MIGRATION_VERSION = 21

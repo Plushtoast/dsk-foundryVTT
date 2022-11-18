@@ -72,18 +72,14 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
         await super._render(force, options);
         let index = -1;
         const advancedFunctions = ["none", "systemEffect", "macro", "creature"].map((x) => {
-            return { name: `ActiveEffects.advancedFunctions.${x}`, index: (index += 1) };
+            return { name: `dsk.ActiveEffects.advancedFunctions.${x}`, index: (index += 1) };
         });
         const itemType = getProperty(this.object, "parent.type");
         const effectConfigs = {
             hasSpellEffects: [
-                    "spell",
-                    "liturgy",
-                    "ritual",
-                    "ceremony",
+                    "ahnengabe",
                     "consumable",
                     "poison",
-                    "disease",
                     "ammunition",
                     "meleeweapon",
                     "rangeweapon",
@@ -387,200 +383,149 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
 
     dropDownMenu() {
         const FW = game.i18n.localize("dsk.MODS.FW");
-        const skill = game.i18n.localize("skill");
-        const FP = game.i18n.localize("MODS.FP");
-        const stepValue = game.i18n.localize("stepValue");
-        const QS = game.i18n.localize("MODS.QS");
-        const partChecks = game.i18n.localize("MODS.partChecks");
-        const demo = `${game.i18n.localize("LocalizedIDs.perception")} 1`;
+        const skill = game.i18n.localize("ITEM.TypeSkill");
+        const regenerate = game.i18n.localize("dsk.regenerate")
+        const FP = game.i18n.localize("dsk.MODS.FP");
+        const stepValue = game.i18n.localize("dsk.stepValue");
+        const QS = game.i18n.localize("dsk.MODS.QS");
+        const partChecks = game.i18n.localize("dsk.MODS.partChecks");
+        const demo = `${game.i18n.localize("dsk.LocalizedIDs.perception")} 1`;
         const democs = `${game.i18n.localize("dsk.LocalizedIDs.wrestle")} 1`;
-        const closeCombat = game.i18n.localize("closeCombatAttacks");
-        const rangeCombat = game.i18n.localize("rangeCombatAttacks");
-        const combatReg = `${game.i18n.localize("regenerate")} (${game.i18n.localize("CHARAbbrev.CR")})`;
-        const AsPCost = game.i18n.localize("AsPCost");
-        const KaPCost = game.i18n.localize("KaPCost");
-        const regenerate = game.i18n.localize("regenerate")
+        const closeCombat = game.i18n.localize("dsk.closeCombatAttacks");
+        const rangeCombat = game.i18n.localize("dsk.rangeCombatAttacks");
+        const combatReg = `${regenerate} (${game.i18n.localize("dsk.CHARAbbrev.CR")})`;
+        const AePCost = game.i18n.localize("dsk.AePCost");       
+        const descriptor = `${game.i18n.localize("dsk.description")} 1`
         const feature = `${game.i18n.localize("Healing")} 1`
-        const descriptor = `${game.i18n.localize("Description")} 1`
-        const miracle = `${game.i18n.localize('dsk.LocalizedIDs.miracle')}`
 
         let optns = [
-            { name: game.i18n.localize("protection"), val: "system.totalArmor", mode: 2, ph: "1" },
-            { name: game.i18n.localize("liturgyArmor"), val: "system.liturgyArmor", mode: 2, ph: "1" },
+            { name: game.i18n.localize("dsk.protection"), val: "system.totalArmor", mode: 2, ph: "1" },
             {
-                name: `${game.i18n.localize("resistanceModifier")} (${game.i18n.localize("condition")})`,
+                name: `${game.i18n.localize("dsk.resistanceModifier")} (${game.i18n.localize("dsk.condition")})`,
                 val: "system.resistances.effects",
                 mode: 0,
                 ph: "inpain 1",
             },
-            { name: game.i18n.localize("spellArmor"), val: "system.spellArmor", mode: 2, ph: "1" },
-            { name: game.i18n.localize("carrycapacity"), val: "system.carryModifier", mode: 2, ph: "1" },
+            { name: game.i18n.localize("dsk.carrycapacity"), val: "system.carryModifier", mode: 2, ph: "1" },
             {
-                name: `${closeCombat} - ${game.i18n.localize("CHARAbbrev.AT")}`,
+                name: `${closeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.AW")}`,
                 val: "system.meleeStats.attack",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${closeCombat} - ${game.i18n.localize("CHARAbbrev.PA")}`,
+                name: `${closeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.VW")}`,
                 val: "system.meleeStats.parry",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${miracle} - ${game.i18n.localize("CHARAbbrev.AT")}`,
-                val: "system.miracle.attack",
-                mode: 2,
-                ph: "1",
-            },
-            {
-                name: `${miracle} - ${game.i18n.localize("CHARAbbrev.PA")}`,
-                val: "system.miracle.parry",
-                mode: 2,
-                ph: "1",
-            },
-            {
-                name: `${closeCombat} - ${game.i18n.localize("CHARAbbrev.damage")}`,
+                name: `${closeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.damage")}`,
                 val: "system.meleeStats.damage",
                 mode: 2,
                 ph: "1d6",
             },
             {
-                name: `${closeCombat} - ${game.i18n.localize("MODS.defenseMalus")}`,
+                name: `${closeCombat} - ${game.i18n.localize("dsk.MODS.defenseMalus")}`,
                 val: "system.meleeStats.defenseMalus",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: game.i18n.localize("MODS.creatureBonus"),
+                name: game.i18n.localize("dsk.MODS.creatureBonus"),
                 val: "system.creatureBonus",
                 mode: 0,
-                ph: `${game.i18n.localize("CONJURATION.elemental")} 1`,
+                ph: `Elementar 1`,
             },
             {
-                name: `${rangeCombat} - ${game.i18n.localize("CHARAbbrev.AT")}`,
+                name: `${rangeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.AW")}`,
                 val: "system.rangeStats.attack",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${rangeCombat} - ${game.i18n.localize("CHARAbbrev.damage")}`,
+                name: `${rangeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.damage")}`,
                 val: "system.rangeStats.damage",
                 mode: 2,
                 ph: "1d6",
             },
             {
-                name: `${rangeCombat} - ${game.i18n.localize("MODS.defenseMalus")}`,
+                name: `${rangeCombat} - ${game.i18n.localize("dsk.MODS.defenseMalus")}`,
                 val: "system.rangeStats.defenseMalus",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${game.i18n.localize("spell")} - ${game.i18n.localize("CHARAbbrev.damage")}`,
+                name: `${game.i18n.localize("ITEM.TypeAhnengabe")} - ${game.i18n.localize("dsk.CHARAbbrev.damage")}`,
                 val: "system.spellStats.damage",
                 mode: 2,
                 ph: "1",
             },
-            {
-                name: `${game.i18n.localize("liturgy")} - ${game.i18n.localize("CHARAbbrev.damage")}`,
-                val: "system.liturgyStats.damage",
-                mode: 2,
-                ph: "1",
-            },
-            { name: KaPCost, val: "system.kapModifier", mode: 2, ph: "1" },
-            { name: AsPCost, val: "system.aspModifier", mode: 2, ph: "1" },
+            { name: AePCost, val: "system.aepModifier", mode: 2, ph: "1" },
             { name: `${skill} - ${FW}`, val: "system.skillModifiers.FW", mode: 0, ph: demo },
             { name: `${skill} - ${FP}`, val: "system.skillModifiers.FP", mode: 0, ph: demo },
             { name: `${skill} - ${stepValue}`, val: "system.skillModifiers.step", mode: 0, ph: demo },
             { name: `${skill} - ${QS}`, val: "system.skillModifiers.QL", mode: 0, ph: demo },
             { name: `${skill} - ${partChecks}`, val: "system.skillModifiers.TPM", mode: 0, ph: demo },
             {
-                name: `${game.i18n.localize("vulnerability")} - ${game.i18n.localize("combatskill")}`,
+                name: `${game.i18n.localize("dsk.vulnerability")} - ${game.i18n.localize("ITEM.TypeCombatskill")}`,
                 val: "system.vulnerabilities.combatskill",
                 mode: 0,
                 ph: democs,
             },
 
-            { name: `${skill} - ${game.i18n.localize("MODS.global")}`, val: "system.skillModifiers.global", mode: 0, ph: "1" },
+            { name: `${skill} - ${game.i18n.localize("dsk.MODS.global")}`, val: "system.skillModifiers.global", mode: 0, ph: "1" },
             {
-                name: `${combatReg} - ${game.i18n.localize("wounds")}`,
-                val: "system.repeatingEffects.startOfRound.wounds",
+                name: `${combatReg} - ${game.i18n.localize("dsk.LeP")}`,
+                val: "system.repeatingEffects.startOfRound.LeP",
                 mode: 0,
                 ph: "1d6",
             },
             {
-                name: `${combatReg} - ${game.i18n.localize("astralenergy")}`,
-                val: "system.repeatingEffects.startOfRound.astralenergy",
+                name: `${combatReg} - ${game.i18n.localize("dsk.AeP")}`,
+                val: "system.repeatingEffects.startOfRound.AeP",
                 mode: 0,
                 ph: "1d6",
             },
             {
-                name: `${combatReg} - ${game.i18n.localize("karmaenergy")}`,
-                val: "system.repeatingEffects.startOfRound.karmaenergy",
-                mode: 0,
-                ph: "1d6",
-            },
-            {
-                name: `${regenerate} - ${game.i18n.localize("wounds")}`,
-                val: "system.status.regeneration.LePgearmodifier",
+                name: `${regenerate} - ${game.i18n.localize("dsk.LeP")}`,
+                val: "system.stats.regeneration.LePgearmodifier",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${regenerate} - ${game.i18n.localize("astralenergy")}`,
-                val: "system.status.regeneration.AsPgearmodifier",
+                name: `${regenerate} - ${game.i18n.localize("dsk.AeP")}`,
+                val: "system.stats.regeneration.AePgearmodifier",
                 mode: 2,
                 ph: "1",
-            },
-            {
-                name: `${regenerate} - ${game.i18n.localize("karmaenergy")}`,
-                val: "system.status.regeneration.KaPgearmodifier",
-                mode: 2,
-                ph: "1",
-            },
-            {
-                name: `${game.i18n.localize("feature")} - ${AsPCost}`,
-                val: `system.skillModifiers.feature.AsPCost`,
                 mode: 0,
                 ph: feature,
             },
             {
-                name: `${game.i18n.localize("advanced")} - ${AsPCost}`,
-                val: `system.skillModifiers.conditional.AsPCost`,
+                name: `${game.i18n.localize("dsk.advanced")} - ${AePCost}`,
+                val: `system.skillModifiers.conditional.AePCost`,
                 mode: 0,
                 ph: descriptor,
-            },
-            {
-                name: `${game.i18n.localize("feature")} - ${KaPCost}`,
-                val: `system.skillModifiers.feature.KaPCost`,
-                mode: 0,
-                ph: feature,
-            },
-            {
-                name: `${game.i18n.localize("advanced")} - ${KaPCost}`,
-                val: `system.skillModifiers.conditional.KaPCost`,
-                mode: 0,
-                ph: descriptor,
-            },
+            }
         ];
-        const models = ["liturgy", "ceremony", "spell", "ritual", "skill", "feature"];
+        const models = ["ahnengabe", "skill", "feature"];
         for (const k of models) {
             let key = k == "skill" ? "skillglobal" : k;
-            const el = game.i18n.localize(key);
+            const el = DSKUtility.categoryLocalization(key)
             optns.push({ name: `${el} - ${FW}`, val: `system.skillModifiers.${k}.FW`, mode: 0, ph: demo }, { name: `${el} - ${FP}`, val: `system.skillModifiers.${k}.FP`, mode: 0, ph: demo }, { name: `${el} - ${stepValue}`, val: `system.skillModifiers.${k}.step`, mode: 0, ph: demo }, { name: `${el} - ${QS}`, val: `system.skillModifiers.${k}.QL`, mode: 0, ph: demo }, { name: `${el} - ${partChecks}`, val: `system.skillModifiers.${k}.TPM`, mode: 0, ph: demo });
         }
 
         const attrs = ["mu", "kl", "in", "ch", "ff", "ge", "ko", "kk"];
         for (const k of attrs)
             optns.push({
-                name: game.i18n.localize(`CHAR.${k.toUpperCase()}`),
+                name: game.i18n.localize(`dsk.characteristics.${k}.name`),
                 val: `system.characteristics.${k}.gearmodifier`,
                 mode: 2,
                 ph: "1",
             });
 
         for (const k of DSK.gearModifyableCalculatedAttributes)
-            optns.push({ name: game.i18n.localize(k), val: `system.status.${k}.gearmodifier`, mode: 2, ph: "1" });
+            optns.push({ name: game.i18n.localize(`dsk.${k}`), val: `system.stats.${k}.gearmodifier`, mode: 2, ph: "1" });
 
         optns = optns.sort((a, b) => {
             return a.name.localeCompare(b.name);

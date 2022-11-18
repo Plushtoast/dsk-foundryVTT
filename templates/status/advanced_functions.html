@@ -1,0 +1,42 @@
+{{#if (eq effect.flags.dsk.advancedFunction '1')}}
+<div class="form-group">
+    <label class="label-text">{{localize 'dsk.effect'}}</label>
+    <select name="flags.dsk.args0" data-dtype="String">
+    {{#select effect.flags.dsk.args0}}
+    {{#each config.systemEffects as |item i|}}
+    <option value="{{item.id}}">{{item.label}}</option>
+    {{/each}}
+    {{/select}}
+  </select>
+</div>
+<div class="form-group">
+    <label class="label-text">{{localize 'dsk.stepValue'}}</label>
+    <input type="text" name="flags.dsk.args1" value="{{effect.flags.dsk.args1}}" />
+</div>
+{{/if}} {{#if (eq effect.flags.dsk.advancedFunction '2')}}
+<div class="form-group full-height">
+    <label class="label-text">{{localize 'dsk.ActiveEffects.advancedFunctions.macro'}}</label> {{#if config.canEditMacros}}
+    <textarea class="input-text" rows="10" type="text" name="flags.dsk.args3" placeholder="{{localize 'dsk.ActiveEffects.placeholder.macros'}}">{{effect.flags.dsk.args3}}</textarea> {{else}}
+    <p class="input-text">{{#if effect.flags.dsk.args3}}{{effect.flags.dsk.args3}}{{else}} - {{/if}}</p>
+    {{/if}}
+</div>
+{{/if}} {{#if (eq effect.flags.dsk.advancedFunction '3')}}
+<div class="form-group">
+    <label class="label-text">{{localize 'dsk.ActiveEffects.creature'}}</label>
+    <input type="text" name="flags.dsk.args4" value="{{effect.flags.dsk.args4}}" />
+</div>
+{{/if}} {{#if (eq effect.flags.dsk.advancedFunction '4')}}
+<div class="form-group full-height">
+    <label class="label-text">{{localize 'dsk.ActiveEffects.advancedFunctions.armorPostprocess'}}</label> {{#if config.canEditMacros}}
+    <textarea class="input-text" rows="10" type="text" name="flags.dsk.args3" placeholder="{{localize 'dsk.ActiveEffects.placeholder.armorPostprocess'}}">{{effect.flags.dsk.args3}}</textarea> {{else}}
+    <p class="input-text">{{#if effect.flags.dsk.args3}}{{effect.flags.dsk.args3}}{{else}} - {{/if}}</p>
+    {{/if}}
+</div>
+{{/if}} {{#if (eq effect.flags.dsk.advancedFunction '5')}}
+<div class="form-group full-height">
+    <label class="label-text">{{localize 'dsk.ActiveEffects.advancedFunctions.damagePostprocess'}}</label> {{#if config.canEditMacros}}
+    <textarea class="input-text" rows="10" type="text" name="flags.dsk.args3" placeholder="{{localize 'dsk.ActiveEffects.placeholder.armorPostprocess'}}">{{effect.flags.dsk.args3}}</textarea> {{else}}
+    <p class="input-text">{{#if effect.flags.dsk.args3}}{{effect.flags.dsk.args3}}{{else}} - {{/if}}</p>
+    {{/if}}
+</div>
+{{/if}}

@@ -20,6 +20,7 @@ import DSKActiveEffectConfig from "../status/active_effects.js";
 import MerchantSheetDSK from "../actor/merchant-sheet.js"
 import CreatureMerchantSheetDSK from "../actor/creature-merchant-sheet.js"
 import CharacterSheetMerchantDSK from "../actor/character-merchant-sheet.js"
+import migrateWorld from "../system/migrator.js";
 
 export function initHooks(){
     setupJournal()
@@ -32,6 +33,7 @@ export function initHooks(){
     initTokenHook()
     initTokenHUD()
     initRollsFunction()
+    migrateWorld()
 
     Hooks.once("init", () => {
         loadTemplates([
@@ -53,6 +55,7 @@ export function initHooks(){
             "systems/dsk/templates/actors/creature/creature-combat.html",
             "systems/dsk/templates/actors/creature/creature-main.html",
             "systems/dsk/templates/actors/creature/creature-magic.html",
+            "systems/dsk/templates/status/advanced_functions.html",
             "systems/dsk/templates/actors/creature/creature-loot.html",
             "systems/dsk/templates/dialog/default-dialog.html",
             "systems/dsk/templates/actors/character/actor-magic.html",
@@ -89,3 +92,4 @@ export function initHooks(){
 
     DPS.initDoorMinDistance()
 }
+

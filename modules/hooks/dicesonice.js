@@ -124,7 +124,7 @@ export function initDSN() {
 }
 
 export class DiceSoNiceCustomization extends Application {
-    static attrs = ["mu", "kl", "in", "ch", "ff", "ge", "ko", "kk", "attack", "dodge", "parry", "damage"]
+    static attrs = ["mu", "kl", "in", "ch", "ff", "ge", "ko", "kk", "attack", "damage"]
     initConfigs() {
         const colors = game.dice3d.exports.Utils.prepareColorsetList()
         this.choices = {}

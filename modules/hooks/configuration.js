@@ -6,7 +6,7 @@ export function setupConfiguration(){
         name: "migrationVersion",
         scope: "world",
         config: false,
-        default: 1,
+        default: 2,
         type: Number
     })
     game.settings.register("dsk", "firstTimeStart", {
@@ -23,6 +23,14 @@ export function setupConfiguration(){
         default: false,
         type: Boolean
     })
+    game.settings.register("dsk", "limitCombatSpecAbs", {
+        name: "dsk.SETTINGS.limitCombatSpecAbs",
+        hint: "dsk.SETTINGS.limitCombatSpecAbsHint",
+        scope: "world",
+        config: true,
+        default: true,
+        type: Boolean
+    });
     game.settings.register("dsk", "merchantNotification", {
         name: "dsk.SETTINGS.merchantNotification",
         hint: "dsk.SETTINGS.merchantNotificationHint",

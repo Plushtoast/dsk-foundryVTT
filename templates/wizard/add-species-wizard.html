@@ -1,0 +1,52 @@
+<section class="content" data-cost="{{baseCost}}">
+    <h1>{{title}}</h1>
+    <p style="margin-bottom:10px;">{{{description}}}</p>
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a> 
+        {{#if generalToChose}} 
+        <a class="item" data-tab="general">{{localize "dsk.WIZARD.generalTab"}}</a> 
+        {{/if}} 
+    </nav>
+
+    <div class="tab description active" data-tab="description">
+        <div class="row-section">
+            <div class="col two">
+                {{{speciesDescription}}}
+            </div>
+            <div class="col two">
+                <img src="{{species.img}}" style="max-width:100%; max-height: 100%;float: left;" data-edit="img" />
+            </div>
+        </div>
+    </div>
+
+    {{#if generalToChose}}
+    <div class="tab general" data-tab="general">
+        {{#if anyAttributeRequirements}}
+        <h2>{{localize 'dsk.WIZARD.attributesToChose'}}</h2>
+        {{#each attributeRequirements as |item i|}}
+        <p class="allowedCount_{{i}}" data-count="{{item.allowedCount}}">{{localize 'WIZARD.chose'}} {{item.allowedCount}}.
+        </p>
+        <div class="row-section wrap">
+            {{#each item.choices as |choice j|}}
+            <div class="col two row-section lineheight">
+                <input type="checkbox" id="exclusive_{{i}}_{{j}}" class="exclusive exclusive_{{i}}" data-sel="{{i}}" name="{{choice}}" value="{{choice}}">
+                <label for="exclusive_{{i}}_{{j}}">{{choice}}</label>
+            </div>
+            {{/each}}
+        </div>
+        <hr /> {{/each}} {{/if}}
+    </div>
+    {{/if}}
+
+</section>
+<div class="dialog-buttons">
+    <button class="dialog-button ok default" data-button="ok">
+    <i class="fas fa-check"></i>
+    {{localize 'dsk.ok'}}
+  </button>
+    <button class="dialog-button cancel default" data-button="cancel">
+    <i class="fas fa-close"></i>
+    {{localize 'dsk.cancel'}}
+  </button>
+</div>

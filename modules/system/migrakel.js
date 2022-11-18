@@ -138,7 +138,7 @@ export default class Migrakel {
                             list: { value: find.system.list.value },
                         },
                     });
-                    if (find.system.category.value == "staff") {
+                    if (find.system.category == "staff") {
                         mergeObject(update, {
                             system: {
                                 feature: getProperty(find, "system.feature") || "",
@@ -232,16 +232,7 @@ export default class Migrakel {
                         },
                     });
                 }
-                if (["meleeweapon", "rangeweapon", "armor"].includes(find.type)) {
-                    mergeObject(update, {
-                        system: {
-                            structure: {
-                                max: find.system.structure.max,
-                                value: find.system.structure.value,
-                            },
-                        },
-                    });
-                }
+          
                 this.updateMacro(update, find);
                 return update;
             };

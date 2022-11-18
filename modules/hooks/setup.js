@@ -1,3 +1,5 @@
+import AdvantageRulesDSK from "../system/advantage-rules.js"
+import SpecialabilityRulesDSK from "../system/specialability-rules.js"
 import BookWizard from "../wizards/adventure_wizard.js"
 import { setupConfiguration } from "./configuration.js"
 import { setupKeybindings } from "./keybindings.js"
@@ -18,6 +20,14 @@ export function initSetup(){
         setupKeybindings()
         setupScene()
         BookWizard.initHook()
+
+        CONFIG.Canvas.lightAnimations.daylight = {
+            label: "LIGHT.daylight",
+            illuminationShader: DaylightIlluminationShader
+        }
+
+        AdvantageRulesDSK.setupFunctions()
+        SpecialabilityRulesDSK.setupFunctions()
     })
 }
 
@@ -42,4 +52,23 @@ const showWrongLanguageDialog = (forceLanguage) => {
         }
     }
     new Dialog(data).render(true)
+}
+
+
+class DaylightIlluminationShader extends AdaptiveIlluminationShader {
+    static fragmentShader =  `
+    ${this.SHADER_HEADER}
+    ${this.PERCEIVED_BRIGHTNESS}
+
+    void main() {
+        ${this.FRAGMENT_BEGIN}
+        ${this.TRANSITION}
+       
+        // Darkness
+        framebufferColor = max(framebufferColor, colorBackground);        
+        // Elevation
+        finalColor = mix(finalColor, max(finalColor, smoothstep( 0.1, 1.0, finalColor ) * 10.0), 1.0) * depth;        
+        // Final
+        gl_FragColor = vec4(finalColor, 1.0);
+      }`;
 }

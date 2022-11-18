@@ -1,5 +1,8 @@
+import DSKStatusEffects from "../status/status_effects.js";
+import DSKChatAutoCompletion from "../system/chat_autocompletion.js";
 import DSK from "../system/config.js";
 import DSKUtility from "../system/dsk_utility.js";
+import SpecialabilityRulesDSK from "../system/specialability-rules.js";
 import { svgAutoFit } from "../system/view_helper.js";
 import { ItemSheetObfuscation } from "./obfuscatemixin.js";
 
@@ -63,6 +66,7 @@ export default class ItemSheetDSK extends ItemSheet {
             enrichedDescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: true, async: true}),
             enrichedGmdescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: true, async: true})
         })
+        DSKStatusEffects.prepareActiveEffects(this.item, data)
         return data
     }
 
@@ -79,9 +83,45 @@ export default class ItemSheetDSK extends ItemSheet {
     activateListeners(html) {
         super.activateListeners(html);
 
+        html.find(".advance-step").mousedown(ev => this.advanceWrapper(ev, "_advanceStep"))
+        html.find(".refund-step").mousedown(ev => this.advanceWrapper(ev, "_refundStep"))
+
         html.find('[data-edit="img"]').mousedown(ev => {
             if (ev.button == 2) DSKUtility.showArtwork(this.item)
         })
+
+        html.find(".status-add").click(() => {
+            if (this.item.actor) {
+                ui.notifications.error(game.i18n.localize("dsk.DSKError.nestedEffectNotSupported"))
+            } else {
+                DSKStatusEffects.createCustomEffect(this.item, "", this.item.name)
+            }
+        })
+
+        html.find('.condition-show').mousedown(ev => {
+            ev.preventDefault()
+            const id = $(ev.currentTarget).attr("data-id")
+            if (ev.button == 0) {
+                const effect = this.item.effects.get(id)
+                effect.sheet.render(true)
+            } else if (ev.button == 2) {
+                this.item.deleteEmbeddedDocuments("ActiveEffect", [id])
+            }
+        })
+
+        html.find(".condition-toggle").mousedown(ev => {
+            let condKey = $(ev.currentTarget).parents(".statusEffect").attr("data-id")
+            let ef = this.item.effects.get(condKey)
+            ef.update({ disabled: !ef.system.disabled })
+        })
+
+        html.find('.condition-edit').click(ev => {
+            const effect = this.item.effects.get($(ev.currentTarget).attr("data-id"))
+            effect.sheet.render(true)
+        })
+
+        DSKChatAutoCompletion.bindRollCommands(html)
+        DSKStatusEffects.bindButtons(html)
 
         let toObserve = html.find(".item-header")
         if (toObserve.length) {
@@ -357,9 +397,42 @@ class ItemSheetProfession extends ItemSheetDSK{
 class ItemSheetAdvantage extends ItemSheetDSK{
     async getData(options){
         const data = await super.getData(options)
-        data.enrichedRule = await TextEditor.enrichHTML(getProperty(this.item.system, "rule.owner"), { secrets: true, async: true })
+        data.enrichedRule = await TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: true, async: true })
         return data
     }
+
+    _advancable() {
+        return this.item.system.max > 0
+    }
+
+    async _refundStep() {
+        let xpCost, steps
+        if (this.item.system.level > 1) {
+            xpCost = this.item.system.ap
+            if (/;/.test(xpCost)) {
+                steps = xpCost.split(";").map(x => Number(x.trim()))
+                xpCost = steps[this.item.system.level - 1]
+            }
+            await this.item.actor._updateAPs(xpCost * -1)
+            await this.item.update({ "system.level": this.item.system.level - 1 })
+        }
+    }
+
+    async _advanceStep() {
+        let xpCost, steps
+        if (this.item.system.level < this.item.system.max) {
+            xpCost = this.item.system.ap
+            if (/;/.test(xpCost)) {
+                steps = xpCost.split(";").map(x => Number(x.trim()))
+                xpCost = steps[this.item.system.level]
+            }
+            if (await this.item.actor.checkEnoughXP(xpCost)) {
+                await this.item.actor._updateAPs(xpCost)
+                await this.item.update({ "system.level": this.item.system.level + 1 })
+            }
+        }
+    }
+
 }
 
 class ItemSheetDisadvantage extends ItemSheetAdvantage{
@@ -372,10 +445,42 @@ class ItemSheetSpecialability extends ItemSheetDSK{
         mergeObject(data, {
             categories: DSK.specialAbilityCategories,
             subCategories: DSK.combatSkillSubCategories,
-            enrichedRule: await TextEditor.enrichHTML(getProperty(this.item.system, "rule.owner"), { secrets: true, async: true }),
+            enrichedRule: await TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: true, async: true }),
             canOnUseEffect: game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
         })
         return data
+    }
+
+    async _refundStep() {
+        let xpCost, steps
+        if (this.item.system.level > 1) {
+            xpCost = this.item.system.ap
+            if (/;/.test(xpCost)) {
+                steps = xpCost.split(";").map(x => Number(x.trim()))
+                xpCost = steps[this.item.system.level - 1]
+            }
+            await this.item.actor._updateAPs(xpCost * -1)
+            await this.item.update({ "system.level": this.item.system.level - 1 })
+        }
+    }
+
+    async _advanceStep() {
+        let xpCost, steps
+        if (this.item.system.level < this.item.system.max) {
+            xpCost = this.item.system.ap
+            if (/;/.test(xpCost)) {
+                steps = xpCost.split(";").map(x => Number(x.trim()))
+                xpCost = steps[this.item.system.level]
+            }
+            if (await this.item.actor.checkEnoughXP(xpCost)) {
+                await this.item.actor._updateAPs(xpCost)
+                await this.item.update({ "system.level": this.item.system.level + 1 })
+            }
+        }
+    }
+
+    _advancable() {
+        return this.item.system.max > 0
     }
 }
 
@@ -400,8 +505,8 @@ class ItemSheetAhnengeschenk extends ItemSheetDSK{
         if (this.item.actor.system.stats.AeP.value < 1)
             return ui.notifications.error(game.i18n.localize("dsk.DSKError.NotEnoughAeP"))
 
-        const cantrip = game.dsk.config.ItemSubclasses.ahnengeschenk
-        await this.item.actor.update({ "system.system.stats.AeP.value": this.item.actor.system.ssystem.stats.AeP.value -= 1 })
+        const cantrip = game.dsk.config.ItemSubClasses.ahnengeschenk
+        await this.item.actor.update({ "system.stats.AeP.value": this.item.actor.system.stats.AeP.value -= 1 })
         const chatMessage = `<p><b>${this.item.name} - ${game.i18n.localize('ITEM.TypeAhnengeschenk')} ${game.i18n.localize('dsk.probe')}</b></p><p>${this.item.system.description.value}</p><p>${cantrip.chatData(this.item.system, "").join("</br>")}</p>`
         await ChatMessage.create(DSKUtility.chatDataSetup(chatMessage));
     }

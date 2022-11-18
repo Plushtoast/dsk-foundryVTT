@@ -1,0 +1,43 @@
+<section class="tab" data-tab="advanced">
+    <div class="form-group">
+        <label class="label-text">{{localize 'dsk.ActiveEffects.hideOnToken'}}</label>
+        <input type="checkbox" name="flags.dsk.hideOnToken" {{checked effect.flags.dsk.hideOnToken}} />
+    </div>
+    <div class="form-group">
+        <label class="label-text">{{localize 'dsk.ActiveEffects.hidePlayers'}}</label>
+        <input type="checkbox" name="flags.dsk.hidePlayers" {{checked effect.flags.dsk.hidePlayers}}/>
+    </div>
+    <div class="form-group">
+        <label class="label-text">{{localize 'dsk.description'}}</label>
+        <input type="text" name="flags.dsk.description" value="{{effect.flags.dsk.description}}" />
+    </div>
+    {{#if effectConfigs.hasSpellEffects}}
+    <div class="form-group">
+        <label class="label-text">{{localize 'dsk.duration'}}</label>
+        <input type="text" name="flags.dsk.customDuration" value="{{effect.flags.dsk.customDuration}}" />
+    </div>
+    <div class="form-group">
+        <label class="label-text">{{localize "dsk.ActiveEffects.custom"}}</label>
+        <select class="advancedSelector" name="flags.dsk.advancedFunction" data-dtype="String">
+            {{#select effect.flags.dsk.advancedFunction}}
+            {{#each advancedFunctions as |item i|}}
+            <option value="{{item.index}}">{{localize item.name}}</option>
+            {{/each}}
+            {{/select}}
+        </select>
+    </div>
+    <div class="form-group">
+        <label class="label-text">{{localize 'dsk.ActiveEffects.resistRoll'}}</label>
+        <input type="text" name="flags.dsk.resistRoll" value="{{effect.flags.dsk.resistRoll}}" placeholder="{{localize 'dsk.LocalizedIDs.perception'}} -2" />
+    </div>
+    <div class="advancedFunctions">
+        {{> systems/dsk/templates/status/advanced_functions.html}}
+    </div>
+    {{/if}}
+    <div class="form-group full-height">
+        <label class="label-text">{{localize 'dsk.ActiveEffects.advancedFunctions.onRemove'}}</label> {{#if config.canEditMacros}}
+        <textarea class="input-text" rows="10" type="text" name="flags.dsk.onRemove" placeholder="{{localize 'dsk.ActiveEffects.placeholder.onRemove'}}">{{effect.flags.dsk.onRemove}}</textarea> {{else}}
+        <p class="input-text">{{#if effect.flags.dsk.args3}}{{effect.flags.dsk.onRemove}}{{else}} - {{/if}}</p>
+        {{/if}}
+    </div>
+</section>

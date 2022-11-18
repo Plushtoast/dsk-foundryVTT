@@ -37,7 +37,7 @@ export const dropToGround = async(sourceActor, item, data, amount) => {
                     temporary: true,
                     hidePlayer: 1
                 },
-                status: { wounds: { value: 16 } }
+                status: { LeP: { value: 16 } }
             }
         };
         const finalActor = await game.dsk.documents.ActorDSK.create(actor)

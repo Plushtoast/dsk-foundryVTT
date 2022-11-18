@@ -5,7 +5,7 @@ export default class DSKPayment {
     static payMoney(actor, moneyString, silent = false) {
         let canPay = DSKPayment.canPay(actor, moneyString, silent)
         if (canPay.success)
-            DSKPayment._updateMoney(actor, canPay.actorsMoney.money, canPay.actorsMoney.sum - canPay.money)
+            DSKPayment._updateMoney(actor, canPay.actorsMoney.sum - canPay.money)
 
         if (!silent && canPay.msg != "")
             ChatMessage.create(DSKUtility.chatDataSetup(`<p>${canPay.msg}</p>`, "roll"))
@@ -37,7 +37,7 @@ export default class DSKPayment {
 
         if (money) {
             let actorsMoney = this._actorsMoney(actor)
-            DSKPayment._updateMoney(actor, actorsMoney.money, actorsMoney.sum + money)
+            DSKPayment._updateMoney(actor, actorsMoney.sum + money)
             let msg = `<p>${game.i18n.format("dsk.PAYMENT.getPaid", {actor: actor.name, amount: DSKPayment._moneyToString(money)})}</p>`
             if (!silent) {
                 ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
@@ -46,27 +46,10 @@ export default class DSKPayment {
         }
     }
 
-    static _updateMoney(actor, money, newSum) {
+    static _updateMoney(actor, newSum) {
         let coins = DSKPayment._moneyToCoins(newSum)
 
-        for (let m of money) {
-            switch (m.name) {
-                case "Money-D":
-                    m.system.quantity = coins.D
-                    break
-                case "Money-S":
-                    m.system.quantity = coins.S
-                    break
-                case "Money-H":
-                    m.system.quantity = coins.H
-                    break
-                case "Money-K":
-                    m.system.quantity = coins.K
-                    break
-            }
-        }
-
-        actor.updateEmbeddedDocuments("Item", money)
+        actor.update({"system.money": coins})
     }
 
     static createGetPaidChatMessage(moneyString, whisper = undefined) {
@@ -157,27 +140,12 @@ export default class DSKPayment {
     }
 
     static _moneyToCoins(money) {
-        let m = Math.round(money * 100)
-        let D = Math.floor(m / 1000)
-        let S = Math.floor((m - (D * 1000)) / 100)
-        let H = Math.floor((m - (D * 1000) - S * 100) / 10)
-        return {
-            D,
-            S,
-            H,
-            K: Math.round(((m - (D * 1000) - S * 100 - H * 10)))
-        }
+        return money
     }
 
     static _moneyToString(money) {
-            let coins = DSKPayment._moneyToCoins(money)
-            let res = []
-
-            for (const [key, value] of Object.entries(coins)) {
-                if (value > 0)
-                    res.push(`<span class="nobr">${value} <span data-tooltip="Money-${key}" class="chatmoney money-${key}"></span></span>`)
-        }
-        return res.join(", ")
+        let coins = DSKPayment._moneyToCoins(money)        
+        return `<span class="nobr">${coins} <span data-tooltip="dsk.money" class="chatmoney" style="background-size:contain;background-image:url('systems/dsk/icons/categories/money.webp');"></span></span>`
     }
 
     static async chatListeners(html) {

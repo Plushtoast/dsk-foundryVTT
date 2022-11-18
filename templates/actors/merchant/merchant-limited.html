@@ -7,7 +7,7 @@
                 <span class="label name">{{localize "dsk.name"}}</span>
             </div>
             <div class="headerInput col fourty">
-                <input class="input species" name="system.details.species.value" type="text" value="{{actor.system.details.species.value}}" readonly placeholder="{{localize 'ITEM.TypeSpecies'}}" />
+                <input class="input species" name="system.details.species" type="text" value="{{actor.system.details.species}}" readonly placeholder="{{localize 'ITEM.TypeSpecies'}}" />
                 <span class="label species">{{localize "ITEM.TypeSpecies"}}</span>
             </div>
 
@@ -115,7 +115,7 @@
                                                 {{item.calculatedPrice}}
                                             </div>
                                             <div class="col eight center">
-                                                {{item.system.quantity.value}}
+                                                {{item.system.quantity}}
                                             </div>
                                             <div class="col eight center">
                                                 <a class="sell-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.sell"><i class="fas fa-piggy-bank"></i></a>
@@ -162,7 +162,7 @@
                                                 {{item.calculatedPrice}}
                                             </div>
                                             <div class="col eight center">
-                                                {{item.system.quantity.value}}
+                                                {{item.system.quantity}}
                                             </div>
                                             <div class="col eight center">
                                                 <a class="buy-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.buy"><i class="fas fa-shopping-cart"></i></a>

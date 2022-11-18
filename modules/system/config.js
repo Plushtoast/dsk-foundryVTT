@@ -284,8 +284,8 @@ DSK.helpContent = [{
 },
 {
     name: "quickAbility",
-    command: "/sk [a-z]*, /sp [a-z]*, /li [a-z]*, /at [a-z]*, /pa [a-z]*",
-    example: "/sk betören",
+    command: "/sk [a-z]*, /ah [a-z]*, /at [a-z]*, /pa [a-z]*",
+    example: "/sk sinnesschärfe",
 },
 {
     name: "conditions",
@@ -374,6 +374,8 @@ DSK.combatSkillSubCategories = {
     "3": "dsk.COMBATSKILLCATEGORY.3",
     "4": "dsk.COMBATSKILLCATEGORY.4"
 }
+
+DSK.gearModifyableCalculatedAttributes = ["schips", "ini", "gs", "AeP", "LeP", "sk", "zk"]
 
 DSK.rangeWeaponModifiers = {
     "short": "dsk.RangeMod.short",
@@ -614,7 +616,7 @@ DSK.skillGroups = {
     "trade": "dsk.SKILL.trade"
 };
 
-CONFIG.time.roundTime = 5
+CONFIG.time.roundTime = 2
 CONFIG.time.turnTime = 0
 
 export default DSK

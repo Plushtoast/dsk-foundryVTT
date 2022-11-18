@@ -19,6 +19,25 @@ export default class DSKStatusEffects{
         html.find('.chat-condition').click(ev => DSKChatListeners.postStatus($(ev.currentTarget).attr("data-id")))
     }
 
+    static createCustomEffect(owner, description = "", label) {
+        label = label || game.i18n.localize("dsk.CONDITION.custom")
+        if (description == "") description = label
+
+        owner.addCondition({
+            label,
+            icon: "icons/svg/aura.svg",
+            origin: owner.uuid,
+            flags: {
+                dsk: {
+                    value: null,
+                    editable: true,
+                    description,
+                    custom: true
+                }
+            }
+        })
+    }
+
     static async addCondition(target, effect, value = 1, absolute = false, auto = true) {
         if (!target.isOwner) return "Not owned"
         if (target.compendium) return "Can not add in compendium"

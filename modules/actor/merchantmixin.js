@@ -459,13 +459,6 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
             }
         } else {
             this.prepareStorage(data)
-            data.garadanOptions = {
-                1: game.i18n.localize('dsk.GARADAN.1'),
-                2: game.i18n.localize('dsk.GARADAN.2'),
-                3: game.i18n.localize('dsk.GARADAN.3'),
-                4: game.i18n.localize('dsk.GARADAN.4'),
-                6: game.i18n.localize('dsk.GARADAN.6')
-            }
         }
         data.hasOtherTradeFriend = !!this.otherTradeFriend
 

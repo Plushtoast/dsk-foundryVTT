@@ -212,7 +212,7 @@ class RepeatingEffectsHelper {
                 const applyDamage = `${turn.actor.name} ${type} ${game.i18n.localize(attr)} ${damage}`
                 await ChatMessage.create(DSKUtility.chatDataSetup(applyDamage))
 
-                if (attr == "wounds") await turn.actor.applyDamage(damageRoll.total * -1)
+                if (attr == "LeP") await turn.actor.applyDamage(damageRoll.total * -1)
                 else await turn.actor.applyMana(damageRoll.total * -1)
             }
         }

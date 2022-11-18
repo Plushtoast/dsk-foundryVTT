@@ -35,6 +35,9 @@
             },
             "attack": {
                 "name": "Angriff"
+            },
+            "damage": {
+                "name": "Trefferpunkte"
             }
         },
         "SKILL": {
@@ -44,7 +47,39 @@
             "trade": "Handwerksfertigkeiten",
             "combat": "Kampffertigkeiten"
         },
+        "ActiveEffects": {
+            "hideOnToken": "Am Token verstecken",
+            "hidePlayers": "Vor Spielern verstecken",
+            "applyTarget": "Effekt (Ziel)",
+            "applySelf": "Effekt (Selbst)",
+            "appliedEffect": "Effekt <b>{source}</b> wurde auf <b>{target}</b> übertragen.",
+            "removedEffect": "Effekt <b>{source}</b> wurde von <b>{target}</b> entfernt.",
+            "apply": "Anwenden",
+            "custom": "Sondereffekt",
+            "creature": "Akteurlink (z.b. das5-core.corebestiary.Gotongi)",
+            "resistRoll": "Widerstandsprobe",
+            "resistPain": "Der Schmerz ist überwältigend (Stufe 4). Die Handlungsfähigkeit ist nur über eine Selbstbeherrschungsprobe zu bewahren.",
+            "placeholder": {
+                "macros": "Macros können auf diese Variablen zugreifen:\nactor - Der anvisierte Akteur\ntestData - All Daten für die aktuelle Probe\nsource - Die Quelle des Macros",
+                "armorPostprocess": "Rüstungstransformation können auf diese Variablen zugreifen:\nactor - Der anvisierte Akteur\noptions.armor - Die Rüstungs des Ziels\noptions.attackItem - Die Quelle des Macros",
+                "onRemove": "Macro wird beim Entfernen des Effekts aus dem Akteur ausgeführt.\nVariablen:\nactor - Der Akteur",
+                "onUseEffect": "Macro für die Benutzung des Items.\nVariablen:\nactor - Der Akteur\nitem - Der Gegenstand"
+            },
+            "advancedFunctions": {
+                "none": "Nothing",
+                "systemEffect": "Systemeffekt",
+                "macro": "Macro",
+                "creature": "Beschwörung/Gestaltwandlung",
+                "armorPostprocess": "Rüstungstransformation (Macro)",
+                "damagePostprocess": "Schadenstransformation (Macro)",
+                "onRemove": "Macro (Effektende)",
+                "onUseEffect": "Macro (Benutzung)"
+            }
+        },
+        "advanced": "Erweitert",
+      
         "CONDITION": {
+            "custom": "Manueller Effekt",
             "defeated": "Besiegt",
             "encumbered": "Belastung",
             "stunned": "Betäubung",
@@ -118,7 +153,7 @@
         "TABLENAMES": {
             "Melee": "Patzertabelle Nahkampf",
             "Range": "Patzertabelle Fernkampf",
-            "Spell": "Patzertabelle für Ahnengaben"
+            "Ahnen": "Patzertabelle für Ahnengaben"
         },
         "meleeVisionDisruption": {
             "0": "Klare Sicht",
@@ -225,7 +260,14 @@
             "ongoing": "Laufende Handlungen",
             "waitInit": "Zurückstellen"
         },
+        "gs": "Geschwindigkeit",
+        "ini": "Initiative",
+        "schips": "Schicksalspunkte",
+        "sk": "Seelenkraft",
+        "zk": "Zähigkeit",
         "SETTINGS": {
+            "limitCombatSpecAbs": "Spezialmanöver limitieren",
+        "limitCombatSpecAbsHint": "Nur ein Spezial- und Basismanöver erlauben.",
             "tokenhotbarLayout": "Tokenhotbar Layout",
             "tokenhotbarLayoutHint": "Layout und Ausklappausrichtung der Tokenhotbar",
             "tokenhotbarLayout0": "Horizontal, nach oben",
@@ -329,8 +371,14 @@
             "big": "Groß - Überfall/Hundswache (-2)",
             "none": "Keine (+-0)"
         },
-        
+        "LocalizedAbilityModifiers": {
+            "at": "aw",
+            "pa": "vw",
+            "tp": "tp",
+            "dm": "vm"
+        },
         "LocalizedIDs": {
+            "all": "alle",
             "Shields": "Schilde",
             "wrestle": "Raufen",
             "perception": "Sinnesschärfe"
@@ -379,6 +427,7 @@
         },
         "DSKError": {
             "reportBug": "Fehler melden",
+            "opposedAttackNoSpecAbs": "Passierschläge können nicht mit Sonderfertigkeiten kombiniert werden",
             "unknownCombatSkill": "Das Kampftalent {skill} der Waffe {item} ist unbekannt. Bitte die Waffe anpassen.",
             "noProperActor": "Dir wurde noch kein Charakter zugewiesen oder du hast keinen Token markiert.",
             "NotEnoughXP": "Nicht genug Abenteuerpunkte",
@@ -429,6 +478,7 @@
         "LeP": "Lebensenergie",
         "soulpower": "Seelenkraft",
         "AeP": "Ahnenergie",
+        "AePCost": "Ahnenenergiekosten",
         "distribution": "Verbreitung",
         "effect": "Wirkung",
         "targetCategory": "Zielkategorie",
@@ -461,6 +511,7 @@
         "value": "Wert",
         "rule": "Regel",
         "zoo": "Zoo",
+        "vulnerability": "Verwundbarkeit",
         "maxlevel": "Maximale Stufe",
         "attacktest": "Angriffsprobe",
         "SPECIALABILITYCATEGORIES": {
@@ -477,7 +528,10 @@
             "extreme": "Extrem [–4 auf FK, –2 TP]"
         },
         "WIZARD": {
-            "generalTab": "Allgemein"
+            "addItem": "{item} hinzufügen",
+            "generalTab": "Allgemein",
+            "speciesdescr": "Bitte wähle die passenden Optionen der Spezies <b>{species}</b> und bestätige, um sie zu deinem Charakter hinzuzufügen.",
+            "attributesToChose": "Eigenschaftsänderungen"
         },
         "mountedRangeOptions": {
             "STATIONARY": "steht",
@@ -561,6 +615,7 @@
         "CHARAbbrev": {
             "QS": "QS",
             "AW": "AW",
+            "GS": "GS",
             "VW": "VW",
             "RS": "RS",
             "LeP": "LeP",
@@ -589,7 +644,7 @@
             "typeMerchant": "Händler",
             "hideMoney": "Geld verbergen",
             "hideMoneyHint": "Dem Spieler wird die Kaufkraft des Händlers nicht mehr angezeigt",
-            "typeEpic": "Garadan",
+            "typeEpic": "VIP",
             "typeLoot": "Schatz",
             "typeNone": "Normale Person",
             "randomGoods": "Zufällige Auswahl",
@@ -672,7 +727,7 @@
         "closeCombatAttacks": "Nahkampfangriffe",
         "rangeCombatAttacks": "Fernkampfangriffe",
         "removeGesture": "Geste weglassen",
-        "removeFormula": "Formel/Gebet weglassen",
+        "removeFormula": "Formel weglassen",
         "Spent": "Ausgegeben",
         "cost": "Kosten",
         "damagetest": "Schadensprobe",
@@ -806,6 +861,8 @@
     "ACTOR.TypeCreature": "Kreatur",
     "ITEM.TypeCharacter": "Charakter",
     "ITEM.TypeNpc": "Nichtspielercharakter",
-    "ITEM.TypeCreature": "Kreatur"
+    "ITEM.TypeCreature": "Kreatur",
+    "ITEM.TypeFeature": "Merkmal",
+    "ITEM.TypeSkillglobal": "Global"
 
 }

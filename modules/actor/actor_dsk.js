@@ -25,7 +25,7 @@ export default class ActorDSK extends Actor {
         const data = this.system;
         try {
             data.canAdvance = this.type == "character"
-
+            
             for (let ch of Object.values(data.characteristics)) {
                 ch.value = ch.initial + ch.advances + (ch.modifier || 0) + ch.gearmodifier;
                 ch.cost = game.i18n.format("dsk.advancementCost", {
@@ -35,6 +35,11 @@ export default class ActorDSK extends Actor {
                     cost: DSKUtility._calculateAdvCost(ch.initial + ch.advances, "Eig", 0),
                 });
             }
+
+            data.isMage = this.items.some(
+              (x) => ["ahnengeschenk", "ahnengabe"].includes(x.type) ||
+                (x.type == "specialability" && ["ahnen"].includes(x.system.category))
+            )
 
             if (data.canAdvance) {
                 data.details.experience.current = data.details.experience.total - data.details.experience.spent;
@@ -228,8 +233,7 @@ export default class ActorDSK extends Actor {
                 crit: 1,
                 global: [],
                 conditional: {
-                  AsPCost: [],
-                  KaPCost: [],
+                  AePCost: []
                 },
                 feature: {
                   FP: [],
@@ -237,8 +241,7 @@ export default class ActorDSK extends Actor {
                   QL: [],
                   TPM: [],
                   FW: [],
-                  KaPCost: [],
-                  AsPCost: [],
+                  AePCost: [],
                 },
                 ...["ahnengabe", "skill"].reduce((prev, x) => {
                   prev[x] = {
@@ -556,7 +559,7 @@ export default class ActorDSK extends Actor {
         const specAbs = Object.fromEntries(Object.keys(DSK.specialAbilityCategories).map((x) => [x, []]));
         const traits = Object.fromEntries(Object.keys(DSK.traitCategories).map((x) => [x, []]));
         const magic = {
-            hasSpells: true, //this.system.isMage,
+            hasSpells: this.system.isMage,
             ahnengabe: [],
             ahnengeschenk: []
         };
@@ -989,7 +992,7 @@ export default class ActorDSK extends Actor {
             testData[`regeneration${k}`] = Number(this.system.stats.regeneration[`${k}max`])
             const regenerate = html.find(`[name="regenerate${k}"]`).is(":checked") ? 1 : 0
             testData[`regenerate${k}`] = regenerate
-            if (regenerate) update[`system.status.regeneration.${k}Temp`] = 0
+            if (regenerate) update[`system.stats.regeneration.${k}Temp`] = 0
           }
   
           mergeObject(testData.extra.options, options);
@@ -1126,7 +1129,7 @@ export default class ActorDSK extends Actor {
           }
         } else if (
           (testData.source.type == "rangeweapon" ||
-            (testData.source.type == "trait" && testData.source.system.traitType.value == "rangeAttack")) &&
+            (testData.source.type == "trait" && testData.source.system.traitType == "rangeAttack")) &&
           !testData.extra.ammoDecreased
         ) {
           testData.extra.ammoDecreased = true;
