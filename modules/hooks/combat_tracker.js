@@ -1,5 +1,6 @@
 import ActorDSK from "../actor/actor_dsk.js";
 import DSKUtility from "../system/dsk_utility.js";
+import { ActAttackDialog } from "../dialog/dialog-react.js"
 
 export class DSKCombatTracker extends CombatTracker {
     static get defaultOptions() {
@@ -167,7 +168,7 @@ Hooks.on("updateCombatant", (combatant, change, user) => {
             combatant.setFlag("dsk", "baseRoll", roll)
         }
     } else if("initiative" in change && change.initiative == null){
-        combatant.update({ [`flags.dsk.-=baseRoll`]: null }).then(x => console.log(combatant))
+        combatant.update({ [`flags.dsk.-=baseRoll`]: null })
     }
 })
 

@@ -61,7 +61,6 @@ export default class DSKCombatDialog extends DialogShared {
                 step = Math.clamped(maxStep, 0, step - 1)
             }
             elem.attr("data-step", step);
-            console.log(step)
             if (step > 0) {
                 elem.addClass("active");
             } else {

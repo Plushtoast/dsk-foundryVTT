@@ -1,5 +1,7 @@
 import ActorSheetDSK from "./actor_sheet_dsk.js";
 import SpeciesWizard from "../wizards/species_wizard.js"
+import CultureWizard from "../wizards/culture_wizard.js"
+import CareerWizard from "../wizards/career_wizard.js"
 
 export default class ActorSheetCharacter extends ActorSheetDSK{
     static get defaultOptions() {

@@ -150,6 +150,13 @@
         "opposingWeaponSize": "Waffengröße Gegner",
         "halfDefense": "der Verteidigungswert des Gegners muss für diesen Angriff halbiert werden",
         "doubleDamage": "dreifacher Schaden",
+        "Skill-eeasy": "Extrem leicht (+16)",
+        "Skill-veasy": "Sehr leicht (+8)",
+        "Skill-easy": "Leicht (+4)",
+        "Skill-challenging": "Anspruchsvoll (+0)",
+        "Skill-difficult": "Schwierig (-4)",
+        "Skill-hard": "Sehr schwierig (-8)",
+        "Skill-vhard": "Extrem schwierig (-16)",
         "TABLENAMES": {
             "Melee": "Patzertabelle Nahkampf",
             "Range": "Patzertabelle Fernkampf",
@@ -177,10 +184,13 @@
             "onlyInCombatTargets": "Ziele werden nur im Kampf angezeigt.",
             "setTargetToUserHint": "Aktuell markierte Ziele auf den User übertragen.",
             "setTargetToUser": "Spielerziel setzen",
+            "selectAction": "Bitte wähle deine Handlung",
             "noCombatskills": "Keine passenden Kampfsonderfertigkeiten",
             "DeleteItemDetail": "Möchtest du <b>{item}</b> entfernen?",
             "deleteConfirmation": "Löschen bestätigen",
             "RollMode": "Würfelmodus",
+            "warning": "Vorsicht",
+            "alreadyAddedCharacterpart": "Du hast bereits eine {category}. Möchtest du diese Überschreiben? Bereits hinzugefügte Modifikation der vorherigen {category} können nicht automatisch rückgängig gemacht werden.",
             "cheat": "SL-Willkür",
             "noTarget": "Kein Ziel",
             "addTarget": "Ziel hinzufügen",
@@ -426,6 +436,7 @@
             "cannotpay": "<b>{actor}</b> kann seine/ihre Schulden von {amount} nicht bezahlen."
         },
         "DSKError": {
+            "notFound": "{category} {name} nicht gefunden",
             "reportBug": "Fehler melden",
             "opposedAttackNoSpecAbs": "Passierschläge können nicht mit Sonderfertigkeiten kombiniert werden",
             "unknownCombatSkill": "Das Kampftalent {skill} der Waffe {item} ist unbekannt. Bitte die Waffe anpassen.",
@@ -512,6 +523,7 @@
         "rule": "Regel",
         "zoo": "Zoo",
         "vulnerability": "Verwundbarkeit",
+        "attackWeaponless": "Waffenloser Angriff",
         "maxlevel": "Maximale Stufe",
         "attacktest": "Angriffsprobe",
         "SPECIALABILITYCATEGORIES": {
@@ -530,8 +542,11 @@
         "WIZARD": {
             "addItem": "{item} hinzufügen",
             "generalTab": "Allgemein",
-            "speciesdescr": "Bitte wähle die passenden Optionen der Spezies <b>{species}</b> und bestätige, um sie zu deinem Charakter hinzuzufügen.",
-            "attributesToChose": "Eigenschaftsänderungen"
+            "chose": "Wähle ",
+            "careerdescr": "Bitte wähle die passenden Optionen der Profession <b>{career}</b> und bestätige, um sie für <b class=\"apCost\">{cost}</b> Abenteuerpunkte zu deinem Charakter hinzuzufügen.",
+            "culturedescr": "Bitte wähle die passenden Optionen der Kultur <b>{culture}</b> und bestätige, um sie für <b class=\"apCost\">{cost}</b> Abenteuerpunkte zu deinem Charakter hinzuzufügen.",
+            "vantageDescriptionSpecies": "Wähle besondere Vorteile um deine Spezies abzurunden.",
+            "speciesdescr": "Bitte wähle die passenden Optionen der Spezies <b>{species}</b> und bestätige, um sie für <b class=\"apCost\">0</b> Abenteuerpunkte zu deinem Charakter hinzuzufügen."
         },
         "mountedRangeOptions": {
             "STATIONARY": "steht",
@@ -593,10 +608,13 @@
             "3": "Passiv",
             "4": "Allgemein"
         },
+        "WIZARDPARSER": {
+            "speciesAdvantage": "Hohe Starteigenschaft"
+        },
         "Difficulty": "Schwierigkeit",
         "skModifier": "Seelenkraft (Ziel)",
         "zkModifier": "Zähigkeit (Ziel)",
-        "importDefault": "<div class=\"detailbox\"><p>DAS SCHWARZE AUGE, AVENTURIEN, DERE, MYRANOR, RIESLAND, THARUN, UTHURIA und THE DARK EYE sind eingetragene Marken der Ulisses Spiele GmbH, Waldems.</p><p>Copyright © 2021 by Ulisses Spiele GmbH. Alle Rechte vorbehalten.</p><p>Titel und Inhalte dieses Werkes sind urheberrechtlich geschützt. Der Nachdruck, auch auszugsweise, die Bearbeitung, Verarbeitung, Verbreitung und Vervielfältigung des Werkes in jedweder Form, insbesondere die Vervielfältigung auf photomechanischem, elektronischem oder ähnlichem Weg, sind nur mit schriftlicher Genehmigung der Ulisses Spiele GmbH, Waldems, gestattet.</p></div>",
+        "importDefault": "<div class=\"detailbox\"><p>DAS SCHWARZE AUGE, DIE SCHWARZE KATZE, AVENTURIEN, DERE, MYRANOR, RIESLAND, THARUN, UTHURIA und THE DARK EYE sind eingetragene Marken der Ulisses Spiele GmbH, Waldems.</p><p>Copyright © 2022 by Ulisses Spiele GmbH. Alle Rechte vorbehalten.</p><p>Titel und Inhalte dieses Werkes sind urheberrechtlich geschützt. Der Nachdruck, auch auszugsweise, die Bearbeitung, Verarbeitung, Verbreitung und Vervielfältigung des Werkes in jedweder Form, insbesondere die Vervielfältigung auf photomechanischem, elektronischem oder ähnlichem Weg, sind nur mit schriftlicher Genehmigung der Ulisses Spiele GmbH, Waldems, gestattet.</p></div>",
         "ABBR": {
             "value": "Wert",
             "modifiers": "Mod.",
@@ -800,7 +818,8 @@
             "Basteln": "<div>\n<p>Unter den Katzen Havenas finden sich kaum echte Handwerker, schlichtweg weil die Menschen die meisten G&uuml;ter f&uuml;r sie produzieren. Schmiede, K&uuml;rschner oder Weber gibt es bei ihnen nicht.</p>\n</div>\n<div>\n<p>Stattdessen haben sich die meisten Katzen darauf verlegt, vorhandene Ger&auml;tschaften mit einfachen Mitteln umzubasteln, um sie ihren Zwecken anzupassen. So werden Griffe von Messern zurecht geschliffen, damit sie gut in ihren Pfoten liegen, Metallst&uuml;cke zurechtgebogen und mit Draht und Zwirn zu R&uuml;stungen zusammengebunden oder Topfdeckel als Schilde zweckentfremdet. Einzig die Kunst der Schneiderei genie&szlig;t einen gewissen Stellenwert, denn es ist nicht leicht, in Havena geeignete Kleidung f&uuml;r Katzen aufzutreiben.</p>\n</div>\n<div>\n<p>Wenn sich die Frage stellt, ob eine Handlung eher unter Basteln oder Friemeln f&auml;llt, gilt als Faustregel: Wenn man hierf&uuml;r Werkzeuge ben&ouml;tigt, f&auml;llt es unter Basteln, ansonsten eher unter Friemeln.</p>\n</div>\n<div>\n<p><strong>Anwendungsbeispiele:</strong> Schneidern, schleifen, zurechtbiegen, Schl&ouml;sser knacken</p>\n</div>",
             "Durchschauen": "<div>\n<p>Vertrauen will erarbeitet werden, auch und besonders unter Katzen. Mit etwas &Uuml;bung und dem richtigen Sp&uuml;rsinn l&auml;sst sich jedoch erahnen, ob es das Gegen&uuml;ber ehrlich mit einem meint oder einem offen ins Gesicht l&uuml;gt.</p>\n</div>\n<div>\n<p><strong>Anwendungsbeispiele:</strong> L&uuml;gen durchschauen, Motivationen erkennen</p>\n</div>",
             "Überleben": "<div>\n<p>F&uuml;r eine Hauskatze mit gehorsamen menschlichen Mitbewohnern ist das Leben leicht. Doch wer sein Leben im M&uuml;ll, den dunklen Gassen oder der Tiefe fristet, entwickelt schnell Methoden, um &uuml;ber die Runden zu kommen. Mit der Fertigkeit &Uuml;berleben l&auml;sst sich etwas Essbares in M&uuml;llhaufen finden, ein Feuer entfachen, sauberes Wasser auftreiben oder ein sicheres Pl&auml;tzchen zum Schlafen finden.</p>\n</div>\n<div>\n<p><strong>Anwendungsbeispiele:</strong> Feuer machen, M&uuml;llw&uuml;hlen, Verstecke finden</p>\n</div>",
-            "Kraftakt": "<div>\n<p>Gelegentlich gilt es Kisten aufzubrechen, Gewichte zu stemmen oder kr&auml;ftig an einem Fisch zu ziehen, den schon jemand anderes in den Klauen hat. Wenn es also darum geht, rohe Kr&auml;fte gezielt einzusetzen, kommt Kraftakt ins Spiel.</p>\n</div>\n<div>\n<p><strong>Anwendungsbeispiele</strong>: Stemmen, Heben, Ziehen, Dr&uuml;cken, Verbiegen, Zerbrechen</p>\n</div>"
+            "Kraftakt": "<div>\n<p>Gelegentlich gilt es Kisten aufzubrechen, Gewichte zu stemmen oder kr&auml;ftig an einem Fisch zu ziehen, den schon jemand anderes in den Klauen hat. Wenn es also darum geht, rohe Kr&auml;fte gezielt einzusetzen, kommt Kraftakt ins Spiel.</p>\n</div>\n<div>\n<p><strong>Anwendungsbeispiele</strong>: Stemmen, Heben, Ziehen, Dr&uuml;cken, Verbiegen, Zerbrechen</p>\n</div>",
+            "Willenskraft": "<div>\n<p>Manchmal gilt es sich zusammenzurei&szlig;en, auch wenn der Fisch am Ende der Gasse noch so verf&uuml;hrerisch duftet oder ein unpassender Scherz auf der Zunge liegt. Mit der Fertigkeit Willenskraft wehrt man sich gegen alle Arten von Verf&uuml;hrungs- und Einsch&uuml;chterungsversuchen und den Versuchungen eines Katzenlebens.</p>\n<p><strong>Anwendungsbeispiele:</strong> Versuchungen widerstehen, Bedrohungen standhalten, Umschmeicheln widerstehen, Einsch&uuml;chtern widerstehen</p>\n</div>"
         },
         "Equipment": {
             "misc": "Ramsch",

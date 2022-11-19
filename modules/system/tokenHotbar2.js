@@ -297,8 +297,6 @@ export default class TokenHotbar2 extends Application {
 
             onUse = onUsages.pop()
 
-            console.log(moreSkills)
-
             if (items.spells.length == 0 && moreSpells.length > 0) {
                 items.spells.push(moreSpells.pop())
             }

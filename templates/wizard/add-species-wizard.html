@@ -1,12 +1,11 @@
-<section class="content" data-cost="{{baseCost}}">
+<section class="content" data-cost="0">
     <h1>{{title}}</h1>
     <p style="margin-bottom:10px;">{{{description}}}</p>
 
     <nav class="sheet-tabs tabs" data-tab-container="primary">
         <a class="item active" data-tab="description">{{localize "dsk.description"}}</a> 
-        {{#if generalToChose}} 
-        <a class="item" data-tab="general">{{localize "dsk.WIZARD.generalTab"}}</a> 
-        {{/if}} 
+        {{#if generalToChose}} <a class="item" data-tab="general">{{localize "dsk.WIZARD.generalTab"}}</a> {{/if}} 
+        {{#if optionals}} <a class="item" data-tab="vantages">{{localize "ITEM.TypeAdvantage"}}</a> {{/if}}
     </nav>
 
     <div class="tab description active" data-tab="description">
@@ -19,19 +18,35 @@
             </div>
         </div>
     </div>
+    {{#if optionals}}
+    <div class="tab vantages" data-tab="vantages">
+
+        <p>{{localize 'dsk.WIZARD.vantageDescriptionSpecies'}}</p>
+        <h2>{{localize 'ITEM.TypeAdvantage'}}</h2>
+        <div class="row-section wrap">
+            {{#each optionals as |item i|}}
+            <div class="col two row-section lineheight">
+                <input type="checkbox" id="advantage_{{i}}_{{j}}" class="optional" data-cost="{{item.apCost}}" name="{{item.replaceName}}" data-step="{{item.step}}" value="{{item.uuid}}" {{#if item.disabled}}disabled{{/if}}>
+                <label for="advantage_{{i}}_{{j}}">{{item.replaceName}} {{roman item.step item.system.max}} ({{item.apCost}} AP)</label>
+                <a class="show-item" data-id="{{item.uuid}}" data-tooltip="{{item.tooltip}}"><i class="fas fa-info"></i></a>
+            </div>
+            {{/each}}
+        </div>        
+    </div>
+    {{/if}}
 
     {{#if generalToChose}}
     <div class="tab general" data-tab="general">
         {{#if anyAttributeRequirements}}
-        <h2>{{localize 'dsk.WIZARD.attributesToChose'}}</h2>
+        <h2>{{localize 'dsk.WIZARDPARSER.speciesAdvantage'}}</h2>
         {{#each attributeRequirements as |item i|}}
-        <p class="allowedCount_{{i}}" data-count="{{item.allowedCount}}">{{localize 'WIZARD.chose'}} {{item.allowedCount}}.
+        <p class="allowedCount_{{i}}" data-count="{{item.allowedCount}}">{{localize 'dsk.WIZARD.chose'}} {{item.allowedCount}}.
         </p>
         <div class="row-section wrap">
             {{#each item.choices as |choice j|}}
             <div class="col two row-section lineheight">
                 <input type="checkbox" id="exclusive_{{i}}_{{j}}" class="exclusive exclusive_{{i}}" data-sel="{{i}}" name="{{choice}}" value="{{choice}}">
-                <label for="exclusive_{{i}}_{{j}}">{{choice}}</label>
+                <label for="exclusive_{{i}}_{{j}}">{{attrLoc choice "name"}}</label>
             </div>
             {{/each}}
         </div>

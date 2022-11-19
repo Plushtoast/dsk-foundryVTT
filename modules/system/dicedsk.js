@@ -156,7 +156,6 @@ export default class DiceDSK{
     
 
     static async rollAttribute(testData) {
-        this._appendSituationalModifiers(testData, game.i18n.localize("dsk.Difficulty"), testData.testDifficulty)
         let result = await this._roll2D20(testData)
         result["rollType"] = "attribute"
         return result
@@ -183,7 +182,6 @@ export default class DiceDSK{
         let res = await this._roll2D20(testData)
         res["rollType"] = testData.source.types
         res.preData.calculatedSpellModifiers.finalcost = Number(res.preData.calculatedSpellModifiers.cost)
-        console.log(res.preData.calculatedSpellModifiers)
         if (res.successLevel >= 2) {
             let extraFps = 10
             res.description = res.description + ", " + game.i18n.localize("dsk.additionalQLs") + " " + extraFps
@@ -276,8 +274,6 @@ export default class DiceDSK{
             1,
             Number(res.preData.calculatedSpellModifiers.finalcost) + costModifiers.reduce((b, a) => {return b + a.value}, 0)
         )
-
-        console.log(res.preData.calculatedSpellModifiers)
     }
 
     static async _stringToRoll(text, testData) {
@@ -473,11 +469,22 @@ export default class DiceDSK{
         let description = []
         let successLevel = 0
 
+        if(testData.testDifficulty) this._appendSituationalModifiers(testData, game.i18n.localize("dsk.Difficulty"), testData.testDifficulty)
+
         let modifiers = this._situationalModifiers(testData)
         const pcms = this._situationalPartCheckModifiers(testData, "TPM")
-        let basePW = testData.source.attack || Number(testData.source.system.at) || ((testData.source.system.level == undefined ? -5 : testData.source.system.level + 5)
-            + testData.extra.actor.system.characteristics[testData.source.system.characteristic1].value
-            + testData.extra.actor.system.characteristics[testData.source.system.characteristic2].value)
+        let basePW = testData.source.attack || Number(testData.source.system.at)
+        
+        if(!basePW){
+            if(testData.source.system.level == undefined){
+                basePW = -5 + testData.extra.actor.system.characteristics[testData.source.system.characteristic1].value
+                + testData.extra.actor.system.characteristics[testData.source.system.characteristic2].value
+            }   
+            else{
+                basePW = testData.source.system.level + 5 + Math.round((testData.extra.actor.system.characteristics[testData.source.system.characteristic1].value
+                    + testData.extra.actor.system.characteristics[testData.source.system.characteristic2].value)/2)
+            }
+        }
         let pw = basePW + this._situationalModifiers(testData, "FW") 
             + pcms[0] + pcms[1] + modifiers 
 
@@ -680,7 +687,6 @@ export default class DiceDSK{
     }
 
     static getSuccessDescription(successLevel) {
-        console.log(successLevel)
         return game.i18n.localize(["dsk.CriticalFailure", "dsk.Failure", "", "dsk.Success", "dsk.CriticalSuccess"][successLevel + 2])
     }
 

@@ -693,6 +693,7 @@ export default class ActorSheetDSK extends ActorSheet {
                 case "poison":
                     return await this._addLoot(item)
                     break
+                case "disadvantage":
                 case "advantage":
                     await this._addVantage(item, typeClass)
                     break;

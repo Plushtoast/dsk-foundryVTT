@@ -332,17 +332,6 @@ DSK.addAbilityRules = {}
 DSK.removeAbilityRules = {}
 DSK.AbilitiesNeedingAdaption = {}
 
-DSK.characteristics = {
-    "mu": "dsk.characteristics.mu.name",
-    "kl": "dsk.characteristics.kl.name",
-    "in": "dsk.characteristics.in.name",
-    "ch": "dsk.characteristics.ch.name",
-    "ff": "dsk.characteristics.ff.name",
-    "ge": "dsk.characteristics.ge.name",
-    "ko": "dsk.characteristics.ko.name",
-    "kk": "dsk.characteristics.kk.name"
-};
-
 DSK.advancementCosts = {
     "A": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
     "B": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28],
@@ -607,6 +596,26 @@ DSK.skillBurdens = {
     "yes": "dsk.yes",
     "no": "dsk.no",
     "maybe": "dsk.maybe"
+}
+
+DSK.skillDifficultyLabels = {
+    "eeasy": "dsk.Skill-eeasy",
+    "veasy": "dsk.Skill-veasy",
+    "easy": "dsk.Skill-easy",
+    "challenging": "dsk.Skill-challenging",
+    "difficult": "dsk.Skill-difficult",
+    "hard": "dsk.Skill-hard",
+    "vhard": "dsk.Skill-vhard"
+}
+
+DSK.skillDifficultyModifiers = {
+    "eeasy": 16,
+    "veasy": 8,
+    "easy": 4,
+    "challenging": 0,
+    "difficult": -4,
+    "hard": -8,
+    "vhard": -16
 }
 
 DSK.skillGroups = {

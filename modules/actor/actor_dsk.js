@@ -518,7 +518,7 @@ export default class ActorDSK extends Actor {
     }
 
     static _calculatePW(item, actorData) {
-        item.PW = ActorDSK._attrFromCharacteristic(item.system.characteristic1, actorData) + ActorDSK._attrFromCharacteristic(item.system.characteristic2, actorData) + 5 + (item.system.level || 0)
+        item.PW = Math.round((ActorDSK._attrFromCharacteristic(item.system.characteristic1, actorData) + ActorDSK._attrFromCharacteristic(item.system.characteristic2, actorData))/2) + 5 + (item.system.level || 0)
         return item
     }
 

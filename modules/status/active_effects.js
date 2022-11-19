@@ -515,8 +515,7 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
             optns.push({ name: `${el} - ${FW}`, val: `system.skillModifiers.${k}.FW`, mode: 0, ph: demo }, { name: `${el} - ${FP}`, val: `system.skillModifiers.${k}.FP`, mode: 0, ph: demo }, { name: `${el} - ${stepValue}`, val: `system.skillModifiers.${k}.step`, mode: 0, ph: demo }, { name: `${el} - ${QS}`, val: `system.skillModifiers.${k}.QL`, mode: 0, ph: demo }, { name: `${el} - ${partChecks}`, val: `system.skillModifiers.${k}.TPM`, mode: 0, ph: demo });
         }
 
-        const attrs = ["mu", "kl", "in", "ch", "ff", "ge", "ko", "kk"];
-        for (const k of attrs)
+        for (const k of Object.keys(DSK.characteristics))
             optns.push({
                 name: game.i18n.localize(`dsk.characteristics.${k}.name`),
                 val: `system.characteristics.${k}.gearmodifier`,

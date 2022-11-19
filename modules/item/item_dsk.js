@@ -518,7 +518,6 @@ class ItemTrait extends ItemDSK {
             characteristic1: "attack",
             characteristic2: "attack",
         })
-        console.log(item)
         let testData = {
             opposable: true,
             source: item,
@@ -993,6 +992,7 @@ class ItemSkill extends ItemDSK{
         let data = {
             rollMode: options.rollMode,
             modifier: options.modifier || 0,
+            difficultyLabels: DSK.skillDifficultyLabels,
             characteristics: [1, 2].map((x) => skill.system[`characteristic${x}`]),
             situationalModifiers: actor ? DSKStatusEffects.getRollModifiers(actor, skill) : []
         }
@@ -1007,8 +1007,9 @@ class ItemSkill extends ItemDSK{
             callback: (html, options = {}) => {
                 cardOptions.rollMode = html.find('[name="rollMode"]').val()
                 testData.situationalModifiers = ActorDSK._parseModifiers(html)
+                testData.testDifficulty = DSK.skillDifficultyModifiers[html.find('[name="testDifficulty"]').val()]
                 testData.advancedModifiers = {
-                    chars: [0, 1, 2].map((x) => Number(html.find(`[name="ch${x}"]`).val())),
+                    chars: [0, 1].map((x) => Number(html.find(`[name="ch${x}"]`).val())),
                     fws: Number(html.find(`[name="fw"]`).val()),
                     qls: Number(html.find(`[name="qs"]`).val()),
                 }

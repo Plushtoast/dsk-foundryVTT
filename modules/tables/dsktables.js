@@ -78,7 +78,6 @@ export default class DSKTables {
 
     static async getRollTable(packName, name, options = {}) {
         const pack = game.packs.get(packName)
-        console.log(pack, name, packName)
         const table = (await pack.getDocuments({ name: { $in: [name] } }))[0]
         let result = await table.draw({ displayChat: false })
         if (options.weaponless == "true" && result.roll.total < 7) {

@@ -4,6 +4,7 @@ import DSKChatAutoCompletion from '../system/chat_autocompletion.js';
 import DSKChatListeners from '../system/chat_listeners.js';
 import DSKUtility from '../system/dsk_utility.js';
 import DSKStatusEffects from '../status/status_effects.js';
+import DialogReactDSK from '../dialog/dialog-react.js';
 
 export function initChatlogHooks() {
     Hooks.on('renderChatLog', (log, html, data) => {
@@ -21,7 +22,7 @@ export function initChatlogHooks() {
             let actor
             const reaction = html.find(".chat-button-target")
             if (reaction.length) {
-                actor = DialogReactDSA5.getTargetActor(msg.message)
+                actor = DialogReactDSK.getTargetActor(msg.message)
                 if (actor && actor.actor && !actor.actor.isOwner) reaction.remove()
             }
 

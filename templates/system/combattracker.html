@@ -54,7 +54,7 @@
     <ol id="combat-tracker" class="directory-list">
         {{#each turns}}
         <li class="combatant actor directory-item flexrow {{this.css}}" data-combatant-id="{{this.id}}">
-            <div class="aggroButton specImg" data-tooltip="attacktest"></div>
+            <div class="aggroButton specImg" data-tooltip="dsk.attacktest"></div>
             <div class="combatant-advanced">
                 <img class="token-image" data-src="{{this.img}}" data-tooltip="{{this.name}}" /> {{#if this.defenseCount}}
                 <i class="fas def fa-shield-alt" data-defenseCount="{{this.defenseCount}}" data-tooltip="dsk.COMBATTRACKER.noDefenses"></i>

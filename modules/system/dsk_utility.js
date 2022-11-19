@@ -33,6 +33,17 @@ export default class DSKUtility {
         return activeGM && game.user.id == activeGM.id
     }
 
+    static parseAbilityString(ability) {
+        return {
+            original: ability.replace(/ (FP|SR|FW|SP)?[+-]?\d{1,2}$/, '').trim(),
+            name: ability.replace(/\((.+?)\)/g, "()").replace(/ (FP|SR|FW|SP)?[+-]?\d{1,2}$/, '').trim(),
+            step: Number((ability.match(/[+-]?\d{1,2}$/) || [1])[0]),
+            special: (ability.match(/\(([^()]+)\)/) || ["", ""])[1],
+            type: ability.match(/ (FP|SP)[+-]?\d{1,2}/) ? "FP" : (ability.match(/ (FW|SR)[+-]?\d{1,2}/) ? "FW" : ""),
+            bonus: ability.match(/[-+]\d{1,2}$/) != undefined
+        }
+    }
+
     static async allSkills(elems =  ["skill", "combatskill", "specialability"]) {
         const pack = game.i18n.lang == "de" ? "dsk.default" : "dsk.defaulten"
         return await this.getCompendiumEntries(pack, elems)
