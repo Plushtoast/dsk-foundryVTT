@@ -222,7 +222,7 @@ export default class Migrakel {
                 };
                 if (!["poison", "consumable"].includes(find.type)) {
                     mergeObject(update, {
-                        system: { effect: { value: find.system.effect.value } },
+                        system: { effect: { value: find.system.effect } },
                     });
                 }
                 if (["armor"].includes(find.type)) {

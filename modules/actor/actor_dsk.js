@@ -99,7 +99,7 @@ export default class ActorDSK extends Actor {
               if (this.isMerchant()) this.prepareMerchant()
             }
 
-
+            data.maxDefense = this.maxDefenseValue()
         } catch (error) {
             console.error("Something went wrong with preparing actor data: " + error + error.stack);
             ui.notifications.error(game.i18n.format("dsk.DSKError.PreparationError", { name: this.name }) + error + error.stack);
@@ -175,6 +175,9 @@ export default class ActorDSK extends Actor {
                         case "equipment":
                             apply = !item.system.worn.wearable || (item.system.worn.wearable && item.system.worn.value)
                             break;
+                        case "trait":
+                            apply = !["meleeAttack", "rangeAttack"].includes(item.system.traitType)
+                            break
                         case "ammunition":
                         case "combatskill":
                         case "poison":
@@ -217,6 +220,33 @@ export default class ActorDSK extends Actor {
         }
 
         this.overrides = foundry.utils.expandObject(overrides);
+    }
+
+    maxDefenseValue(){
+      const defenses = [0]
+      const combatskills = []
+      const wornweapons = []
+      for(let cur of this.items){
+        if(cur.type == "combatskill"){
+          combatskills.push(ActorDSK._calculateCombatSkillValues(cur, this.system))
+        } else if(cur.type == "meleeweapon"){
+          if(getProperty(cur, "system.worn.value")) wornweapons.push(cur)
+        } else if(cur.type == "trait" && cur.system.traitType == "meleeAttack"){
+          defenses.push(ActorDSK._prepareMeleetrait(cur).parry)
+        }
+      }
+      
+      for(let item of wornweapons){
+        const weapon = ActorDSK._prepareMeleeWeapon(
+            item,
+            combatskills,
+            this,
+            wornweapons.filter((x) => x._id != item._id && !RuleChaos.isYieldedTwohanded(x))
+        )
+        defenses.push(weapon.parry)
+      }
+
+      return Math.max(...defenses)
     }
 
     prepareBaseData() {
@@ -362,7 +392,6 @@ export default class ActorDSK extends Actor {
 
    
           if (item.system.ammunitionType != "-") {
-            if (!ammunitions) ammunitions = actorData.inventory.ammunition.items;
             item.ammo = ammunitions.filter((x) => x.system.ammunitionType == item.system.ammunitionType);
     
             currentAmmo = ammunitions.find((x) => x._id == item.system.currentAmmo);
@@ -395,7 +424,7 @@ export default class ActorDSK extends Actor {
 
     static _prepareMeleetrait(item) {
       item.attack = Number(item.system.at);
-      if (item.system.pa != 0) item.parry = item.system.pa;
+      item.parry = item.system.pa || Math.round(item.attack / 4);
   
       return this._parseDmg(item);
     }
@@ -669,8 +698,10 @@ export default class ActorDSK extends Actor {
                         i.toggleValue = getProperty(i.system, "worn.value") || false;
                         i.toggle = true;
                         this._setOnUseEffect(i);
-                        inventory.meleeweapons.items.push(ActorDSK._prepareitemStructure(i));
-                        inventory.meleeweapons.show = true;
+                        if(!i.system.notInInventory){
+                          inventory.meleeweapons.items.push(ActorDSK._prepareitemStructure(i));
+                          inventory.meleeweapons.show = true;
+                        }
                         if (i.toggleValue) wornweapons.push(i);
                         totalWeight += Number(i.weight);
                         break;

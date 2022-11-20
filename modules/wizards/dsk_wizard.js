@@ -48,7 +48,7 @@ export default class WizardDSK extends Application {
         for(let type of types){
             const results = await game.dsk.itemLibrary.findCompendiumItem(name, type)
             //todo make sure this loads the right thing e.g. armory instead of core
-            if(results.length && results[0].system) return results[0]
+            if(results.length) return results.find((x) => x.name == name && x.type == type && x.system);
         }
         
         return undefined

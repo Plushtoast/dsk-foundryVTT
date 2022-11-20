@@ -31,28 +31,6 @@ export default class MacroDSK {
         this.runItem(actor, item, itemName, bypassData, speaker.token)
     }
 
-    static charMacroById(char, actorId) {
-        let actor = game.actors.get(actorId)
-        this.runChar(actor, char)
-    }
-
-    static charMacro(char) {
-        const speaker = ChatMessage.getSpeaker();
-        let actor;
-        if (speaker.token) actor = game.actors.tokens[speaker.token];
-        if (!actor) actor = game.actors.get(speaker.actor);
-
-        this.runChar(actor, char, speaker.token)
-    }
-
-    static runChar(actor, char, tokenId) {
-        if (!actor) return ui.notifications.error(game.i18n.format("dsk.DSKError.MacroItemMissing", { item: char }));
-
-        actor.setupDodge({}, tokenId).then(setupData => {
-            actor.basicTest(setupData)
-        });
-    }
-
     static runItem(actor, item, itemName, bypassData, tokenId) {
         if (!actor) return ui.notifications.error(game.i18n.format("dsk.DSKError.MacroItemMissing", { item: itemName }));
 

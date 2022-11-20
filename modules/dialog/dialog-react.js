@@ -107,13 +107,7 @@ export class ActAttackDialog extends Dialog {
 
     static async getTemplate(actor) {
         const combatskills = actor.items.filter(x => x.type == "combatskill").map(x => ActorDSK._calculateCombatSkillValues(x.toObject(), actor.system))
-        const brawl = combatskills.find(x => x.name == game.i18n.localize('dsk.LocalizedIDs.wrestle'))
-        let items = [{
-            name: game.i18n.localize("dsk.attackWeaponless"),
-            id: "attackWeaponless",
-            img: "systems/dsk/icons/categories/attack_weaponless.webp",
-            value: brawl.system.attack
-        }]
+        let items = []
 
         const types = ["meleeweapon", "rangeweapon"]
         const traitTypes = ["meleeAttack", "rangeAttack"]
@@ -140,20 +134,15 @@ export class ActAttackDialog extends Dialog {
     }
     
     callbackResult(text, actor, tokenId) {
-        if ("attackWeaponless" == text) {
-            actor.setupWeaponless("attack", {}, tokenId).then(setupData => {
+        const types = ["meleeweapon", "trait", "rangeweapon"]
+        const result = actor.items.find(x => { return types.includes(x.type) && x.name == text })
+        if (result) {
+            actor.setupWeapon(result, "attack", {}, tokenId).then(setupData => {
                 actor.basicTest(setupData)
             });
-        } else {
-            const types = ["meleeweapon", "trait", "rangeweapon"]
-            const result = actor.items.find(x => { return types.includes(x.type) && x.name == text })
-            if (result) {
-                actor.setupWeapon(result, "attack", {}, tokenId).then(setupData => {
-                    actor.basicTest(setupData)
-                });
-            }
         }
     }
+    
     static get defaultOptions() {
         const options = super.defaultOptions;
         mergeObject(options, {

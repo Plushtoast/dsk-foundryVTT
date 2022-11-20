@@ -9,8 +9,8 @@
             <span class="label name">{{localize "dsk.name"}}</span>
         </div>
         <div class="headerInput">
-            <input class="input creatureClass" data-dtype="String" name="system.details.species" type="text" value="{{actor.system.details.species}}" placeholder="{{localize ITEM.TypeSpecies}}" />
-            <span class="label creatureClass ">{{localize "ITEM.TypeSpecies"}}</span>
+            <input class="input creatureClass" data-dtype="String" name="system.details.species" type="text" value="{{actor.system.details.species}}" placeholder="{{localize 'dsk.typus'}}" />
+            <span class="label creatureClass ">{{localize "dsk.typus"}}</span>
         </div>
 
     </header>
@@ -21,22 +21,31 @@
             <div class="col">
                 {{> systems/dsk/templates/actors/parts/rollhead.html}}
     
-                {{> systems/dsk/templates/actors/parts/healthbar.html}}
-                {{#if actor.schips}}
                 <div class="row-section">
-                    <div class="col ten lineheight center" data-tooltip="dsk.fatePoints">
-                        {{localize 'dsk.CHARAbbrev.fatePoints'}}
+                    <div class="col eighty">
+                        {{> systems/dsk/templates/actors/parts/healthbar.html}}
+                        {{#if actor.schips}}
+                        <div class="row-section">
+                            <div class="col ten lineheight center" data-tooltip="dsk.fatePoints">
+                                {{localize 'dsk.CHARAbbrev.fatePoints'}}
+                            </div>
+                            <div class="col eighty center" data-tooltip="dsk.fatePoints">
+                                <input class="dskhidden" type="text" name="system.stats.schips.value" data-dtype="Number" value="{{actor.system.stats.schips.value}}" /> 
+                                {{#each actor.schips as |item i|}}
+                                <a class="schip {{item.cssClass}}" data-val="{{item.value}}"></a>
+                                {{/each}}
+                            </div>
+                            <div class="col ten center">
+                            </div>
+                        </div>
+                        {{/if}}
                     </div>
-                    <div class="col eighty center" data-tooltip="dsk.fatePoints">
-                        <input class="dskhidden" type="text" name="system.stats.schips.value" data-dtype="Number" value="{{actor.system.stats.schips.value}}" /> 
-                        {{#each actor.schips as |item i|}}
-                        <a class="schip {{item.cssClass}}" data-val="{{item.value}}"></a>
-                        {{/each}}
-                    </div>
-                    <div class="col ten center">
+                    <div class="col row-section five maxDefense" style="min-height:65px;" data-tooltip="dsk.ABBR.VW">
+                        <div class="center col dskrelative diet-shield d20height">
+                            <h3>{{actor.system.maxDefense}}</h3>
+                        </div>
                     </div>
                 </div>
-                {{/if}}
             </div>
         </div>
     </div>

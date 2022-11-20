@@ -13,11 +13,6 @@
                         "modifier": 0,
                         "advances": 0
                     },
-                    "ch": {
-                        "initial": 8,
-                        "modifier": 0,
-                        "advances": 0
-                    },
                     "kl": {
                         "initial": 8,
                         "modifier": 0,
@@ -28,7 +23,7 @@
                         "modifier": 0,
                         "advances": 0
                     },
-                    "ge": {
+                    "ch": {
                         "initial": 8,
                         "modifier": 0,
                         "advances": 0
@@ -38,12 +33,17 @@
                         "modifier": 0,
                         "advances": 0
                     },
-                    "kk": {
+                    "ge": {
                         "initial": 8,
                         "modifier": 0,
                         "advances": 0
                     },
                     "ko": {
+                        "initial": 8,
+                        "modifier": 0,
+                        "advances": 0
+                    },
+                    "kk": {
                         "initial": 8,
                         "modifier": 0,
                         "advances": 0
@@ -147,7 +147,8 @@
             "notes": {
                 "description": "",
                 "fight": "",
-                "specialRules": ""
+                "specialRules": "",
+                "owner": ""
             },
             "actionCount": 1,
             "count": "1"

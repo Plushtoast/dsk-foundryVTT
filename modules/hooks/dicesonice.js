@@ -96,27 +96,6 @@ export function initDSN() {
             outline: '#b3241a',
             texture: 'none'
         });
-        dice3d.addColorset({
-            name: 'dodge',
-            description: 'DSK.dodge',
-            category: 'DSK.dies',
-            foreground: '#FFFFFF',
-            background: '#388834',
-            edge: '#388834',
-            outline: '#FFFFFF',
-            texture: 'none'
-        });
-        dice3d.addColorset({
-            name: 'parry',
-            description: 'DSK.parry',
-            category: 'DSK.dies',
-            foreground: '#FFFFFF',
-            background: '#388834',
-            edge: '#388834',
-            outline: '#FFFFFF',
-            texture: 'none'
-        });
-
 
         game.dsk.apps.DiceSoNiceCustomization.initConfigs()
         DiceSoNiceCustomization.onConnect()

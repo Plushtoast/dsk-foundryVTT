@@ -107,7 +107,7 @@
                     </span>
                 </div>
                 <div class="col eight lineheight center">
-                    {{actor.system.stats.LeP.current}}
+                    <input name="system.stats.LeP.initial" type="text" value="{{actor.system.stats.LeP.initial}}" data-dtype="Number" />
                 </div>
                 <div class="col eight center">
                     <input name="system.stats.LeP.modifier" type="text" value="{{actor.system.stats.LeP.modifier}}" data-dtype="Number" />
@@ -145,7 +145,7 @@
                     <a data-attr="AeP" class="advance advance-points"><i data-tooltip="{{actor.system.stats.AeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
                 </div>
                 <div class="col eight lineheight center">
-                    {{actor.system.stats.AeP.current}}
+                    <input name="system.stats.AeP.initial" type="text" value="{{actor.system.stats.AeP.initial}}" data-dtype="Number" />
                 </div>
                 <div class="col eight center">
                     <input name="system.stats.AeP.modifier" type="text" value="{{actor.system.stats.AeP.modifier}}" data-dtype="Number" />

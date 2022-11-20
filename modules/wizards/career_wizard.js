@@ -91,7 +91,7 @@ export default class CareerWizard extends WizardDSK {
         }
 
         let update = {
-            "system.details.profession.value": this.career.name
+            "system.details.profession": this.career.name
         }
 
         if (this.career.system.isAncestor) {

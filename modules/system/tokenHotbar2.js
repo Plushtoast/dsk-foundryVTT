@@ -176,29 +176,22 @@ export default class TokenHotbar2 extends Application {
                 onUse.executeOnUseEffect()
                 break
             default:
-                if ("attackWeaponless" == id) {
-                    actor.setupWeaponless("attack", {}, tokenId).then(setupData => {
-                        actor.basicTest(setupData)
-                    });
-                } else {
-                    let result = actor.items.get(id)
-                    if (result) {
-                        if(ev.button == 2) return result.sheet.render(true)
+                let result = actor.items.get(id)
+                if (result) {
+                    if(ev.button == 2) return result.sheet.render(true)
 
-                        switch (result.type) {
-                            case "meleeweapon":
-                            case "rangeweapon":
-                            case "trait":
-                                actor.setupWeapon(result, "attack", {}, tokenId).then(setupData => { actor.basicTest(setupData) });
-                                break
-                            case "ahnengabe":
-                                actor.setupSpell(result, {}, tokenId).then(setupData => { actor.basicTest(setupData) });
-                                break
-                            case "skill":
-                                actor.setupSkill(result, {}, tokenId).then(setupData => { actor.basicTest(setupData) })
-                                break
-                        }
-
+                    switch (result.type) {
+                        case "meleeweapon":
+                        case "rangeweapon":
+                        case "trait":
+                            actor.setupWeapon(result, "attack", {}, tokenId).then(setupData => { actor.basicTest(setupData) });
+                            break
+                        case "ahnengabe":
+                            actor.setupSpell(result, {}, tokenId).then(setupData => { actor.basicTest(setupData) });
+                            break
+                        case "skill":
+                            actor.setupSkill(result, {}, tokenId).then(setupData => { actor.basicTest(setupData) })
+                            break
                     }
                 }
         }
@@ -232,17 +225,7 @@ export default class TokenHotbar2 extends Application {
             effects = (await actor.actorEffects()).map(x => { return { name: x.label, id: x.id, icon: x.icon, cssClass: "effect", abbrev: `${x.label[0]} ${x.getFlag("dsk","value") || ""}`, subfunction: "effect" } })
             if (game.combat) {
                 const combatskills = actor.items.filter(x => x.type == "combatskill").map(x => ActorDSK._calculateCombatSkillValues(x.toObject(), actor.system))
-                const brawl = combatskills.find(x => x.name == game.i18n.localize('dsk.LocalizedIDs.wrestle'))
-                if(brawl) {
-                    items.attacks.push({
-                        name: game.i18n.localize("dsk.attackWeaponless"),
-                        id: "attackWeaponless",
-                        icon: "systems/dsk/icons/categories/attack_weaponless.webp",
-                        attack: brawl.system.attack,
-                        damage: "1d6"
-                    })
-                }
-                
+
                 const attacktypes = ["meleeweapon", "rangeweapon"]
                 const traitTypes = ["meleeAttack", "rangeAttack"]                
 

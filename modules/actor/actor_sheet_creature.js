@@ -14,8 +14,8 @@ export default class ActorSheetCreature extends ActorSheetDSK{
 
     async getData(options) {
         const data = await super.getData(options);        
-        data.enrichedBehaviour = await TextEditor.enrichHTML(getProperty(this.actor.system, "fight"), {secrets: true, async: true})
-        data.enrichedSpecialrules = await TextEditor.enrichHTML(getProperty(this.actor.system, "specialRules"), {secrets: true, async: true})
+        data.enrichedBehaviour = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.fight"), {secrets: true, async: true})
+        data.enrichedSpecialrules = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.specialRules"), {secrets: true, async: true})
         return data;
     }
 

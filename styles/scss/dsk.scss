@@ -2289,6 +2289,19 @@ input[type="search"] {
   }
 }
 
+.maxDefense{
+  min-height: 65px;
+  .diet-shield{
+    margin-top:20px;
+
+    h3{
+      border:none;
+      margin:0;
+      line-height: 55px;
+    }
+  }
+}
+
 .card-content input {
   width: 30px;
   display: inline-block;

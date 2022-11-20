@@ -134,17 +134,12 @@ export default class DSKCombatDialog extends DialogShared {
                 }
                 if (this.dialogData.mode == "attack") {
                     this.dialogData.rollValue = weapon.attack
-                } else if (this.dialogData.mode == "parry") {
-                    this.dialogData.rollValue = weapon.parry
-                }
-            } else if (source.type == "dodge") {
-                this.dialogData.rollValue = source.system.value
-            } else {
+                } 
+            } 
+             else {
                 if (this.dialogData.mode == "attack") {
-                    this.dialogData.rollValue = Number(source.system.at.value)
-                } else if (this.dialogData.mode == "parry") {
-                    this.dialogData.rollValue = Number(source.system.pa)
-                }
+                    this.dialogData.rollValue = Number(source.system.aw)
+                } 
             }
         }
 

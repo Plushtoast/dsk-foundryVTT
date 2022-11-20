@@ -4,7 +4,7 @@ import RequestRoll from "./request-roll.js"
 
 export default class DSKChatAutoCompletion {
     static skills = []
-    static cmds = ["sk", "at", "pa", "ah", "rq", "gc", "w", "ch"]
+    static cmds = ["sk", "at", "ah", "rq", "gc", "w", "ch"]
 
     constructor() {
         if (DSKChatAutoCompletion.skills.length == 0) {
@@ -17,11 +17,6 @@ export default class DSKChatAutoCompletion {
         }
         this.regex
         this.filtering = false
-        this.constants = {
-            dodge: game.i18n.localize("dsk.dodge"),
-            parryWeaponless: game.i18n.localize("dsk.parryWeaponless"),
-            attackWeaponless: game.i18n.localize("dsk.attackWeaponless")
-        }
     }
 
     get regex() {
@@ -95,20 +90,8 @@ export default class DSKChatAutoCompletion {
                     return ((types.includes(x.type) && x.system.worn.value == true) || (x.type == "trait" && traitTypes.includes(x.system.traitType))) &&
                         x.name.toLowerCase().trim().indexOf(search) != -1
                 }).slice(0, 5).map(x => { return { name: x.name, type: "item" } })
-                .concat([{ name: this.constants.attackWeaponless, type: "item" }].filter(x => x.name.toLowerCase().trim().indexOf(search) != -1))
             this._checkEmpty(result)
             this._setList(result, "AT")
-        }
-    }
-
-    _filterPA(search) {
-        const { actor, tokenId } = DSKChatAutoCompletion._getActor()
-        if (actor) {
-            let types = ["meleeweapon"]
-            let result = actor.items.filter(x => { return types.includes(x.type) && x.name.toLowerCase().trim().indexOf(search) != -1 && x.system.worn.value == true }).slice(0, 5).map(x => { return { name: x.name, type: "item" } })
-                .concat([{ name: this.constants.dodge, type: "item" }, { name: this.constants.parryWeaponless, type: "item" }].filter(x => x.name.toLowerCase().trim().indexOf(search) != -1))
-            this._checkEmpty(result)
-            this._setList(result, "PA")
         }
     }
 
@@ -272,47 +255,16 @@ export default class DSKChatAutoCompletion {
         RequestRoll.showRQMessage(target.text(), modifier)
     }
 
-    _quickPA(target, actor, tokenId) {
-        let text = target.text()
-
-        if (this.constants.dodge == text) {
-            actor.setupDodge({}, tokenId).then(setupData => {
-                actor.basicTest(setupData)
-            });
-        } else if (this.constants.parryWeaponless == text) {
-            actor.setupWeaponless("parry", {}, tokenId).then(setupData => {
-                actor.basicTest(setupData)
-            });
-        }
-        else {
-            let types = ["meleeweapon"]
-            let result = actor.items.find(x => { return types.includes(x.type) && x.name == target.text() })
-            if (result) {
-                actor.setupWeapon(result, "parry", {}, tokenId).then(setupData => {
-                    actor.basicTest(setupData)
-                });
-            }
-        }
-    }
-
     _quickAT(target, actor, tokenId) {
-        let text = target.text()
-        if (this.constants.attackWeaponless == text) {
-            actor.setupWeaponless("attack", {}, tokenId).then(setupData => {
+        const types = ["meleeweapon", "rangeweapon"]
+        const traitTypes = ["meleeAttack", "rangeAttack"]
+        let result = actor.items.find(x => { return types.includes(x.type) && x.name == target.text() })
+        if(!result) result = actor.items.find(x => { return x.type == "trait" && x.name == target.text() && traitTypes.includes(x.system.traitType) })
+
+        if (result) {
+            actor.setupWeapon(result, "attack", {}, tokenId).then(setupData => {
                 actor.basicTest(setupData)
             });
-        }
-        else {
-            const types = ["meleeweapon", "rangeweapon"]
-            const traitTypes = ["meleeAttack", "rangeAttack"]
-            let result = actor.items.find(x => { return types.includes(x.type) && x.name == target.text() })
-            if(!result) result = actor.items.find(x => { return x.type == "trait" && x.name == target.text() && traitTypes.includes(x.system.traitType) })
-
-            if (result) {
-                actor.setupWeapon(result, "attack", {}, tokenId).then(setupData => {
-                    actor.basicTest(setupData)
-                });
-            }
         }
     }
     
