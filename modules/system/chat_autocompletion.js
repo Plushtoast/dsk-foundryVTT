@@ -8,7 +8,7 @@ export default class DSKChatAutoCompletion {
 
     constructor() {
         if (DSKChatAutoCompletion.skills.length == 0) {
-            DSKUtility.allSkills().then(res => {
+            DSKUtility.allSkills(["skill"]).then(res => {
                 DSKChatAutoCompletion.skills = res.map(x => { return { name: x.name, type: "skill" } })
                     .concat(Object.values(game.dsk.config.characteristics).map(x => {
                         return { name: game.i18n.localize(x), type: "attribute" }

@@ -189,12 +189,9 @@ export default class ActorSheetDSK extends ActorSheet {
         html.find('.schip').click(ev => {
             ev.preventDefault()
             let val = Number(ev.currentTarget.getAttribute("data-val"))
-            let elem = $(this.form).parent().find('[name="system.stats.schips.value"]')
-
             if (val == 1 && $(this.form).find(".fullSchip").length == 1) val = 0
 
-            elem.val(val)
-            elem.trigger("change")
+            this.actor.update({"system.stats.schips.value": val})
         })
 
         html.find('.swapWeaponHand').click(ev => this.swapWeaponHand(ev))
@@ -471,13 +468,111 @@ export default class ActorSheetDSK extends ActorSheet {
     }
 
     async advanceWrapper(ev, funct, param) {
-        let elem = $(ev.currentTarget)
-        let i = elem.find('i')
+        const i = $(ev.currentTarget).find('i')
         if (!i.hasClass("fa-spin")) {
             i.addClass("fa-spin fa-spinner")
             await this[funct](param)
             i.removeClass("fa-spin fa-spinner")
         }
+    }
+
+    async _advanceAttribute(attr) {
+        const advances = Number(this.actor.system.characteristics[attr].advances) + Number(this.actor.system.characteristics[attr].initial)
+        const cost = DSKUtility._calculateAdvCost(advances, "Eig")
+        if (await this._checkEnoughXP(cost)) {
+            await this._updateAPs(cost, {
+                [`system.characteristics.${attr}.advances`]: Number(this.actor.system.characteristics[attr].advances) + 1
+            })
+        }
+    }
+
+    async _refundAttributeAdvance(attr) {
+        const advances = Number(this.actor.system.characteristics[attr].advances) + Number(this.actor.system.characteristics[attr].initial)
+        if (Number(this.actor.system.characteristics[attr].advances) > 0) {
+            const cost = DSKUtility._calculateAdvCost(advances, "Eig", 0) * -1
+            await this._updateAPs(cost, {
+                [`system.characteristics.${attr}.advances`]: Number(this.actor.system.characteristics[attr].advances) - 1
+            })
+        }
+    }
+
+    async _advancePoints(attr) {
+        const advances = Number(this.actor.system.stats[attr].advances)
+        const cost = DSKUtility._calculateAdvCost(advances, "D")
+        if (await this._checkEnoughXP(cost) && this._checkMaximumPointAdvancement(attr, advances + 1)) {
+            await this._updateAPs(cost, {
+                [`system.stats.${attr}.advances`]: Number(this.actor.system.stats[attr].advances) + 1
+            })
+        }
+    }
+
+    async _refundPointsAdvance(attr) {
+        const advances = Number(this.actor.system.stats[attr].advances)
+        if (advances > 0) {
+            const cost = DSKUtility._calculateAdvCost(advances, "D", 0) * -1
+            await this._updateAPs(cost, {
+                [`system.stats.${attr}.advances`]: Number(this.actor.system.stats[attr].advances) - 1
+            })
+        }
+    }
+
+    async _advanceItem(itemId) {
+        let item = this.actor.items.get(itemId).toObject()
+        let cost = DSKUtility._calculateAdvCost(Number(item.system.level), item.system.StF)
+        if (await this._checkEnoughXP(cost) && this._checkMaximumItemAdvancement(item, Number(item.system.level) + 1)) {
+            await this.actor.updateEmbeddedDocuments("Item", [{ _id: itemId, "system.level": item.system.level + 1 }])
+            await this._updateAPs(cost)
+        }
+    }
+
+    async _refundItemAdvance(itemId) {
+        let item = this.actor.items.get(itemId).toObject()
+        if (item.system.level > 0) {
+            let cost = DSKUtility._calculateAdvCost(Number(item.system.level), item.system.StF, 0) * -1
+            await this.actor.updateEmbeddedDocuments("Item", [{ _id: itemId, "system.level": item.system.level - 1 }])
+            await this._updateAPs(cost)
+        }
+    }
+
+    _checkMaximumItemAdvancement(item, newValue) {
+        let result = false
+        switch (item.type) {
+            case "combatskill":
+                result = newValue <= this.maxByAttr(item, 'dsk.LocalizedIDs.exceptionalCombatTechnique')
+                break
+            case "ahnengabe":
+            case "skill":
+                result = newValue <= this.maxByAttr(item, 'dsk.LocalizedIDs.exceptionalSkill')
+                break
+        }
+        if (!result)
+            ui.notifications.error(game.i18n.localize("dsk.DSKError.AdvanceMaximumReached"))
+
+        return result
+    }
+
+    maxByAttr(item, specialability) {
+        return Math.max(...[this.actor.system.characteristics[item.system.characteristic1].value, this.actor.system.characteristics[item.system.characteristic2].value]) + 2 + AdvantageRulesDSK.vantageStep(this.actor, `${game.i18n.localize(specialability)} (${item.name})`)
+    }
+
+    async _checkEnoughXP(cost) {
+        return await this.actor.checkEnoughXP(cost)
+    }
+
+    _checkMaximumPointAdvancement(attr, newValue) {
+        let result = false
+        switch (attr) {
+            case "LeP":
+                result = newValue <= this.actor.system.characteristics.ko.value
+                break
+            case "AeP":
+                result = newValue <= (this.actor.system.characteristics[this.actor.system.guidevalue] == undefined ? 0 : this.actor.system.characteristics[this.actor.system.guidevalue].value)
+                break
+        }
+        if (!result)
+            ui.notifications.error(game.i18n.localize("dsk.DSKError.AdvanceMaximumReached"))
+
+        return result
     }
 
     _onItemCreate(event) {

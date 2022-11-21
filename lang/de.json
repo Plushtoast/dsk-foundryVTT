@@ -276,8 +276,10 @@
         "sk": "Seelenkraft",
         "zk": "Zähigkeit",
         "SETTINGS": {
+            "statusEffectCounterColor": "Farbe des Statuseffektzählers",
+            "statusEffectCounterColorHint": "Hex Code für die Token Farbe von zählbaren Status Effekten. Format: #000000",
             "limitCombatSpecAbs": "Spezialmanöver limitieren",
-        "limitCombatSpecAbsHint": "Nur ein Spezial- und Basismanöver erlauben.",
+            "limitCombatSpecAbsHint": "Nur ein Spezial- und Basismanöver erlauben.",
             "tokenhotbarLayout": "Tokenhotbar Layout",
             "tokenhotbarLayoutHint": "Layout und Ausklappausrichtung der Tokenhotbar",
             "tokenhotbarLayout0": "Horizontal, nach oben",
@@ -327,7 +329,7 @@
         },
         "HELP": {
             "showHelp": "Hilfe anzeigen",
-            "default": "Weiterführende Hilfe und Informationen gibt es hier: <a href=\"https://youtube.com/c/VTTom\" target=\"_blank\"><button>VTTom's YouTube Kanal</button></a><a href=\"https://github.com/Plushtoast/dsa5-foundryVTT/wiki\" target=\"_blank\"><button>Wiki & FAQ</button></a><a href=\"https://discord.gg/foundryvtt\" target=\"_blank\"><button>Foundry Discord (ulisses-dsa)</button></a><a href=\"https://discord.gg/foundryvtt\" target=\"_blank\"><a href=\"https://discord.com/invite/SnqCgcvPzR\" target=\"_blank\"><button>Ulisses Discord</button></a>",
+            "default": "Weiterführende Hilfe und Informationen gibt es hier: <a href=\"https://youtube.com/c/VTTom\" target=\"_blank\"><button>VTTom's YouTube Kanal</button></a><a href=\"https://github.com/Plushtoast/dsk-foundryVTT/wiki\" target=\"_blank\"><button>Wiki & FAQ</button></a><a href=\"https://discord.gg/foundryvtt\" target=\"_blank\"><button>Foundry Discord (ulisses-dsa)</button></a><a href=\"https://discord.gg/foundryvtt\" target=\"_blank\"><a href=\"https://discord.com/invite/SnqCgcvPzR\" target=\"_blank\"><button>Ulisses Discord</button></a>",
             "command": "Befehl",
             "example": "Beispiel",
             "pay": "Bezahlen",
@@ -394,6 +396,7 @@
             "perception": "Sinnesschärfe"
         },
         "fshopLink": "https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/",
+        "noDefense": "Keine Verteidigung",
         "UNITS": {
             "weight": "Gewicht in Zehntstein",
             "money": "Wert in Mondglöckchen"
@@ -440,6 +443,7 @@
         "DSKError": {
             "notFound": "{category} {name} nicht gefunden",
             "reportBug": "Fehler melden",
+            "AdvanceMaximumReached": "Maximale Steigerung bereits erreicht",
             "opposedAttackNoSpecAbs": "Passierschläge können nicht mit Sonderfertigkeiten kombiniert werden",
             "unknownCombatSkill": "Das Kampftalent {skill} der Waffe {item} ist unbekannt. Bitte die Waffe anpassen.",
             "noProperActor": "Dir wurde noch kein Charakter zugewiesen oder du hast keinen Token markiert.",

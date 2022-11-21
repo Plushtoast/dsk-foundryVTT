@@ -102,6 +102,14 @@ export function setupConfiguration(){
             step: 1
         }
     });
+    game.settings.register("dsk", "statusEffectCounterColor", {
+        name: "dsk.SETTINGS.statusEffectCounterColor",
+        hint: "dsk.SETTINGS.statusEffectCounterColorHint",
+        scope: "client",
+        config: true,
+        default: "#FFFFFF",
+        type: String
+    });
     game.settings.register("dsk", "playerCanEditSpellMacro", {
         name: "dsk.SETTINGS.playerCanEditSpellMacro",
         hint: "dsk.SETTINGS.playerCanEditSpellMacroHint",

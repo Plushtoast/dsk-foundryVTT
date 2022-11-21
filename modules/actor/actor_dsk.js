@@ -3,7 +3,6 @@ import DSKStatusEffects from "../status/status_effects.js";
 import AdvantageRulesDSK from "../system/advantage-rules.js";
 import DSK from "../system/config.js";
 import DiceDSK from "../system/dicedsk.js";
-import DSKSoundEffect from "../system/dsk-soundeffect.js";
 import DSKUtility from "../system/dsk_utility.js";
 import RuleChaos from "../system/rule_chaos.js";
 import { tinyNotification } from "../system/view_helper.js";
@@ -16,7 +15,11 @@ export default class ActorDSK extends Actor {
 
         if (!data.img || data.img == "icons/svg/mystery-man.svg") data.img = "icons/svg/mystery-man-black.svg";
 
-        data.items = await DSKUtility.allSkills();
+        const elems = ["skill", "combatskill"]
+        if(["character", "npc"].includes(data.type)){
+          elems.push("meleeweapon", "specialability")
+        }
+        data.items = await DSKUtility.allSkills(elems);
 
         return await super.create(data, options);
     }
@@ -223,7 +226,7 @@ export default class ActorDSK extends Actor {
     }
 
     maxDefenseValue(){
-      const defenses = [0]
+      let defense = { parry: 0, name: game.i18n.localize("dsk.noDefense")}
       const combatskills = []
       const wornweapons = []
       for(let cur of this.items){
@@ -232,7 +235,8 @@ export default class ActorDSK extends Actor {
         } else if(cur.type == "meleeweapon"){
           if(getProperty(cur, "system.worn.value")) wornweapons.push(cur)
         } else if(cur.type == "trait" && cur.system.traitType == "meleeAttack"){
-          defenses.push(ActorDSK._prepareMeleetrait(cur).parry)
+          const trait = ActorDSK._prepareMeleetrait(cur)
+          if(trait.parry > defense.parry) defense = trait
         }
       }
       
@@ -243,10 +247,10 @@ export default class ActorDSK extends Actor {
             this,
             wornweapons.filter((x) => x._id != item._id && !RuleChaos.isYieldedTwohanded(x))
         )
-        defenses.push(weapon.parry)
+        if(weapon.parry > defense.parry) defense = weapon
       }
 
-      return Math.max(...defenses)
+      return defense
     }
 
     prepareBaseData() {

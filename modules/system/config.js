@@ -547,6 +547,10 @@ DSK.tokenSizeCategories = {
     "giant": 4
 }
 
+DSK.effectTextStyle = CONFIG.canvasTextStyle.clone();
+DSK.effectTextStyle.fontSize = "30";
+DSK.effectTextStyle.fontFamily = "GentiumBasic"
+
 DSK.ammunitiongroups = {
     "-": "-",
     "arrow": "dsk.ammunition.arrow",

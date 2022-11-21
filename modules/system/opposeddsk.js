@@ -110,7 +110,8 @@ export default class OpposedDSK{
                 let targets = Array.from(game.user.targets)
                 const item = attackerToken.actor.items.get(msgData.preData.source._id)
                 if (!targets.length) targets = [attackerToken]
-                AutoAnimations.playAnimation(attackerToken, targets, item)
+
+                AutomatedAnimations.playAnimation(attackerToken, item, { targets })
             }
         }
     }
