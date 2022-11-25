@@ -27,6 +27,9 @@ export default class ItemDSK extends Item{
             rangeweapon: "systems/dsk/icons/categories/rangeweapon.webp",
             meleeweapon: "systems/dsk/icons/categories/meleeweapon.webp",
             ahnengeschenk: "systems/dsk/icons/categories/ahnengeschenk.webp",
+            culture: "systems/dsk/icons/categories/culture.webp",
+            profession: "systems/dsk/icons/categories/profession.webp",
+            poison: "systems/dsk/icons/categories/poison.webp",
             trait: "systems/dsk/icons/categories/trait.webp",
         }[key]
     }
