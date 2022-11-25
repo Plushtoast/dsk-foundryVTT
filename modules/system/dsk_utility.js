@@ -28,7 +28,7 @@ export default class DSKUtility {
 
     static fateAvailable(actor, group) {
         //if (group)
-        //    return game.settings.get("dsa5", "groupschips").split("/").map(x => Number(x))[0] > 0
+        //    return game.settings.get("dsk", "groupschips").split("/").map(x => Number(x))[0] > 0
 
         return actor.system.stats.schips.value > 0
     }

@@ -1,5 +1,6 @@
 import ActorDSK from "../actor/actor_dsk.js"
 import DSKDialog from "../dialog/dialog-dsk.js"
+import ItemDSK from "../item/item_dsk.js"
 import DSKActiveEffectConfig from "../status/active_effects.js"
 import DSKStatusEffects from "../status/status_effects.js"
 import DSKTables from "../tables/dsktables.js"
@@ -1050,6 +1051,72 @@ export default class DiceDSK{
             preData: testData,
             modifiers,
             extra: {},
+        }
+    }
+
+    static async _rollEdit(ev) {
+        let input = $(ev.currentTarget),
+            messageId = input.parents(".message").attr("data-message-id"),
+            message = game.messages.get(messageId)
+
+        let data = message.flags.data
+        let newTestData = data.preData
+        newTestData.extra.actor = DSKUtility.getSpeaker(newTestData.extra.speaker).toObject(false)
+        if(newTestData.extra.options.cheat) delete newTestData.extra.options.cheat
+        let index
+
+        switch (input.attr("data-edit-type")) {
+            case "roll":
+                index = input.attr("data-edit-id")
+                let newValue = Number(input.val())
+                
+                if (newTestData.roll.terms.length > index * 2) {
+                    let newRoll = Roll.fromData(newTestData.roll)
+                    newRoll.editRollAtIndex([{index, val: newValue}])
+                    newTestData.roll = newRoll
+                } else {
+                    let oldDamageRoll = Roll.fromData(data.postData.damageRoll)
+                    index = index - newTestData.roll.terms.filter((x) => x.results).length
+                    oldDamageRoll.editRollAtIndex([{index, val: newValue}])
+                    newTestData.damageRoll = oldDamageRoll
+                }
+                break
+            case "mod":
+                index = newTestData.situationalModifiers.findIndex((x) => x.name == game.i18n.localize("dsk.chatEdit"))
+                if (index > 0) newTestData.situationalModifiers.splice(index, 1)
+
+                let newVal = {
+                    name: game.i18n.localize("dsk.chatEdit"),
+                    value: Number(input.val()) - this._situationalModifiers(newTestData),
+                }
+                newTestData.situationalModifiers.push(newVal)
+                break
+        }
+
+        let chatOptions = {
+            template: data.template,
+            rollMode: data.rollMode,
+            title: data.title,
+            speaker: message.speaker,
+            user: message.user.id,
+        }
+
+        if (["gmroll", "blindroll"].includes(chatOptions.rollMode))
+            chatOptions["whisper"] = game.users.filter((user) => user.isGM).map((x) => x.id)
+
+        if (chatOptions.rollMode === "blindroll") chatOptions["blind"] = true
+
+        if (["poison", "disease"].includes(newTestData.source.type)) {
+            new ItemDSK(newTestData.source, { temporary: true })[`${data.postData.postFunction}`](
+                { testData: newTestData, cardOptions: chatOptions },
+                { rerenderMessage: message }
+            )
+        } else {
+            const speaker = DSKUtility.getSpeaker(message.speaker)
+            speaker[`${data.postData.postFunction}`](
+                { testData: newTestData, cardOptions: chatOptions },
+                { rerenderMessage: message }
+            )
         }
     }
 

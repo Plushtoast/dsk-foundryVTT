@@ -38,6 +38,12 @@
             },
             "damage": {
                 "name": "Trefferpunkte"
+            },
+            "LeP": {
+                "name": "Lebenspunkte"
+            },
+            "AeP": {
+                "name": "Ahnenenergie"
             }
         },
         "SKILL": {
@@ -654,6 +660,7 @@
             "AW": "Angriffswert",
             "VW": "Verteidigungswert"
         },
+        "chatEdit": "Manuelle Korrektur",
         "KEYBINDINGS": {
             "journalBrowser": "Öffne den Journalbrowser",
             "library": "Öffne die Bibliothek",
