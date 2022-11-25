@@ -10,12 +10,19 @@
     </select>
 </div>
 {{/if}}
+
 <div class="form-group custom-select">
     <label>{{localize "dsk.DIALOG.RollMode"}}</label>
     <select name="rollMode">
       {{selectOptions rollModes selected=rollMode localize=true}}  
     </select>
 </div>
+{{#if hasSchips}}
+<div class="form-group">
+  <label>{{localize "dsk.schips"}} (+5)</label>
+  <input type="checkbox" id="schips" name="schips" value="5">
+</div>
+{{/if}}
 {{#if hasSituationalModifiers}}
 <div class="modifiers form-group custom-select">
     <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>

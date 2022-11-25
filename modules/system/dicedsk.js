@@ -14,7 +14,7 @@ import TraitRulesDSK from "./trait_rules.js"
 export default class DiceDSK{
     static async setupDialog({ dialogOptions, testData, cardOptions }) {
         let rollMode = await game.settings.get("core", "rollMode")
-        let sceneStress = "challenging"
+        let sceneStress = 0
 
         if (typeof testData.source.toObject === "function") testData.source = testData.source.toObject(false)
 
@@ -203,7 +203,7 @@ export default class DiceDSK{
                 if (/(,|;)/.test(formula)) formula = formula.split(/[,;]/)[res.qualityStep - 1]
 
                 let rollEffect = testData.damageRoll ? 
-                    testData.damageRoll : 
+                    Roll.fromData(testData.damageRoll) : 
                     await DiceDSK.manualRolls(
                         await new Roll(formula).evaluate({ async: true }),
                         "dsk.CHAR.DAMAGE",
@@ -230,7 +230,7 @@ export default class DiceDSK{
                     damageBonusDescription.push(game.i18n.localize("dsk.statuseffects") + " " + statusDmg)
                 }
                 res["armorPen"] = armorPen
-                res["damageRoll"] = rollEffect
+                res["damageRoll"] = damageRoll.toJSON()
                 res["damage"] = rollEffect.total + statusDmg
                 res["damagedescription"] = damageBonusDescription.join("\n")
             }
@@ -347,14 +347,15 @@ export default class DiceDSK{
                 }
             }
         }
+
         let damageRoll = testData.damageRoll
-            ? await testData.damageRoll
+            ? Roll.fromData(testData.damageRoll)
             : await DiceDSK.manualRolls(
                   await new Roll(rollFormula).evaluate({ async: true }),
                   "dsk.damage",
                   testData.extra.options
               )
-        let damage = damageRoll.total
+        let damage = damageRoll.total;
 
         let weaponroll = 0
         for (let k of damageRoll.terms) {
@@ -425,7 +426,7 @@ export default class DiceDSK{
         result["armorPen"] = armorPen
         result["damagedescription"] = damageBonusDescription.join(", ")
         result["damage"] = Math.round(damage)
-        result["damageRoll"] = duplicate(damageRoll)
+        result["damageRoll"] = damageRoll.toJSON()
     }
 
     static parseEffect(source) {
@@ -491,12 +492,11 @@ export default class DiceDSK{
         
         if(testData.advancedModifiers){
             pw += testData.advancedModifiers.fws + testData.advancedModifiers.chars[0] + testData.advancedModifiers.chars[1]
-        }
+        }        
         
-        let fws = pw - roll.total
+        let fws = pw - roll.terms[0].results[0].result - roll.terms[2].results[0].result
         let crit = 1
         let botch = 20
-     
         if (
             testData.source.type == "skill" &&
             AdvantageRulesDSK.hasVantage(
@@ -570,6 +570,7 @@ export default class DiceDSK{
             }),
             qualityStep,
             pw,
+            roll,
             description,
             preData: testData,
             successLevel,
@@ -998,7 +999,7 @@ export default class DiceDSK{
             }
             roll = await DiceDSK.manualRolls(roll, testData.source.type, testData.extra.options)
             await this.showDiceSoNice(roll, cardOptions.rollMode)
-            testData.roll = roll
+            testData.roll = duplicate(roll)
             testData.rollMode = cardOptions.rollMode
         }
         return testData

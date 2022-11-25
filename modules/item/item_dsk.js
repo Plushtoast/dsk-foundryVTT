@@ -21,7 +21,13 @@ export default class ItemDSK extends Item{
             advantage: "systems/dsk/icons/categories/advantage.webp",
             disadvantage: "systems/dsk/icons/categories/disadvantage.webp",
             specialability: "systems/dsk/icons/categories/specialability.webp",
-            combatskill: "systems/dsk/icons/categories/combatskill.webp"
+            combatskill: "systems/dsk/icons/categories/combatskill.webp",
+            ahnengabe: "systems/dsk/icons/categories/ahnengabe.webp",
+            armor: "systems/dsk/icons/categories/armor.webp",
+            rangeweapon: "systems/dsk/icons/categories/rangeweapon.webp",
+            meleeweapon: "systems/dsk/icons/categories/meleeweapon.webp",
+            ahnengeschenk: "systems/dsk/icons/categories/ahnengeschenk.webp",
+            trait: "systems/dsk/icons/categories/trait.webp",
         }[key]
     }
 
@@ -396,6 +402,10 @@ export default class ItemDSK extends Item{
         }
     }
 
+    static hasSchips(actor){
+        return getProperty(actor.system, "stats.schips.value") > 0
+    }
+
     async postItem() {
         ItemDSK.getSubClass(this.type)._postItem(this)
     }
@@ -532,6 +542,7 @@ class ItemTrait extends ItemDSK {
         let data = {
             rollMode: options.rollMode,
             mode,
+            hasSchips: this.hasSchips(actor),
             defenseCountString: game.i18n.format("dsk.defenseCount", { malus: multipleDefenseValue }),
         }
 
@@ -551,6 +562,7 @@ class ItemTrait extends ItemDSK {
                 } else {
                     DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options)
                 }
+                ActorDSK.schipsModifier(html, actor, testData.situationalModifiers)
                 testData.isRangeDefense = data.isRangeDefense
                 Hooks.call("callbackDialogCombatDSK", testData, actor, html, item, tokenId)
                 return { testData, cardOptions }
@@ -612,6 +624,7 @@ class ItemMeleeweapon extends ItemDSK{
         let data = {
             rollMode: options.rollMode,
             mode,
+            hasSchips: this.hasSchips(actor),
             defenseCountString: game.i18n.format("dsk.defenseCount", { malus: multipleDefenseValue }),
         }
         let situationalModifiers = actor ? DSKStatusEffects.getRollModifiers(actor, item, { mode }) : []
@@ -624,6 +637,7 @@ class ItemMeleeweapon extends ItemDSK{
             data,
             callback: (html, options = {}) => {
                 DSKCombatDialog.resolveMeleeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue, mode)
+                ActorDSK.schipsModifier(html, actor, testData.situationalModifiers)
                 Hooks.call("callbackDialogCombatDSK", testData, actor, html, item, tokenId)
                 testData.isRangeDefense = data.isRangeDefense
                 return { testData, cardOptions }
@@ -751,6 +765,7 @@ class ItemRangeweapon extends ItemDSK{
         let data = {
             rollMode: options.rollMode,
             mode,
+            hasSchips: this.hasSchips(actor),
         }
         let situationalModifiers = actor ? DSKStatusEffects.getRollModifiers(actor, item, { mode }) : []
         this.getSituationalModifiers(situationalModifiers, actor, data, item, tokenId)
@@ -762,6 +777,7 @@ class ItemRangeweapon extends ItemDSK{
             data,
             callback: (html, options = {}) => {
                 DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options)
+                ActorDSK.schipsModifier(html, actor, testData.situationalModifiers)
                 Hooks.call("callbackDialogCombatDSK", testData, actor, html, item, tokenId)
                 return { testData, cardOptions }
             },
@@ -841,6 +857,7 @@ class ItemAhnengabe extends ItemDSK{
     static async getCallbackData(testData, html, actor) {
         testData.testDifficulty = 0
         testData.situationalModifiers = ActorDSK._parseModifiers(html)
+        ActorDSK.schipsModifier(html, actor, testData.situationalModifiers)
         const formData = new FormDataExtended(html.find('form')[0]).object
         testData.calculatedSpellModifiers = {
             castingTime: html.find(".castingTime").text(),
@@ -927,6 +944,7 @@ class ItemAhnengabe extends ItemDSK{
             hasSKModifier: spell.system.resist == "sk",
             hasZKModifier: spell.system.resist == "zk",
             spellReach: spell.system.range,
+            hasSchips: this.hasSchips(actor),
             characteristics: [1, 2].map((x) => spell.system[`characteristic${x}`]),
         }
 
@@ -993,6 +1011,7 @@ class ItemSkill extends ItemDSK{
             rollMode: options.rollMode,
             modifier: options.modifier || 0,
             difficultyLabels: DSK.skillDifficultyLabels,
+            hasSchips: this.hasSchips(actor),
             characteristics: [1, 2].map((x) => skill.system[`characteristic${x}`]),
             situationalModifiers: actor ? DSKStatusEffects.getRollModifiers(actor, skill) : []
         }
@@ -1007,6 +1026,7 @@ class ItemSkill extends ItemDSK{
             callback: (html, options = {}) => {
                 cardOptions.rollMode = html.find('[name="rollMode"]').val()
                 testData.situationalModifiers = ActorDSK._parseModifiers(html)
+                ActorDSK.schipsModifier(html, actor, testData.situationalModifiers)
                 testData.testDifficulty = DSK.skillDifficultyModifiers[html.find('[name="testDifficulty"]').val()]
                 testData.advancedModifiers = {
                     chars: [0, 1].map((x) => Number(html.find(`[name="ch${x}"]`).val())),

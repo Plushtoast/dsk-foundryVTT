@@ -8,6 +8,8 @@ import RuleChaos from "../system/rule_chaos.js";
 import { tinyNotification } from "../system/view_helper.js";
 import OpposedDSK from "../system/opposeddsk.js";
 import SpecialabilityRulesDSK from "../system/specialability-rules.js";
+import DSKActiveEffect from "../status/dsk_active_effects.js";
+import DSKDialog from "../dialog/dialog-dsk.js";
 
 export default class ActorDSK extends Actor {
     static async create(data, options) {
@@ -20,6 +22,18 @@ export default class ActorDSK extends Actor {
           elems.push("meleeweapon", "specialability")
         }
         data.items = await DSKUtility.allSkills(elems);
+
+        const schipsCounts = {
+          "character": 3,
+          "npc": 1,
+          "creature": 0
+        }
+        let schipsCount = getProperty(data, "system.stats.schips.current") || schipsCounts[data.type] || 0
+        
+        data.system = { stats: { schips: { current: schipsCount, value: schipsCount } } }
+
+        if (data.type != "creature" && [undefined, 0].includes(getProperty(data, "system.stats.LeP.value")))
+            mergeObject(data, { system: { status: { wounds: { value: 16 } } } });
 
         return await super.create(data, options);
     }
@@ -251,6 +265,214 @@ export default class ActorDSK extends Actor {
       }
 
       return defense
+    }
+
+    preparePostRollAction(message) {
+      let data = message.flags.data;
+      let cardOptions = {
+        flags: { img: message.flags.img },
+        rollMode: data.rollMode,
+        speaker: message.speaker,
+        template: data.template,
+        title: data.title,
+        user: message.user,
+      };
+      if (data.attackerMessage) cardOptions.attackerMessage = data.attackerMessage;
+      if (data.defenderMessage) cardOptions.defenderMessage = data.defenderMessage;
+      if (data.unopposedStartMessage) cardOptions.unopposedStartMessage = data.unopposedStartMessage;
+      return cardOptions;
+    }
+
+    async useFateOnRoll(message, type, schipsource) {
+      if (type == "isTalented" || DSKUtility.fateAvailable(this, schipsource == 1)) {
+        let data = message.flags.data;
+        let cardOptions = this.preparePostRollAction(message);
+        let fateAvailable;
+        let schipText;
+        if (schipsource == 0) {
+          fateAvailable = this.system.stats.schips.value - 1;
+          schipText = "PointsRemaining";
+        } else {
+          fateAvailable = game.settings.get("dsk", "groupschips").split("/")[0];
+          schipText = "GroupPointsRemaining";
+        }
+        let infoMsg = `<h3 class="center"><b>${game.i18n.localize("dsk.CHATFATE.fatepointUsed")}</b></h3>
+                  ${game.i18n.format("dsk.CHATFATE." + type, {
+          character: "<b>" + this.name + "</b>",
+        })}<br>
+                  <b>${game.i18n.localize(`dsk.CHATFATE.${schipText}`)}</b>: ${fateAvailable}`;
+  
+        let newTestData = data.preData;
+        newTestData.extra.actor = DSKUtility.getSpeaker(newTestData.extra.speaker).toObject(false);
+  
+        this[`fate${type}`](infoMsg, cardOptions, newTestData, message, data, schipsource);
+      }
+    }
+
+    resetTargetAndMessage(data, cardOptions) {
+      if (data.originalTargets?.size) {
+        game.user.targets = data.originalTargets;
+        game.user.targets.user = game.user;
+      }
+      if (!data.defenderMessage && data.startMessagesList) {
+        cardOptions.startMessagesList = data.startMessagesList;
+      }
+    }
+
+    async fatererollDamage(infoMsg, cardOptions, newTestData, message, data, schipsource) {
+      cardOptions.fatePointDamageRerollUsed = true;
+      this.resetTargetAndMessage(data, cardOptions);
+      const html = await renderTemplate("systems/dsk/templates/dialog/fateReroll-dialogDamage.html", {
+        testData: newTestData,
+        postData: data.postData,
+        singleDie: data.postData.characteristics.filter(x => x.char == "damage").length == 1
+      });
+      new DSKDialog({
+        title: game.i18n.localize("dsk.CHATFATE.selectDice"),
+        content: html,
+        buttons: {
+          Yes: {
+            icon: '<i class="fa fa-check"></i>',
+            label: game.i18n.localize("dsk.ok"),
+            callback: async (dlg) => {
+              let diesToReroll = dlg.find(".dieSelected").map(function () {return Number($(this).attr("data-index"));}).get();
+              if (diesToReroll.length > 0) {
+                let oldDamageRoll = Roll.fromData(data.postData.damageRoll);
+                let newRoll = await DiceDSK.manualRolls(
+                  await new Roll(oldDamageRoll.formula || oldDamageRoll._formula).evaluate({ async: true }),
+                  "dsk.CHATCONTEXT.rerollDamage"
+                );
+                await DiceDSK.showDiceSoNice(newRoll, newTestData.rollMode);
+                for (let i = 0; i < newRoll.dice.length; i++) newRoll.dice[i].options.colorset = "black";
+
+                let ind = 0;
+                let changedRolls = [];
+
+                const changes = []
+                for (let k of diesToReroll) {
+                  changedRolls.push(
+                    `${oldDamageRoll.terms[(k - 2) * 2].results[0].result}/${newRoll.terms[ind * 2].results[0].result}`
+                  );    
+                  changes.push({ index: (k-2)*2, val: newRoll.terms[ind * 2].results[0].result })
+                  ind += 1;
+                }
+                oldDamageRoll.editRollAtIndex(changes)
+                newTestData.damageRoll = oldDamageRoll
+  
+                infoMsg += `<br><b>${game.i18n.localize("dsk.Roll")}</b>: ${changedRolls.join(", ")}`;
+                ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
+
+                this[`${data.postData.postFunction}`]({ testData: newTestData, cardOptions }, { rerenderMessage: message });
+                await message.update({ "flags.data.fatePointDamageRerollUsed": true });
+                await this.reduceSchips(schipsource);
+              }
+            }
+          },
+          cancel: {
+            icon: '<i class="fas fa-times"></i>',
+            label: game.i18n.localize("dsk.cancel"),
+          },
+        },
+        default: "Yes",
+      }).render(true);
+
+      
+    }
+
+    async fatereroll(infoMsg, cardOptions, newTestData, message, data, schipsource) {
+      cardOptions.fatePointDamageRerollUsed = true;
+      this.resetTargetAndMessage(data, cardOptions);
+  
+      const html = await renderTemplate("systems/dsk/templates/dialog/fateReroll-dialog.html", {
+        testData: newTestData,
+        postData: data.postData,
+        singleDie: data.postData.characteristics.filter(x => x.char != "damage").length == 1
+      });
+      new DSKDialog({
+        title: game.i18n.localize("dsk.CHATFATE.selectDice"),
+        content: html,
+        buttons: {
+          Yes: {
+            icon: '<i class="fa fa-check"></i>',
+            label: game.i18n.localize("dsk.ok"),
+            callback: async (dlg) => {
+              let diesToReroll = dlg.find(".dieSelected").map(function () {return Number($(this).attr("data-index"));}).get();
+              if (diesToReroll.length > 0) {
+                let newRoll = [];
+                for (let k of diesToReroll) {
+                  let term = newTestData.roll.terms[k * 2];
+                  newRoll.push(term.number + "d" + term.faces + "[" + term.options.colorset + "]");
+                }
+                newRoll = await DiceDSK.manualRolls(
+                  await new Roll(newRoll.join("+")).evaluate({ async: true }),
+                  "dsk.CHATCONTEXT.Reroll"
+                );
+                await DiceDSK.showDiceSoNice(newRoll, newTestData.rollMode);
+  
+                let ind = 0;
+                let changedRolls = [];
+                const actor = DSKUtility.getSpeaker(newTestData.extra.speaker);
+                const phexTradition = game.i18n.localize("dsk.LocalizedIDs.traditionPhex");
+                const isPhex = actor.items.some((x) => x.type == "specialability" && x.name == phexTradition);
+  
+                for (let k of diesToReroll) {
+                  const characteristic = newTestData.source.system[`characteristic${k + 1}`];
+                  const attr = characteristic ? `${game.i18n.localize(`dsk.characteristics.${characteristic}.abbr`)} - ` : "";
+                  changedRolls.push(
+                    `${attr}${newTestData.roll.terms[k * 2].results[0].result}/${newRoll.terms[ind * 2].results[0].result}`
+                  );
+                  if (isPhex)
+                    newTestData.roll.terms[k * 2].results[0].result = Math.min(
+                      newRoll.terms[ind * 2].results[0].result,
+                      newTestData.roll.terms[k * 2].results[0].result
+                    );
+                  else newTestData.roll.terms[k * 2].results[0].result = newRoll.terms[ind * 2].results[0].result;
+  
+                  ind += 1;
+                }
+  
+                infoMsg += `<br><b>${game.i18n.localize("dsk.Roll")}</b>: ${changedRolls.join(", ")}`;
+                ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
+  
+                this[`${data.postData.postFunction}`]({ testData: newTestData, cardOptions }, { rerenderMessage: message });
+                await message.update({ "flags.data.fatePointRerollUsed": true});
+                await this.reduceSchips(schipsource);
+              }
+            },
+          },
+          cancel: {
+            icon: '<i class="fas fa-times"></i>',
+            label: game.i18n.localize("dsk.cancel"),
+          },
+        },
+        default: "Yes",
+      }).render(true);
+    }
+
+    async reduceSchips(schipsource) {
+      if (schipsource == 0)
+        await this.update({"system.stats.schips.value": this.system.stats.schips.value - 1});
+      else {
+        await ActorDSK.reduceGroupSchip()
+      }
+    }
+
+    static armorValue(actor, options = {}) {
+      let wornArmor = actor.items.filter((x) => x.type == "armor" && x.system.worn.value == true);
+      if (options.origin) {
+        wornArmor = wornArmor.map((armor) => {
+          let optnCopy = mergeObject(duplicate(options), { armor });
+          return DSKActiveEffect.applyRollTransformation(actor, optnCopy, 4).options.armor;
+        });
+      }
+      const protection = wornArmor.reduce((a, b) => a + b, 0);
+      const animalArmor = actor.items
+        .filter((x) => x.type == "trait" && x.system.traitType == "armor")
+        .reduce((a, b) => a + Number(b.system.at), 0);
+      return {
+        wornArmor,
+        armor: protection + animalArmor + (actor.system.totalArmor || 0),
+      };
     }
 
     prepareBaseData() {
@@ -1072,10 +1294,12 @@ export default class ActorDSK extends Actor {
           data: {
             rollMode: options.rollMode,
             modifier: options.modifier || 0,
+            hasSchips: ItemDSK.hasSchips(this)
           },
           callback: (html, options = {}) => {
             cardOptions.rollMode = html.find('[name="rollMode"]').val();
             testData.situationalModifiers = ActorDSK._parseModifiers(html);
+            ActorDSK.schipsModifier(html, this, testData.situationalModifiers)
             mergeObject(testData.extra.options, options);
             return { testData, cardOptions };
           },
@@ -1139,7 +1363,19 @@ export default class ActorDSK extends Actor {
           value: Number(html.find('[name="testModifier"]').val()),
           type: "",
         });
+        
         return res;
+      }
+
+      static async schipsModifier(html, actor, situationalModifiers){
+        if(html.find('[name="schips"]').is(":checked")){
+          situationalModifiers.push({
+            name: game.i18n.localize("dsk.schips"),
+            value: 5,
+            type: ""
+          })
+          await actor.reduceSchips(0)
+        }
       }
 
       async consumeAmmunition(testData) {

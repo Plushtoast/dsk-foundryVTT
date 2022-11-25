@@ -26,6 +26,13 @@ export default class DSKUtility {
         return game.i18n.localize(`ITEM.Type${a.slice(0,1).toUpperCase()}${a.slice(1).toLowerCase()}`)
     }
 
+    static fateAvailable(actor, group) {
+        //if (group)
+        //    return game.settings.get("dsa5", "groupschips").split("/").map(x => Number(x))[0] > 0
+
+        return actor.system.stats.schips.value > 0
+    }
+
     static isActiveGM(){
         //Prevent double update with multiple GMs, still unsafe
         const activeGM = game.users.find((u) => u.active && u.isGM);
@@ -143,7 +150,7 @@ export default class DSKUtility {
             type: "npc",
             items: [],
             system: {
-                stats: { LeP: { value: 50 }, fatePoints: {} },
+                stats: { LeP: { value: 50 }, schips: {} },
                 characteristics: {
                     mu: { initial: attrs[0] },
                     kl: { initial: attrs[1] },

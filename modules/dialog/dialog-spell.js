@@ -1,4 +1,3 @@
-import RuleChaos from "../system/rule_chaos.js";
 import DSKUtility from "../system/dsk_utility.js";
 import DSKDialog from "./dialog-dsk.js";
 import DialogShared from "./dialog-shared.js";
@@ -10,6 +9,7 @@ export default class DSKpellDialog extends DialogShared {
         const options = super.defaultOptions;
         mergeObject(options, {
             width: 700,
+            height: 400,
             resizable: true,
         });
         return options;

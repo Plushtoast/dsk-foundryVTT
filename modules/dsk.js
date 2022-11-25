@@ -21,6 +21,7 @@ import DSKStatusEffects from "./status/status_effects.js"
 import DPS from "./system/derepositioningsystem.js"
 import DiceDSK from "./system/dicedsk.js"
 import RollMemory from "./system/roll_memory.js"
+import MacroDSK from "./system/macroControl.js"
 
 Hooks.once("init", () => {
     console.log("Initializing DSK system")
@@ -51,6 +52,7 @@ Hooks.once("init", () => {
             ActorSheetNPC
         },
         config: DSK,
+        macro: MacroDSK,
         memory: new RollMemory(),
         itemLibrary: new DSKItemLibrary()
     }

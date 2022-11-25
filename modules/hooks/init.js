@@ -21,6 +21,7 @@ import MerchantSheetDSK from "../actor/merchant-sheet.js"
 import CreatureMerchantSheetDSK from "../actor/creature-merchant-sheet.js"
 import CharacterSheetMerchantDSK from "../actor/character-merchant-sheet.js"
 import migrateWorld from "../system/migrator.js";
+import { initChatContext } from "./chat_context.js";
 
 export function initHooks(){
     setupJournal()
@@ -34,6 +35,7 @@ export function initHooks(){
     initTokenHUD()
     initRollsFunction()
     migrateWorld()
+    initChatContext()
 
     Hooks.once("init", () => {
         loadTemplates([

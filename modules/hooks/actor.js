@@ -93,10 +93,10 @@ export function initActorHooks() {
         if (getProperty(actor, "system.merchant.merchantType") == "loot") {
             mergeObject(modify, { displayBars: 0 })
         } else if (getProperty(actor, "system.config.autoBar")) {
-            mergeObject(modify, { bar1: { attribute: "status.LeP" } })
+            mergeObject(modify, { bar1: { attribute: "stats.LeP" } })
             
             if (actor.system.isMage) {
-                mergeObject(modify, { bar2: { attribute: "status.AeP" } })
+                mergeObject(modify, { bar2: { attribute: "stats.AeP" } })
             } else {
                 mergeObject(modify, { bar2: { attribute: "tbd" } })
             }

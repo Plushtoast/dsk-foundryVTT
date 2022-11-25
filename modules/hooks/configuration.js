@@ -165,6 +165,15 @@ export function setupConfiguration(){
         default: true,
         type: Boolean
     })
+    game.settings.register("dsk", "hideOpposedDamage", {
+        name: "dsk.SETTINGS.hideOpposedDamage",
+        hint: "dsk.SETTINGS.hideOpposedDamageHint",
+        scope: "world",
+        config: true,
+        default: false,
+        type: Boolean
+    });
+
     game.settings.register("dsk", "indexDescription", {
         name: "dsk.SETTINGS.indexDescription",
         scope: "client",
