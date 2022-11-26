@@ -1,7 +1,12 @@
 <form class="skill-test">
     <div class="row-section">
         <div class="col sixty" style="max-width:60%">
-            {{> systems/dsk/templates/dialog/default-combat-dialog.html}} {{#if melee}}
+            {{> systems/dsk/templates/dialog/default-combat-dialog.html}} 
+            <div class="form-group custom-select">
+                <label>{{localize "dsk.ABBR.VW"}}</label>
+                <input class="quantity-click" type="number" name="vw" value="{{vw}}" />
+            </div>
+            {{#if melee}}
             <div class="form-group custom-select">
                 <label>{{localize "dsk.narrowSpace"}}</label>
                 <input type="checkbox" id="narrowSpace" name="narrowSpace" value="1" {{checked constricted}}>

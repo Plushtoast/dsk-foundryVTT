@@ -1191,6 +1191,34 @@ a.img-entity-link {
     background-size: 101% 1400px;
   }
 
+  &.dskjournalbrowser {
+    .window-content {
+      background-image: url('../../icons/backgrounds/journhead.webp'), url('../../icons/backgrounds/journbot.webp');
+      background-size: 100% 150px, 100% 240px;
+      background-position: top, bottom;
+      background-repeat: no-repeat, no-repeat;
+      background-color: white;
+
+      h1 {
+        background: url('../../icons/backgrounds/journtitle.webp') no-repeat;
+        background-size: cover;
+        border: 2px double var(--dskcolor);
+        border-radius: 5px;
+        padding: 5px;
+        margin-top: 5px;
+        color: var(--dskcolor);
+
+        .jrnIcons{
+          color: var(--dskcolor);
+        }
+      }
+
+      .chapter, .three.toc{
+        margin-bottom: 70px;
+      }
+    }
+  }
+
   &.dskjournal {
 
     .window-content {
@@ -3951,6 +3979,10 @@ input[type="checkbox"].autoCheckbox {
     justify-content: center;
     align-items: center;
   }
+}
+
+.flexaligncenter{
+  align-items: center;
 }
 
 #settings .fshopButton div {

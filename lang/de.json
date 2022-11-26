@@ -83,7 +83,8 @@
             }
         },
         "advanced": "Erweitert",
-      
+        "specialty": "Besonderheit",
+        "force": "Kraft",
         "CONDITION": {
             "custom": "Manueller Effekt",
             "defeated": "Besiegt",
@@ -421,7 +422,10 @@
             "all": "alle",
             "Shields": "Schilde",
             "wrestle": "Raufen",
-            "perception": "Sinnesschärfe"
+            "perception": "Sinnesschärfe",
+            "selfControl": "Selbstbeherrschung",
+            "featOfStrength": "Kraftakt",
+            "bodyControl": "Körperbeherrschung"
         },
         "fshopLink": "https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/",
         "noDefense": "Keine Verteidigung",

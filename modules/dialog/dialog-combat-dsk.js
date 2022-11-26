@@ -285,6 +285,7 @@ export default class DSKCombatDialog extends DialogShared {
     static _resolveDefault(testData, cardOptions, html, options) {
         cardOptions.rollMode = html.find('[name="rollMode"]').val();
         testData.situationalModifiers = ActorDSK._parseModifiers(html);
+        testData.vw = html.find('[name="vw"]').val()
         mergeObject(testData.extra.options, options);
     }
 

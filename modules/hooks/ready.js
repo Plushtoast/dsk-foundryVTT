@@ -10,6 +10,7 @@ import TokenHotbar2 from "../system/tokenHotbar2.js"
 import MerchantSheetDSK from "../actor/merchant-sheet.js"
 import OnUseEffect from "../system/onUseEffects.js"
 import DSKActiveEffectConfig from "../status/active_effects.js"
+import { initImagePopoutTochat } from "./imagepopouttochat.js"
 
 export function initReady(){
     Hooks.once("ready", async() => {
@@ -126,6 +127,8 @@ export function initReady(){
         ItemDSK.setupSubClasses()
         DSKIniTracker.connectHooks()
         TokenHotbar2.registerTokenHotbar()
+        initImagePopoutTochat()
+        
         setEnrichers()
     })
 }

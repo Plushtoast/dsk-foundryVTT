@@ -56,7 +56,7 @@ export default class ItemDSK extends Item{
         )
         this.getCombatSkillModifier(actor, source, situationalModifiers)
 
-        const targetSize = this.getTargetSizeAndModifier(actor, source, situationalModifiers)
+        const targetSize = this.getTargetSizeAndModifier(actor, source, situationalModifiers, data)
 
         const defenseMalus = Number(actor.system.rangeStats.defenseMalus) * -1
         if (defenseMalus != 0) {
@@ -106,7 +106,6 @@ export default class ItemDSK extends Item{
 
     static prepareMeleeAttack(situationalModifiers, actor, data, source, combatskills, wrongHandDisabled) {
         let targetWeaponSize = "short"
-        
         game.user.targets.forEach((target) => {
             if (target.actor) {
                 const defWeapon = target.actor.items.filter((x) => {
@@ -116,10 +115,11 @@ export default class ItemDSK extends Item{
                     )
                 })
                 if (defWeapon.length > 0) targetWeaponSize = defWeapon[0].system.rw
+
             }
         })
         
-        const targetSize = this.getTargetSizeAndModifier(actor, source, situationalModifiers)
+        const targetSize = this.getTargetSizeAndModifier(actor, source, situationalModifiers, data)
         this.getCombatSkillModifier(actor, source, situationalModifiers)
 
         const defenseMalus = Number(actor.system.meleeStats.defenseMalus) * -1
@@ -183,16 +183,19 @@ export default class ItemDSK extends Item{
         return res
     }
 
-    static getTargetSizeAndModifier(actor, source, situationalModifiers){
+    static getTargetSizeAndModifier(actor, source, situationalModifiers, data){
         let targetSize = "average"
+        let vw = 0
         game.user.targets.forEach((target) => {
             if (target.actor) {
                 const size = getProperty(target.actor, "system.details.size")
                 if(size) targetSize = size
 
                 CreatureType.addCreatureTypeModifiers(target.actor, source, situationalModifiers, actor)
+                vw = Math.max(vw, target.actor.system.maxDefense.parry)
             }
         })
+        data.vw = vw
         return targetSize
     }
 

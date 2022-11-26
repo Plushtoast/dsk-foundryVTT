@@ -86,7 +86,7 @@
                     <a data-mode="damage" class="ch-rollCombat d6 die-damage">{{item.damagedie}}</a><span data-tooltip="damageOverThreshold">{{item.damageAdd}}</span>
                 </div>
                 <div class="col ten center small">
-                    {{localize (concat "dsk.Range." item.system.range)}}
+                    {{localize (concat "dsk.Range." item.system.rw)}}
                 </div>
             </div>
         </div>
@@ -238,7 +238,7 @@
             <div class="row-section lineheight expandDetails {{item.detailed}}">
                 <div class="col">
                     <ul>
-                        <li><b>{{localize "dsk.range"}}</b>: {{item.system.range}}</li>
+                        <li><b>{{localize "dsk.range"}}</b>: {{item.system.rw}}</li>
                         <li><b>{{localize "dsk.reloadTime"}}</b>: {{item.LZ}} ({{item.system.reloadTimeprogress}})</li>
                     </ul>
                 </div>

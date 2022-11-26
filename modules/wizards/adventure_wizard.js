@@ -18,7 +18,7 @@ export default class BookWizard extends Application {
         const options = super.defaultOptions
         options.tabs = [{ navSelector: ".tabs", contentSelector: ".content", initial: "description" }]
         mergeObject(options, {
-            classes: options.classes.concat(["dsk", "largeDialog", "noscrollWizard", "bookWizardsheet"]),
+            classes: options.classes.concat(["dsk", "largeDialog", "noscrollWizard", "bookWizardsheet", "dskjournalbrowser"]),
             width: 800,
             height: 880,
             template: 'systems/dsk/templates/wizard/adventure/adventure_wizard.html',

@@ -246,7 +246,7 @@ export default class DiceDSK{
         let costModifiers = []
  
         if(res.successLevel < 0){
-            const traditions = ["traditionWitch", "traditionFjarning", "braniborian"].map(x => game.i18n.localize(`LocalizedIDs.${x}`))
+            const traditions = ["traditionWitch", "traditionFjarning", "braniborian"].map(x => game.i18n.localize(`dsk.LocalizedIDs.${x}`))
             const factor = testData.extra.actor.items.some(x => x.type == "specialability" && traditions.includes(x.name)) ? 3 : 2
             res.preData.calculatedSpellModifiers.finalcost = Math.round(res.preData.calculatedSpellModifiers.finalcost / factor)
         }
@@ -473,6 +473,10 @@ export default class DiceDSK{
 
         if(testData.testDifficulty) this._appendSituationalModifiers(testData, game.i18n.localize("dsk.Difficulty"), testData.testDifficulty)
 
+        if(testData.vw){
+            const finalVw = Math.max(0, testData.vw - this._situationalModifiers(testData, "defenseMalus"))
+            this._appendSituationalModifiers(testData, game.i18n.localize("dsk.ABBR.VW"), -1 * finalVw)
+        }
         let modifiers = this._situationalModifiers(testData)
         const pcms = this._situationalPartCheckModifiers(testData, "TPM")
         let basePW = testData.source.attack || Number(testData.source.system.at)
@@ -487,9 +491,11 @@ export default class DiceDSK{
                     + testData.extra.actor.system.characteristics[testData.source.system.characteristic2].value)/2)
             }
         }
+
         let pw = basePW + this._situationalModifiers(testData, "FW") 
             + pcms[0] + pcms[1] + modifiers 
 
+        
         
         if(testData.advancedModifiers){
             pw += testData.advancedModifiers.fws + testData.advancedModifiers.chars[0] + testData.advancedModifiers.chars[1]

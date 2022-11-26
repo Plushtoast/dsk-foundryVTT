@@ -182,7 +182,7 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
         if (!twoHanded) {
             wrongGripHint = "wrongGrip.yieldTwo"
         } else {
-            const localizedCT = game.i18n.localize(`LocalizedCTs.${this.item.system.combatskill}`)
+            const localizedCT = game.i18n.localize(`dsk.LocalizedCTs.${this.item.system.combatskill}`)
             switch (localizedCT) {
                 case "Two-Handed Impact Weapons":
                 case "Two-Handed Swords":
@@ -209,7 +209,7 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
         if (this.item.actor) {
             const combatSkill = this.item.actor.items.find(x => x.type == "combatskill" && x.name == this.item.system.combatskill)
             data['canBeOffHand'] = combatSkill && !(combatSkill.system.weapontype.twoHanded) && this.item.system.worn.value
-            data['canBeWrongGrip'] = !["Daggers", "Fencing Weapons"].includes(game.i18n.localize(`LocalizedCTs.${this.item.system.combatskill}`))
+            data['canBeWrongGrip'] = !["Daggers", "Fencing Weapons"].includes(game.i18n.localize(`dsk.LocalizedCTs.${this.item.system.combatskill}`))
         }
         data.canOnUseEffect = game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
         return data

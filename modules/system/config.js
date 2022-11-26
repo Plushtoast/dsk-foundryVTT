@@ -566,6 +566,8 @@ DSK.traitCategories = {
     "meleeAttack": "dsk.closeCombatAttacks",
     "rangeAttack": "dsk.rangeCombatAttacks",
     "armor": "ITEM.TypeArmor",
+    "force": "dsk.force",
+    "specialty": "dsk.specialty"
 }
 
 DSK.meleeRanges = {
