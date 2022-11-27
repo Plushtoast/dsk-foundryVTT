@@ -295,7 +295,7 @@ export default class ActorDSK extends Actor {
         } else if(cur.type == "meleeweapon"){
           if(getProperty(cur, "system.worn.value")) wornweapons.push(cur)
         } else if(cur.type == "trait" && cur.system.traitType == "meleeAttack"){
-          const trait = ActorDSK._prepareMeleetrait(cur)
+          const trait = ActorDSK._prepareMeleetrait(cur, this)
           if(trait.parry > defense.parry) defense = trait
         }
       }
