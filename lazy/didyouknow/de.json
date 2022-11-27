@@ -1,5 +1,64 @@
 {
     "data": [
-        "Dass die did you know nachrichten noch ausgefüllt werden müssen"
+        "Du kannst Gegenstände in deinem Inventar duplizieren, wenn du STRG hälst und den Gegenstand auf deinem Char Blatt bewegst.",
+        "Du kannst die Fähigkeiten und Gegenstände deines Charakters aktualisieren, indem du auf das Kettensymbol auf deinem Charakterblatt klickst.",
+        "Du kannst Gegenstände in Taschen ziehen, um dein Inventar sauber zu halten oder die Tasche samt Gewicht schnell abzulegen",
+        "Du kannst Schicksalspunkte verwenden, indem du mit der rechten Maustaste auf die Chatnachrichten klickst.",
+        "Im Chat /help einzugeben, zeigt dir ein paar nützliche Befehle.",
+        "Mit /w im Chat kannst du Spieler anflüstern.",
+        "Du kännst Händler- und Schatzcharaktere anlegen, mit denen Spielern direkt Gegenstände tauschen können.",
+        "Der Gehirn Button in der Bibliothek stellt ein paar verbesserte Filter zur Verfügung.",
+        "Ausrüstung vom Typ Dienstleistung wird bei Händlern nicht ins Spielerinventar übertragen (z.b. der Haarschnitt).",
+        "Du kannst temporäre Modifikatoren zur Regeneration im Tab Eigenschaften hinzufügen.",
+        "Die Systemeinstellungen erlauben die Verwendung einiger optionaler Regeln.",
+        "Du kannst Fähigkeiten deines Charakters in die Hotbar ziehen, indem du auf deinem Charakterblatt den zugehörigen Würfel in die Leiste ziehst.",
+        "Du kannst Gifte und Krankheiten auswürfeln, indem du auf dem Gegenstandsblatt das Würfelicon anklickst.",
+        "Du kannst Ahnengeschenke benutzen indem du den Würfelbutton auf dem Gegenstandsblatt anklickst.",
+        "ALT halten, während du einen Token auf die Map ziehst, platziert diesen unsichtbar.",
+        "Rechtsklick auf Grafiken auf den Sheets, in Journals, Bibliothek und Journalbrowser exponiert die Grafik, um sie anschließend den Spielern zu zeigen.",
+        "Journals auf den Journalbrowser zu ziehen erzeugt ein Bookmark.",
+        "Du hast heute ein Vorstellungsgespräch als Futter beim Wolf von nebenan.",
+        "Eine Begabung lässt sich durch Rechtsklick auf die passende Chatnachricht verwenden.",
+        "Das Modul \"times-up\" kann Active Effects automatisch nach Ablauf ihrer Wirkungsdauer entfernen.",
+        "Du kannst Ahnengaben per Macro für alle möglichen Effekte automatisieren. Die meisten vorgefertigten Zauber aus den offiziellen Modulen beinhalten solche Makros bereits.",
+        "Du musst Tokens ins Ziel nehmen, um von der Automatisierung von Vergleichsproben zu profitieren.",
+        "Du solltest Dinge aus Kompendien nur importieren falls es unbedingt erforderlich ist und niemals das komplette Kompendium (keine Bugfixes und Updates, schlechte Performance).",
+        "Foundry selbst beinhaltet auch bereits tausende Icons für Ausrüstung.",
+
+
+        "In den Optionen lässt sich das automatische Token-beim-Drop-aufs-Canvas-Umbennen aktivieren.",
+        "Mit dem Linkbutton neben dem Charakternamen auf dem Charakterblatt kannst du den Charakter auf die Hotbar ziehen,",
+
+        "Die Bibliothek, der Journalbrowser, das Meistermenü und das Angriffsmenü können über ein Taste aktiviert und geschlossen werden.",
+        "Im System sind Tokenrahmen für deine eigene Tokens enthalten.",
+        "Das Tokenizer Modul wird automatisch konfiguriert, so dass du schnell die DSA/DSK Token Rahmen für eigenes verwenden kannst.",
+
+        "Würfelsysteme von \"Rollsmith\" können den DSK Würfeln zugeordnet werden.",
+
+        "Im Ulisses und Foundry Discord wird dir geholfen.",
+
+        "Du kannst Waffen bauen die gegen bestimmte Kreaturentypen Bonusschaden anrichten",
+        "Gegenstände und Fähigkeiten können einen Aktivierungseffekt beinhalten.",
+        "Das Modul \"Automated Animations\" kann deiner Welt Angriffsanimationen hinzufügen.",
+        "Aktiviere das Dere Positioning System, um Händler nur noch aus der Nähe kontaktieren zu können.",
+        "Aktiviere das Dere Positioning System, um den Distanzmodifikator für Fernkampfangriffe automatisch zu setzen.",
+
+        "Update regelmäßig sowohl Foundry, das DSA System und alle Module.",
+
+        "Macht’s gut, und danke für den Fisch.",
+
+        "Die Tokenbar lässt sich verschieben und anpassen.",
+        "Du kannst Charaktergrafiken und Bilder in Journals direkt per Drag and Drop auf die Szene ziehen.",
+        
+        "Du kannst Gegenstände per Drag & Drop auf der Karte ablegen.",
+
+        "Du kannst Waffen einhändige Waffen auch zweihändig führen.",
+        "Du kannst zweihändige Waffen auch einhändig führen.",
+        "Über den Gegenstand Information kannst du den Spielern Wissen in Abhängigkeit von einer Probe zukommen lassen.",
+        "Active Effects können auch direkt Waffen modifizieren.",
+        "Einige nützliche DSK Funktionen lassen sich über Hotkeys aufrufen.",
+
+        "Der Spielleiter kann einzelne Tabs von Ausrüstungsgegenständen verbergen.",
+        "Informationsitems können in Journalen eingebettet werden."
     ]
 }

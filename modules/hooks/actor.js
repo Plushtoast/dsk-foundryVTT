@@ -10,7 +10,7 @@ export function initActorHooks() {
         if (actor && actor.documentName == "Actor") {
             const statusId = getProperty(effect, "flags.core.statusId")
             if (statusId == "bloodrush") {
-                actor.addCondition("stunned", 2, false, false)
+                actor.addCondition("stunned", 4, false, false)
                 return false
             } else if (statusId == "dead" && game.combat) {
                 actor.markDead(false)

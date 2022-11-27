@@ -322,6 +322,7 @@ export default class ActorSheetDSK extends ActorSheet {
                     } else {
                         //search temporary effects
                         effect = this.actor.effects.find(x => x.id == id)
+                        console.log(effect, id)
                         if (effect) {
                             text = $(`<div style="padding:5px;"><b><a class="chat-condition chatButton" data-id="${effect.id}"><img src="${effect.icon}"/>${game.i18n.localize(effect.label)}</a></b>: ${game.i18n.localize(effect.flags.dsk.description)}</div>`)
                         }
@@ -637,7 +638,7 @@ export default class ActorSheetDSK extends ActorSheet {
             let conditions = $(this.form).find('.statusEffectMenu li:not(.search)')
             conditions.removeClass('filterHide')
             conditions.filter(function () {
-                return $(this).find('a').attr('data-tooltip').toLowerCase().trim().indexOf(val) == -1
+                return game.i18n.localize($(this).find('a').attr('data-tooltip')).toLowerCase().trim().indexOf(val) == -1
             }).addClass('filterHide')
         }
     }

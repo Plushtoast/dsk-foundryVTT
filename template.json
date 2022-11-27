@@ -267,6 +267,7 @@
                 "description"
             ],
             "rs": 0,
+            "encumbrance": 0,
             "worn": {
                 "value": false,
                 "wearable": true

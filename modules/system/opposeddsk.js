@@ -1,3 +1,4 @@
+import ItemDSK from "../item/item_dsk.js";
 import DiceDSK from "./dicedsk.js";
 import DSKUtility from "./dsk_utility.js";
 
@@ -70,6 +71,26 @@ export default class OpposedDSK{
              `
     }
 
+    static async playAutomatedJBA2(attacker, defender, opposedResult) {
+        if (DSKUtility.moduleEnabled("autoanimations")) {
+            //const attackerToken = canvas.tokens.get(attacker.speaker.token)
+            const attackerToken = DSKUtility.getSpeaker(attacker.speaker).getActiveTokens()[0]
+            const defenderToken = DSKUtility.getSpeaker(defender.speaker).getActiveTokens()[0]
+            if (!attackerToken || !attackerToken.actor || !defenderToken || !defenderToken.actor) {
+                return
+            }
+            let item = attackerToken.actor.items.get(attacker.testResult.source._id)
+            if (!item) item = new ItemDSK(attacker.testResult.source, { temporary: true })
+            if (!item) return
+
+            const targets = [defenderToken]
+            const hitTargets = opposedResult.winner == "attacker" ? targets : []
+
+            AutomatedAnimations.playAnimation(attackerToken, item, { targets, hitTargets, playOnMiss: true })
+        }
+    }
+
+   
     static videoOrImgTag(path) {
         if (/\.webm$/.test(path)) {
             return `<video loop autoplay src="${path}" width="50" height="50"></video>`

@@ -515,6 +515,16 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
             optns.push({ name: `${el} - ${FW}`, val: `system.skillModifiers.${k}.FW`, mode: 0, ph: demo }, { name: `${el} - ${FP}`, val: `system.skillModifiers.${k}.FP`, mode: 0, ph: demo }, { name: `${el} - ${stepValue}`, val: `system.skillModifiers.${k}.step`, mode: 0, ph: demo }, { name: `${el} - ${QS}`, val: `system.skillModifiers.${k}.QL`, mode: 0, ph: demo }, { name: `${el} - ${partChecks}`, val: `system.skillModifiers.${k}.TPM`, mode: 0, ph: demo });
         }
 
+        const cummulativeEffects = ["inpain", "selfconfidence", "encumbered", "stunned", "feared"]
+        for(const k of cummulativeEffects) {
+            optns.push({
+                name: game.i18n.localize(`dsk.CONDITION.${k}`),
+                val: `system.status.${k}`,
+                mode: 2,
+                ph: 1
+            })
+        }
+
         for (const k of Object.keys(DSK.characteristics))
             optns.push({
                 name: game.i18n.localize(`dsk.characteristics.${k}.name`),

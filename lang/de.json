@@ -186,8 +186,12 @@
         "CONTROLS": {
             "targetForUser": "Ziel für Spieler wählen"
         },
+        "source": "Quelle",
+        "cummulativeStatusEffects": "Kumulative Statuseffekte",
         "DIALOG": {
             "firstTime": "Spracheinstellungen",
+            "SituationalModifiers": "Bedingte\nModifikatoren",
+            "deselectWithStrg": "Strg + Click zum Deselektieren",
             "onlyInCombatTargets": "Ziele werden nur im Kampf angezeigt.",
             "setTargetToUserHint": "Aktuell markierte Ziele auf den User übertragen.",
             "setTargetToUser": "Spielerziel setzen",

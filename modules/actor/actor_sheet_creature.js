@@ -3,7 +3,7 @@ import ActorSheetDSK from "./actor_sheet_dsk.js";
 export default class ActorSheetCreature extends ActorSheetDSK{
     static get defaultOptions() {
         const options = super.defaultOptions;
-        mergeObject(options, { classes: options.classes.concat(["dsk", "actor", "creature-sheet"]) });
+        mergeObject(options, { classes: options.classes.concat(["dsk", "actor", "creature-sheet", "character-sheet"]) });
         return options;
     }
 

@@ -1,4 +1,5 @@
 import DSKChatListeners from "../system/chat_listeners.js";
+import DSK from "../system/config.js";
 
 export default class DSKStatusEffects{
     static bindButtons(html) {
@@ -199,11 +200,78 @@ export default class DSKStatusEffects{
             }
         }
         data.manualConditions = systemConditions.filter(x => !appliedSystemConditions.includes(x.id))
+
+        const cumulativeConditions = []
+        for(let key of Object.keys(target.system?.status || {})) {
+          if(target.system.status[key]){
+            const ef = DSK.statusEffects.find(x => x.id == key)
+            cumulativeConditions.push({
+              icon: ef.icon,
+              id: key,
+              label: game.i18n.localize(ef.label),
+              value: target.system.status[key]
+            })
+          }
+        }
+        data.cumulativeConditions = cumulativeConditions
+    }
+
+    static calculateRollModifier(effectId, actor, item, options = {}) {
+        if (item.type == "regenerate") return 0
+
+        return -1 * (actor.system.status[effectId] || 0)
+    }
+
+    static ModifierIsSelected(item, options = {}, actor) {
+        return options.mode != "damage"
     }
 
     static getRollModifiers(actor, item, options = {}) {
-        
-        return []
-        
+        const source = game.i18n.localize('dsk.status') + "/" + game.i18n.localize('dsk.condition')
+        const actorEffects = []
+        for(let key of Object.keys(actor.system.status)){
+            if(actor.system.status[key]){
+                const effectClass = game.dsk.config.statusEffectClasses[key] || DSKStatusEffects
+                actorEffects.push({
+                    name: game.i18n.localize(`dsk.CONDITION.${key}`),
+                    value: effectClass.calculateRollModifier(key, actor, item, options),
+                    selected: effectClass.ModifierIsSelected(item, options, actor),
+                    source
+                })
+            }   
+        }
+        return actorEffects
     }
+}
+
+class EncumberedEffect extends DSKStatusEffects {
+    static ModifierIsSelected(item, options = {}, actor) {
+        const burdenedSkill = item.type == "skill" && item.system.encumbers == "yes"
+        const attack = !["skill", "ahnengabe", "rangeweapon"].includes(item.type) && options.mode != "damage"
+        return burdenedSkill || attack
+    }
+
+    static calculateRollModifier(effectId, actor, item, options = {}) {
+        if (item.type == "regenerate") return 0
+        return (item.type == "skill" && item.system.encumbers == "no") ? 0 : super.calculateRollModifier(effectId, actor, item, options)
+    }
+}
+
+class PainEffect extends DSKStatusEffects {
+    static ModifierIsSelected(item, options = {}, actor) {
+        return actor.effects.find(x => getProperty(x, "flags.core.statusId") == "bloodrush") == undefined
+    }
+}
+
+class SelfconfidenceEffect extends DSKStatusEffects {
+    static calculateRollModifier(effectId, actor, item, options = {}) {
+        if (item.type == "regenerate") return 0
+        return actor.system.status.selfconfidence || 0
+    }
+}
+
+DSK.statusEffectClasses = {
+    encumbered: EncumberedEffect,
+    inpain: PainEffect,
+    selfconfidence: SelfconfidenceEffect
 }

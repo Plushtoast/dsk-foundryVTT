@@ -1,5 +1,18 @@
 import DSKUtility from "../system/dsk_utility.js"
 
+const modifierTypes = {
+    "": "dsk.Modifier",
+    "defenseMalus": "dsk.MODS.defenseMalus",
+    "FW": "dsk.MODS.FW",
+    "AeP": "dsk.AeP",
+    "FP": "dsk.MODS.FP",
+    "QL": "dsk.MODS.QS",
+    "dmg": "dsk.MODS.damage",
+    "damageBonus": "dsk.MODS.damage",
+    "armorPen": "dsk.MODS.armorPen",
+    "TPM": "dsk.MODS.partChecks"
+}
+
 export function setupHandlebars(){
     Handlebars.registerHelper({
         roman: (a, max) => {
@@ -16,5 +29,13 @@ export function setupHandlebars(){
         replaceConditions: DSKUtility.replaceConditions,
         attrLoc: (a, b) => { return game.i18n.localize(`dsk.characteristics.${a}.${b}`)},
         floor: (a) => Math.floor(Number(a)),
+        situationalTooltip: (mod) => {
+            const key = game.i18n.localize(`dsk.${modifierTypes[mod.type] || "Modifier"}`)
+            let res = `${mod.name}<br/>${key}: ${mod.value}`
+            if(mod.source){
+                res += `<br/>${game.i18n.localize('dsk.source')}: ${mod.source}`
+            }
+            return res
+        },
     })
 }

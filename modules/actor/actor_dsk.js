@@ -33,7 +33,7 @@ export default class ActorDSK extends Actor {
         data.system = { stats: { schips: { current: schipsCount, value: schipsCount } } }
 
         if (data.type != "creature" && [undefined, 0].includes(getProperty(data, "system.stats.LeP.value")))
-            mergeObject(data, { system: { status: { wounds: { value: 16 } } } });
+            mergeObject(data, { system: { stats: { LeP: { value: 16 } } } });
 
         return await super.create(data, options);
     }
@@ -100,7 +100,8 @@ export default class ActorDSK extends Actor {
                 data.stats.AeP.advances +
                 data.stats.AeP.gearmodifier;
 
-            data.stats.gs.max = data.stats.gs.initial + (data.stats.gs.modifier || 0) + data.stats.gs.gearmodifier;
+            data.stats.gs.max = Math.max(0, data.stats.gs.initial + (data.stats.gs.modifier || 0) + data.stats.gs.gearmodifier);
+            
             data.stats.sk.max =
                 data.stats.sk.value + data.stats.sk.modifier + data.stats.sk.gearmodifier;
             data.stats.zk.max =
@@ -111,6 +112,46 @@ export default class ActorDSK extends Actor {
             const baseInit = Number((0.01 * data.stats.ini.value).toFixed(2));
             data.stats.ini.value *= data.stats.ini.multiplier || 1;
             data.stats.ini.value = Math.round(data.stats.ini.value) + baseInit;
+
+            const hasDefaultPain = this.type != "creature" || data.stats.LeP.max >= 20;
+            let pain = 0;
+            if (data.stats.LeP.max > 0) {
+              if (hasDefaultPain) {
+                pain = Math.floor((1 - data.stats.LeP.value / data.stats.LeP.max) * 4);
+                if (data.stats.LeP.value <= 5) pain = 4;
+              } else {
+                pain = Math.floor(5 - (5 * data.stats.LeP.value) / data.stats.LeP.max);
+              }
+
+              if (pain < 8)
+                pain -=
+                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.ruggedFighter")) +
+                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.ruggedAnimal")) +
+                  (SpecialabilityRulesDSK.hasAbility(this, game.i18n.localize("dsk.LocalizedIDs.traditionKor")) ? 1 : 0);
+              if (pain > 0)
+                pain +=
+                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.sensitiveToPain")) +
+                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.fragileAnimal"));
+
+            }    
+           
+            if (DSKUtility.isActiveGM()) {
+              const changePain = data.pain != pain;
+              data.pain = pain;
+      
+              if (changePain) // && !TraitRulesDSA5.hasTrait(this, game.i18n.localize("LocalizedIDs.painImmunity")))
+                this.addCondition("inpain", pain * 2, true).then(() => (data.pain = undefined));
+      
+              if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.blind"))) this.addCondition("blind");
+              if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.mute"))) this.addCondition("mute");
+              if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.deaf"))) this.addCondition("deaf");
+      
+              if (this.isMerchant()) this.prepareMerchant()
+            }
+
+            for(let key of Object.keys(data.status)){
+              data.status[key] = Math.clamped(data.status[key], 0, 8)
+            }
 
             if(DSKUtility.isActiveGM()){
               if (this.isMerchant()) this.prepareMerchant()
@@ -215,7 +256,12 @@ export default class ActorDSK extends Actor {
 
                     if (!apply) return changes;
                 }
-            }
+            } else{
+              const flag = e.getFlag("dsk", "value")
+              if(flag){
+                multiply = Number(flag)
+              }
+            } 
 
             for (let i = 0; i < multiply; i++) {
                 changes.push(
@@ -614,7 +660,7 @@ export default class ActorDSK extends Actor {
     
         let currentAmmo;
         if (skill) {
-         item.attack = Number(skill.system.attack)  //+ Number(item.system.aw);
+         item.attack = Number(skill.system.attack);
 
    
           if (item.system.ammunitionType != "-") {
@@ -648,9 +694,9 @@ export default class ActorDSK extends Actor {
         return this._parseDmg(item, currentAmmo);
       }
 
-    static _prepareMeleetrait(item) {
+    static _prepareMeleetrait(item, actor) {
       item.attack = Number(item.system.at);
-      item.parry = item.system.pa || Math.round(item.attack / 4);
+      item.parry = Math.max(0, (item.system.pa || Math.round(item.attack / 4)) - actor.system.meleeStats.parry);
   
       return this._parseDmg(item);
     }
@@ -659,8 +705,8 @@ export default class ActorDSK extends Actor {
         let skill = combatskills.find((i) => i.name == item.system.combatskill);
         if (skill) {
           item.attack = Number(skill.system.attack) + Number(item.system.aw);
-          item.parry = skill.system.parry + Number(item.system.vw) +
-            (item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Shields") ? Number(item.system.vw) : 0);
+          item.parry = Math.max(0, skill.system.parry + Number(item.system.vw) + actorData.system.meleeStats.parry +
+            (item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Shields") ? Number(item.system.vw) : 0));
     
           item.yieldedTwoHand = RuleChaos.isYieldedTwohanded(item)
           if (!item.yieldedTwoHand) {
@@ -797,6 +843,17 @@ export default class ActorDSK extends Actor {
           item.transformRight = `${Math.round(progress * 360 + 1)}deg`;
           item.transformLeft = 0;
         }
+      }
+
+      getArmorEncumbrance(actorData, wornArmors) {
+        const encumbrance = wornArmors.reduce((sum, a) => {
+          a.calculatedEncumbrance = Number(a.system.encumbrance)
+          return (sum += a.calculatedEncumbrance);
+        }, 0);
+        return Math.max(
+          0,
+          encumbrance - SpecialabilityRulesDSK.abilityStep(actorData, game.i18n.localize("dsk.LocalizedIDs.inuredToEncumbrance"))
+        );
       }
 
     prepareItems(sheetInfo) {
@@ -964,7 +1021,7 @@ export default class ActorDSK extends Actor {
                             i = ActorDSK._prepareRangeTrait(i);
                             break;
                           case "meleeAttack":
-                            i = ActorDSK._prepareMeleetrait(i);
+                            i = ActorDSK._prepareMeleetrait(i, actorData);
                             break;
                           case "armor":
                             totalArmor += Number(i.system.at);
@@ -1037,6 +1094,13 @@ export default class ActorDSK extends Actor {
         }
 
         const carrycapacity = actorData.system.characteristics.kk.value * 2 + actorData.system.carryModifier;
+
+        let encumbrance = this.getArmorEncumbrance(this, armor);
+
+        if ((this.type != "creature" || this.canAdvance) && !this.isMerchant()) {
+          encumbrance += Math.max(0, Math.ceil((totalWeight - carrycapacity - 5) / 5)) * 2;
+        }
+        this.addCondition("encumbered", encumbrance, true);
         totalWeight = parseFloat(totalWeight.toFixed(3));
 
         let guidevalues = duplicate(DSK.characteristics);
@@ -1586,21 +1650,15 @@ export default class ActorDSK extends Actor {
     }
 
     async _dependentEffects(statusId, effect, delta) {
-        const effectData = duplicate(effect);
-    
-        if (effectData.flags.dsk.value == 4) {
-          if (statusId == "inpain")
-            await this.initResistPainRoll()
-          else if (["encumbered", "stunned", "feared", "confused", "trance"].includes(statusId))
-            await this.addCondition("incapacitated");
-          else if (statusId == "paralysed")
-            await this.addCondition("rooted");
-          else if (["drunken", "exhaustion"].includes(statusId)) {
-            await this.addCondition("stunned");
-            await this.removeCondition(statusId);
-          }
-        }
-    
+        if (["inpain"].includes(statusId) && this.system.status[statusId] > 7)
+          await this.addCondition("incapacitated");
+        else if(["stunned"].includes(statusId) && this.system.status.encumbered > 7)
+          await this.addCondition("unconscious")
+        else if(["feared"].includes(statusId) && this.system.status.encumbered > 7)
+          await this.addCondition("panic")
+        else if(["encumbered"].includes(statusId) && this.system.status.encumbered > 7)
+          await this.addCondition("fixated")       
+
         if (statusId == "dead" && game.combat) await this.markDead(true);
     
         if (statusId == "unconscious") await this.addCondition("prone");

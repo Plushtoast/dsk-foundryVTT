@@ -18,6 +18,7 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.inpain",
         icon: "icons/svg/blood.svg",
         description: "dsk.CONDITIONDESCRIPTION.inpain",
+        changes: [ { "key": "system.status.inpain", "mode": 2, "value": 1 }],
         flags: {
             dsk: {
                 "value": 1,
@@ -31,7 +32,7 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.encumbered",
         icon: "icons/svg/anchor.svg",
         description: "dsk.CONDITIONDESCRIPTION.encumbered",
-        changes: [ { "key": "system.status.encumbered", "mode": 2, "value": -1 }],
+        changes: [ { "key": "system.status.encumbered", "mode": 2, "value": 1 }],
         flags: {
             dsk: {
                 "value": 1,
@@ -45,7 +46,7 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.stunned",
         icon: "icons/svg/daze.svg",
         description: "dsk.CONDITIONDESCRIPTION.stunned",
-        changes: [ { "key": "system.status.stunned", "mode": 2, "value": -1 }],
+        changes: [ { "key": "system.status.stunned", "mode": 2, "value": 1 }],
         flags: {
             dsk: {
                 "value": 1,
@@ -59,7 +60,7 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.feared",
         icon: "icons/svg/terror.svg",
         description: "dsk.CONDITIONDESCRIPTION.feared",
-        changes: [ { "key": "system.status.feared", "mode": 2, "value": -1 }],
+        changes: [ { "key": "system.status.feared", "mode": 2, "value": 1 }],
         flags: {
             dsk: {
                 "value": 1,
@@ -87,6 +88,12 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.prone",
         icon: "icons/svg/falling.svg",
         description: "dsk.CONDITIONDESCRIPTION.prone",
+        changes: [ 
+            { "key": "system.stats.gs.gearmodifier", "mode": 2, "value": -500 },
+            { "key": "system.meleeStats.attack", "mode": 2, "value": -4 },
+            { "key": "system.rangeStats.attack", "mode": 2, "value": -4 },
+            { "key": "system.meleeStats.parry", "mode": 2, "value": -2 }
+        ],
         flags: {
             dsk: {
                 "value": null,
@@ -98,6 +105,9 @@ DSK.statusEffects = [
         id: "rooted",
         label: "dsk.CONDITION.rooted",
         icon: "icons/svg/net.svg",
+        changes: [ 
+            { "key": "system.stats.gs.gearmodifier", "mode": 2, "value": -500 },
+        ],
         description: "dsk.CONDITIONDESCRIPTION.rooted",
         flags: {
             dsk: {
@@ -123,6 +133,11 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.blind",
         icon: "icons/svg/blind.svg",
         description: "dsk.CONDITIONDESCRIPTION.blind",
+        changes: [ 
+            { "key": "system.meleeStats.attack", "mode": 2, "value": -8 },
+            { "key": "system.rangeStats.attack", "mode": 2, "value": -100 },
+            { "key": "system.meleeStats.parry", "mode": 2, "value": -100 },
+        ],
         flags: {
             dsk: {
                 "value": null,
@@ -147,6 +162,10 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.fixated",
         icon: "icons/svg/padlock.svg",
         description: "dsk.CONDITIONDESCRIPTION.fixated",
+        changes: [ 
+            { "key": "system.stats.gs.gearmodifier", "mode": 2, "value": -500 },
+            { "key": "system.meleeStats.parry", "mode": 2, "value": -2 },
+        ],
         flags: {
             dsk: {
                 "value": null,
@@ -171,6 +190,7 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.incapacitated",
         icon: "icons/svg/sleep.svg",
         description: "dsk.CONDITIONDESCRIPTION.incapacitated",
+        changes: [{ "key": "system.stats.gs.gearmodifier", "mode": 2, "value": -500 }],
         flags: {
             dsk: {
                 "value": null,
@@ -185,9 +205,8 @@ DSK.statusEffects = [
         description: "dsk.CONDITIONDESCRIPTION.panic",
         flags: {
             dsk: {
-                "value": 1,
-                "editable": true,
-                "max": 8
+                "value": null,
+                "editable": true
             }
         }
     },
@@ -196,6 +215,11 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.rage",
         icon: "icons/svg/bones.svg",
         description: "dsk.CONDITIONDESCRIPTION.rage",
+        changes: [
+            { "key": "system.meleeStats.attack", "mode": 2, "value": 4 },
+            { "key": "system.meleeStats.parry", "mode": 2, "value": -100 },
+            { "key": "system.rangeStats.attack", "mode": 2, "value": -100 },
+        ],
         flags: {
             dsk: {
                 "value": null,
@@ -220,6 +244,9 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.deaf",
         icon: "icons/svg/deaf.svg",
         description: "dsk.CONDITIONDESCRIPTION.deaf",
+        changes: [
+            { "key": "system.skillModifiers.step", "mode": 0, "value": "Sinnesschärfe -4;Perception -4" },
+        ],
         flags: {
             dsk: {
                 "value": null,
@@ -232,6 +259,9 @@ DSK.statusEffects = [
         label: "dsk.CONDITION.surprised",
         icon: "icons/svg/hazard.svg",
         description: "dsk.CONDITIONDESCRIPTION.surprised",
+        changes: [
+            { "key": "system.meleeStats.parry", "mode": 2, "value": -100 },
+        ],
         flags: {
             dsk: {
                 "value": null,

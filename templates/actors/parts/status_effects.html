@@ -100,6 +100,84 @@
 
         </div>
         <div class="col eighty header-label lineheight">
+            <b>{{localize "dsk.cummulativeStatusEffects"}}</b>
+        </div>
+        <div class="col ten center">
+
+        </div>
+    </div>
+    <div class="row-section">
+        <div class="col effectDescription">
+
+        </div>
+    </div>
+    <div class="row-section  wrap">
+
+        <div class="col two row-section skills table-title">
+            <div class="col ten">
+
+            </div>
+            <div class="col two">
+                {{localize "dsk.condition"}}
+            </div>
+
+            <div class="col ten center">
+
+            </div>
+            <div class="col ten center" data-tooltip="dsk.value">
+                {{localize "dsk.ABBR.value"}}
+            </div>
+            <div class="col five">
+
+            </div>
+        </div>
+        <div class="col two row-section skills table-title">
+            <div class="col ten">
+
+            </div>
+            <div class="col two">
+                {{localize "dsk.condition"}}
+            </div>
+
+            <div class="col ten center">
+
+            </div>
+            <div class="col ten center" data-tooltip="dsk.value">
+                {{localize "dsk.ABBR.value"}}
+            </div>
+            <div class="col five">
+
+            </div>
+        </div>
+        {{#each cumulativeConditions as |item i|}}
+        <div class="row-section col skills two statusEffect" data-id="{{item.id}}" data-descriptor="{{item.id}}">
+            <div class="col ten">
+                <img src="{{item.icon}}" />
+            </div>
+            <div class="col two">
+                <a class="condition-show" data-id="{{item.id}}">{{localize item.label}}</a>
+            </div>
+            <div class="col ten center">
+                
+            </div>
+            <div class="col ten center" data-tooltip="dsk.value">
+                <span>{{item.value}}</span>
+            </div>
+            <div class="col five right">
+
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+</div>
+
+<div class="groupbox">
+    <div class="row-section">
+        <div class="col ten">
+
+        </div>
+        <div class="col eighty header-label lineheight">
             <b>{{localize "dsk.transferredStatusEffects"}}</b>
         </div>
         <div class="col ten center">

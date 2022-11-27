@@ -2,11 +2,14 @@
     "id": "dsk",
     "title": "Die Schwarze Katze/A Furry Tale",
     "description": "",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "authors": [{
         "name": "Plushtoast"
     },{
-        "name": "VTTom"
+        "name": "VTTom",
+        "youtube": "youtube.com/@VTTom",
+        "homepage": "https://vttom.de",
+        "kofi": "https://ko-fi.com/vttom"
     }],
     "scripts": [
         "libs/flexsearch.min.js",
@@ -71,7 +74,7 @@
     },
     "url": "https://github.com/Plushtoast/dsk-foundryVTT",
     "manifest": "https://raw.githubusercontent.com/Plushtoast/dsk-foundryVTT/master/system.json",
-    "download": "https://github.com/Plushtoast/dsk-foundryVTT/releases/download/0.0.7/dsk-foundryVTT-0.0.7.zip",
+    "download": "https://github.com/Plushtoast/dsk-foundryVTT/releases/download/0.0.8/dsk-foundryVTT-0.0.8.zip",
     "name": "dsk",
     "minimumCoreVersion": "10.286"
 }
