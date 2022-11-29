@@ -919,32 +919,32 @@ export default class DiceDSK{
                     k
                 )
                 this._appendSituationalModifiers(
-                        testData,
-                        `${game.i18n.localize(`CHARAbbrev.${k}`)} ${game.i18n.localize("dsk.Modifier")}`,
-                testData[`${k}Modifier`],
-                k
-            )
-            this._appendSituationalModifiers(
-                testData,
-                `${game.i18n.localize(`CHARAbbrev.${k}`)} ${game.i18n.localize("dsk.regenerate")}`,
-                testData[`regeneration${k}`],
-                k
-            )
+                    testData,
+                    `${game.i18n.localize(`CHARAbbrev.${k}`)} ${game.i18n.localize("dsk.Modifier")}`,
+                    testData[`${k}Modifier`],
+                    k
+                )
+                this._appendSituationalModifiers(
+                    testData,
+                    `${game.i18n.localize(`CHARAbbrev.${k}`)} ${game.i18n.localize("dsk.regenerate")}`,
+                    testData[`regeneration${k}`],
+                    k
+                )
 
-            chars.push({ char: k, res: roll.terms[index].results[0].result, die: "d6" })
-            result[k] = Math.round(
-                Math.max(
-                    0,
-                    Number(roll.terms[index].results[0].result) + Number(modifier) + this._situationalModifiers(testData, k)
-                ) * Number(testData.regenerationFactor)
-            )
-            index += 2
+                chars.push({ char: k, res: roll.terms[index].results[0].result, die: "d6" })
+                result[k] = Math.round(
+                    Math.max(
+                        0,
+                        Number(roll.terms[index].results[0].result) + Number(modifier) + this._situationalModifiers(testData, k)
+                    ) * Number(testData.regenerationFactor)
+                )
+                index += 2
+            }
         }
-    }
 
-    result["characteristics"] = chars
-    return result
-}
+        result["characteristics"] = chars
+        return result
+    }
 
     static async rollDices(testData, cardOptions) {
         if (!testData.roll) {

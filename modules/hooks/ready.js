@@ -49,9 +49,6 @@ export function initReady(){
                     case "showDamage":
                         OpposedDSK.showDamage(game.messages.get(data.payload.id), data.payload.hide)
                         break
-                    case "updateGroupCheck":
-                        RequestRoll.rerenderGC(game.messages.get(data.payload.messageId), data.payload.data)
-                        break
                     case "updateAttackMessage":
                         game.messages.get(data.payload.messageId).update({ "flags.data.unopposedStartMessage": data.payload.startMessageId });
                         break

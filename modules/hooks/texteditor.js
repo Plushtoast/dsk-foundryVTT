@@ -10,7 +10,7 @@ export function setEnrichers() {
 
     if (!DSK.statusRegex) {
         let effects = DSK.statusEffects.map(x => game.i18n.localize(x.label).toLowerCase())
-        let keywords = ["status", "condition", "level", "levels"].map(x => game.i18n.localize(x)).join("|")
+        let keywords = ["dsk.status", "dsk.condition", "dsk.level", "dsk.levels"].map(x => game.i18n.localize(x)).join("|")
         DSK.statusRegex = {
             effects: effects,
             regex: new RegExp(`(${keywords}) (${effects.join('|')})`, 'gi')
@@ -19,7 +19,7 @@ export function setEnrichers() {
 
     CONFIG.TextEditor.enrichers.push(
         {
-            pattern: /@(Rq|Gc|Ch)\[[a-zA-zöüäÖÜÄ&; -]+ (-|\+)?\d+\]/g,
+            pattern: /@(Rq|Ch)\[[a-zA-zöüäÖÜÄ&; -]+ (-|\+)?\d+\]/g,
             enricher: (match, options) => {
                 const str = match[0]
                 const type = match[1]

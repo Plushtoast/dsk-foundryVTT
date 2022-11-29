@@ -4,7 +4,7 @@ import RequestRoll from "./request-roll.js"
 
 export default class DSKChatAutoCompletion {
     static skills = []
-    static cmds = ["sk", "at", "ah", "rq", "gc", "w", "ch"]
+    static cmds = ["sk", "at", "ah", "rq", "w", "ch"]
 
     constructor() {
         if (DSKChatAutoCompletion.skills.length == 0) {
@@ -20,7 +20,7 @@ export default class DSKChatAutoCompletion {
     }
 
     get regex() {
-        ///^\/(sk |at |pa |sp |li |rq |gc |w |ch)/
+        ///^\/(sk |at |pa |sp |li |rq |w |ch)/
         return new RegExp(`^\/(${DSKChatAutoCompletion.cmds.join(" |")})`)
     }
 
@@ -128,10 +128,6 @@ export default class DSKChatAutoCompletion {
         this._setList(this._getSkills(search), "RQ")
     }
 
-    _filterGC(search) {
-        this._setList(this._getSkills(search, "skill"), "GC")
-    }
-
     _setList(result, cmd) {
             let html = $(`<div class="quickfind dsklist"><ul>${result.map(x=> `<li data-type="${x.type}" data-category="${cmd}" class="quick-item">${x.name}</li>`).join("")}</ul></div>`)
 
@@ -195,7 +191,6 @@ export default class DSKChatAutoCompletion {
         let cmd = target.attr("data-category")
         switch(cmd){
             case "NM":
-            case "GC":
             case "RQ":
             case "CH":
                 this[`_quick${cmd}`](target)
@@ -241,12 +236,6 @@ export default class DSKChatAutoCompletion {
     _resetChatAutoCompletion(){
         $('#chat-message').val("")
         this.anchor.find(".quickfind").remove()
-    }
-
-    _quickGC(target){
-        const modifier = Number($('#chat-message').val().match(/(-|\+)?\d+/g)) || 0
-        this._resetChatAutoCompletion()
-        RequestRoll.showGCMessage(target.text(), modifier)
     }
 
     _quickRQ(target){
@@ -299,11 +288,6 @@ export default class DSKChatAutoCompletion {
                 }
             }
 
-            ev.stopPropagation()
-            return false
-        })
-        html.on('click', '.request-GC', ev => {
-            RequestRoll.showGCMessage(ev.currentTarget.dataset.name, Number(ev.currentTarget.dataset.modifier) || 0)
             ev.stopPropagation()
             return false
         })

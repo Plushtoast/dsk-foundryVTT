@@ -235,7 +235,7 @@ export default class DSKCombatDialog extends DialogShared {
             testData.situationalModifiers.push({
                 name: game.i18n.localize("dsk.doubleAttack"),
                 value: data.doubleAttack ?
-                    -2 + SpecialabilityRulesDSK.abilityStep(actor, game.i18n.localize("dsk.LocalizedIDs.twoWeaponCombat")) : 0,
+                    -3 + Math.floor(SpecialabilityRulesDSK.abilityStep(actor, game.i18n.localize("dsk.LocalizedIDs.twoWeaponCombat")) * 1.5) : 0,
             });
         }
     }
@@ -290,7 +290,7 @@ export default class DSKCombatDialog extends DialogShared {
     }
 
     static attackOfOpportunity(situationalModifiers, formData) {
-        let value = formData.opportunityAttack ? -4 : 0;
+        let value = formData.opportunityAttack ? -8 : 0;
         if (value) {
             situationalModifiers.push({
                 name: game.i18n.localize("dsk.opportunityAttack"),

@@ -125,16 +125,13 @@ export default class ActorDSK extends Actor {
 
               if (pain < 8)
                 pain -=
-                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.ruggedFighter")) +
-                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.ruggedAnimal")) +
-                  (SpecialabilityRulesDSK.hasAbility(this, game.i18n.localize("dsk.LocalizedIDs.traditionKor")) ? 1 : 0);
+                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.ruggedFighter")) 
               if (pain > 0)
                 pain +=
-                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.sensitiveToPain")) +
-                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.fragileAnimal"));
+                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.sensitiveToPain")) 
 
             }    
-           
+          
             if (DSKUtility.isActiveGM()) {
               const changePain = data.pain != pain;
               data.pain = pain;
@@ -244,7 +241,7 @@ export default class ActorDSK extends Actor {
                             apply = false;
                             break;
                         case "specialability":
-                            apply = item.system.category != "combat" || [2, 3].includes(item.system.subcategory);
+                            apply = item.system.category != "Combat" || [2, 3].includes(item.system.subcategory);
                             multiply = Number(item.system.level) || 1
                             break
                         case "advantage":
@@ -483,6 +480,71 @@ export default class ActorDSK extends Actor {
                 this[`${data.postData.postFunction}`]({ testData: newTestData, cardOptions }, { rerenderMessage: message });
                 await message.update({ "flags.data.fatePointRerollUsed": true});
                 await this.reduceSchips(schipsource);
+              }
+            },
+          },
+          cancel: {
+            icon: '<i class="fas fa-times"></i>',
+            label: game.i18n.localize("dsk.cancel"),
+          },
+        },
+        default: "Yes",
+      }).render(true);
+    }
+
+    async fateisTalented(infoMsg, cardOptions, newTestData, message, data) {
+      cardOptions.talentedRerollUsed = true;
+  
+      this.resetTargetAndMessage(data, cardOptions);
+  
+      infoMsg = `<h3 class="center"><b>${game.i18n.localize("dsk.CHATFATE.fatepointUsed")}</b></h3>
+              ${game.i18n.format("dsk.CHATFATE.isTalented", {
+        character: "<b>" + this.name + "</b>",
+      })}<br>`;
+      const html = await renderTemplate("systems/dsk/templates/dialog/isTalentedReroll-dialog.html", {
+        testData: newTestData,
+        postData: data.postData,
+      });
+      new DSKDialog({
+        title: game.i18n.localize("dsk.CHATFATE.selectDice"),
+        content: html,
+        buttons: {
+          Yes: {
+            icon: '<i class="fa fa-check"></i>',
+            label: game.i18n.localize("dsk.ok"),
+            callback: async (dlg) => {
+              let diesToReroll = dlg.find(".dieSelected").map(function () {return Number($(this).attr("data-index"));}).get();
+              if (diesToReroll.length > 0) {
+                let newRoll = [];
+                for (let k of diesToReroll) {
+                  let term = newTestData.roll.terms[k * 2];
+                  newRoll.push(term.number + "d" + term.faces + "[" + term.options.colorset + "]");
+                }
+                newRoll = await DiceDSK.manualRolls(
+                  await new Roll(newRoll.join("+")).evaluate({ async: true }),
+                  "dsk.CHATCONTEXT.talentedReroll"
+                );
+                await DiceDSK.showDiceSoNice(newRoll, newTestData.rollMode);
+  
+                let ind = 0;
+                let changedRolls = [];
+  
+                for (let k of diesToReroll) {
+                  const characteristic = newTestData.source.system[`characteristic${k + 1}`];
+                  const attr = characteristic ? `${game.i18n.localize(`dsk.characteristics.${characteristic}.abbr`)} - ` : "";
+  
+                  changedRolls.push(
+                    `${attr}${newTestData.roll.terms[k * 2].results[0].result}/${newRoll.terms[ind * 2].results[0].result}`
+                  );
+                  newTestData.roll.terms[k * 2].results[0].result = newRoll.terms[ind * 2].results[0].result;
+  
+                  ind += 1;
+                }
+                infoMsg += `<b>${game.i18n.localize("dsk.Roll")}</b>: ${changedRolls.join(", ")}`;
+                ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
+  
+                this[`${data.postData.postFunction}`]({ testData: newTestData, cardOptions }, { rerenderMessage: message });
+                await message.update({ "flags.data.talentedRerollUsed": true });
               }
             },
           },
@@ -782,7 +844,7 @@ export default class ActorDSK extends Actor {
           item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Crossbows") &&
           SpecialabilityRulesDSK.hasAbility(
             actor,
-            `${game.i18n.localize("dsk.LocalizedIDs.quickload")} (${game.i18n.localize("dsk.LocalizedIDs.Crossbows")})`
+            game.i18n.localize("dsk.LocalizedIDs.quickload")
           )
         )
           factor = 0.5;
@@ -790,7 +852,7 @@ export default class ActorDSK extends Actor {
           modifier =
           SpecialabilityRulesDSK.abilityStep(
               actor,
-              `${game.i18n.localize("dsk.LocalizedIDs.quickload")} (${game.i18n.localize(item.system.combatskill)})`
+              game.i18n.localize("dsk.LocalizedIDs.quickload")
             ) * -1;
         }
     
@@ -1006,7 +1068,7 @@ export default class ActorDSK extends Actor {
                         i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
                         totalWeight += parseFloat(
                             (
-                                i.system.weight * (i.toggleValue ? Math.max(0, i.system.quantity - 1) : i.system.quantity.value)
+                                i.system.weight * (i.toggleValue ? Math.max(0, i.system.quantity - 1) : i.system.quantity)
                             ).toFixed(3)
                         );
 

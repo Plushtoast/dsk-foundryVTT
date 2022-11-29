@@ -322,7 +322,6 @@ export default class ActorSheetDSK extends ActorSheet {
                     } else {
                         //search temporary effects
                         effect = this.actor.effects.find(x => x.id == id)
-                        console.log(effect, id)
                         if (effect) {
                             text = $(`<div style="padding:5px;"><b><a class="chat-condition chatButton" data-id="${effect.id}"><img src="${effect.icon}"/>${game.i18n.localize(effect.label)}</a></b>: ${game.i18n.localize(effect.flags.dsk.description)}</div>`)
                         }

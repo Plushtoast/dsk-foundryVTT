@@ -7,10 +7,6 @@ export default class MacroDSK {
         RequestRoll.showRQMessage(skill, modifier)
     }
 
-    static requestGC(skill, modifier = 0, options = {}) {
-        RequestRoll.showGCMessage(skill, modifier, options)
-    }
-
     static rollCh(skill, options = {}) {
         DSKChatListeners.check3D20(undefined, skill, options)
     }

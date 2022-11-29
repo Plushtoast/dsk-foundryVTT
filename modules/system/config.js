@@ -337,11 +337,6 @@ DSK.helpContent = [{
     command: "/ch",
     example: "/ch"
 },
-{
-    name: "groupcheck",
-    command: "/gc",
-    example: "/gc"
-}
 ]
 
 DSK.meleeRangeVision = () => {

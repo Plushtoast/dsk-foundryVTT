@@ -1229,7 +1229,10 @@ a.img-entity-link {
   }
 
   &.dskjournal {
-
+    .roll-button, .chatButton, .content-link{
+      position: relative;
+      z-index: 1;
+    }
     .window-content {
       background-image:none;
       padding: 0 2px;
