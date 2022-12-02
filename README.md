@@ -1,3 +1,5 @@
+![alt text](https://github.com/Plushtoast/dsk-foundryVTT/blob/master/icons/githublogo.webp?raw=true)
+
 # The System is currently in the beta phase
 
 # Official Die Schwarze Katze system for Foundry
