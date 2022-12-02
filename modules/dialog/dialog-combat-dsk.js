@@ -138,7 +138,7 @@ export default class DSKCombatDialog extends DialogShared {
             } 
              else {
                 if (this.dialogData.mode == "attack") {
-                    this.dialogData.rollValue = Number(source.system.aw)
+                    this.dialogData.rollValue = Number(source.system.at)
                 } 
             }
         }

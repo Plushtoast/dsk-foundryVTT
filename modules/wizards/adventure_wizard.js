@@ -259,7 +259,7 @@ export default class BookWizard extends Application {
         const chapter = $(this._element).find('.chapter')
         chapter.html(this.content)
         bindImgToCanvasDragStart(chapter)
-        chapter.find('.documentName-link, .entity-link').click(ev => {
+        chapter.find('.documentName-link, .entity-link, .content-link').click(ev => {
             const elem = $(ev.currentTarget)
             if (this.bookData && elem.attr("data-pack") == this.bookData.journal) {
                 ev.stopPropagation()    

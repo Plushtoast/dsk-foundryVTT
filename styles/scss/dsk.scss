@@ -1201,6 +1201,11 @@ a.img-entity-link {
   }
 
   &.dskjournalbrowser {
+    .roll-button, .chatButton, .content-link, a{
+      position: relative;
+      z-index: 1;
+    }
+    
     .window-content {
       background-image: url('../../icons/backgrounds/journhead.webp'), url('../../icons/backgrounds/journbot.webp');
       background-size: 100% 150px, 100% 240px;
@@ -1229,10 +1234,11 @@ a.img-entity-link {
   }
 
   &.dskjournal {
-    .roll-button, .chatButton, .content-link{
+    .roll-button, .chatButton, .content-link, a{
       position: relative;
       z-index: 1;
     }
+
     .window-content {
       background-image:none;
       padding: 0 2px;
@@ -2619,7 +2625,7 @@ a {
   background-position: center;
 
   &.ab_1 {
-    background-image: url('../../icons/categories/Combat_Skill.webp');
+    background-image: url('../../icons/categories/combatskill.webp');
   }
 
   &.ab_2 {

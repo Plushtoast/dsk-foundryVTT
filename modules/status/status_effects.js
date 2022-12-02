@@ -17,7 +17,7 @@ export default class DSKStatusEffects{
                 ev.dataTransfer.setData("text/plain", JSON.stringify(dataTransfer));
             });
         })
-        html.find('.chat-condition').click(ev => DSKChatListeners.postStatus($(ev.currentTarget).attr("data-id")))
+        html.on('click', '.chat-condition', ev => DSKChatListeners.postStatus($(ev.currentTarget).attr("data-id")))
     }
 
     static createCustomEffect(owner, description = "", label) {
