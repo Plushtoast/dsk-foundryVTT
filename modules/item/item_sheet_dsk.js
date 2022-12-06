@@ -5,6 +5,7 @@ import DSKUtility from "../system/dsk_utility.js";
 import SpecialabilityRulesDSK from "../system/specialability-rules.js";
 import { svgAutoFit } from "../system/view_helper.js";
 import { ItemSheetObfuscation } from "./obfuscatemixin.js";
+import { itemFromDrop } from "../system/view_helper.js";
 
 export default class ItemSheetDSK extends ItemSheet {
     static setupSheets(){

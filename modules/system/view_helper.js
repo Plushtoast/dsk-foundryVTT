@@ -67,3 +67,24 @@ export function tinyNotification(message) {
     container.prepend(elem)
     setTimeout(function() { elem.remove() }, 1500)
 }
+
+export async function itemFromDrop(dragData, actorId, toObject = true) {
+    let item
+    let selfTarget
+    if(dragData.type == "Actor"){
+        item = await Actor.implementation.fromDropData(dragData)
+        selfTarget = actorId === item.id
+    }else{
+        item = await Item.implementation.fromDropData(dragData)
+        selfTarget = actorId === item.parent?.uuid
+    }
+    let typeClass = item?.type
+    
+    if (toObject) {
+        item = item.toObject()
+    }
+
+    if(dragData.amount) item.system.quantity.value = Number(dragData.amount)
+    
+    return { item, typeClass, selfTarget }
+}

@@ -30,7 +30,7 @@ export function setupHandlebars(){
         attrLoc: (a, b) => { return game.i18n.localize(`dsk.characteristics.${a}.${b}`)},
         floor: (a) => Math.floor(Number(a)),
         situationalTooltip: (mod) => {
-            const key = game.i18n.localize(`dsk.${modifierTypes[mod.type] || "Modifier"}`)
+            const key = game.i18n.localize(`${modifierTypes[mod.type] || "dsk.Modifier"}`)
             let res = `${mod.name}<br/>${key}: ${mod.value}`
             if(mod.source){
                 res += `<br/>${game.i18n.localize('dsk.source')}: ${mod.source}`

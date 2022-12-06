@@ -529,7 +529,7 @@ class ItemTrait extends ItemDSK {
 
     static setupDialog(ev, options, item, actor, tokenId) {
         let mode = options["mode"]
-        let title = item.name + " " + game.i18n.localize(mode + "test")
+        let title = item.name + " " + game.i18n.localize("dsk." + mode + "test")
         mergeObject(item.system,{
             characteristic1: "attack",
             characteristic2: "attack",

@@ -501,23 +501,12 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
             let inventory = this.prepareSellPrices(tradeData.inventory, factor)
             if (inventory["misc"].items.length == 0) inventory["misc"].show = false
 
-            if (data["merchantType"] == "loot") {
-                inventory["money"] = {
-                    items: tradeData.money.coins.map(x => {
-                        x.name = game.i18n.localize(x.name)
-                        return x
-                    }),
-                    show: true,
-                    dataType: "money"
-                }
-            }
-
             mergeObject(data, {
                 tradeFriend: {
                     img: friend.img,
                     name: friend.name,
                     inventory,
-                    money: tradeData.money
+                    money: { coins: [] }
                 }
             })
         } else {

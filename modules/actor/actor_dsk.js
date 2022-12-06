@@ -74,6 +74,8 @@ export default class ActorDSK extends Actor {
                 data.stats.ini.value =
                     Math.round((data.characteristics.mu.value + data.characteristics.ge.value) / 2) +
                     (data.stats.ini.modifier || 0);
+
+                data.stats.LeP.min = -1 * data.characteristics.ko.value
             }
 
             if (this.type == "creature") {
@@ -565,6 +567,21 @@ export default class ActorDSK extends Actor {
       }
     }
 
+    async modifyTokenAttribute(attribute, value, isDelta=false, isBar=true) {
+      const current = foundry.utils.getProperty(this.system, attribute);
+  
+      let updates;
+      if ( isBar ) {
+        if (isDelta) value = Math.clamped(current.min || 0, Number(current.value) + value, current.max);
+        updates = {[`system.${attribute}.value`]: value};
+      } else {
+        if ( isDelta ) value = Number(current) + value;
+        updates = {[`system.${attribute}`]: value};
+      }
+      const allowed = Hooks.call("modifyTokenAttribute", {attribute, value, isDelta, isBar}, updates);
+      return allowed !== false ? this.update(updates) : this;
+    }
+
     static armorValue(actor, options = {}) {
       let wornArmor = actor.items.filter((x) => x.type == "armor" && x.system.worn.value == true);
       if (options.origin) {
@@ -708,8 +725,8 @@ export default class ActorDSK extends Actor {
         return item;
     }
 
-    static _prepareRangeTrait(item) {
-      item.attack = Number(item.system.at);
+    static _prepareRangeTrait(item, actor) {
+      item.attack = Number(item.system.at) + actor.system.rangeStats.attack;
       item.LZ = Number(item.system.lz);
       if (item.LZ > 0) ActorDSK.buildReloadProgress(item);
   
@@ -722,7 +739,7 @@ export default class ActorDSK extends Actor {
     
         let currentAmmo;
         if (skill) {
-         item.attack = Number(skill.system.attack);
+         item.attack = Number(skill.system.attack) + actor.system.rangeStats.attack;
 
    
           if (item.system.ammunitionType != "-") {
@@ -758,7 +775,7 @@ export default class ActorDSK extends Actor {
 
     static _prepareMeleetrait(item, actor) {
       item.attack = Number(item.system.at);
-      item.parry = Math.max(0, (item.system.pa || Math.round(item.attack / 4)) - actor.system.meleeStats.parry);
+      item.parry = Math.max(0, (item.system.pa || Math.round(item.attack / 4)) + actor.system.meleeStats.parry);
   
       return this._parseDmg(item);
     }
@@ -1080,7 +1097,7 @@ export default class ActorDSK extends Actor {
                     case "trait":
                         switch (i.system.traitType) {
                           case "rangeAttack":
-                            i = ActorDSK._prepareRangeTrait(i);
+                            i = ActorDSK._prepareRangeTrait(i, actorData);
                             break;
                           case "meleeAttack":
                             i = ActorDSK._prepareMeleetrait(i, actorData);
@@ -1629,7 +1646,7 @@ export default class ActorDSK extends Actor {
             for (let child of containers.get(elem._id)) {
                 child.weight = Number(parseFloat((child.system.weight * child.system.quantity).toFixed(3)));
                 bagweight += child.weight;
-                elem.children.push(ActorDSK._prepareitemStructure(ActorDSK._prepareConsumable(child)));
+                elem.children.push(ActorDSK._prepareitemStructure(child));
                 if (containers.has(child._id)) {
                     bagweight += this._setBagContent(child, containers, false);
                 }
@@ -1714,11 +1731,11 @@ export default class ActorDSK extends Actor {
     async _dependentEffects(statusId, effect, delta) {
         if (["inpain"].includes(statusId) && this.system.status[statusId] > 7)
           await this.addCondition("incapacitated");
-        else if(["stunned"].includes(statusId) && this.system.status.encumbered > 7)
+        else if(["stunned"].includes(statusId) && this.system.status[statusId] > 7)
           await this.addCondition("unconscious")
-        else if(["feared"].includes(statusId) && this.system.status.encumbered > 7)
+        else if(["feared"].includes(statusId) && this.system.status[statusId] > 7)
           await this.addCondition("panic")
-        else if(["encumbered"].includes(statusId) && this.system.status.encumbered > 7)
+        else if(["encumbered"].includes(statusId) && this.system.status[statusId] > 7)
           await this.addCondition("fixated")       
 
         if (statusId == "dead" && game.combat) await this.markDead(true);

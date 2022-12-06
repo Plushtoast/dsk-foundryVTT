@@ -30,7 +30,16 @@
                     {{editor enrichedDescription target="system.description.value" button=true owner=owner editable=editable}}
                 </div>
                 <div class="col two">
-                    <img src="{{item.img}}" class="fullImg" data-edit="img" /> {{editor enrichedClothing target="system.description.gear" button=true owner=owner editable=editable}}
+                    <img src="{{item.img}}" class="fullImg" data-edit="img" /> 
+                    <div class="dskbox2">
+                        <div class="row-section flexaligncenter center">
+                            <div class="col">
+                                <b>{{localize 'ITEM.TypeEquipment'}}</b>
+                            </div>
+                        </div>
+                        {{editor enrichedClothing target="system.description.gear" button=true owner=owner editable=editable}}
+                    </div>
+                    
                 </div>
             </div>
         </div>

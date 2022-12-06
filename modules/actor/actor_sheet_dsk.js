@@ -11,6 +11,7 @@ import RuleChaos from "../system/rule_chaos.js";
 import AdvantageRulesDSK from "../system/advantage-rules.js"
 import SpecialabilityRulesDSK from "../system/specialability-rules.js"
 import ActorDSK from "./actor_dsk.js";
+import { itemFromDrop } from "../system/view_helper.js";
 
 export default class ActorSheetDSK extends ActorSheet {
     async _render(force = false, options = {}) {
