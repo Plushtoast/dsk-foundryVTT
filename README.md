@@ -1,14 +1,14 @@
 ![alt text](https://github.com/Plushtoast/dsk-foundryVTT/blob/master/icons/githublogo.webp?raw=true)
 
-# The System is currently in the beta phase
 
 # Official Die Schwarze Katze system for Foundry
 
-
 ### Current Version and Compatibility:
-0.0.x - FoundryVTT 10.+
+1.0.x - FoundryVTT 10.+
 This system is intended for usage with [Foundry Virtual Tabletop](https://foundryvtt.com/) to play "Die Schwarze Katze".
 If you want to learn more checkout the [German](https://ulisses-spiele.de/virtual-tabletop-dsa-vtt/) or [English](https://ulisses-us.com/ulisses-virtual-tabletops/virtual-tabletop-dsa-vtt/) VTT Page by Ulisses Spiele.
+
+This game is currently only available in german.
 
 ## Installation - Auto Installer
 In the FVTT Game Systems Menu, click Install System and enter the Manifest URL: `https://raw.githubusercontent.com/Plushtoast/dsk-foundryVTT/master/system.json`
@@ -39,10 +39,6 @@ If you want to discuss DSK for foundry or need some assistance you can also join
 * Automated spell effects
 * Several Game Master Aids
 * Merchant features
-* Automated abilities
-* JB2A support
-
-
 
 <h2>German Modules</h2>
 As of this moment several modules are in the making. We will inform you as soon as they will be available.
