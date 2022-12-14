@@ -87,6 +87,7 @@
                         "modifier": 0
                     },
                     "ini": {
+                        "current": 0,
                         "initial": 0,
                         "modifier": 0,
                         "die": "1d6",

@@ -198,7 +198,7 @@ export default class DSKCombatDialog extends DialogShared {
     }
 
     static resolveMeleeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue, mode) {
-        this._resolveDefault(testData, cardOptions, html, options);
+        this._resolveDefault(testData, cardOptions, html, actor, options);
 
         //TODO move this to situational modifiers only
         const data = new FormDataExtended(html.find('form')[0]).object
@@ -241,7 +241,7 @@ export default class DSKCombatDialog extends DialogShared {
     }
 
     static resolveRangeDialog(testData, cardOptions, html, actor, options) {
-        this._resolveDefault(testData, cardOptions, html, options);
+        this._resolveDefault(testData, cardOptions, html, actor, options);
 
         //TODO move this to situational modifiers only
         const data = new FormDataExtended(html.find('form')[0]).object
@@ -282,9 +282,10 @@ export default class DSKCombatDialog extends DialogShared {
         );
     }
 
-    static _resolveDefault(testData, cardOptions, html, options) {
+    static _resolveDefault(testData, cardOptions, html, actor, options) {
         cardOptions.rollMode = html.find('[name="rollMode"]').val();
         testData.situationalModifiers = ActorDSK._parseModifiers(html);
+        ActorDSK.schipsModifier(html, testData.situationalModifiers)
         testData.vw = html.find('[name="vw"]').val()
         mergeObject(testData.extra.options, options);
     }

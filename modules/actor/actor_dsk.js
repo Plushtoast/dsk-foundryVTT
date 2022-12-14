@@ -306,7 +306,7 @@ export default class ActorDSK extends Actor {
             this,
             wornweapons.filter((x) => x._id != item._id && !RuleChaos.isYieldedTwohanded(x))
         )
-        if(weapon.parry > defense.parry) defense = weapon
+        if(weapon.parry >= defense.parry) defense = weapon
       }
 
       return defense
@@ -726,7 +726,7 @@ export default class ActorDSK extends Actor {
     }
 
     static _prepareRangeTrait(item, actor) {
-      item.attack = Number(item.system.at) + actor.system.rangeStats.attack;
+      item.attack = Number(item.system.at) + Number(actor.system.rangeStats.attack);
       item.LZ = Number(item.system.lz);
       if (item.LZ > 0) ActorDSK.buildReloadProgress(item);
   
@@ -739,7 +739,7 @@ export default class ActorDSK extends Actor {
     
         let currentAmmo;
         if (skill) {
-         item.attack = Number(skill.system.attack) + actor.system.rangeStats.attack;
+         item.attack = Number(skill.system.attack) + Number(actor.system.rangeStats.attack);
 
    
           if (item.system.ammunitionType != "-") {
@@ -775,7 +775,7 @@ export default class ActorDSK extends Actor {
 
     static _prepareMeleetrait(item, actor) {
       item.attack = Number(item.system.at);
-      item.parry = Math.max(0, (item.system.pa || Math.round(item.attack / 4)) + actor.system.meleeStats.parry);
+      item.parry = Math.max(0, (Number(item.system.pa) || Math.round(item.attack / 4)) + Number(actor.system.meleeStats.parry));
   
       return this._parseDmg(item);
     }
@@ -784,7 +784,7 @@ export default class ActorDSK extends Actor {
         let skill = combatskills.find((i) => i.name == item.system.combatskill);
         if (skill) {
           item.attack = Number(skill.system.attack) + Number(item.system.aw);
-          item.parry = Math.max(0, skill.system.parry + Number(item.system.vw) + actorData.system.meleeStats.parry +
+          item.parry = Math.max(0, skill.system.parry + Number(item.system.vw) + Number(actorData.system.meleeStats.parry) +
             (item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Shields") ? Number(item.system.vw) : 0));
     
           item.yieldedTwoHand = RuleChaos.isYieldedTwohanded(item)
@@ -1442,7 +1442,9 @@ export default class ActorDSK extends Actor {
           callback: (html, options = {}) => {
             cardOptions.rollMode = html.find('[name="rollMode"]').val();
             testData.situationalModifiers = ActorDSK._parseModifiers(html);
-            ActorDSK.schipsModifier(html, this, testData.situationalModifiers)
+            ActorDSK.schipsModifier(html, testData.situationalModifiers)
+            if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) this.reduceSchips(0)
+            
             mergeObject(testData.extra.options, options);
             return { testData, cardOptions };
           },
@@ -1510,14 +1512,13 @@ export default class ActorDSK extends Actor {
         return res;
       }
 
-      static async schipsModifier(html, actor, situationalModifiers){
+      static async schipsModifier(html, situationalModifiers){
         if(html.find('[name="schips"]').is(":checked")){
           situationalModifiers.push({
             name: game.i18n.localize("dsk.schips"),
             value: 5,
             type: ""
           })
-          await actor.reduceSchips(0)
         }
       }
 

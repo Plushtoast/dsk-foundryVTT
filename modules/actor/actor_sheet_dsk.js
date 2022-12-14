@@ -699,13 +699,14 @@ export default class ActorSheetDSK extends ActorSheet {
             case "disadvantage":
                 {
                     await AdvantageRulesDSK.vantageRemoved(this.actor, item)
-                    let xpCost = item.system.ap * item.system.level
+                    let xpCost = item.system.ap * (item.system.level || 1)
                     if (/;/.test(item.system.ap)) {
                         const steps = item.system.ap.split(";").map(x => Number(x.trim()))
                         xpCost = 0
                         for (let i = 0; i < item.system.level; i++)
                             xpCost += steps[i]
                     }
+                    console.log(xpCost)
                     await this._updateAPs(-1 * xpCost)
                 }
                 break;

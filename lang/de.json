@@ -560,6 +560,8 @@
         "initDie": "Initiativewürfel",
         "initiative": "Initiative",
         "initialize": "Initialisieren",
+        "initComplete": "Initialisierung abgeschlossen",
+        "initSkipped": "Initialisierung abgebrochen",
         "Initial": "Startwert",
         "APValue": "Abenteuerpunkte",
         "stepValue": "Stufe",
@@ -709,6 +711,7 @@
             "medium": "Mittel",
             "long": "Lang"
         },
+        "modules": "Module",
         "MERCHANT": {
             "buy": "Kaufen",
             "sell": "Verkaufen",

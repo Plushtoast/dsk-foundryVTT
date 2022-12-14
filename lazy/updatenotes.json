@@ -1,6 +1,6 @@
 {
     "default": "<a href=\"https://github.com/Plushtoast/dsk-foundryVTT/releases/tag/VERSION\" target=\"_blank\">VERSION Changelog</a>",
     "notes": [
-        { "version": "0.0.2", "text": "<p>Willkommen zur Beta für die Schwarze Katze auf Foundry VTT</p><ul><li>Geplanter Release Mitte Dezember</li><li>Bitte Fehler und Wünsche im Github repository posten</li><li>Test und finden von Problemen wird begrüßt, alles in allem müsste das Spiel aber bereits spielbar sein.</li><li>Offizielle Module sind geplant</li><li>Design und fehlende Grafiken sind noch im Wandel und können noch nicht diskutiert werden.</li><li>Der derzeitige Entwicklungsstatus kann auch auf Github mitverfolgt werden.</li></ul>" }
+        { "version": "1.0.0", "text": "<p>Willkommen zum offiziellen Release der Schwarze Katze auf Foundry VTT.</p><ul><li>Wir wünschen viel Spaß beim Spielen</li><li>Sehr bald auch mit offiziellen Modulen erhältlich über den F-Shop</li></ul>" }
     ]
 }

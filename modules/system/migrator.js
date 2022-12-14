@@ -37,10 +37,10 @@ export default function migrateWorld() {
     Hooks.once("ready", async function() {
         if (!game.user.isGM) return
 
-        betaWarning()
+        //betaWarning()
         await setupDefaulTokenConfig()
         const currentVersion = await game.settings.get("dsk", "migrationVersion")
-        const NEEDS_MIGRATION_VERSION = 21
+        const NEEDS_MIGRATION_VERSION = 22
         const needsMigration = currentVersion < NEEDS_MIGRATION_VERSION
 
         if (!needsMigration) return;
@@ -79,9 +79,10 @@ class PatchViewer extends Application {
         const changelog = await renderTemplate(`systems/dsk/lazy/patchhtml/changelog_${lang}_${version.version}.html`)
         const news = await renderTemplate(`systems/dsk/lazy/patchhtml/news_${lang}_${version.version}.html`)
 
-        const prevVersions = [this.json["notes"][this.json["notes"].length - 2]]
-        const prevChangeLogs = await Promise.all(prevVersions.map(async(x) => await renderTemplate(`systems/dsk/lazy/patchhtml/changelog_${lang}_${x.version}.html`)))
-        const prevNews = await Promise.all(prevVersions.map(async(x) => await renderTemplate(`systems/dsk/lazy/patchhtml/news_${lang}_${x.version}.html`)))
+        const prevVersions = [this.json["notes"][this.json["notes"].length - 2]].filter(x => x != undefined)
+        const hasPrevVersions = prevVersions.length > 0
+        const prevChangeLogs = hasPrevVersions ? await Promise.all(prevVersions.map(async(x) => await renderTemplate(`systems/dsk/lazy/patchhtml/changelog_${lang}_${x.version}.html`))) : []
+        const prevNews = hasPrevVersions ? await Promise.all(prevVersions.map(async(x) => await renderTemplate(`systems/dsk/lazy/patchhtml/news_${lang}_${x.version}.html`))) : []
         const modules = await renderTemplate(`systems/dsk/lazy/patchhtml/modules_${lang}.html`)
 
         return {

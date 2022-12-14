@@ -2,7 +2,7 @@ import ItemDSK from "../item/item_dsk.js"
 import DidYouKnow from "../system/didyouknow.js"
 import DSKUtility from "../system/dsk_utility.js"
 import DSKTutorial from "../system/tutorial.js"
-import { dropToGround } from "./itemDrop.js"
+import { connectHook, dropToGround } from "./itemDrop.js"
 import { setEnrichers } from "./texteditor.js"
 import DSKIniTracker from "../system/dsk-ini-tracker.js"
 import OpposedDSK from "../system/opposeddsk.js"
@@ -123,6 +123,7 @@ export function initReady(){
         }
         ItemDSK.setupSubClasses()
         DSKIniTracker.connectHooks()
+        connectHook()
         TokenHotbar2.registerTokenHotbar()
         initImagePopoutTochat()
         

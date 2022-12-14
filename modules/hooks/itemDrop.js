@@ -28,7 +28,7 @@ export const dropToGround = async(sourceActor, item, data, amount) => {
                 height: 0.4
             },
             ownership,
-            items: [...items, newItem],
+            items: [newItem],
             flags: { core: { sheetClass: "dsk.MerchantSheetDSK" } },
             folder,
             system: {
@@ -37,7 +37,7 @@ export const dropToGround = async(sourceActor, item, data, amount) => {
                     temporary: true,
                     hidePlayer: 1
                 },
-                status: { LeP: { value: 16 } }
+                stats: { LeP: { value: 16 } }
             }
         };
         const finalActor = await game.dsk.documents.ActorDSK.create(actor)
