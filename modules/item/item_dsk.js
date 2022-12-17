@@ -933,7 +933,7 @@ class ItemAhnengabe extends ItemDSK{
     static setupDialog(ev, options, spell, actor, tokenId) {
         let sheet = "ahnen"
 
-        let title = spell.name + " " + game.i18n.localize(`${spell.type}Test`)  + (options.subtitle || "")
+        let title = spell.name + " " + game.i18n.localize(`dsk.probe`)  + (options.subtitle || "")
 
         let testData = {
             opposable: !!spell.system.effectFormula,

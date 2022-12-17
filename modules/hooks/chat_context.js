@@ -141,7 +141,7 @@ export function initChatContext() {
             return ui.notifications.error(game.i18n.localize("dsk.DSKError.DamagePermission"))
 
         
-        const payType = (["ritual", "spell"].includes(cardData.preData.source.type) || getProperty(cardData.preData.calculatedSpellModifiers, "costsMana")) ? "AsP" : "KaP"
+        const payType = (["ritual", "spell"].includes(cardData.preData.source.type) || getProperty(cardData.preData.calculatedSpellModifiers, "costsMana")) ? "AeP" : "KaP"
         const manaApplied = await actor.applyMana(cardData.preData.calculatedSpellModifiers.finalcost, payType)
         await message.update({ "flags.data.manaApplied": true, content: message.content.replace(/<span class="costCheck">/, `<span class="costCheck"><i class="fas fa-check" style="float:right"></i>`) })
 
@@ -159,7 +159,7 @@ export function initChatContext() {
                 condition: canUnhideData,
                 callback: (li) => { showHideData(li) }
             }, {
-                name: game.i18n.localize("regenerate"),
+                name: game.i18n.localize("dsk.regenerate"),
                 icon: '<i class="fas fa-user-plus"></i>',
                 condition: canHeal,
                 callback: async(li) => {
@@ -169,7 +169,7 @@ export function initChatContext() {
                         return ui.notifications.error(game.i18n.localize("dsk.DSKError.DamagePermission"))
 
                     await message.update({ "flags.data.healApplied": true, content: message.content.replace(/<\/div>$/, '<i class="fas fa-check" style="float:right"></i></div>') });
-                    await actor.applyRegeneration(message.flags.data.postData.LeP, message.flags.data.postData.AsP, message.flags.data.postData.KaP)
+                    await actor.applyRegeneration(message.flags.data.postData.LeP, message.flags.data.postData.AeP, message.flags.data.postData.KaP)
                 }
             }, {
                 name: game.i18n.localize("dsk.CHATCONTEXT.ApplyMana"),

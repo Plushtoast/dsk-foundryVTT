@@ -880,8 +880,9 @@ export default class DiceDSK{
         }
 
         const attrs = []
+
         if (testData.regenerateLeP) attrs.push("LeP")
-        if (testData.extra.actor.system.isMage && testData.regenerateAsP) attrs.push("AeP")
+        if (testData.extra.actor.system.isMage && testData.regenerateAeP) attrs.push("AeP")
         let index = 0
 
         const isSick = testData.extra.actor.effects.some((x) => getProperty(x, "flags.core.statusId") == "sick")
@@ -963,11 +964,11 @@ export default class DiceDSK{
                     const leDie = []
 
                     if (testData.regenerateLeP ) leDie.push("1d6")
-                    if (testData.extra.actor.isMage && testData.regenerateAsP) leDie.push("1d6")
+                    if (testData.extra.actor.isMage && testData.regenerateAeP) leDie.push("1d6")
 
                     roll = await new Roll(leDie.join("+")).evaluate({ async: true })
                     if (testData.regenerateLeP ) mergeObject(roll.dice[0].options, d3dColors("mu"))
-                    if (testData.extra.actor.isMage && testData.regenerateAsP) mergeObject(roll.dice[leDie.length - 1].options, d3dColors("ge"))
+                    if (testData.extra.actor.isMage && testData.regenerateAeP) mergeObject(roll.dice[leDie.length - 1].options, d3dColors("ge"))
                     break
                 case "meleeweapon":
                 case "rangeweapon":

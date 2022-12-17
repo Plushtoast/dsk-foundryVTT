@@ -9,7 +9,6 @@ export default class DSKpellDialog extends DialogShared {
         const options = super.defaultOptions;
         mergeObject(options, {
             width: 700,
-            height: 400,
             resizable: true,
         });
         return options;

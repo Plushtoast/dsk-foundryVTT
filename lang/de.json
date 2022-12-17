@@ -197,6 +197,7 @@
             "onlyInCombatTargets": "Ziele werden nur im Kampf angezeigt.",
             "setTargetToUserHint": "Aktuell markierte Ziele auf den User übertragen.",
             "setTargetToUser": "Spielerziel setzen",
+            "noExtensions": "",
             "selectAction": "Bitte wähle deine Handlung",
             "noCombatskills": "Keine passenden Kampfsonderfertigkeiten",
             "DeleteItemDetail": "Möchtest du <b>{item}</b> entfernen?",

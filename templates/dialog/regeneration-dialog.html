@@ -6,11 +6,11 @@
 
             </div>
             <div class="col center">
-                {{localize 'dsk.LeP'}}
+                {{localize 'dsk.CHARAbbrev.LeP'}}
             </div>
             {{#if showAepModifier}}
             <div class="col center">
-                {{localize 'dsk.AsP'}}
+                {{localize 'dsk.CHARAbbrev.AeP'}}
             </div>
             {{/if}}
         </div>
@@ -27,7 +27,7 @@
             </div>
             {{#if showAepModifier}}
             <div class="col">
-                <input class="quantity-click" type="number" name="AsPModifier" value="0" />
+                <input class="quantity-click" type="number" name="AePModifier" value="0" />
             </div>
             {{/if}} 
         </div>
@@ -77,7 +77,7 @@
 
     {{#if showAepModifier}}
         <div class="form-group custom-select">
-            <label>{{localize 'dsk.CHARAbbrev.LEP'}}</label>
+            <label>{{localize 'dsk.LeP'}}</label>
             <input type="checkbox" name="regenerateLeP" value="1" checked="checked">
         </div>
     {{else}}
@@ -89,7 +89,7 @@
     
     {{#if showAepModifier}}
         <div class="form-group custom-select">
-            <label>{{localize 'dsk.CHARAbbrev.AeP'}}</label>
+            <label>{{localize 'dsk.AeP'}}</label>
             <input type="checkbox" name="regenerateAeP" value="1" checked="checked">
         </div>    
     {{/if}}
