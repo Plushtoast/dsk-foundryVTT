@@ -2770,6 +2770,9 @@ a {
   }
 }
 
+.maskfield .editor{
+  z-index: 2;
+}
 
 .maskfield:before {
   content: '';
