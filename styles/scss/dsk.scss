@@ -559,14 +559,6 @@ select[multiple] option {
     border:none;
   }
 
-  .window-header {
-    .aa-item-settings, [id^="popout_"] {
-      width: 15px;
-      height: 15px;
-      margin-top: 10px;
-    }
-  }
-
   &.item .window-header {
     & > a {
       margin-top: 10px;

@@ -494,6 +494,7 @@
         "DSKError": {
             "notFound": "{category} {name} nicht gefunden",
             "reportBug": "Fehler melden",
+            "APUpdateError": "AP Wert konnte nicht angepasst werden. Bitte manuell durchführen.",
             "DamagePermission": "Du darfst den Schaden nicht übertragen.",
             "AdvanceMaximumReached": "Maximale Steigerung bereits erreicht",
             "opposedAttackNoSpecAbs": "Passierschläge können nicht mit Sonderfertigkeiten kombiniert werden",
@@ -673,6 +674,7 @@
         "WIZARDPARSER": {
             "speciesAdvantage": "Hohe Starteigenschaft"
         },
+        "entry": "Eintrag",
         "Difficulty": "Schwierigkeit",
         "skModifier": "Seelenkraft (Ziel)",
         "zkModifier": "Zähigkeit (Ziel)",

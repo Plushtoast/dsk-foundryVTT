@@ -1,0 +1,30 @@
+<div class="selection">
+    <p>{{localize 'dsk.DIALOG.ItemRequiresAdoptionDescription'}}.</p>
+    <h2>{{original.name}}</h2>
+    <p>{{{original.description.value}}}</p>
+    <div class="row-section">
+        <div class="col third">
+            <label>{{localize "dsk.entry"}}</label>
+        </div>
+        <div class="col seventy">
+            <select name="entryselection">
+                {{#select "-"}}
+                {{#each items as |itm i|}}
+                <option value="{{itm.name}}">{{itm.name}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+    </div>
+
+    {{#if area}}
+    <div class="row-section">
+        <div class="col third">
+            <label>{{localize "dsk.specialisation"}}</label>
+        </div>
+        <div class="col seventy">
+            <input class="input-text" type="text" name="custom" data-dtype="String" />
+        </div>
+    </div>
+    {{/if}}
+</div>

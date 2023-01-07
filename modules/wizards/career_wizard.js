@@ -53,7 +53,7 @@ export default class CareerWizard extends WizardDSK {
             let item = this.actor.items.find(x => types.includes(x.type) && x.name == parsed.original)
             if (item) {
                 item = duplicate(item)
-                if(item.system.level) item.system.level = parsed.step
+                if(item.system.level != undefined) item.system.level = parsed.step
 
                 item = ItemRulesDSK.reverseAdoptionCalculation(this.actor, parsed, item)
                 itemsToUpdate.push(item)
@@ -65,7 +65,7 @@ export default class CareerWizard extends WizardDSK {
                 if (item) {
                     item = duplicate(item)
                     item.name = parsed.original
-                    if(item.system.level) item.system.level = parsed.step
+                    if(item.system.level != undefined) item.system.level = parsed.step
 
                     item = ItemRulesDSK.reverseAdoptionCalculation(this.actor, parsed, item)
                     itemsToCreate.push(item)
