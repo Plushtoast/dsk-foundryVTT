@@ -1,4 +1,4 @@
-<form class="{{cssClass}} lock{{actor.sheetLocked}}" autocomplete="off">
+<form class="{{cssClass}} lock{{prepare.sheetLocked}}" autocomplete="off">
 
     {{> systems/dsk/templates/actors/parts/normalhead.html}}
     <!-- TABS -->
@@ -7,7 +7,7 @@
             {{#if (ne merchantType 'loot')}}
             <a class="item" data-tab="skills">{{localize "ITEM.TypeSkill"}}</a>
             <a class="item" data-tab="combat">{{localize "dsk.SPECIALABILITYCATEGORIES.combat"}}</a> 
-            {{#if actor.magic.hasSpells}}
+            {{#if prepare.magic.hasSpells}}
             <a class="item" data-tab="magic">{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</a> 
             {{/if}}
             <a class="item" data-tab="main">{{localize "dsk.attributes"}}</a>
@@ -34,7 +34,7 @@
             <div class="tab save-scroll" data-tab="notes">
                 {{> systems/dsk/templates/actors/actor-notes.html}}
             </div>
-            {{#if actor.magic.hasSpells}}
+            {{#if prepare.magic.hasSpells}}
             <div class="tab magic save-scroll" data-tab="magic">
                 {{> systems/dsk/templates/actors/character/actor-magic.html}}
             </div>

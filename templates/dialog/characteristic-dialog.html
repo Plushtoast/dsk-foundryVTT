@@ -1,4 +1,27 @@
 <form class="characteristic-test">
+    <div class="row-section">
+        <div class="col fourty">{{localize 'dsk.attributes'}}</div>
+        <div class="row-section col sixty">
+            {{#each characteristics as |item i|}}
+            <div class="col five center" style="max-width: 16.66%;" data-tooltip="{{attrLoc item 'name'}}">
+                <select class="noAppearance" name="characteristics{{i}}">
+                    {{#select item}}
+                    <option value="mu"> {{localize 'dsk.characteristics.mu.abbr'}}</option>
+                    <option value="kl"> {{localize 'dsk.characteristics.kl.abbr'}}</option>
+                    <option value="in"> {{localize 'dsk.characteristics.in.abbr'}}</option>
+                    <option value="ch"> {{localize 'dsk.characteristics.ch.abbr'}}</option>
+                    <option value="ff"> {{localize 'dsk.characteristics.ff.abbr'}}</option>
+                    <option value="ge"> {{localize 'dsk.characteristics.ge.abbr'}}</option>
+                    <option value="ko"> {{localize 'dsk.characteristics.ko.abbr'}}</option>
+                    <option value="kk"> {{localize 'dsk.characteristics.kk.abbr'}}</option>
+                    {{/select}}
+                </select>
+            </div>
+            {{/each}}
+            <div class="col five">
+            </div>
+        </div>
+    </div>
     {{> systems/dsk/templates/dialog/default-dialog.html}}
 
     <div class="roll-dialog-tag">characteristic</div>

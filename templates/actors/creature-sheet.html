@@ -1,4 +1,4 @@
-<form class="{{cssClass}} lock{{actor.sheetLocked}}" autocomplete="off">
+<form class="{{cssClass}} lock{{prepare.sheetLocked}}" autocomplete="off">
 
 
     <header class="sheet-header">
@@ -24,14 +24,14 @@
                 <div class="row-section flexaligncenter">
                     <div class="col eighty ">
                         {{> systems/dsk/templates/actors/parts/healthbar.html}}
-                        {{#if actor.schips}}
+                        {{#if prepare.schips}}
                         <div class="row-section">
                             <div class="col ten lineheight center" data-tooltip="dsk.fatePoints">
                                 {{localize 'dsk.CHARAbbrev.fatePoints'}}
                             </div>
                             <div class="col eighty center" data-tooltip="dsk.fatePoints">
                                 <input class="dskhidden" type="text" name="system.stats.schips.value" data-dtype="Number" value="{{actor.system.stats.schips.value}}" /> 
-                                {{#each actor.schips as |item i|}}
+                                {{#each prepare.schips as |item i|}}
                                 <a class="schip {{item.cssClass}}" data-val="{{item.value}}"></a>
                                 {{/each}}
                             </div>
@@ -53,7 +53,7 @@
         <nav id="dsk-primarytabs" class="sheet-tabs tabs">
             <a class="item active" data-tab="skills">{{localize "ITEM.TypeSkill"}}</a>
             <a class="item" data-tab="combat">{{localize "dsk.SPECIALABILITYCATEGORIES.combat"}}</a> 
-            {{#if actor.magic.hasSpells}}
+            {{#if prepare.magic.hasSpells}}
             <a class="item" data-tab="magic">{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</a> 
             {{/if}}
             <a class="item" data-tab="main">{{localize "dsk.attributes"}}</a>
@@ -72,7 +72,7 @@
             <div class="tab combat save-scroll" data-tab="combat">
                 {{> systems/dsk/templates/actors/creature/creature-combat.html}}
             </div>
-            {{#if actor.magic.hasSpells}}
+            {{#if prepare.magic.hasSpells}}
             <div class="tab magic save-scroll" data-tab="magic">
                 {{> systems/dsk/templates/actors/creature/creature-magic.html}}
             </div>

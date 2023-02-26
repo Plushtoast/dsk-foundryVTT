@@ -115,7 +115,7 @@ export function initChatContext() {
     const applyDamage = async(li, mode) => {
         const message = game.messages.get(li.attr("data-message-id"))
         const cardData = message.flags.opposeData
-        const defenderSpeaker = cardData.speakerDefend;
+        const defenderSpeaker = cardData.speakerDefend.speaker;
         const actor = DSKUtility.getSpeaker(defenderSpeaker)
 
         if (!actor.isOwner) return ui.notifications.error(game.i18n.localize("dsk.DSKError.DamagePermission"))

@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-        {{/each}} {{#each actor.traits.meleeAttack as |item i|}}
+        {{/each}} {{#each prepare.traits.meleeAttack as |item i|}}
         <div class="col item" data-item-id="{{item._id}}">
             <div class="row-section">
                 <div class="col ten image" style="background-image: url('{{item.img}}')">
@@ -117,7 +117,7 @@
         </div>
     </div>
     <div class="row-section wrap rowtable inventory">
-        {{#each actor.wornRangedWeapons as |item i|}}
+        {{#each prepare.wornRangedWeapons as |item i|}}
         <div class="col item" data-item-id="{{item._id}}">
             <div class="row-section">
                 <div class="col ten image" style="background-image: url('{{item.img}}')">
@@ -200,7 +200,7 @@
                 </div>
             </div>
         </div>
-        {{/each}} {{#each actor.traits.rangeAttack as |item i|}}
+        {{/each}} {{#each prepare.traits.rangeAttack as |item i|}}
         <div class="col item" data-item-id="{{item._id}}">
             <div class="row-section">
                 <div class="col ten image" style="background-image: url('{{item.img}}')">
@@ -253,11 +253,11 @@
         <div class="col two">
             <b>{{localize "ITEM.TypeArmor"}}</b>
         </div>
-        <div class="col four center small">{{localize "dsk.protection"}} ({{actor.armorSum}})</div>
+        <div class="col four center small">{{localize "dsk.protection"}} ({{prepare.armorSum}})</div>
         <div class="col four center small">{{localize "dsk.CONDITION.encumbered"}}</div>
     </div>
     <div class="row-section wrap rowtable inventory">
-        {{#each actor.wornArmor as |item i|}}
+        {{#each prepare.wornArmor as |item i|}}
         <div class="col item" data-item-id="{{item._id}}">
             <div class="row-section">
                 <div class="col ten image" style="background-image: url('{{item.img}}')">
@@ -273,7 +273,7 @@
                 </div>
             </div>
         </div>
-        {{/each}} {{#each actor.traits.armor as |item i|}}
+        {{/each}} {{#each prepare.traits.armor as |item i|}}
         <div class="col item" data-item-id="{{item._id}}">
             <div class="row-section">
                 <div class="col ten image" style="background-image: url('{{item.img}}')">
@@ -300,7 +300,7 @@
         </div>
     </div>
     <div class="row-section wrap cards">
-        {{#each actor.specAbs.Combat as |item i|}}
+        {{#each prepare.specAbs.Combat as |item i|}}
         <div class="item" data-item-id="{{item._id}}">
             {{#if item.OnUseEffect}}<a data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
         </div>
@@ -359,7 +359,7 @@
                 </div>
             </div>
         </div>
-        {{#each actor.combatskills as |item i|}}
+        {{#each prepare.combatskills as |item i|}}
         <div class="col two">
             <div class="row-section item skills lineheight" data-item-id="{{item._id}}">
                 <div class="col fourty">

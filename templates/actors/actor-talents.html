@@ -13,7 +13,7 @@
 
 <div class="row-section wrap allTalents showAll">
     <div class="col morph">
-        {{#each actor.allSkillsLeft}}
+        {{#each prepare.allSkillsLeft}}
         <div class="row-section skills table-header lineheight {{@key}}" style="margin-top:10px;">
             <div class="col two">
                 {{localize (concat "dsk.SKILL." @key)}}
@@ -48,7 +48,7 @@
         {{/each}} {{/each}}
     </div>
     <div class="col morph">
-        {{#each actor.allSkillsRight}}
+        {{#each prepare.allSkillsRight}}
         <div class="row-section skills table-header lineheight {{@key}}" style="margin-top:10px;">
             <div class="col two">
                 {{localize (concat "dsk.SKILL." @key)}}

@@ -123,8 +123,7 @@ export default class ActorSheetDSK extends ActorSheet {
     async getData(options) {
         const baseData = await super.getData(options);
         const sheetData = { actor: baseData.actor, editable: baseData.editable, limited: baseData.limited, owner: baseData.owner }
-        const prepare = this.actor.prepareSheet({ details: this.openDetails })
-        mergeObject(sheetData.actor, prepare)
+        sheetData["prepare"] = this.actor.prepareSheet({ details: this.openDetails })
         sheetData["sizeCategories"] = DSK.sizeCategories
         sheetData.isGM = game.user.isGM;
         sheetData["initDies"] = { "": "-", "1d6": "1d6", "2d6": "2d6", "3d6": "3d6", "4d6": "4d6" }
@@ -706,7 +705,6 @@ export default class ActorSheetDSK extends ActorSheet {
                         for (let i = 0; i < item.system.level; i++)
                             xpCost += steps[i]
                     }
-                    console.log(xpCost)
                     await this._updateAPs(-1 * xpCost)
                 }
                 break;

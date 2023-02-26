@@ -1,0 +1,19 @@
+<div class="dsk chat-card">
+    <div class="opposed-card">
+        <div>
+            {{{result}}}
+        </div>
+        <div class="opposed-tokens row-section">
+            <div class="col two attacker">{{{speakerAttack.img}}}</div>
+            <div class="col two defender">{{{speakerDefend.img}}}</div>
+        </div>
+        <div class="{{#if hideData}}hideData{{/if}} hideAnchor">
+            {{{damage.description}}}
+        </div>
+        {{#each other as |string index|}}
+        <div>
+            {{{string}}}
+        </div>
+        {{/each}}
+    </div>
+</div>

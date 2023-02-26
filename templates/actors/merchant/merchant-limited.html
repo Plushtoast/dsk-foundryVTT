@@ -1,4 +1,4 @@
-<form class="{{cssClass}} lock{{actor.sheetLocked}}" autocomplete="off">
+<form class="{{cssClass}} lock{{prepare.sheetLocked}}" autocomplete="off">
     <fieldset disabled>
         <header class="sheet-header row-section">
 
@@ -54,7 +54,7 @@
                                     {{localize 'dsk.money'}}
                                 </div>
                                 <div class="col five center">
-                                    {{tradeFriend.system.money}}
+                                    {{tradeFriend.money}}
                                 </div>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
                                 <div class="row-section table-title">
                                     <div class="col eight"></div>
                                     <div class="col">
-                                        <b>{{localize (concat "Equipment." @key)}}</b>
+                                        <b>{{localize (concat "dsk.Equipment." @key)}}</b>
                                     </div>
 
                                     <div class="col four center">
@@ -128,12 +128,12 @@
                             {{/if}} {{/each}}
                         </div>
                         <div class="col two">
-                            {{#each actor.inventory as |section sid|}} {{#if section.show}}
+                            {{#each prepare.inventory as |section sid|}} {{#if section.show}}
                             <div class="groupbox">
                                 <div class="row-section table-title">
                                     <div class="col eight"></div>
                                     <div class="col">
-                                        <b>{{localize (concat "Equipment." @key)}}</b>
+                                        <b>{{localize (concat "dsk.Equipment." @key)}}</b>
                                     </div>
 
                                     <div class="col four center">

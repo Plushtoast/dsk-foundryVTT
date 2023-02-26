@@ -2,8 +2,8 @@
     <div class="col ten center lineheight" data-tooltip="dsk.LeP">
         {{localize 'dsk.CHARAbbrev.LeP'}}
     </div>
-    <div class="col {{#if actor.magic.hasSpells}}fourty{{else}}ninety{{/if}}">
-        <div class="healthbar barLeft{{#if actor.magic.hasSpells}}{{else}} soloBar{{/if}}" data-tooltip="dsk.LeP">
+    <div class="col {{#if prepare.magic.hasSpells}}fourty{{else}}ninety{{/if}}">
+        <div class="healthbar barLeft{{#if prepare.magic.hasSpells}}{{else}} soloBar{{/if}}" data-tooltip="dsk.LeP">
 
             <div class="bar LeP" style="--a: {{actor.system.stats.LeP.value}}; --b: {{actor.system.stats.LeP.max}}">
             </div>
@@ -13,7 +13,7 @@
             </div>
         </div>
     </div>
-     {{#if actor.magic.hasSpells}}
+     {{#if prepare.magic.hasSpells}}
     <div class="col fourty">
         <div class="healthbar barRight" data-tooltip="dsk.AeP">
             <div class="barLabel">

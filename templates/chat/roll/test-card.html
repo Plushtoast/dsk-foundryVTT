@@ -22,7 +22,7 @@
     <a class="expand-mods"><i class="fas fa-plus"></i></a>
     <ul>
         {{#each modifierList as |item i|}}
-        <li>{{item.name}}: {{item.value}}{{#if item.type}} {{localize (concat 'CHARAbbrev.' item.type)}}{{/if}}</li>
+        <li>{{item.name}}: {{item.value}}{{#if item.type}} {{localize (concat 'dsk.CHARAbbrev.' item.type)}}{{/if}}</li>
         {{/each}}
         {{#if preData.source.system.worn.wrongGrip}}
         <li>{{localize "dsk.wrongGrip.wrongGripped"}}</li>

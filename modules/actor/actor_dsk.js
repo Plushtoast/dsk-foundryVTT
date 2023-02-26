@@ -10,6 +10,8 @@ import OpposedDSK from "../system/opposeddsk.js";
 import SpecialabilityRulesDSK from "../system/specialability-rules.js";
 import DSKActiveEffect from "../status/dsk_active_effects.js";
 import DSKDialog from "../dialog/dialog-dsk.js";
+import TraitRulesDSK from "../system/trait_rules.js"
+import DSKActiveEffectConfig from "../status/active_effects.js";
 
 export default class ActorDSK extends Actor {
     static async create(data, options) {
@@ -138,7 +140,7 @@ export default class ActorDSK extends Actor {
               const changePain = data.pain != pain;
               data.pain = pain;
       
-              if (changePain) // && !TraitRulesDSA5.hasTrait(this, game.i18n.localize("LocalizedIDs.painImmunity")))
+              if (changePain && !TraitRulesDSK.hasTrait(this, game.i18n.localize("dsk.LocalizedIDs.painImmunity")))
                 this.addCondition("inpain", pain * 2, true).then(() => (data.pain = undefined));
       
               if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.blind"))) this.addCondition("blind");
@@ -587,10 +589,10 @@ export default class ActorDSK extends Actor {
       if (options.origin) {
         wornArmor = wornArmor.map((armor) => {
           let optnCopy = mergeObject(duplicate(options), { armor });
-          return DSKActiveEffect.applyRollTransformation(actor, optnCopy, 4).options.armor;
+          return DSKActiveEffectConfig.applyRollTransformation(actor, optnCopy, 4).options.armor;
         });
       }
-      const protection = wornArmor.reduce((a, b) => a + b, 0);
+      const protection = wornArmor.reduce((a, b) => a + b.system.rs, 0);
       const animalArmor = actor.items
         .filter((x) => x.type == "trait" && x.system.traitType == "armor")
         .reduce((a, b) => a + Number(b.system.at), 0);
@@ -1020,7 +1022,7 @@ export default class ActorDSK extends Actor {
         let totalWeight = 0;
         let hasTrait = false;
 
-        for (let i of this.items) {
+        for (let i of actorData.items) {
             try {
                 let parent_id = getProperty(i, "system.parent_id");
                 if (i.type == "ammunition") availableAmmunition.push(ActorDSK._prepareitemStructure(i));
@@ -1437,6 +1439,7 @@ export default class ActorDSK extends Actor {
           data: {
             rollMode: options.rollMode,
             modifier: options.modifier || 0,
+            characteristics: [1, 2].map((x) => characteristicId),
             hasSchips: ItemDSK.hasSchips(this)
           },
           callback: (html, options = {}) => {
@@ -1445,6 +1448,7 @@ export default class ActorDSK extends Actor {
             ActorDSK.schipsModifier(html, testData.situationalModifiers)
             if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) this.reduceSchips(0)
             
+            ItemDSK.changeChars(testData.source, ...[0, 1].map((x) => html.find(`[name="characteristics${x}"]`).val()))
             mergeObject(testData.extra.options, options);
             return { testData, cardOptions };
           },

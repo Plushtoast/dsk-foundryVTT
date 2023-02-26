@@ -6,7 +6,7 @@ export function setupConfiguration(){
         name: "migrationVersion",
         scope: "world",
         config: false,
-        default: 3,
+        default: 22,
         type: Number
     })
     game.settings.register("dsk", "firstTimeStart", {

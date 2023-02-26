@@ -1,6 +1,10 @@
 {
-    "QL": "QS",
+    
     "dsk": {
+        "QL": "QS",
+        "manual": "Händisch",
+        "attackFromBehind": "Angriff von Hinten",
+        "defenseCount": "# Verteidigung (je {malus})",
         "characteristics": {
             "mu": {
                 "abbr": "MU",
@@ -402,6 +406,11 @@
         "regenerationTest": "Erholungsprobe",
         "Roll": "Wurf",
         "Opposed": "Vergleichsprobe",
+        "OPPOSED": {
+            "winsFP": "<b>{winner}</b> gewinnt gegen <b>{loser}</b> mit {SL} Qualitätsstufe(n)",
+            "wins": "<b>{winner}</b> gewinnt gegen <b>{loser}</b>",
+            "attackOfOpportunity": "<b>Beschreibung</b>: Passierschlag, Verteidigung unmöglich"
+        },
         "distance": "Distanz",
         "FP": "Fertigkeitspunkte",
         "regenerate": "Regeneration",
@@ -435,6 +444,8 @@
             "ambidextrous": "Beidhändig",
             "senseOfRange": "Entfernungssinn",
             "twoWeaponCombat": "Beidhändiger Kampf",
+            "feint": "Finte",
+            "painImmunity": "Immun gegen Schmerzen",
             "poisonResistance": "Giftresistenz",
             "perception": "Sinnesschärfe",
             "selfControl": "Selbstbeherrschung",

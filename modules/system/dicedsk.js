@@ -412,8 +412,9 @@ export default class DiceDSK{
             }
         }
 
-        if(result.qualityStep > 0){
-            damage+= result.qualityStep
+        const feint = game.i18n.localize("dsk.LocalizedIDs.feint")
+        if(result.qualityStep > 0 && !testData.situationalModifiers.find(x => x.name == feint)){
+            damage += result.qualityStep
             damageBonusDescription.push(game.i18n.localize("dsk.qualityStep") + " " + result.qualityStep)
         }
 
@@ -474,7 +475,10 @@ export default class DiceDSK{
         if(testData.testDifficulty) this._appendSituationalModifiers(testData, game.i18n.localize("dsk.Difficulty"), testData.testDifficulty)
 
         if(testData.vw){
-            const finalVw = Math.max(0, testData.vw - this._situationalModifiers(testData, "defenseMalus"))
+            const dmmalus = testData.situationalModifiers.reduce((prev, o) => {
+                return prev + (Number(o.dmmalus) || 0)
+            }, 0)
+            const finalVw = Math.max(0, Number(testData.vw) - dmmalus)
             this._appendSituationalModifiers(testData, game.i18n.localize("dsk.ABBR.VW"), -1 * finalVw)
         }
         let modifiers = this._situationalModifiers(testData)

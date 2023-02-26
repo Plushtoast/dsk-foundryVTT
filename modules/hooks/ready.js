@@ -37,6 +37,9 @@ export function initReady(){
                     case "addEffect":
                         DSKActiveEffectConfig.applyEffect(data.payload.id, data.payload.mode, data.payload.actors)
                         break
+                    case "hideQueryButton":
+                        OpposedDSK.hideReactionButton(data.payload.id)
+                            break
                     case "updateDefenseCount":
                         if (game.combat) game.combat.updateDefenseCount(data.payload.speaker)
                         break
@@ -48,9 +51,6 @@ export function initReady(){
                         break
                     case "showDamage":
                         OpposedDSK.showDamage(game.messages.get(data.payload.id), data.payload.hide)
-                        break
-                    case "updateAttackMessage":
-                        game.messages.get(data.payload.messageId).update({ "flags.data.unopposedStartMessage": data.payload.startMessageId });
                         break
                     case "clearCombat":
                         if (game.combat) game.combat.nextRound()
