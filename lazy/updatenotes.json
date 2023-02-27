@@ -2,6 +2,6 @@
     "default": "<a href=\"https://github.com/Plushtoast/dsk-foundryVTT/releases/tag/VERSION\" target=\"_blank\">VERSION Changelog</a>",
     "notes": [
         { "version": "1.0.0", "text": "<p>Willkommen zum offiziellen Release der Schwarze Katze auf Foundry VTT.</p><ul><li>Wir wünschen viel Spaß beim Spielen</li><li>Sehr bald auch mit offiziellen Modulen erhältlich über den F-Shop</li></ul>" },
-        { "version": "1.1.0", "text": "<p>Einige kleiner Dinge wurden verbessert.</p><ul><li>Wir wünschen viel Spaß beim Spielen</li><li>Das Bestiarium (mit Bonus Fasar Bestiarium) für die Schwarze Katze wird bald erhältlich sein.</li><li>Offizielle Module erhältlich im F-Shop</li></ul>" }
+        { "version": "1.1.0", "text": "<p>Einige kleiner Dinge wurden verbessert.</p><ul><li>Wir wünschen viel Spaß beim Spielen</li><li>Das Bestiarium (mit Bonus Fasar Bestiarium) für die Schwarze Katze wird bald erhältlich sein.</li><li>Offizielle Module erhältlich im F-Shop</li><li>Ein besonderer Dank geht an Kai den Weisen!</li></ul>" }
     ]
 }
