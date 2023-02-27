@@ -24,6 +24,10 @@ export function initActorHooks() {
         }
     })
 
+    Hooks.on("updateActor",(actor, updates) => {
+        if(!game.user.isGM && actor.limited && hasProperty(updates, "system.merchant.hidePlayer")) ui.sidebar.render(true)
+    })
+
     Hooks.on("dropActorSheetData", (actor, sheet, data) => {
         switch(data.data?.type){
             case "condition":
