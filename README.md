@@ -4,7 +4,7 @@
 # Official Die Schwarze Katze system for Foundry
 
 ### Current Version and Compatibility:
-1.0.x - FoundryVTT 10.+
+1.1.x - FoundryVTT 10.+
 This system is intended for usage with [Foundry Virtual Tabletop](https://foundryvtt.com/) to play "Die Schwarze Katze".
 If you want to learn more checkout the [German](https://ulisses-spiele.de/virtual-tabletop-dsa-vtt/) or [English](https://ulisses-us.com/ulisses-virtual-tabletops/virtual-tabletop-dsa-vtt/) VTT Page by Ulisses Spiele.
 
