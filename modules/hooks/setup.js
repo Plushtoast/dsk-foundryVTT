@@ -10,12 +10,13 @@ export function initSetup(){
         setupConfiguration()
         if (!["de"].includes(game.i18n.lang)) {
             console.warn(`DSK - ${game.i18n.lang} is not a supported language. Falling back to default language.`)
-            game.settings.set("core", "language", "de").then(()=> foundry.utils.debouncedReload())
-        }
-        const forceLanguage = game.settings.get("dsk", "forceLanguage")
-        if (["de"].includes(forceLanguage) && game.i18n.lang != forceLanguage) {
-            showWrongLanguageDialog(forceLanguage)
-        }
+            showForbiddenLanguageDialog()
+        } else {
+            const forceLanguage = game.settings.get("dsk", "forceLanguage")
+            if (["de"].includes(forceLanguage) && game.i18n.lang != forceLanguage) {
+                showWrongLanguageDialog(forceLanguage)
+            }
+        }       
 
         setupKeybindings()
         setupScene()
@@ -54,6 +55,39 @@ const showWrongLanguageDialog = (forceLanguage) => {
     new Dialog(data).render(true)
 }
 
+class ForbiddenLanguageDialog extends Dialog{
+    async close(options = {}){
+        if(!["de"].includes(game.i18n.lang)) return
+
+        return super.close(options)
+    }
+}
+
+const showForbiddenLanguageDialog = () => {
+    let data = {
+        title: game.i18n.localize("language"),
+        content: "Your foundry language is not supported by this system. Due to technical reasons your foundry language setting has to be switched to german.",
+        buttons: {
+            de: {
+                icon: '<i class="fa fa-check"></i>',
+                label: "en",
+                callback: async() => { 
+                    await game.settings.set("core", "language", "de") 
+                    foundry.utils.debouncedReload()
+                }
+            },
+            logout: {
+                icon: '<i class="fas fa-door-closed"></i>',
+                label: game.i18n.localize('SETTINGS.Logout'),
+                callback: async() => { 
+                    ui.menu.items.logout.onClick()
+                }
+            }            
+        }
+    }
+
+    new ForbiddenLanguageDialog(data).render(true)
+}
 
 class DaylightIlluminationShader extends AdaptiveIlluminationShader {
     static fragmentShader =  `
