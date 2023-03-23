@@ -365,7 +365,12 @@
             "inventorySound": "Inventar Geräusche",
             "inventorySoundHint": "Aktiviere Interface Geräusche im Inventar (benötigt game audio bundles)",
             "yesNumbered": "Ja (Nummeriert)",
-            "renameNumbered": "Umbenennen (Nummeriert)"
+            "renameNumbered": "Umbenennen (Nummeriert)",
+            "information0": "Jeder",
+            "information1": "Nur Spieler",
+            "information2": "Nur SL",
+            "informationDistribution": "Informationsergebnisse anzeigen",
+            "informationDistributionHint": "Lege fest wer das Ergebnis von Informationswürfen sehen kann."
         },
         "HELP": {
             "showHelp": "Hilfe anzeigen",
@@ -527,7 +532,8 @@
             "PreparationError": "Die Initialisierung es Akteurs {name} ist fehlgeschlagen.",
             "NoAmmo": "Nicht genug Munition.",
             "zeroXP": "Der Charakter hat noch keine Abenteuerpunkte. Möchtest du welche hinzufügen?",
-            "NotEnoughAeP": "Nicht genug Ahnenergie"
+            "NotEnoughAeP": "Nicht genug Ahnenergie",
+            "mapsViaJournalbrowser": "Diese Karte sollte über den Journalbrowser importiert werden, um die korrekte Funktion zu gewährleisten."
         },
         "gridUnits": "Schritt",
         "name": "Name",

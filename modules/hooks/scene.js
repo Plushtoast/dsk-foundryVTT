@@ -1,6 +1,10 @@
 export function setupScene() {
     Hooks.on('preCreateScene', function(doc, createData, options, userId) {
         if (!createData.grid?.units) doc.updateSource({ grid: { units: game.i18n.localize('dsk.gridUnits') }})
+
+        if(!options.dskInit && createData.notes?.some(x => getProperty(x, "flags.dsa5.initName"))){
+            ui.notifications.warn(game.i18n.localize('dsk.DSKError.mapsViaJournalbrowser'))
+        }
     })
 
     Hooks.on('preCreateActiveEffect', function(doc, createData, options, userId) {

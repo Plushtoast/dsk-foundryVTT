@@ -16,6 +16,19 @@ export function setupConfiguration(){
         default: false,
         type: Boolean
     })
+    game.settings.register("dsk", "informationDistribution", {
+        name: "dsk.SETTINGS.informationDistribution",
+        hint: "dsk.SETTINGS.informationDistributionHint",
+        scope: "world",
+        config: true,
+        default: "0",
+        type: String,
+        choices: {
+            0: game.i18n.localize('dsk.SETTINGS.information0'),
+            1: game.i18n.localize('dsk.SETTINGS.information1'),
+            2: game.i18n.localize('dsk.SETTINGS.information2')
+        }
+    });
     game.settings.register("dsk", "defaultConfigFinished", {
         name: "defaultConfigFinished",
         scope: "world",

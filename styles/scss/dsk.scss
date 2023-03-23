@@ -1673,10 +1673,6 @@ form.dsk.item-sheet {
     background-image: url('../../icons/backgrounds/blackcreaturebot.webp');
   }
 
-  &.masterMenu:after {
-    background-image: url('../../icons/backgrounds/masterborder.webp');
-  }
-
   &.creature-sheet .window-resizable-handle {
     bottom: 18px;
   }
@@ -2719,6 +2715,7 @@ a {
   }
 }
 
+
 .dskbox1 {
   background: url('../../icons/backgrounds/dskborder1_top.webp'), url('../../icons/backgrounds/dskborder1_bot.webp');
   background-repeat: no-repeat, no-repeat;
@@ -2738,6 +2735,21 @@ a {
     background-size: 100% 60px;
     background-repeat: repeat-y;
   }
+}
+
+.dskbox3, .dskbox4 {
+  background-image: url('../../icons/backgrounds/dskboxhead.webp'), url('../../icons/backgrounds/dskbox3.webp');
+  background-repeat: no-repeat, no-repeat;
+  background-size: 250px 21px, 250px 44px;
+  background-position: center 15px, center bottom;
+  padding: 35px 20px 44px 40px;
+  position: relative;
+}
+
+.dskbox4{
+  background-image: url('../../icons/backgrounds/dskboxhead.webp'), url('../../icons/backgrounds/dskbox4.webp');
+  background-size: 250px 21px, 250px 41px;
+  padding: 35px 20px 41px 40px;
 }
 
 .maskfield,

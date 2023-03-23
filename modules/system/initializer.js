@@ -209,7 +209,7 @@ export default class DSKInitializer extends Dialog {
                         scenesToUpdate.push(entry)
                     }
                 }
-                let createdEntries = await Scene.create(scenesToCreate)
+                let createdEntries = await Scene.create(scenesToCreate, { dskInit: true })
                 for (let entry of createdEntries) {
                     this.scenes[entry.name] = entry;
                     const thumb = await entry.createThumbnail()
