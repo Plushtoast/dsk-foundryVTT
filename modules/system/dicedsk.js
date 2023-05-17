@@ -461,7 +461,7 @@ export default class DiceDSK{
             result.push(
                 `<a class="roll-button roll-item" data-removecharge="${!poison.permanent}" data-name="${
                     poison.name
-                }" data-type="poison"><i class="fas fa-dice"></i>${game.i18n.localize("ITEM.TypePoison")}: ${poison.name}</a>`
+                }" data-type="poison"><i class="fas fa-dice"></i>${game.i18n.localize("TYPES.Item.poison")}: ${poison.name}</a>`
             )
         }
         return result.join(", ")

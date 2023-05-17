@@ -5,7 +5,7 @@ import WizardDSK from "./dsk_wizard.js"
 export default class CareerWizard extends WizardDSK {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.title = game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("ITEM.TypeProfession")}` })
+        options.title = game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.profession")}` })
         options.template = 'systems/dsk/templates/wizard/add-career-wizard.html'
         return options;
     }

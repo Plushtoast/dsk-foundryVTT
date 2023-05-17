@@ -5,7 +5,7 @@
     <nav class="sheet-tabs tabs" data-tab-container="primary">
         <a class="item active" data-tab="description">{{localize "dsk.description"}}</a> 
         {{#if generalToChose}} <a class="item" data-tab="general">{{localize "dsk.WIZARD.generalTab"}}</a> {{/if}} 
-        {{#if optionals}} <a class="item" data-tab="vantages">{{localize "ITEM.TypeAdvantage"}}</a> {{/if}}
+        {{#if optionals}} <a class="item" data-tab="vantages">{{localize "TYPES.Item.advantage"}}</a> {{/if}}
     </nav>
 
     <div class="tab description active" data-tab="description">
@@ -22,7 +22,7 @@
     <div class="tab vantages" data-tab="vantages">
 
         <p>{{localize 'dsk.WIZARD.vantageDescriptionSpecies'}}</p>
-        <h2>{{localize 'ITEM.TypeAdvantage'}}</h2>
+        <h2>{{localize 'TYPES.Item.advantage'}}</h2>
         <div class="row-section wrap">
             {{#each optionals as |item i|}}
             <div class="col two row-section lineheight">

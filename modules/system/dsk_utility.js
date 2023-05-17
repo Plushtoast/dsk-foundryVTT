@@ -23,7 +23,7 @@ export default class DSKUtility {
     }
 
     static categoryLocalization(a){
-        return game.i18n.localize(`ITEM.Type${a.slice(0,1).toUpperCase()}${a.slice(1).toLowerCase()}`)
+        return game.i18n.localize(`TYPES.Item.${a.slice(0,1).toUpperCase()}${a.slice(1).toLowerCase()}`)
     }
 
     static fateAvailable(actor, group) {

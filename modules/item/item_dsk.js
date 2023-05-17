@@ -587,7 +587,7 @@ class ItemMeleeweapon extends ItemDSK{
         let res = [
             this._chatLineHelper("dsk.damage", data.tp),
             this._chatLineHelper("dsk.ABBR.awvw", `${data.aw} / ${data.vw}`),
-            this._chatLineHelper("ITEM.TypeCombatskill", data.combatskill),
+            this._chatLineHelper("TYPES.Item.combatskill", data.combatskill),
             this._chatLineHelper("dsk.range", game.i18n.localize(`dsk.Range.${data.rw}`)),
         ]
 
@@ -662,7 +662,7 @@ class ItemRangeweapon extends ItemDSK{
     static chatData(data, name) {
         let res = [
             this._chatLineHelper("dsk.damage", data.tp),
-            this._chatLineHelper("ITEM.TypeCombatskill", data.combatskill),
+            this._chatLineHelper("TYPES.Item.combatskill", data.combatskill),
             this._chatLineHelper("dsk.range", data.rw),
         ]
 

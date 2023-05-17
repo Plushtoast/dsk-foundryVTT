@@ -128,10 +128,10 @@ export default class ActorSheetDSK extends ActorSheet {
         sheetData.isGM = game.user.isGM;
         sheetData["initDies"] = { "": "-", "1d6": "1d6", "2d6": "2d6", "3d6": "3d6", "4d6": "4d6" }
         DSKStatusEffects.prepareActiveEffects(this.actor, sheetData)
-        sheetData.enrichedOwnerdescription = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.owner"), { secrets: true, async: true })
-        sheetData.enrichedGmdescription = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.gm"), { secrets: true, async: true })
-        sheetData.enrichedNotes = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.description"), { secrets: true, async: true })
-        sheetData.enrichedBiography = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.biography"), { secrets: true, async: true })
+        sheetData.enrichedOwnerdescription = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.owner"), { secrets: this.object.isOwner, async: true })
+        sheetData.enrichedGmdescription = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.gm"), { secrets: this.object.isOwner, async: true })
+        sheetData.enrichedNotes = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.description"), { secrets: this.object.isOwner, async: true })
+        sheetData.enrichedBiography = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.biography"), { secrets: this.object.isOwner, async: true })
 
         return sheetData;
     }

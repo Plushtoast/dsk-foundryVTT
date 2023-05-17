@@ -4,7 +4,7 @@ import DSK from "../system/config.js";
 export default class SpeciesWizard extends WizardDSK {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.title = game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("ITEM.TypeSpecies")}` })
+        options.title = game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.species")}` })
         options.template = 'systems/dsk/templates/wizard/add-species-wizard.html'
         return options;
     }
@@ -40,7 +40,7 @@ export default class SpeciesWizard extends WizardDSK {
             speciesDescription: game.i18n.has(`dsk.Racedescr.${this.species.name}`) ? game.i18n.localize(`dsk.Racedescr.${this.species.name}`) : this.species.system.description.value,
             species: this.species,
             description: game.i18n.format("dsk.WIZARD.speciesdescr", { species: this.species.name }),
-            title: game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("ITEM.TypeSpecies")} ${this.species.name}` }),
+            title: game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.species")} ${this.species.name}` }),
             generalToChose,
             anyAttributeRequirements,
             optionals,

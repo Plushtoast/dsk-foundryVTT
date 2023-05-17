@@ -383,7 +383,7 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
 
     dropDownMenu() {
         const FW = game.i18n.localize("dsk.MODS.FW");
-        const skill = game.i18n.localize("ITEM.TypeSkill");
+        const skill = game.i18n.localize("TYPES.Item.skill");
         const regenerate = game.i18n.localize("dsk.regenerate")
         const FP = game.i18n.localize("dsk.MODS.FP");
         const stepValue = game.i18n.localize("dsk.stepValue");
@@ -456,7 +456,7 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
                 ph: "1",
             },
             {
-                name: `${game.i18n.localize("ITEM.TypeAhnengabe")} - ${game.i18n.localize("dsk.CHARAbbrev.damage")}`,
+                name: `${game.i18n.localize("TYPES.Item.ahnengabe")} - ${game.i18n.localize("dsk.CHARAbbrev.damage")}`,
                 val: "system.spellStats.damage",
                 mode: 2,
                 ph: "1",
@@ -468,7 +468,7 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
             { name: `${skill} - ${QS}`, val: "system.skillModifiers.QL", mode: 0, ph: demo },
             { name: `${skill} - ${partChecks}`, val: "system.skillModifiers.TPM", mode: 0, ph: demo },
             {
-                name: `${game.i18n.localize("dsk.vulnerability")} - ${game.i18n.localize("ITEM.TypeCombatskill")}`,
+                name: `${game.i18n.localize("dsk.vulnerability")} - ${game.i18n.localize("TYPES.Item.combatskill")}`,
                 val: "system.vulnerabilities.combatskill",
                 mode: 0,
                 ph: democs,

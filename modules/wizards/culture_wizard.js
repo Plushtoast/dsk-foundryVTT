@@ -5,7 +5,7 @@ export default class CultureWizard extends WizardDSK {
 
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.title = game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("ITEM.TypeCulture")}` })
+        options.title = game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.culture")}` })
         options.template = 'systems/dsk/templates/wizard/add-culture-wizard.html'
         return options;
     }

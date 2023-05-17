@@ -590,7 +590,7 @@ DSK.ammunitiongroups = {
 DSK.traitCategories = {
     "meleeAttack": "dsk.closeCombatAttacks",
     "rangeAttack": "dsk.rangeCombatAttacks",
-    "armor": "ITEM.TypeArmor",
+    "armor": "TYPES.Item.armor",
     "force": "dsk.force",
     "specialty": "dsk.specialty"
 }
@@ -608,8 +608,8 @@ DSK.magicResistanceModifiers = {
 }
 
 DSK.weapontypes = {
-    "melee": "ITEM.TypeMeleeweapon",
-    "range": "ITEM.TypeRangeweapon"
+    "melee": "TYPES.Item.meleeweapon",
+    "range": "TYPES.Item.rangeweapon"
 }
 
 DSK.characteristics = {

@@ -34,7 +34,7 @@
                     <div class="dskbox2">
                         <div class="row-section flexaligncenter center">
                             <div class="col">
-                                <b>{{localize 'ITEM.TypeEquipment'}}</b>
+                                <b>{{localize 'TYPES.Item.equipment'}}</b>
                             </div>
                         </div>
                         {{editor enrichedClothing target="system.description.gear" button=true owner=owner editable=editable}}
@@ -87,11 +87,11 @@
            
             {{#if system.isAncestor}}
             <div class="form-group full-height">
-                <label class="label-text">{{localize "ITEM.TypeAhnengabe"}}</label>
+                <label class="label-text">{{localize "TYPES.Item.ahnengabe"}}</label>
                 <textarea class="input-text" type="text" name="system.ahnengabe" data-dtype="String">{{system.ahnengabe}}</textarea>
             </div>
             <div class="form-group full-height">
-                <label class="label-text">{{localize "ITEM.TypeAhnengeschenk"}}</label>
+                <label class="label-text">{{localize "TYPES.Item.ahnengeschenk"}}</label>
                 <textarea class="input-text" type="text" name="system.ahnengeschenk" data-dtype="String">{{system.ahnengeschenk}}</textarea>
             </div>
             {{/if}} 

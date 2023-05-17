@@ -64,8 +64,8 @@ export default class ItemSheetDSK extends ItemSheet {
             editable: this.isEditable,
             item: this.item,
             isGM: game.user.isGM,
-            enrichedDescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: true, async: true}),
-            enrichedGmdescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: true, async: true})
+            enrichedDescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: this.object.isOwner, async: true}),
+            enrichedGmdescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: this.object.isOwner, async: true})
         })
         DSKStatusEffects.prepareActiveEffects(this.item, data)
         return data
@@ -389,7 +389,7 @@ class ItemSheetProfession extends ItemSheetDSK{
     async getData(options) {
         const data = await super.getData(options);
         mergeObject(data, {
-            enrichedClothing: await TextEditor.enrichHTML(getProperty(this.item.system, "description.gear"), {secrets: true, async: true})
+            enrichedClothing: await TextEditor.enrichHTML(getProperty(this.item.system, "description.gear"), {secrets: this.object.isOwner, async: true})
         })
         return data
     }
@@ -398,7 +398,7 @@ class ItemSheetProfession extends ItemSheetDSK{
 class ItemSheetAdvantage extends ItemSheetDSK{
     async getData(options){
         const data = await super.getData(options)
-        data.enrichedRule = await TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: true, async: true })
+        data.enrichedRule = await TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner, async: true })
         return data
     }
 
@@ -446,7 +446,7 @@ class ItemSheetSpecialability extends ItemSheetDSK{
         mergeObject(data, {
             categories: DSK.specialAbilityCategories,
             subCategories: DSK.combatSkillSubCategories,
-            enrichedRule: await TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: true, async: true }),
+            enrichedRule: await TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner, async: true }),
             canOnUseEffect: game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
         })
         return data
@@ -508,7 +508,7 @@ class ItemSheetAhnengeschenk extends ItemSheetDSK{
 
         const cantrip = game.dsk.config.ItemSubClasses.ahnengeschenk
         await this.item.actor.update({ "system.stats.AeP.value": this.item.actor.system.stats.AeP.value -= 1 })
-        const chatMessage = `<p><b>${this.item.name} - ${game.i18n.localize('ITEM.TypeAhnengeschenk')} ${game.i18n.localize('dsk.probe')}</b></p><p>${this.item.system.description.value}</p><p>${cantrip.chatData(this.item.system, "").join("</br>")}</p>`
+        const chatMessage = `<p><b>${this.item.name} - ${game.i18n.localize('TYPES.Item.ahnengeschenk')} ${game.i18n.localize('dsk.probe')}</b></p><p>${this.item.system.description.value}</p><p>${cantrip.chatData(this.item.system, "").join("</br>")}</p>`
         await ChatMessage.create(DSKUtility.chatDataSetup(chatMessage));
     }
 }
