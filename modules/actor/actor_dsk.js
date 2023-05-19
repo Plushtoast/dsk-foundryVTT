@@ -1745,36 +1745,6 @@ export default class ActorDSK extends Actor {
         }
     }
 
-    async _dependentEffects(statusId, effect, delta) {
-        if (["inpain"].includes(statusId) && this.system.status[statusId] > 7)
-          await this.addCondition("incapacitated");
-        else if(["stunned"].includes(statusId) && this.system.status[statusId] > 7)
-          await this.addCondition("unconscious")
-        else if(["feared"].includes(statusId) && this.system.status[statusId] > 7)
-          await this.addCondition("panic")
-        else if(["encumbered"].includes(statusId) && this.system.status[statusId] > 7)
-          await this.addCondition("fixated")       
-
-        if (statusId == "dead" && game.combat) await this.markDead(true);
-    
-        if (statusId == "unconscious") await this.addCondition("prone");
-    
-        if (
-          delta > 0 &&
-          statusId == "inpain" &&
-          !this.hasCondition("bloodrush") &&
-          AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.frenzy"))
-        ) {
-          await this.addCondition("bloodrush");
-          const msg = DSKUtility.replaceConditions(
-            `${game.i18n.format("dsk.CHATNOTIFICATION.gainsBloodrush", {
-              character: "<b>" + this.name + "</b>",
-            })}`
-          );
-          ChatMessage.create(DSKUtility.chatDataSetup(msg));
-        }
-      }
-
     async addCondition(effect, value = 1, absolute = false, auto = true) {
         if (effect == "bleeding") return await RuleChaos.bleedingMessage(this);
 

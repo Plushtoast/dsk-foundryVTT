@@ -1,4 +1,5 @@
 import DSKActiveEffectConfig from "../status/active_effects.js"
+import AdvantageRulesDSK from "../system/advantage-rules.js"
 import DSKUtility from "../system/dsk_utility.js"
 
 export function initActorHooks() {
@@ -46,6 +47,7 @@ export function initActorHooks() {
         if(!DSKUtility.isActiveGM()) return
 
         checkIniChange(effect)
+        createEffects(effect)
     })
 
     Hooks.on("deleteActiveEffect", (effect, options, user) => {
@@ -58,6 +60,7 @@ export function initActorHooks() {
         if(!DSKUtility.isActiveGM()) return
 
         checkIniChange(effect)
+        countableDependentEffects(effect)
     })
 
     function checkIniChange(effect){
@@ -67,6 +70,56 @@ export function initActorHooks() {
             const actorId = effect.parent.id
             const combatant = game.combat.combatants.find(x => x.actor.id == actorId)
             if(combatant) combatant.recalcInitiative()
+        }
+    }
+
+    const createEffects = async(effect) => {
+        const actor = effect.parent
+        if(!actor) return
+
+        await countableDependentEffects(effect, {}, actor)
+        const statusesId = [...effect.statuses][0]
+
+        if (statusesId == "dead" && game.combat) await actor.markDead(true);
+        else if (statusesId == "unconscious") await actor.addCondition("prone");
+    }
+
+    const countableDependentEffects = async(effect, toCheck = {}, actor) => {
+        if(!actor) actor = effect.parent
+        if(!actor || actor.documentName != "Actor") return
+
+        const efKeys = /^system\.condition\./
+        for(let ef of effect.changes || []){
+          if(efKeys.test(ef.key) && ef.mode == 2){
+            toCheck[ef.key.split(".")[2]] = Number(ef.value)
+          }
+        }
+   
+        for(let key of Object.keys(toCheck)){
+          if (actor.system.condition[key] >= 8) {
+            if (key == "inpain")
+                await actor.addCondition("incapacitated");
+            else if (key == "stunned")
+              await actor.addCondition("unconscious");
+            else if (key == "feared")
+              await actor.addCondition("panic");
+            else if (key == "encumbered")
+              await actor.addCondition("fixated");
+          }
+          if (
+            ((Number(toCheck.inpain) || 0) > 0) &&
+            !actor.hasCondition("bloodrush") &&
+            actor.system.condition.inpain > 0 &&
+            AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.frenzy"))
+          ) {
+            await actor.addCondition("bloodrush");
+            const msg = DSKUtility.replaceConditions(
+              `${game.i18n.format("dsk.CHATNOTIFICATION.gainsBloodrush", {
+                character: "<b>" + actor.name + "</b>",
+              })}`
+            );
+            ChatMessage.create(DSKUtility.chatDataSetup(msg));
+          }
         }
     }
 

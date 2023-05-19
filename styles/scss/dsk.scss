@@ -2774,6 +2774,10 @@ a {
   }
 }
 
+.editor.prosemirror{
+  min-height: 300px;
+}
+
 .maskfield .editor{
   z-index: 2;
 }

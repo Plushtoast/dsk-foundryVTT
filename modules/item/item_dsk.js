@@ -94,8 +94,6 @@ export default class ItemDSK extends Item{
         return await DSKStatusEffects.addCondition(this, effect, value, absolute, auto)
     }
 
-    async _dependentEffects(statusId, effect, delta) {}
-
     async removeCondition(effect, value = 1, auto = true, absolute = false) {
         return DSKStatusEffects.removeCondition(this, effect, value, auto, absolute)
     }
