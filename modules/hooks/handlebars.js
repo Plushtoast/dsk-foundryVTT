@@ -25,7 +25,6 @@ export function setupHandlebars(){
             return DSKUtility.categoryLocalization(a)
         },
         diceThingsUp: (a, b) => DSKUtility.replaceDies(a, false),
-        concat: (...values) => { return HandlebarsHelpers.concat(...values).string },
         replaceConditions: DSKUtility.replaceConditions,
         attrLoc: (a, b) => { return game.i18n.localize(`dsk.characteristics.${a}.${b}`)},
         floor: (a) => Math.floor(Number(a)),
