@@ -4,15 +4,15 @@ import DSKUtility from "../system/dsk_utility.js"
 export function initActorHooks() {
     
     Hooks.on("deleteActiveEffect", (effect, options) => {
-        if(options.noHook) return
+        if(!DSKUtility.isActiveGM() || options.noHook) return
 
         const actor = effect.parent
         if (actor && actor.documentName == "Actor") {
-            const statusId = getProperty(effect, "flags.core.statusId")
-            if (statusId == "bloodrush") {
+            const statusesId = [...effect.statuses][0]
+            if (statusesId == "bloodrush") {
                 actor.addCondition("stunned", 4, false, false)
                 return false
-            } else if (statusId == "dead" && game.combat) {
+            } else if (statusesId == "dead" && game.combat) {
                 actor.markDead(false)
                 return false
             }

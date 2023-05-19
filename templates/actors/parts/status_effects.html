@@ -16,7 +16,7 @@
                     </li>
                     {{#each manualConditions as |item i|}}
                     <li>
-                        <a class="status-add" data-id="{{item.id}}" data-tooltip="{{item.label}}"><img src="{{item.icon}}" /></a>
+                        <a class="status-add" data-id="{{item.id}}" data-tooltip="{{item.name}}"><img src="{{item.icon}}" /></a>
                     </li>
                     {{/each}}
 
@@ -75,7 +75,7 @@
                 <img src="{{item.icon}}" /> {{/if}}
             </div>
             <div class="col two">
-                <a class="condition-show" data-id="{{item.id}}">{{localize item.label}}</a>
+                <a class="condition-show" data-id="{{item.id}}">{{localize item.name}}</a>
             </div>
             <div class="col ten center">
                 {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
@@ -155,7 +155,7 @@
                 <img src="{{item.icon}}" />
             </div>
             <div class="col two">
-                <a class="condition-show" data-id="{{item.id}}">{{localize item.label}}</a>
+                <a class="condition-show" data-id="{{item.id}}">{{localize item.name}}</a>
             </div>
             <div class="col ten center">
                 
@@ -231,7 +231,7 @@
                 <img src="{{item.icon}}" /> {{/if}}
             </div>
             <div class="col two">
-                <a class="condition-show" data-locked="true" data-id="{{item.id}}">{{localize item.label}}</a>
+                <a class="condition-show" data-locked="true" data-id="{{item.id}}">{{localize item.name}}</a>
             </div>
             <div class="col ten center">
                 {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}

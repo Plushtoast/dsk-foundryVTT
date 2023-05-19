@@ -8,7 +8,6 @@ import RuleChaos from "../system/rule_chaos.js";
 import { tinyNotification } from "../system/view_helper.js";
 import OpposedDSK from "../system/opposeddsk.js";
 import SpecialabilityRulesDSK from "../system/specialability-rules.js";
-import DSKActiveEffect from "../status/dsk_active_effects.js";
 import DSKDialog from "../dialog/dialog-dsk.js";
 import TraitRulesDSK from "../system/trait_rules.js"
 import DSKActiveEffectConfig from "../status/active_effects.js";
@@ -184,7 +183,7 @@ export default class ActorDSK extends Actor {
         if (getProperty(this, "system.merchant.locked") && !this.hasCondition("locked")) {
           await this.addCondition(ActorDSK.lockedCondition());
         } else if (!getProperty(this, "system.merchant.locked")) {
-          let ef = this.effects.find((x) => getProperty(x, "flags.core.statusId") == "locked");
+          let ef = this.effects.find((x) => x.statuses.has("locked"));
           if (ef) await this.deleteEmbeddedDocuments("ActiveEffect", [ef.id]);
         }
       }
@@ -192,10 +191,10 @@ export default class ActorDSK extends Actor {
 
     static lockedCondition() {
       return {
-        label: game.i18n.localize("dsk.MERCHANT.locked"),
+        id: "locked",
+        name: game.i18n.localize("dsk.MERCHANT.locked"),
         icon: "icons/svg/padlock.svg",
         flags: {
-          core: { statusId: "locked" },
           dsk: {
             value: null,
             editable: true,
@@ -1705,7 +1704,7 @@ export default class ActorDSK extends Actor {
                     (x.origin == this.uuid || !x.origin)
                 );
             })
-            : this.effects.filter((x) => allowedEffects.includes(x.getFlag("core", "statusId")));
+            : this.effects.filter((x) => allowedEffects.some(y => x.statuses.has(y)));
     }
 
     async _preCreate(data, options, user) {
@@ -1765,6 +1764,11 @@ export default class ActorDSK extends Actor {
 
     async addCondition(effect, value = 1, absolute = false, auto = true) {
         if (effect == "bleeding") return await RuleChaos.bleedingMessage(this);
+
+        if(this.isToken && !this.token?.object) {
+          console.warn("Actor token object is null for", this.name)
+          return
+        }
     
         return await DSKStatusEffects.addCondition(this, effect, value, absolute, auto);
       }

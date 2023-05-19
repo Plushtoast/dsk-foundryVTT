@@ -130,8 +130,8 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
 
     getStatusEffects() {
         return duplicate(CONFIG.statusEffects).map((x) => {
-            return { id: x.id, label: game.i18n.localize(x.label) };
-        }).sort((a, b) => a.label.localeCompare(b.label))
+            return { id: x.id, label: game.i18n.localize(x.name) };
+        }).sort((a, b) => a.name.localeCompare(b.name))
     }
 
     getData(options) {
@@ -183,7 +183,7 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
                     });
                 } else {
                     effectApplied = true;
-                    if (!effectNames.has(ef.label)) effectNames.add(ef.label)
+                    if (!effectNames.has(ef.name)) effectNames.add(ef.name)
                     if (ef.changes && ef.changes.length > 0) {
                         effectsWithChanges.push(ef);
                     }

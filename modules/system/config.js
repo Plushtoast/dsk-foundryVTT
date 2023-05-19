@@ -1,9 +1,11 @@
 const DSK = {}
 
+//TODO label should not be required anymore, but foundry11 bug?
 DSK.statusEffects = [
     {
         icon: "icons/svg/skull.svg",
         id: "dead",
+        name: "dsk.CONDITION.defeated",
         label: "dsk.CONDITION.defeated",
         description: "dsk.CONDITIONDESCRIPTION.defeated",
         flags: {
@@ -15,7 +17,7 @@ DSK.statusEffects = [
     },
     {
         id: "inpain",
-        label: "dsk.CONDITION.inpain",
+        name: "dsk.CONDITION.inpain",
         icon: "icons/svg/blood.svg",
         description: "dsk.CONDITIONDESCRIPTION.inpain",
         changes: [ { "key": "system.status.inpain", "mode": 2, "value": 1 }],
@@ -29,7 +31,7 @@ DSK.statusEffects = [
     },
     {
         id: "encumbered",
-        label: "dsk.CONDITION.encumbered",
+        name: "dsk.CONDITION.encumbered",
         icon: "icons/svg/anchor.svg",
         description: "dsk.CONDITIONDESCRIPTION.encumbered",
         changes: [ { "key": "system.status.encumbered", "mode": 2, "value": 1 }],
@@ -43,7 +45,7 @@ DSK.statusEffects = [
     },
     {
         id: "stunned",
-        label: "dsk.CONDITION.stunned",
+        name: "dsk.CONDITION.stunned",
         icon: "icons/svg/daze.svg",
         description: "dsk.CONDITIONDESCRIPTION.stunned",
         changes: [ { "key": "system.status.stunned", "mode": 2, "value": 1 }],
@@ -57,7 +59,7 @@ DSK.statusEffects = [
     },
     {
         id: "feared",
-        label: "dsk.CONDITION.feared",
+        name: "dsk.CONDITION.feared",
         icon: "icons/svg/terror.svg",
         description: "dsk.CONDITIONDESCRIPTION.feared",
         changes: [ { "key": "system.status.feared", "mode": 2, "value": 1 }],
@@ -71,7 +73,7 @@ DSK.statusEffects = [
     },
     {
         id: "selfconfidence",
-        label: "dsk.CONDITION.selfconfidence",
+        name: "dsk.CONDITION.selfconfidence",
         icon: "icons/svg/up.svg",
         description: "dsk.CONDITIONDESCRIPTION.selfconfidence",
         changes: [ { "key": "system.status.selfconfidence", "mode": 2, "value": 1 }],
@@ -85,7 +87,7 @@ DSK.statusEffects = [
     },
     {
         id: "prone",
-        label: "dsk.CONDITION.prone",
+        name: "dsk.CONDITION.prone",
         icon: "icons/svg/falling.svg",
         description: "dsk.CONDITIONDESCRIPTION.prone",
         changes: [ 
@@ -103,7 +105,7 @@ DSK.statusEffects = [
     },
     {
         id: "rooted",
-        label: "dsk.CONDITION.rooted",
+        name: "dsk.CONDITION.rooted",
         icon: "icons/svg/net.svg",
         changes: [ 
             { "key": "system.stats.gs.gearmodifier", "mode": 2, "value": -500 },
@@ -118,7 +120,7 @@ DSK.statusEffects = [
     },
     {
         id: "unconscious",
-        label: "dsk.CONDITION.unconscious",
+        name: "dsk.CONDITION.unconscious",
         icon: "icons/svg/unconscious.svg",
         description: "dsk.CONDITIONDESCRIPTION.unconscious",
         flags: {
@@ -130,7 +132,7 @@ DSK.statusEffects = [
     },
     {
         id: "blind",
-        label: "dsk.CONDITION.blind",
+        name: "dsk.CONDITION.blind",
         icon: "icons/svg/blind.svg",
         description: "dsk.CONDITIONDESCRIPTION.blind",
         changes: [ 
@@ -147,7 +149,7 @@ DSK.statusEffects = [
     },
     {
         id: "constricted",
-        label: "dsk.CONDITION.constricted",
+        name: "dsk.CONDITION.constricted",
         icon: "icons/svg/cave.svg",
         description: "dsk.CONDITIONDESCRIPTION.constricted",
         flags: {
@@ -159,7 +161,7 @@ DSK.statusEffects = [
     },
     {
         id: "fixated",
-        label: "dsk.CONDITION.fixated",
+        name: "dsk.CONDITION.fixated",
         icon: "icons/svg/padlock.svg",
         description: "dsk.CONDITIONDESCRIPTION.fixated",
         changes: [ 
@@ -175,7 +177,7 @@ DSK.statusEffects = [
     },
     {
         id: "hallucinating",
-        label: "dsk.CONDITION.hallucinating",
+        name: "dsk.CONDITION.hallucinating",
         icon: "icons/svg/padlock.svg",
         description: "dsk.CONDITIONDESCRIPTION.hallucinating",
         flags: {
@@ -187,7 +189,7 @@ DSK.statusEffects = [
     },
     {
         id: "incapacitated",
-        label: "dsk.CONDITION.incapacitated",
+        name: "dsk.CONDITION.incapacitated",
         icon: "icons/svg/sleep.svg",
         description: "dsk.CONDITIONDESCRIPTION.incapacitated",
         changes: [{ "key": "system.stats.gs.gearmodifier", "mode": 2, "value": -500 }],
@@ -200,7 +202,7 @@ DSK.statusEffects = [
     },
     {
         id: "panic",
-        label: "dsk.CONDITION.panic",
+        name: "dsk.CONDITION.panic",
         icon: "icons/svg/terror.svg",
         description: "dsk.CONDITIONDESCRIPTION.panic",
         flags: {
@@ -212,7 +214,7 @@ DSK.statusEffects = [
     },
     {
         id: "bloodrush",
-        label: "dsk.CONDITION.rage",
+        name: "dsk.CONDITION.rage",
         icon: "icons/svg/bones.svg",
         description: "dsk.CONDITIONDESCRIPTION.rage",
         changes: [
@@ -229,7 +231,7 @@ DSK.statusEffects = [
     },
     {
         id: "mute",
-        label: "dsk.CONDITION.mute",
+        name: "dsk.CONDITION.mute",
         icon: "icons/svg/silenced.svg",
         description: "dsk.CONDITIONDESCRIPTION.mute",
         flags: {
@@ -241,7 +243,7 @@ DSK.statusEffects = [
     },
     {
         id: "deaf",
-        label: "dsk.CONDITION.deaf",
+        name: "dsk.CONDITION.deaf",
         icon: "icons/svg/deaf.svg",
         description: "dsk.CONDITIONDESCRIPTION.deaf",
         changes: [
@@ -256,7 +258,7 @@ DSK.statusEffects = [
     },
     {
         id: "surprised",
-        label: "dsk.CONDITION.surprised",
+        name: "dsk.CONDITION.surprised",
         icon: "icons/svg/hazard.svg",
         description: "dsk.CONDITIONDESCRIPTION.surprised",
         changes: [
@@ -271,7 +273,7 @@ DSK.statusEffects = [
     },
     {
         id: "invisible",
-        label: "dsk.CONDITION.invisible",
+        name: "dsk.CONDITION.invisible",
         icon: "icons/svg/circle.svg",
         description: "dsk.CONDITIONDESCRIPTION.invisible",
         flags: {
@@ -283,7 +285,7 @@ DSK.statusEffects = [
     },
     {
         id: "poisoned",
-        label: "dsk.CONDITION.poisoned",
+        name: "dsk.CONDITION.poisoned",
         icon: "icons/svg/poison.svg",
         description: "dsk.CONDITIONDESCRIPTION.poisoned",
         flags: {

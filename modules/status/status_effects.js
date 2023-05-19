@@ -60,7 +60,7 @@ export default class DSKStatusEffects{
         const immune = this.immuneToEffect(actor, effect)
         if (immune) return immune
 
-        effect.label = game.i18n.localize(effect.label);
+        effect.name = game.i18n.localize(effect.name);
         if (auto) {
             effect.flags.dsk.auto = Math.min(effect.flags.dsk.max, value);
             effect.flags.dsk.manual = 0
@@ -71,7 +71,9 @@ export default class DSKStatusEffects{
 
         effect.flags.dsk.value = Math.min(4, effect.flags.dsk.manual + effect.flags.dsk.auto)
 
-        effect["flags.core.statusId"] = effect.id;
+        if(effect.id)
+            effect.statuses = [effect.id] 
+
         if (effect.id == "dead")
             effect["flags.core.overlay"] = true;
 
@@ -156,7 +158,7 @@ export default class DSKStatusEffects{
     }
 
     static resistantToEffect(target, effect) {
-        const effectId = getProperty(effect, "flags.core.statusId")
+        const effectId = [...effect.statuses][0]
         if (!effectId) return 0
 
         const resistances = getProperty(target, "system.resistances.effects") || []
@@ -170,7 +172,7 @@ export default class DSKStatusEffects{
         if (target != undefined && conditionKey) {
             if (!target.effects) return false
 
-            return target.effects.find(i => getProperty(i, "flags.core.statusId") == conditionKey)
+            return target.effects.find(i => i.statuses.has(conditionKey))
         }
         return false
     }
@@ -183,15 +185,15 @@ export default class DSKStatusEffects{
         for (let condition of target.effects.filter(e => { return game.user.isGM || target.documentName == "Item" || !e.getFlag("dsk", "hidePlayers") })) {
             condition.disabled = condition.disabled
             condition.boolean = condition.getFlag("dsk", "value") == null
-            condition.label = condition.label
+            condition.label = condition.name
             condition.icon = condition.icon
-            const statusId = condition.getFlag("core", "statusId")
-            if (statusId) {
+            const statusesId = [...condition.statuses][0]
+            if (statusesId) {
                 condition.value = condition.getFlag("dsk", "value")
                 condition.editable = condition.getFlag("dsk", "editable")
-                condition.descriptor = statusId
+                condition.descriptor = statusesId
                 condition.manual = condition.getFlag("dsk", "manual")
-                appliedSystemConditions.push(statusId)
+                appliedSystemConditions.push(statusesId)
             }
             if ((condition.origin == target.uuid || !condition.origin) && !condition.notApplicable)
                 data.conditions.push(condition)
@@ -208,7 +210,7 @@ export default class DSKStatusEffects{
             cumulativeConditions.push({
               icon: ef.icon,
               id: key,
-              label: game.i18n.localize(ef.label),
+              label: game.i18n.localize(ef.name),
               value: target.system.status[key]
             })
           }
@@ -259,7 +261,7 @@ class EncumberedEffect extends DSKStatusEffects {
 
 class PainEffect extends DSKStatusEffects {
     static ModifierIsSelected(item, options = {}, actor) {
-        return actor.effects.find(x => getProperty(x, "flags.core.statusId") == "bloodrush") == undefined
+        return actor.effects.find(x => Array.from(x.statuses).includes("bloodrush")) == undefined
     }
 }
 

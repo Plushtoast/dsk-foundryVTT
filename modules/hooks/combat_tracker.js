@@ -62,7 +62,7 @@ export class DSKCombatTracker extends CombatTracker {
                 if (combatant.token.overlayEffect) turn.effects.add(combatant.token.overlayEffect);
             }
             if (combatant.actor) combatant.actor.temporaryEffects.forEach(e => {
-                if (e.getFlag("core", "statusId") === CONFIG.Combat.defeatedStatusId) turn.defeated = true;
+                if (e.statuses.has(CONFIG.Combat.defeatedStatusId)) turn.defeated = true;
                 else if (e.icon && isAllowedToSeeEffects && !e.notApplicable && (game.user.isGM || !e.getFlag("dsk", "hidePlayers")) && !e.getFlag("dsk", "hideOnToken")) turn.effects.add(e.icon);
             })
         }
@@ -193,9 +193,9 @@ class RepeatingEffectsHelper {
         for (let turn of combat.turns) {
             if (!turn.defeated) {
                 for (let x of turn.actor.effects) {
-                    const statusId = x.getFlag("core", "statusId")
-                    if (statusId == "bleeding") await this.applyBleeding(turn)
-                    else if (statusId == "burning") await this.applyBurning(turn, x)
+                    const statusesId = [...x.statuses][0]
+                    if (statusesId == "bleeding") await this.applyBleeding(turn)
+                    else if (statusesId == "burning") await this.applyBurning(turn, x)
                 }
 
                 await this.startOfRoundEffects(turn)

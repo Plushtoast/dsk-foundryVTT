@@ -98,7 +98,7 @@ export function initTokenHook() {
     }
 
     Token.prototype.incrementCondition = async function(effect, { active, overlay = false } = {}) {
-        const existing = this.actor.effects.find(e => e.getFlag("core", "statusId") === effect.id);
+        const existing = this.actor.effects.find(e => e.statuses.has(effect.id));
         if (!existing || Number.isNumeric(getProperty(existing, "flags.dsk.value")))
             await this.actor.addCondition(effect.id, 1, false, false)
         else if (existing)

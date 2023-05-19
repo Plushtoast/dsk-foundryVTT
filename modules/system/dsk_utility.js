@@ -23,7 +23,7 @@ export default class DSKUtility {
     }
 
     static categoryLocalization(a){
-        return game.i18n.localize(`TYPES.Item.${a.slice(0,1).toUpperCase()}${a.slice(1).toLowerCase()}`)
+        return game.i18n.localize(`TYPES.Item.${a}`)
     }
 
     static fateAvailable(actor, group) {
@@ -207,7 +207,7 @@ export default class DSKUtility {
         }
 
         const search = Array.isArray(itemType) ? itemType : [itemType]
-        const items = (await pack.getDocuments({ type: { $in: search} }))
+        const items = (await pack.getDocuments()).filter(i => search.includes(i.type));
         return items.map(x => x.toObject());
     }
 

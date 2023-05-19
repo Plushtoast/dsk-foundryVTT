@@ -93,7 +93,7 @@ export default class OnUseEffect {
             const systemCon = typeof data === "string";
             if (systemCon) {
                 data = duplicate(CONFIG.statusEffects.find((e) => e.id == data));
-                data.label = game.i18n.localize(data.label);
+                data.name = game.i18n.localize(data.name);
             }
 
             const names = [];
@@ -139,7 +139,7 @@ export default class OnUseEffect {
                 }
             }
             const data = CONFIG.statusEffects.find((x) => x.id == coreId);
-            data.label = game.i18n.localize(data.label);
+            data.name = game.i18n.localize(data.name);
             await this.createInfoMessage(data, names, false);
         } else {
             const payload = {
@@ -180,7 +180,7 @@ export default class OnUseEffect {
             const systemCon = typeof data === "string";
             if (systemCon) {
                 data = duplicate(CONFIG.statusEffects.find((e) => e.id == data));
-                data.label = game.i18n.localize(data.label);
+                data.name = game.i18n.localize(data.name);
             }
 
             const names = [];

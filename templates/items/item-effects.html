@@ -28,7 +28,7 @@
                 <img src="{{item.icon}}" /> {{/if}}
             </div>
             <div class="col two">
-                <a class="condition-show" data-id="{{item.id}}">{{localize item.label}}</a>
+                <a class="condition-show" data-id="{{item.id}}">{{localize item.name}}</a>
             </div>
             <div class="col ten center">
                 {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
@@ -50,7 +50,7 @@
                 <img src="{{item.icon}}" /> {{/if}}
             </div>
             <div class="col two">
-                <a class="condition-show" data-id="{{item.id}}">{{localize item.label}}</a>
+                <a class="condition-show" data-id="{{item.id}}">{{localize item.name}}</a>
             </div>
             <div class="col ten center">
                 {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}

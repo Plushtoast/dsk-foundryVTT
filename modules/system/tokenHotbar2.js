@@ -160,7 +160,7 @@ export default class TokenHotbar2 extends Application {
                 break
             case "effect":
                 const effect = actor.effects.get(id)
-                const isSystemEffect = effect.getFlag("core", "statusId")
+                const isSystemEffect = [...effect.statuses][0]
                 if (ev.button == 0) {
                     if (isSystemEffect) await actor.addCondition(isSystemEffect, 1, false, false)
                     else effect.sheet.render(true)
@@ -222,7 +222,7 @@ export default class TokenHotbar2 extends Application {
         if (actor) {
             const moreSkills = []
             let moreSpells = []
-            effects = (await actor.actorEffects()).map(x => { return { name: x.label, id: x.id, icon: x.icon, cssClass: "effect", abbrev: `${x.label[0]} ${x.getFlag("dsk","value") || ""}`, subfunction: "effect" } })
+            effects = (await actor.actorEffects()).map(x => { return { name: x.name, id: x.id, icon: x.icon, cssClass: "effect", abbrev: `${x.name[0]} ${x.getFlag("dsk","value") || ""}`, subfunction: "effect" } })
             if (game.combat) {
                 const combatskills = actor.items.filter(x => x.type == "combatskill").map(x => ActorDSK._calculateCombatSkillValues(x.toObject(), actor.system))
 
@@ -378,7 +378,7 @@ class AddEffectDialog extends Dialog {
     static async showDialog() {
         const effects = duplicate(CONFIG.statusEffects).map(x => {
             return {
-                label: game.i18n.localize(x.label),
+                label: game.i18n.localize(x.name),
                 icon: x.icon,
                 description: game.i18n.localize(x.description),
                 id: x.id

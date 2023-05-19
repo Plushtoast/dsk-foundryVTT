@@ -444,7 +444,7 @@ export default class DiceDSK{
                         const effect = CONFIG.statusEffects.find((x) => x.id == split[1])
                         result.push(
                             `<a class="chat-condition chatButton" data-id="${effect.id}">
-                            <img src="${effect.icon}"/>${game.i18n.localize(effect.label)}
+                            <img src="${effect.icon}"/>${game.i18n.localize(effect.name)}
                             </a>`
                         )
                     } else
@@ -889,7 +889,7 @@ export default class DiceDSK{
         if (testData.extra.actor.system.isMage && testData.regenerateAeP) attrs.push("AeP")
         let index = 0
 
-        const isSick = testData.extra.actor.effects.some((x) => getProperty(x, "flags.core.statusId") == "sick")
+        const isSick = testData.extra.actor.effects.some((x) => x.statuses.includes("sick"))
         if (isSick) {
             this._appendSituationalModifiers(testData, game.i18n.localize("dsk.CONDITION.sick"), "*0")
             for (let k of attrs) {

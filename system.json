@@ -25,7 +25,7 @@
     "packs": [
         {
             "name": "default",
-            "label": "Standard Fertigkeiten",
+            "label": "Basis Gegenstände",
             "system": "dsk",
             "path": "packs/default.db",
             "type": "Item",
@@ -38,16 +38,6 @@
             "path": "packs/patzer.db",
             "type": "RollTable",
             "flags": { "dsklang": "de"}
-        },
-        {
-            "name": "species",
-            "label": "Rassen",
-            "system": "dsk",
-            "path": "packs/species.db",
-            "type": "Item",
-            "flags": {
-                "dsklang": "de"
-            }
         }
      ],
     "languages": [
@@ -79,8 +69,7 @@
           "name": "Item",
           "sorting": "m",
           "packs": [
-            "default",
-            "species"
+            "default"
           ]
         },
         {
