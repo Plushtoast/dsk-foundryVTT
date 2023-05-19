@@ -619,7 +619,9 @@ select[multiple] option {
   }
 
   .global-control {
-    color: white;
+    .playlist-header{
+      color: white;
+    }
     margin-left: 10px;
   }
 }
@@ -632,6 +634,7 @@ select[multiple] option {
   border: none;
   overflow: visible;
   top: 0px;
+  margin: 0px;
   height: 100vh;
 
   &:before {
@@ -1579,12 +1582,36 @@ form.dsk.item-sheet {
     margin-left: 10px;
     padding: 5px;
   }
-
-  h3 {
+  &.sidebar-tab .entry-name i{
+    color: white;
+  }
+  .compendium h3 {
     background: #740f0fe5;
     color: white;
     margin-left: 3px;
   }
+}
+
+.compendium.directory .directory-header .compendium-name{
+  background: #740f0fe5;
+  color: white;
+}
+
+#compendium li.compendium-pack .compendium-footer, #playlists li.sound .sound-playback .sound-timer {
+  color: rgb(14, 12, 12);
+}
+
+#playlists.sidebar-tab .directory-list .directory-item.playlist.collapsed {
+  color: #555;
+}
+
+.sound-name {
+  color: rgb(92, 92, 92);
+}
+
+.app.sidebar-popout{
+ 
+  backdrop-filter: none;
 }
 
 #combat li.combatant {
@@ -1754,6 +1781,9 @@ form.dsk.item-sheet {
 .sidebar-tab .directory-list .directory-item {
   &.collapsed {
     color: white;
+    h3 {
+      color: white;
+    }
   }
 
   h3 {
@@ -2192,12 +2222,12 @@ input[type="search"] {
 #hotbar {
   &:before {
     background-image: url('../../icons/backgrounds/hotbarpart.webp'), url('../../icons/backgrounds/hotbarpart.webp'), url('../../icons/backgrounds/hotbar4.webp');
-    background-size: 30px 48px, 35px 48px, 100% 100%;
+    background-size: 30px 48px, 66px 48px, 100% 100%;
     background-repeat: no-repeat;
     content: '';
     position: absolute;
     left: 0px;
-    right: 0px;
+    right: -32px;
     bottom: -10px;
     top: -10px;
     z-index: -1;
