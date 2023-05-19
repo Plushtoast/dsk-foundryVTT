@@ -76,8 +76,8 @@ export default class CareerWizard extends WizardDSK {
                 }
             }
         }
-        await this.actor.updateEmbeddedDocuments("Item", itemsToUpdate)
-        await this.actor.createEmbeddedDocuments("Item", itemsToCreate)
+        await this.actor.updateEmbeddedDocuments("Item", itemsToUpdate, {}, { render: false })
+        await this.actor.createEmbeddedDocuments("Item", itemsToCreate, {}, { render: false })
     }
 
     async updateCharacter() {
@@ -101,8 +101,7 @@ export default class CareerWizard extends WizardDSK {
 
         await this.setAbility(this.career.system.requirements.specialability, ["specialability"])
         await this.setAbility(this.career.system.requirements.advantage, ["advantage", "disadvantage"])
-        await this.actor.update(update);
-        await this.actor._updateAPs(apCost)
+        await this.actor._updateAPs(apCost, {}, { render: false })
 
         const skills = [
             ...this.career.system.skills.body.split(","),
@@ -113,6 +112,7 @@ export default class CareerWizard extends WizardDSK {
         
         await this.updateSkill(skills, "skill")
         await this.updateSkill(this.career.system.skills.combat.split(","), "combatskill")
+        await this.actor.update(update);
 
         this.finalizeUpdate()
     }

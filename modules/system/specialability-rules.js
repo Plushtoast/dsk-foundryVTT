@@ -51,7 +51,7 @@ export default class SpecialabilityRulesDSK extends ItemRulesDSK {
             let xpCost = /;/.test(vantage.system.ap) ? vantage.system.ap.split(';').map(x => Number(x.trim()))[vantage.system.level] : vantage.system.ap
             if (vantage.system.level + 1 <= vantage.system.max && await actor.checkEnoughXP(xpCost)) {
                 vantage.system.level += 1
-                await actor._updateAPs(xpCost)
+                await actor._updateAPs(xpCost, {}, { render: false })
                 await actor.updateEmbeddedDocuments("Item", [vantage]);
                 await SpecialabilityRulesDSK.abilityAdded(actor, vantage)
             }
@@ -59,7 +59,7 @@ export default class SpecialabilityRulesDSK extends ItemRulesDSK {
             let xpCost = item.system.ap.split(';').map(x => x.trim())[0]
             if (await actor.checkEnoughXP(xpCost)) {
                 await SpecialabilityRulesDSK.abilityAdded(actor, item)
-                await actor._updateAPs(xpCost)
+                await actor._updateAPs(xpCost, {}, { render: false })
                 await actor.createEmbeddedDocuments("Item", [item]);
             }
         }

@@ -1337,12 +1337,12 @@ export default class ActorDSK extends Actor {
         return item;
     }
 
-    async _updateAPs(APValue, dataUpdate = {}) {
+    async _updateAPs(APValue, dataUpdate = {}, options = {}) {
         if (this.system.canAdvance) {
             if (!isNaN(APValue) && !(APValue == null)) {
                 const ap = Number(APValue);
                 dataUpdate["system.details.experience.spent"] = Number(this.system.details.experience.spent) + ap;
-                await this.update(dataUpdate);
+                await this.update(dataUpdate, options);
                 const msg = game.i18n.format(ap > 0 ? "dsk.advancementCost" : "dsk.refundCost", { cost: Math.abs(ap) });
                 tinyNotification(msg);
             } else {

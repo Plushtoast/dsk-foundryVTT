@@ -23,7 +23,7 @@ export default class ActorSheetCreature extends ActorSheetDSK{
         let item = this.actor.items.find(x => x.id == itemId)
         switch (item.type) {
             case "trait":
-                await this._updateAPs(item.system.ap * -1)
+                await this._updateAPs(item.system.ap * -1, {}, { render: false })
                 break;
         }
         await super._cleverDeleteItem(itemId)
@@ -32,7 +32,7 @@ export default class ActorSheetCreature extends ActorSheetDSK{
     async _addTrait(item) {
         let res = this.actor.items.find(i => i.type == "trait" && i.name == item.name);
         if (!res) {
-            await this._updateAPs(item.system.ap)
+            await this._updateAPs(item.system.ap, {}, { render: false })
             //await TraitRulesDSA5.traitAdded(this.actor, item)
             await this.actor.createEmbeddedDocuments("Item", [item]);
         }

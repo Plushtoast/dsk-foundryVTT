@@ -41,7 +41,7 @@ export default class WizardDSK extends Application {
                 this.errors.push(`${DSKUtility.categoryLocalization(itemType)}: ${skill}`)
             }
         }
-        await this.actor.updateEmbeddedDocuments("Item", itemsToUpdate);
+        await this.actor.updateEmbeddedDocuments("Item", itemsToUpdate, {}, { render: false });
     }
 
     async findCompendiumItem(name, types){

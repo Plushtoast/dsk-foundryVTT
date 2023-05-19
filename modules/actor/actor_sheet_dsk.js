@@ -705,7 +705,7 @@ export default class ActorSheetDSK extends ActorSheet {
                         for (let i = 0; i < item.system.level; i++)
                             xpCost += steps[i]
                     }
-                    await this._updateAPs(-1 * xpCost)
+                    await this._updateAPs(-1 * xpCost, {}, { render: false })
                 }
                 break;
             case "specialability":
@@ -720,7 +720,7 @@ export default class ActorSheetDSK extends ActorSheet {
                     for (let i = 0; i <= item.system.level; i++) {
                         xpCost += DSKUtility._calculateAdvCost(i, item.system.StF, 0)
                     }
-                    await this._updateAPs(xpCost * -1)
+                    await this._updateAPs(xpCost * -1, {}, { render: false })
                 }
                 break
         }
@@ -811,8 +811,8 @@ export default class ActorSheetDSK extends ActorSheet {
         }
     }
 
-    async _updateAPs(APValue, update = {}) {
-        await this.actor._updateAPs(APValue, update)
+    async _updateAPs(APValue, update = {}, options = {}) {
+        await this.actor._updateAPs(APValue, update, options)
     }
 
     async _addSpellOrLiturgy(item) {
@@ -831,7 +831,7 @@ export default class ActorSheetDSK extends ActorSheet {
                     return
             }
             if (await this.actor.checkEnoughXP(apCost)) {
-                await this._updateAPs(apCost)
+                await this._updateAPs(apCost, {}, { render: false })
                 await this.actor.createEmbeddedDocuments("Item", [item])
             }
         }

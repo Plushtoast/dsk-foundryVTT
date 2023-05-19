@@ -75,9 +75,10 @@ export default class SpeciesWizard extends WizardDSK {
         for (let k of parent.find('.exclusive:checked')) {
             update[`system.characteristics.${$(k).val()}.species`] = 1
         }
-        await this.actor.update(update);
-        await this.actor._updateAPs(apCost)
+        
+        await this.actor._updateAPs(apCost, {}, { render: false })
         await this.addSelections(parent.find('.optional:checked'))
+        await this.actor.update(update);
         await this.actor.removeCondition("incapacitated")
         this.finalizeUpdate()
     }

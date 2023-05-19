@@ -44,13 +44,13 @@ export default class AdvantageRulesDSK extends ItemRulesDSK {
 
             if (vantage.system.level + 1 <= vantage.system.max && await actor.checkEnoughXP(xpCost)) {
                 vantage.system.level += 1
-                await actor._updateAPs(xpCost)
+                await actor._updateAPs(xpCost, {}, { render: false })
                 await actor.updateEmbeddedDocuments("Item", [vantage]);
                 await AdvantageRulesDSK.vantageAdded(actor, vantage)
             }
         } else if (await actor.checkEnoughXP(item.system.ap.split(';').map(x => x.trim())[0])) {
             await AdvantageRulesDSK.vantageAdded(actor, item)
-            await actor._updateAPs(item.system.ap.split(';').map(x => x.trim())[0])
+            await actor._updateAPs(item.system.ap.split(';').map(x => x.trim())[0], {}, { render: false })
             await actor.createEmbeddedDocuments("Item", [item]);
         }
     }

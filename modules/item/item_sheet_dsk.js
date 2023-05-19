@@ -414,7 +414,7 @@ class ItemSheetAdvantage extends ItemSheetDSK{
                 steps = xpCost.split(";").map(x => Number(x.trim()))
                 xpCost = steps[this.item.system.level - 1]
             }
-            await this.item.actor._updateAPs(xpCost * -1)
+            await this.item.actor._updateAPs(xpCost * -1, {}, { render: false })
             await this.item.update({ "system.level": this.item.system.level - 1 })
         }
     }
@@ -428,7 +428,7 @@ class ItemSheetAdvantage extends ItemSheetDSK{
                 xpCost = steps[this.item.system.level]
             }
             if (await this.item.actor.checkEnoughXP(xpCost)) {
-                await this.item.actor._updateAPs(xpCost)
+                await this.item.actor._updateAPs(xpCost, {}, { render: false })
                 await this.item.update({ "system.level": this.item.system.level + 1 })
             }
         }
@@ -460,7 +460,7 @@ class ItemSheetSpecialability extends ItemSheetDSK{
                 steps = xpCost.split(";").map(x => Number(x.trim()))
                 xpCost = steps[this.item.system.level - 1]
             }
-            await this.item.actor._updateAPs(xpCost * -1)
+            await this.item.actor._updateAPs(xpCost * -1, {}, { render: false })
             await this.item.update({ "system.level": this.item.system.level - 1 })
         }
     }
@@ -474,7 +474,7 @@ class ItemSheetSpecialability extends ItemSheetDSK{
                 xpCost = steps[this.item.system.level]
             }
             if (await this.item.actor.checkEnoughXP(xpCost)) {
-                await this.item.actor._updateAPs(xpCost)
+                await this.item.actor._updateAPs(xpCost, {}, { render: false })
                 await this.item.update({ "system.level": this.item.system.level + 1 })
             }
         }

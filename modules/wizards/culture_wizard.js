@@ -39,9 +39,9 @@ export default class CultureWizard extends WizardDSK {
 
         let update = { "system.details.culture": this.culture.name }
 
-        await this.actor.update(update);
-        await this.actor._updateAPs(apCost)
+        await this.actor._updateAPs(apCost, {}, { render: false })
         await this.updateSkill(this.culture.system.skills.split(","), "skill")
+        await this.actor.update(update);
 
         this.finalizeUpdate()
     }
