@@ -183,7 +183,6 @@ export default class DSKStatusEffects{
         for (let condition of target.effects.filter(e => { return game.user.isGM || target.documentName == "Item" || !e.getFlag("dsk", "hidePlayers") })) {
             condition.disabled = condition.disabled
             condition.boolean = condition.getFlag("dsk", "value") == null
-            condition.label = condition.name
             condition.icon = condition.icon
             const statusesId = [...condition.statuses][0]
             if (statusesId) {
@@ -208,7 +207,7 @@ export default class DSKStatusEffects{
             cumulativeConditions.push({
               icon: ef.icon,
               id: key,
-              label: game.i18n.localize(ef.name),
+              name: game.i18n.localize(ef.name),
               value: target.system.status[key]
             })
           }

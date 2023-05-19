@@ -13,6 +13,9 @@ import TraitRulesDSK from "../system/trait_rules.js"
 import DSKActiveEffectConfig from "../status/active_effects.js";
 
 export default class ActorDSK extends Actor {
+    static _baseCarryItems = new Set(["armor", "meleeweapon", "ammunition", "rangeweapon", "plant", "poison", "money", "consumable", "equipment"])
+    static _mageSpecs = new Set(["ahnen"])
+
     static async create(data, options) {
         if (data instanceof Array || data.items) return await super.create(data, options);
 
@@ -42,22 +45,63 @@ export default class ActorDSK extends Actor {
     prepareDerivedData() {
         const data = this.system;
         try {
-            data.canAdvance = this.type == "character"
+            data.canAdvance = this.isOwner && this.type == "character"
             
             for (let ch of Object.values(data.characteristics)) {
                 ch.value = ch.initial + ch.advances + (ch.modifier || 0) + ch.gearmodifier;
-                ch.cost = game.i18n.format("dsk.advancementCost", {
-                    cost: DSKUtility._calculateAdvCost(ch.initial + ch.advances, "Eig"),
-                });
-                ch.refund = game.i18n.format("dsk.refundCost", {
-                    cost: DSKUtility._calculateAdvCost(ch.initial + ch.advances, "Eig", 0),
-                });
             }
 
-            data.isMage = this.items.some(
-              (x) => ["ahnengeschenk", "ahnengabe"].includes(x.type) ||
-                (x.type == "specialability" && ["ahnen"].includes(x.system.category))
-            )
+            data.totalWeight = 0;
+      
+            const armor = []
+
+            let containers = new Map();
+            const bags = this.items.filter(x => x.type == "equipment" && x.system.category == "bags")
+            for (let container of bags) {
+              containers.set(container.id, []);
+            }
+
+            for(const i of this.items){
+              if(ActorDSK._baseCarryItems.has(i.type)){
+                let parent_id = getProperty(i, "system.parent_id");
+                if (parent_id && parent_id != i._id) {
+                  if (containers.has(parent_id)) {
+                    containers.get(parent_id).push(i);
+                    continue;
+                  }
+                }
+                if(i.type == "armor"){
+                  i.system.preparedWeight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
+                  data.totalWeight += parseFloat(
+                    (
+                      i.system.weight.value * (i.system.worn.value ? Math.max(0, i.system.quantity - 1) : i.system.quantity)
+                    ).toFixed(3)
+                  );
+                  if(i.system.worn.value) armor.push(i)
+                } else {
+                  i.system.preparedWeight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
+                  data.totalWeight += Number(i.system.preparedWeight);
+                }
+              } else { 
+                switch(i.type){
+                  case "ahnengabe":
+                  case "ahnengeschenk":
+                    data.isMage = true
+                    break
+                  case "specialability":
+                    if(ActorDSK._mageSpecs.has(i.system.category)) data.isMage = true
+                    break              
+                }
+              }
+            }
+
+            for(let bag of bags){
+              let parent_id = getProperty(bag, "system.parent_id")
+              if(!parent_id || !containers.has(parent_id))
+                data.totalWeight += this._calcBagweight(bag, containers, true)
+            }
+
+            data.carrycapacity = data.characteristics.kk.value * 2 + data.carryModifier
 
             if (data.canAdvance) {
                 data.details.experience.current = data.details.experience.total - data.details.experience.spent;
@@ -116,31 +160,27 @@ export default class ActorDSK extends Actor {
             data.stats.ini.value *= data.stats.ini.multiplier || 1;
             data.stats.ini.value = Math.round(data.stats.ini.value) + baseInit;
 
-            const hasDefaultPain = this.type != "creature" || data.stats.LeP.max >= 20;
-            let pain = 0;
-            if (data.stats.LeP.max > 0) {
-              if (hasDefaultPain) {
-                pain = Math.floor((1 - data.stats.LeP.value / data.stats.LeP.max) * 4);
-                if (data.stats.LeP.value <= 5) pain = 4;
-              } else {
-                pain = Math.floor(5 - (5 * data.stats.LeP.value) / data.stats.LeP.max);
-              }
-
-              if (pain < 8)
-                pain -=
-                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.ruggedFighter")) 
-              if (pain > 0)
-                pain +=
-                  AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.sensitiveToPain")) 
-
-            }    
-          
             if (DSKUtility.isActiveGM()) {
-              const changePain = data.pain != pain;
-              data.pain = pain;
+              const pain = this.woundPain(data)
+              const currentPain = this.effects.find(x => x.statuses.has("inpain"))?.flags.dsk.auto || 0
+      
+              const changePain = !this.changingPain && (currentPain != pain)
+              this.changingPain = currentPain != pain;
       
               if (changePain && !TraitRulesDSK.hasTrait(this, game.i18n.localize("dsk.LocalizedIDs.painImmunity")))
-                this.addCondition("inpain", pain * 2, true).then(() => (data.pain = undefined));
+                this.addCondition("inpain", pain * 2, true).then(() => this.changingPain = undefined);
+
+              let encumbrance = this.getArmorEncumbrance(this, armor);
+              if ((this.type != "creature" || this.canAdvance) && !this.isMerchant()) {
+                encumbrance += Math.max(0, Math.ceil((data.totalWeight - data.carrycapacity - 5) / 5)) * 2;
+              }
+      
+              const currentEncumbrance =  this.effects.find(x => x.statuses.has("encumbered"))?.flags.dsk.auto || 0
+      
+              const changeEncumbrance = !this.changingEncumbrance && (currentEncumbrance != encumbrance)
+              this.changingEncumbrance = currentEncumbrance != encumbrance;
+      
+              if(changeEncumbrance) this.addCondition("encumbered", encumbrance, true);
       
               if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.blind"))) this.addCondition("blind");
               if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.mute"))) this.addCondition("mute");
@@ -153,11 +193,38 @@ export default class ActorDSK extends Actor {
               data.status[key] = Math.clamped(data.status[key], 0, 8)
             }
 
+            this.effectivePain(data)
+
             data.maxDefense = this.maxDefenseValue()
         } catch (error) {
             console.error("Something went wrong with preparing actor data: " + error + error.stack);
             ui.notifications.error(game.i18n.format("dsk.DSKError.PreparationError", { name: this.name }) + error + error.stack);
         }
+    }
+
+    effectivePain(data){
+      let pain = data.status.inpain || 0
+      if (pain < 8)
+        pain -= AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.ruggedFighter")) 
+      if (pain > 0)
+        pain += AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.sensitiveToPain")) 
+  
+      pain = Math.clamped(pain, 0, 8);
+      data.status.inpain = pain
+    }
+
+    woundPain(data){
+      let pain = 0;
+      if (data.stats.LeP.max > 0) {
+        const hasDefaultPain = this.type != "creature" || data.stats.LeP.max >= 20;
+        if (hasDefaultPain) {
+          pain = Math.floor((1 - data.stats.LeP.value / data.stats.LeP.max) * 4);
+          if (data.stats.LeP.value <= 5) pain = 4;
+        } else {
+          pain = Math.floor(5 - (5 * data.stats.LeP.value) / data.stats.LeP.max);
+        }
+      } 
+      return Math.clamped(pain, 0, 4)
     }
 
     static _calculateCombatSkillValues(i, actorData) {
@@ -705,7 +772,7 @@ export default class ActorDSK extends Actor {
 
     prepareSheet(sheetInfo) {
         let preData = duplicate(this);
-        let preparedData = { system: {} };
+        let preparedData = { system: { characteristics: {}} };
         mergeObject(preparedData, this.prepareItems(sheetInfo));
         if (preparedData.canAdvance) {
             const attrs = ["LeP", "AeP"];
@@ -722,6 +789,17 @@ export default class ActorDSK extends Actor {
                         },
                     },
                 });
+            }
+
+            for (let [key, ch] of Object.entries(this.system.characteristics)) {
+              preparedData.system.characteristics[key] = {
+                cost: game.i18n.format("dsk.advancementCost", {
+                  cost: DSKUtility._calculateAdvCost(ch.initial + ch.advances, "Eig"),
+                }),
+                refund: game.i18n.format("dsk.refundCost", {
+                  cost: DSKUtility._calculateAdvCost(ch.initial + ch.advances, "Eig", 0),
+                })
+              };
             }
         }
 
@@ -1031,7 +1109,6 @@ export default class ActorDSK extends Actor {
         });
 
         let totalArmor = actorData.system.totalArmor || 0;
-        let totalWeight = 0;
         let hasTrait = false;
 
         for (let i of actorData.items) {
@@ -1064,13 +1141,10 @@ export default class ActorDSK extends Actor {
                         combatskills.push(ActorDSK._calculateCombatSkillValues(this._perpareItemAdvancementCost(i, actorData.system), actorData.system));
                         break;
                     case "ammunition":
-                        i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
                         inventory.ammunition.items.push(ActorDSK.prepareMag(i));
                         inventory.ammunition.show = true;
-                        totalWeight += Number(i.weight);
                         break;
                     case "meleeweapon":
-                        i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
                         i.toggleValue = getProperty(i.system, "worn.value") || false;
                         i.toggle = true;
                         this._setOnUseEffect(i);
@@ -1079,16 +1153,13 @@ export default class ActorDSK extends Actor {
                           inventory.meleeweapons.show = true;
                         }
                         if (i.toggleValue) wornweapons.push(i);
-                        totalWeight += Number(i.weight);
                         break;
                     case "rangeweapon":
-                        i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
                         i.toggleValue = getProperty(i.system, "worn.value") || false;
                         i.toggle = true;
                         this._setOnUseEffect(i);
                         inventory.rangeweapons.items.push(ActorDSK._prepareitemStructure(i));
                         inventory.rangeweapons.show = true;
-                        totalWeight += Number(i.weight);
                         break;
                     case "armor":
                         i.toggleValue = getProperty(i.system, "worn.value") || false;
@@ -1096,12 +1167,6 @@ export default class ActorDSK extends Actor {
                         inventory.armor.show = true;
                         i.toggle = true;
                         this._setOnUseEffect(i);
-                        i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
-                        totalWeight += parseFloat(
-                            (
-                                i.system.weight * (i.toggleValue ? Math.max(0, i.system.quantity - 1) : i.system.quantity)
-                            ).toFixed(3)
-                        );
 
                         if (i.system.worn.value) {
                             totalArmor += Number(i.system.rs);
@@ -1124,13 +1189,10 @@ export default class ActorDSK extends Actor {
                         hasTrait = true;
                         break;
                     case "poison":
-                        i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
                         inventory["poison"].items.push(i);
                         inventory["poison"].show = true;
-                        totalWeight += Number(i.weight);
                         break;
                     case "equipment":
-                        i.weight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
                         i.toggle = getProperty(i, "system.worn.wearable") || false;
 
                         if (i.toggle) i.toggleValue = getProperty(i.system, "worn.value") || false
@@ -1138,7 +1200,6 @@ export default class ActorDSK extends Actor {
                         this._setOnUseEffect(i);
                         inventory[i.system.category].items.push(ActorDSK._prepareitemStructure(i));
                         inventory[i.system.category].show = true;
-                        totalWeight += Number(i.weight);
                         break;
                     case "advantage":
                         this._setOnUseEffect(i);
@@ -1160,7 +1221,7 @@ export default class ActorDSK extends Actor {
         }
 
         for (let elem of inventory.bags.items) {
-            totalWeight += this._setBagContent(elem, containers);
+            this._setBagContent(elem, containers);
         }
 
         for (let wep of inventory.rangeweapons.items) {
@@ -1186,23 +1247,14 @@ export default class ActorDSK extends Actor {
             }
         }
 
-        const carrycapacity = actorData.system.characteristics.kk.value * 2 + actorData.system.carryModifier;
-
-        let encumbrance = this.getArmorEncumbrance(this, armor);
-
-        if ((this.type != "creature" || this.canAdvance) && !this.isMerchant()) {
-          encumbrance += Math.max(0, Math.ceil((totalWeight - carrycapacity - 5) / 5)) * 2;
-        }
-        this.addCondition("encumbered", encumbrance, true);
-        totalWeight = parseFloat(totalWeight.toFixed(3));
-
         let guidevalues = duplicate(DSK.characteristics);
         guidevalues["-"] = "-";
 
         return {
-            totalWeight,
+            totalWeight: parseFloat(this.system.totalWeight.toFixed(3)),
             armorSum: totalArmor,
-            carrycapacity,
+            encumbrance: this.system.condition?.encumbered || 0,
+            carrycapacity: this.system.carrycapacity,
             wornRangedWeapons: rangeweapons,
             guidevalues,
             wornMeleeWeapons: meleeweapons,

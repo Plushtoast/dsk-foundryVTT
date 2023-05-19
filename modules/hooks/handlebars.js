@@ -24,6 +24,7 @@ export function setupHandlebars(){
         itemCategory: (a) => {
             return DSKUtility.categoryLocalization(a)
         },
+        getAttr: (a, b, c) => { return a.system.characteristics[b][c] },
         diceThingsUp: (a, b) => DSKUtility.replaceDies(a, false),
         replaceConditions: DSKUtility.replaceConditions,
         attrLoc: (a, b) => { return game.i18n.localize(`dsk.characteristics.${a}.${b}`)},
