@@ -153,10 +153,6 @@ export default class ActorDSK extends Actor {
               data.status[key] = Math.clamped(data.status[key], 0, 8)
             }
 
-            if(DSKUtility.isActiveGM()){
-              if (this.isMerchant()) this.prepareMerchant()
-            }
-
             data.maxDefense = this.maxDefenseValue()
         } catch (error) {
             console.error("Something went wrong with preparing actor data: " + error + error.stack);

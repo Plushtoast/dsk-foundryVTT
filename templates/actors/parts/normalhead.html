@@ -5,7 +5,7 @@
         <span class="label name">{{localize "dsk.name"}}</span>
     </div>
 
-    <div class="headerInput">
+    <div class="headerInput" {{#unless actor.system.details.species}}data-tooltip="dsk.addSpeciesHint"{{/unless}}>
         <input class="input species" name="system.details.species" type="text" value="{{actor.system.details.species}}" readonly placeholder="{{localize 'TYPES.Item.species'}}" />
         <span class="label species">{{localize 'TYPES.Item.species'}}</span>
     </div>

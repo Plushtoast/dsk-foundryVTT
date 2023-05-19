@@ -24,6 +24,8 @@ export function initReady(){
         })
         if(game.user.isGM){
             game.socket.on("system.dsk", data => {
+                if(!DSKUtility.isActiveGM()) return
+                
                 switch(data.type){
                     case "target":
                         {

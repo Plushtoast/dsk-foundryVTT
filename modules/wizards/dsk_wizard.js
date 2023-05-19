@@ -146,14 +146,19 @@ export default class WizardDSK extends Application {
             let choice = parent.find('.allowedCount_' + k.split("_")[1])
             let allowed = Number(choice.attr('data-count'))
             if (parent.find(`.${k}:checked`).length != allowed) {
-                ui.notifications.error(game.i18n.localize("dsk.DSKError.MissingChoices"))
-                WizardDSK.flashElem(choice)
-                let tabElem = choice.closest('.tab').attr("data-tab")
-                WizardDSK.flashElem(parent.find(`.tabs a[data-tab='${tabElem}']`))
+                this._showInputValidation(choice, parent, app)
                 return false
             }
         }
         return true
+    }
+
+    _showInputValidation(choice, parent, app){
+        ui.notifications.error(game.i18n.localize("dsk.DSKError.MissingChoices"))
+        let tabElem = choice.closest('.tab').attr("data-tab")
+        app.activateTab(tabElem) 
+        WizardDSK.flashElem(parent.find(`.tabs a[data-tab='${tabElem}']`))
+        WizardDSK.flashElem(choice.closest("div"))
     }
 
     async alreadyAdded(string, category) {

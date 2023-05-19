@@ -89,7 +89,14 @@ export default class BookWizard extends Application {
             if(!json[key]) continue
 
             let pack = game.packs.get(json[key]);
-            await pack.configure({private: !toggle});
+            let visibility = toggle ? "OBSERVER" : "NONE"
+
+            const ownership = { ownership: {
+                PLAYER: visibility,
+                TRUSTED: visibility
+            }}
+            
+            await pack.configure(ownership)
         }
         this.render()
     }

@@ -43,10 +43,20 @@ export function initActorHooks() {
     }) 
 
     Hooks.on("createActiveEffect", (effect, options, user) => {
+        if(!DSKUtility.isActiveGM()) return
+
         checkIniChange(effect)
     })
 
     Hooks.on("deleteActiveEffect", (effect, options, user) => {
+        if(!DSKUtility.isActiveGM()) return
+
+        checkIniChange(effect)
+    })
+
+    Hooks.on("updateActiveEffect", (effect, options, user) => {
+        if(!DSKUtility.isActiveGM()) return
+
         checkIniChange(effect)
     })
 

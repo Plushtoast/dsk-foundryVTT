@@ -538,6 +538,7 @@
         "gridUnits": "Schritt",
         "name": "Name",
         "probe": "Probe",
+        "addSpeciesHint": "Die Rasse kann aus den Kompendien per Drag & Drop hinzugefügt werden.",
         "pack": "Rudel",
         "Age": "Alter",
         "refundCost": "{cost} Abenteuerpunkte zurückerstatten",
