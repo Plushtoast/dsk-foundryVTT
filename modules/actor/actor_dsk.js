@@ -214,6 +214,14 @@ export default class ActorDSK extends Actor {
     applyActiveEffects() {
         const overrides = {};
 
+        this.statuses ??= new Set();
+      // Identify which special statuses had been active
+      const specialStatuses = new Map();
+      for ( const statusId of Object.values(CONFIG.specialStatusEffects) ) {
+        specialStatuses.set(statusId, this.statuses.has(statusId));
+      }
+      this.statuses.clear();
+
         const changes = this.effects.reduce((changes, e) => {
             if (e.disabled) return changes;
 
@@ -273,16 +281,25 @@ export default class ActorDSK extends Actor {
                     })
                 )
             }
+            for ( const statusId of e.statuses ) this.statuses.add(statusId);
             return changes
         }, []);
         changes.sort((a, b) => a.priority - b.priority);
 
         for (let change of changes) {
-            const result = change.effect.apply(this, change);
-            if (result !== null) overrides[change.key] = result;
+          if ( !change.key ) continue;
+          const result = change.effect.apply(this, change);
+          Object.assign(overrides, result);
         }
 
         this.overrides = foundry.utils.expandObject(overrides);
+        let tokens;
+        for ( const [statusId, wasActive] of specialStatuses ) {
+          const isActive = this.statuses.has(statusId);
+          if ( isActive === wasActive ) continue;
+          tokens ??= this.getActiveTokens();
+          for ( const token of tokens ) token._onApplyStatusEffect(statusId, isActive);
+        }
     }
 
     maxDefenseValue(){
