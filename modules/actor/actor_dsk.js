@@ -74,7 +74,7 @@ export default class ActorDSK extends Actor {
                   i.system.preparedWeight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
                   data.totalWeight += parseFloat(
                     (
-                      i.system.weight.value * (i.system.worn.value ? Math.max(0, i.system.quantity - 1) : i.system.quantity)
+                      i.system.weight * (i.system.worn.value ? Math.max(0, i.system.quantity - 1) : i.system.quantity)
                     ).toFixed(3)
                   );
                   if(i.system.worn.value) armor.push(i)
@@ -200,6 +200,32 @@ export default class ActorDSK extends Actor {
             console.error("Something went wrong with preparing actor data: " + error + error.stack);
             ui.notifications.error(game.i18n.format("dsk.DSKError.PreparationError", { name: this.name }) + error + error.stack);
         }
+    }
+
+    _calcBagweight(elem, containers, topLevel = true) {
+      let totalWeight = 0;
+      if (containers.has(elem._id)) {
+        let bagweight = 0;
+        if (!elem.system.worn.value && topLevel) totalWeight -= elem.system.preparedWeight;
+  
+        for (let child of containers.get(elem._id)) {
+          child.system.preparedWeight = Number(parseFloat((child.system.weight * child.system.quantity).toFixed(3)));
+          
+          if (containers.has(child._id)) {
+            bagweight += this._calcBagweight(child, containers, false);
+          } else {
+            bagweight += child.system.preparedWeight;
+          }
+        }
+        if(!topLevel){
+          totalWeight += bagweight + elem.system.preparedWeight
+        } else if(elem.system.worn.value){
+          totalWeight += bagweight;
+        }
+  
+        elem.system.bagweight = `${bagweight.toFixed(3)}/${elem.system.capacity || 0}`;
+      }
+      return totalWeight;
     }
 
     effectivePain(data){
@@ -1705,25 +1731,17 @@ export default class ActorDSK extends Actor {
         ui.notifications.error("Something went wrong with preparing item " + item.name + ": " + error);
     }
 
-    _setBagContent(elem, containers, topLevel = true) {
-        let totalWeight = 0;
-        if (containers.has(elem._id)) {
-            elem.children = [];
-            let bagweight = 0;
-            if (!elem.toggleValue && topLevel) totalWeight -= elem.weight;
-
-            for (let child of containers.get(elem._id)) {
-                child.weight = Number(parseFloat((child.system.weight * child.system.quantity).toFixed(3)));
-                bagweight += child.weight;
-                elem.children.push(ActorDSK._prepareitemStructure(child));
-                if (containers.has(child._id)) {
-                    bagweight += this._setBagContent(child, containers, false);
-                }
-            }
-            if (elem.toggleValue || !topLevel) totalWeight += bagweight;
-            elem.bagweight = `${bagweight.toFixed(3)}/${elem.system.capacity || 0}`;
+    _setBagContent(elem, containers) {
+      if (containers.has(elem._id)) {
+        elem.children = [];
+  
+        for (let child of containers.get(elem._id)) {
+          elem.children.push(ActorDSK._prepareitemStructure(child));
+          if (containers.has(child._id)) {
+            this._setBagContent(child, containers);
+          }
         }
-        return totalWeight;
+      }
     }
 
     async applyDamage(amount) {

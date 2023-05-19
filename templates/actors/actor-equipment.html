@@ -37,7 +37,7 @@
                 </div>
                 {{#if (eq item.system.category 'bags')}}
                 <div class="col five center">
-                    {{item.bagweight}}
+                    {{item.system.bagweight}}
                 </div>
                 {{/if}}
                 <div class="col eight center" {{#if (eq item.system.category 'bags')}} data-tooltip="dsk.SHEET.weightOnActor" {{/if}}>
@@ -50,7 +50,7 @@
                     <a class="quantity-click">{{item.system.quantity}}</a>
                 </div>
                 <div class="col eight center">
-                    {{item.weight}}
+                    {{item.system.preparedWeight}}
                 </div>
                 <div class="col ten very-small center">
                     {{#if item.OnUseEffect}}<a data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}
