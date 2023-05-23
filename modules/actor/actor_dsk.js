@@ -180,7 +180,7 @@ export default class ActorDSK extends Actor {
               const changeEncumbrance = !this.changingEncumbrance && (currentEncumbrance != encumbrance)
               this.changingEncumbrance = currentEncumbrance != encumbrance;
       
-              if(changeEncumbrance) this.addCondition("encumbered", encumbrance, true);
+              if(changeEncumbrance) this.addCondition("encumbered", encumbrance, true).then(() => this.changingEncumbrance = undefined);
       
               if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.blind"))) this.addCondition("blind");
               if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.mute"))) this.addCondition("mute");
@@ -1044,8 +1044,8 @@ export default class ActorDSK extends Actor {
 
       getArmorEncumbrance(actorData, wornArmors) {
         const encumbrance = wornArmors.reduce((sum, a) => {
-          a.calculatedEncumbrance = Number(a.system.encumbrance)
-          return (sum += a.calculatedEncumbrance);
+          a.system.calculatedEncumbrance = Number(a.system.encumbrance)
+          return (sum += a.system.calculatedEncumbrance);
         }, 0);
         return Math.max(
           0,

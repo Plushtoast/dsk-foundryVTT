@@ -269,7 +269,7 @@ export default class DSKItemLibrary extends Application {
     buildFilter(elem) {
         let res = []
         Object.keys(elem.categories).forEach(function(key) {
-            res.push({ label: game.i18n.localize(`TYPES.Item.${key.slice(0,1).toUpperCase()}${key.slice(1)}`), selected: elem.categories[key], key: key })
+            res.push({ label: game.i18n.localize(`TYPES.Item.${key}`), selected: elem.categories[key], key: key })
         })
         res = res.sort(function(a, b) {
             return a.label.localeCompare(b.label);

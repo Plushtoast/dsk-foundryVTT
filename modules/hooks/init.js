@@ -22,6 +22,7 @@ import CreatureMerchantSheetDSK from "../actor/creature-merchant-sheet.js"
 import CharacterSheetMerchantDSK from "../actor/character-merchant-sheet.js"
 import migrateWorld from "../system/migrator.js";
 import { initChatContext } from "./chat_context.js";
+import { initHook } from "./nobgmapnote.js";
 
 export function initHooks(){
     setupJournal()
@@ -91,6 +92,7 @@ export function initHooks(){
     
     initReady()
     initSetup()
+    initHook()
 
     DPS.initDoorMinDistance()
 }

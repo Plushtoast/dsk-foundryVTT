@@ -34,14 +34,12 @@ export default class BookWizard extends Application {
 
         game.dsk.apps.journalBrowser = BookWizard.wizard
 
-        Hooks.on("renderSidebarTab", (app, html) => {
-            if (app.options.id == "journal") {
-                let div = $('<div class="header-actions action-buttons flexrow"></div>')
-                let button = $(`<button id="openJournalBrowser"><i class="fa fa-book"></i>${game.i18n.localize("dsk.Book.Wizard")}</button>`)
-                button.click(() => { BookWizard.wizard.render(true) })
-                div.append(button)
-                html.find(".header-actions:first-child").after(div)
-            }
+        Hooks.on("renderJournalDirectory", (app, html) => {
+            let div = $('<div class="header-actions action-buttons flexrow"></div>')
+            let button = $(`<button id="openJournalBrowser"><i class="fa fa-book"></i>${game.i18n.localize("dsk.Book.Wizard")}</button>`)
+            button.click(() => { BookWizard.wizard.render(true) })
+            div.append(button)
+            html.find(".header-actions:first-child").after(div)            
         })
     }
 

@@ -9,8 +9,8 @@ export function initSidebar(){
         html.find("#settings-documentation").append(button)
 
         const systemName = game.system.title.split("/")[game.i18n.lang == "de" ? 0 : 1]
-        const version = html.find('#game-details .system span').html()
-        html.find('#game-details .system').html(`${systemName}<span>${version}</span>`)
+        const version = html.find('#game-details .system .system-info').html()
+        html.find('#game-details .system').html(`<span class="system-title">${systemName}</span><span class="system-info">${version}</span>`)
     })
 
     Hooks.on("renderCompendiumDirectory", (app, html, data) => {
@@ -18,36 +18,22 @@ export function initSidebar(){
         const headerActions = html.find(".header-actions")
         headerActions.append(button);
         button.click(() => { game.dsk.itemLibrary.render(true) })
+    })
 
+    Hooks.once("renderCompendiumDirectory", (app, html, data) => {
         const toRemove = game.i18n.lang == "de" ? "en" : "de"
         const packsToRemove = game.packs.filter(p => getProperty(p.metadata, "flags.dsklang") == toRemove)
 
         for (let pack of packsToRemove) {
             let name = `${pack.metadata.packageName}.${pack.metadata.name}`
             game.packs.delete(name)
-            html.find(`li[data-pack="${name}"]`).hide()
+            game.data.packs = game.data.packs.filter(x => x.id != name)
+            html.find(`li[data-pack="${name}"]`).remove()
         }
-
-        const search = $(`
-        <div class="header-search flexrow">
-            <i class="fas fa-search"></i>
-            <input type="search" name="search" value="" placeholder="${game.i18n.localize('dsk.searchCompendium')}" autocomplete="off">
-            <a></a>
-        </div>`)
-        headerActions.after(search)
-        search.find('[name="search"]').keyup(ev => {
-            const isSearch = ev.currentTarget.value.toLowerCase()
-            for(let el of html.find(".compendium-pack")){
-                const title = $(el).find('.pack-title').text().trim().toLowerCase()
-                const label = $(el).find('footer span:nth-child(2)').text().trim().toLowerCase()
-                el.style.display = (!isSearch || title.indexOf(isSearch) >= 0 || label.indexOf(isSearch) >= 0 ) ? "block" : "none";
-            }
-        })
     })
 
     Hooks.on("renderActorDirectory", (app, html, data) => {
         if (game.user.isGM) return
-
         
         for (let act of app.documents.filter(x => x.isMerchant() && getProperty(x, "system.merchant.hidePlayer"))) {
             html.find(`[data-document-id="${act.id}"]`).remove()
