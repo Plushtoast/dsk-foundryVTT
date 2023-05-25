@@ -4,7 +4,7 @@
 # Official Die Schwarze Katze system for Foundry
 
 ### Current Version and Compatibility:
-1.1.x - FoundryVTT 10.+
+2.0.x - FoundryVTT 10.+
 This system is intended for usage with [Foundry Virtual Tabletop](https://foundryvtt.com/) to play "Die Schwarze Katze".
 If you want to learn more checkout the [German](https://ulisses-spiele.de/virtual-tabletop-dsa-vtt/) or [English](https://ulisses-us.com/ulisses-virtual-tabletops/virtual-tabletop-dsa-vtt/) VTT Page by Ulisses Spiele.
 
@@ -42,6 +42,8 @@ If you want to discuss DSK for foundry or need some assistance you can also join
 
 <h2>German Modules</h2>
 As of this moment several modules are in the making. We will inform you as soon as they will be available.
+You can find all finished modules here:
+https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/
 
 ## Other Recommended Modules
 The following modules are recommended for the best gaming experience:
