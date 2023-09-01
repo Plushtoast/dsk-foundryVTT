@@ -4,11 +4,12 @@
 # Official Die Schwarze Katze system for Foundry
 
 ### Current Version and Compatibility:
-1.1.x - FoundryVTT 10.+
+2.0.x - FoundryVTT 11.+
 This system is intended for usage with [Foundry Virtual Tabletop](https://foundryvtt.com/) to play "Die Schwarze Katze".
 If you want to learn more checkout the [German](https://ulisses-spiele.de/virtual-tabletop-dsa-vtt/) or [English](https://ulisses-us.com/ulisses-virtual-tabletops/virtual-tabletop-dsa-vtt/) VTT Page by Ulisses Spiele.
 
 This game is currently only available in german.
+![Screenshot 2023-09-01 061832](https://github.com/Plushtoast/dsk-foundryVTT/assets/44941845/80c7b76b-c080-4cbd-869d-6895eeb07c3c)
 
 ## Installation - Auto Installer
 In the FVTT Game Systems Menu, click Install System and enter the Manifest URL: `https://raw.githubusercontent.com/Plushtoast/dsk-foundryVTT/master/system.json`
@@ -41,7 +42,17 @@ If you want to discuss DSK for foundry or need some assistance you can also join
 * Merchant features
 
 <h2>German Modules</h2>
-As of this moment several modules are in the making. We will inform you as soon as they will be available.
+You can find all finished modules here:
+https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/
+
+<h2>Regelbände</h2>
+<a href="https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/regel-module/3196/die-schwarze-katze-regelwerk-fuer-foundry-vtt" target="_blank" data-tooltip="Die Schwarze Katze - Grundregelwerk">
+    <img src="https://www.f-shop.de/media/image/1a/a1/ca/ESD090_0_0999_600x600.jpg" alt="Die Schwarze Katze - Grundregelwerk" style="margin-right: 5px; margin-bottom: 5px; text-align:center; width:210px;">
+</a>
+<h2>Inhalte</h2>
+<a href="https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/regel-module/3436/die-schwarze-katze-bestiarium-fuer-foundry-vtt" target="_blank" data-tooltip="Die Schwarze Katze - Bestiarium">
+    <img src="https://www.f-shop.de/media/image/13/ec/68/ESD091_0_0999.jpg" alt="Die Schwarze Katze - Bestiarium" style="margin-right: 5px; margin-bottom: 5px; text-align:center; width:210px;">
+</a>
 
 ## Other Recommended Modules
 The following modules are recommended for the best gaming experience:
