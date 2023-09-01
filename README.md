@@ -42,9 +42,17 @@ If you want to discuss DSK for foundry or need some assistance you can also join
 * Merchant features
 
 <h2>German Modules</h2>
-As of this moment several modules are in the making. We will inform you as soon as they will be available.
 You can find all finished modules here:
 https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/
+
+<h2>Regelbände</h2>
+<a href="https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/regel-module/3196/die-schwarze-katze-regelwerk-fuer-foundry-vtt" target="_blank" data-tooltip="Die Schwarze Katze - Grundregelwerk">
+    <img src="https://www.f-shop.de/media/image/1a/a1/ca/ESD090_0_0999_600x600.jpg" alt="Die Schwarze Katze - Grundregelwerk" style="margin-right: 5px; margin-bottom: 5px; text-align:center; width:210px;">
+</a>
+<h2>Inhalte</h2>
+<a href="https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/regel-module/3436/die-schwarze-katze-bestiarium-fuer-foundry-vtt" target="_blank" data-tooltip="Die Schwarze Katze - Bestiarium">
+    <img src="https://www.f-shop.de/media/image/13/ec/68/ESD091_0_0999.jpg" alt="Die Schwarze Katze - Bestiarium" style="margin-right: 5px; margin-bottom: 5px; text-align:center; width:210px;">
+</a>
 
 ## Other Recommended Modules
 The following modules are recommended for the best gaming experience:
