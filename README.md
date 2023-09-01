@@ -4,11 +4,12 @@
 # Official Die Schwarze Katze system for Foundry
 
 ### Current Version and Compatibility:
-2.0.x - FoundryVTT 10.+
+2.0.x - FoundryVTT 11.+
 This system is intended for usage with [Foundry Virtual Tabletop](https://foundryvtt.com/) to play "Die Schwarze Katze".
 If you want to learn more checkout the [German](https://ulisses-spiele.de/virtual-tabletop-dsa-vtt/) or [English](https://ulisses-us.com/ulisses-virtual-tabletops/virtual-tabletop-dsa-vtt/) VTT Page by Ulisses Spiele.
 
 This game is currently only available in german.
+![Screenshot 2023-09-01 061832](https://github.com/Plushtoast/dsk-foundryVTT/assets/44941845/80c7b76b-c080-4cbd-869d-6895eeb07c3c)
 
 ## Installation - Auto Installer
 In the FVTT Game Systems Menu, click Install System and enter the Manifest URL: `https://raw.githubusercontent.com/Plushtoast/dsk-foundryVTT/master/system.json`
