@@ -24,6 +24,7 @@ export function setupHandlebars(){
         itemCategory: (a) => {
             return DSKUtility.categoryLocalization(a)
         },
+        isWEBM: (a) => /.webm$/.test(a),
         getAttr: (a, b, c) => { return a.system.characteristics[b][c] },
         diceThingsUp: (a, b) => DSKUtility.replaceDies(a, false),
         replaceConditions: DSKUtility.replaceConditions,

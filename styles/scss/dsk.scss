@@ -1187,6 +1187,10 @@ a.img-entity-link {
   background-size: 101% 1400px;
 }
 
+.compendium-footer .source{
+  color: white;
+}
+
 .window-app {
   .window-content {
     background: url('../../icons/backgrounds/sheet2.webp') no-repeat;
@@ -1227,6 +1231,9 @@ a.img-entity-link {
       }
     }
   }
+
+  
+
 
   &.dskjournal {
     .roll-button, .chatButton, .content-link, a{
@@ -1723,6 +1730,29 @@ form.dsk.item-sheet {
   border: none;
 }
 
+.postChatSection {
+  &.maskfield{
+    background: url('../../icons/backgrounds/dskborder2_top.webp'), url('../../icons/backgrounds/dskborder2_bot.webp');
+    background-repeat: no-repeat, no-repeat;
+    background-size: 100% 21px, 100% 15px;
+    background-position: center 15px,center bottom;
+  }
+  .postContentChat{
+    position: relative;
+    z-index:1;
+    cursor: pointer;
+    em{
+      padding: 5px;
+      border-radius:50%;
+      transition: 0.3s ease-in-out all;
+    }
+    &:hover em{
+      background-color: white;
+      color: black;
+    }
+  }
+}
+
 .dskjournal .heading.h3 a:before {
   content: "\f0da";
   font-family: "Font Awesome 6 Pro";
@@ -1988,6 +2018,10 @@ input[type="search"] {
 
     &:focus {
       box-shadow: none;
+    }
+
+    &:hover{
+      background-color: rgba(0,0,0,0.3);
     }
   }
 

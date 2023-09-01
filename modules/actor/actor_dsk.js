@@ -301,94 +301,100 @@ export default class ActorDSK extends Actor {
     }
 
     applyActiveEffects() {
-        const overrides = {};
+      const overrides = {};
 
-        this.statuses ??= new Set();
+      this.statuses ??= new Set();
       // Identify which special statuses had been active
       const specialStatuses = new Map();
       for ( const statusId of Object.values(CONFIG.specialStatusEffects) ) {
         specialStatuses.set(statusId, this.statuses.has(statusId));
       }
       this.statuses.clear();
-
-        const changes = this.effects.reduce((changes, e) => {
-            if (e.disabled) return changes;
-
-            let multiply = 1
-            if (e.origin) {
-                const id = e.origin.match(/[^.]+$/)[0];
-                const item = this.items.get(id);
-                if (item) {
-                    let apply = true;
-
-                    switch (item.type) {
-                        case "meleeweapon":
-                        case "rangeweapon":
-                        case "armor":
-                            apply = item.system.worn.value;
-                            break;
-                        case "equipment":
-                            apply = !item.system.worn.wearable || (item.system.worn.wearable && item.system.worn.value)
-                            break;
-                        case "trait":
-                            apply = !["meleeAttack", "rangeAttack"].includes(item.system.traitType)
-                            break
-                        case "ammunition":
-                        case "combatskill":
-                        case "poison":
-                        case "ahnengabe":
-                        case "ahnengeschenk":
-                            apply = false;
-                            break;
-                        case "specialability":
-                            apply = item.system.category != "Combat" || [2, 3].includes(item.system.subcategory);
-                            multiply = Number(item.system.level) || 1
-                            break
-                        case "advantage":
-                        case "disadvantage":
-                            multiply = Number(item.system.level) || 1
-                            break;
-                    }
-                    e.notApplicable = !apply;
-
-                    if (!apply) return changes;
-                }
-            } else{
-              const flag = e.getFlag("dsk", "value")
-              if(flag){
-                multiply = Number(flag)
-              }
-            } 
-
-            for (let i = 0; i < multiply; i++) {
-                changes.push(
-                    ...e.changes.map((c) => {
-                        c = foundry.utils.duplicate(c);
-                        c.effect = e;
-                        c.priority = c.priority ? c.priority : c.mode * 10;
-                        return c;
-                    })
-                )
-            }
-            for ( const statusId of e.statuses ) this.statuses.add(statusId);
-            return changes
-        }, []);
-        changes.sort((a, b) => a.priority - b.priority);
-
-        for (let change of changes) {
-          if ( !change.key ) continue;
-          const result = change.effect.apply(this, change);
-          Object.assign(overrides, result);
+      const changes = []
+      let multiply = 1
+      for ( const e of this.effects ) {
+        multiply = 1
+        const flag = e.getFlag("dsk", "value")
+        if(flag){
+          multiply = Number(flag)
         }
-
-        this.overrides = foundry.utils.expandObject(overrides);
-        let tokens;
-        for ( const [statusId, wasActive] of specialStatuses ) {
-          const isActive = this.statuses.has(statusId);
-          if ( isActive === wasActive ) continue;
-          tokens ??= this.getActiveTokens();
-          for ( const token of tokens ) token._onApplyStatusEffect(statusId, isActive);
+        for (let i = 0; i < multiply; i++) {
+          changes.push(
+            ...e.changes.map((c) => {
+              c = foundry.utils.duplicate(c);
+              c.effect = e;
+              c.priority = c.priority ? c.priority : c.mode * 10;
+              return c;
+            })
+          )
         }
+        for ( const statusId of e.statuses ) this.statuses.add(statusId);
+      }
+      let apply = true
+      for(let item of this.items) {
+        for(const e of item.effects) {
+          apply = true
+          switch (item.type) {
+              case "meleeweapon":
+              case "rangeweapon":
+              case "armor":
+                  apply = item.system.worn.value;
+                  break;
+              case "equipment":
+                  apply = !item.system.worn.wearable || (item.system.worn.wearable && item.system.worn.value)
+                  break;
+              case "trait":
+                  apply = !["meleeAttack", "rangeAttack"].includes(item.system.traitType)
+                  break
+              case "ammunition":
+              case "combatskill":
+              case "poison":
+              case "ahnengabe":
+              case "ahnengeschenk":
+                  apply = false;
+                  break;
+              case "specialability":
+                  apply = item.system.category != "Combat" || [2, 3].includes(item.system.subcategory);
+                  multiply = Number(item.system.level) || 1
+                  break
+              case "advantage":
+              case "disadvantage":
+                  multiply = Number(item.system.level) || 1
+                  break;
+          }
+          e.notApplicable = !apply;
+
+          if (!apply) continue
+          
+          for (let i = 0; i < multiply; i++) {
+              changes.push(
+                  ...e.changes.map((c) => {
+                      c = foundry.utils.duplicate(c);
+                      c.effect = e;
+                      c.priority = c.priority ? c.priority : c.mode * 10;
+                      return c;
+                  })
+              )
+          }
+          for ( const statusId of e.statuses ) this.statuses.add(statusId);
+        }
+      }
+      changes.sort((a, b) => a.priority - b.priority);
+
+      for (let change of changes) {
+        if ( !change.key ) continue;
+        const result = change.effect.apply(this, change);
+        Object.assign(overrides, result);
+      }
+
+      this.overrides = foundry.utils.expandObject(overrides);
+      let tokens;
+      for ( const [statusId, wasActive] of specialStatuses ) {
+        const isActive = this.statuses.has(statusId);
+        if ( isActive === wasActive ) continue;
+        tokens ??= this.getActiveTokens();
+        for ( const token of tokens ) token._onApplyStatusEffect(statusId, isActive);
+      }
     }
 
     maxDefenseValue(){

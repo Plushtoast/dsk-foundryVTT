@@ -190,8 +190,8 @@ export default class DSKCombatDialog extends DialogShared {
         const isMelee = (source.type == "trait" && getProperty(source, "system.traitType") == "meleeAttack") || source.type == "meleeweapon"
         const testData = { source: this.dialogData.source, extra: { options: {} } }
         const actor = DSKUtility.getSpeaker(this.dialogData.speaker)
-        isMelee ? DSKCombatDialog.resolveMeleeDialog(testData, {}, this.element, actor, {}, -3, this.dialogData.mode) :
-            DSKCombatDialog.resolveRangeDialog(testData, {}, this.element, actor, {}, this.dialogData.mode)
+        isMelee ? DSKCombatDialog.resolveMeleeDialog(testData, {}, this.element, actor, {}, -2, this.dialogData.mode) :
+            DSKCombatDialog.resolveRangeDialog(testData, {}, this.element, actor, {}, this.dialogData.mode, -2)
 
         this.dialogData.modifier = DiceDSK._situationalModifiers(testData)
         this.updateRollButton(this.readTargets())
@@ -216,8 +216,10 @@ export default class DSKCombatDialog extends DialogShared {
                 value: 0,
                 step: 1,
             }, {
-                name: game.i18n.format("dsk.defenseCount", { malus: multipleDefenseValue }),
-                value: (Number(data.defenseCount) || 0) * multipleDefenseValue,
+                name: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
+                dmmalus: (Number(data.defenseCount) || 0) * multipleDefenseValue * -1,
+                value: (Number(data.defenseCount) || 0) * multipleDefenseValue * -1,
+                type: "defenseMalus"
             }, {
                 name: game.i18n.localize("dsk.wrongHand"),
                 value: data.wrongHand ? -4 : 0,
@@ -240,7 +242,7 @@ export default class DSKCombatDialog extends DialogShared {
         }
     }
 
-    static resolveRangeDialog(testData, cardOptions, html, actor, options) {
+    static resolveRangeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue) {
         this._resolveDefault(testData, cardOptions, html, actor, options);
 
         //TODO move this to situational modifiers only
@@ -256,7 +258,14 @@ export default class DSKCombatDialog extends DialogShared {
             }, {
                 name: game.i18n.localize("dsk.mount") + " " + html.find('[name="mountedOptions"] option:selected').text(),
                 value: Number(data.mountedOptions) || 0,
-            }, {
+            },
+            {
+                name: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
+                dmmalus: (Number(data.defenseCount) || 0) * multipleDefenseValue * -1,
+                value: (Number(data.defenseCount) || 0) * multipleDefenseValue * -1,
+                type: "defenseMalus"
+            },
+            {
                 name: game.i18n.localize("dsk.rangeMovementOptions.QUICKCHANGE"),
                 value: data.quickChange ? -4 : 0,
             }, {

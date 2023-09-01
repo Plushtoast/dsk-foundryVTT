@@ -1,0 +1,27 @@
+<div class="dsk chat-card" data-actor-id="{{actorId}}" data-hide={{hideData}}>
+    {{> systems/dsk/templates/chat/roll/test-card.html}}
+
+    <div class="card-content">
+        <b>{{localize "dsk.effect"}}</b>: {{{diceThingsUp testData.effect}}}
+    </div>
+    <div class="card-content">
+        <b>{{localize "dsk.start"}}</b>: {{preData.source.system.start}}
+    </div>
+    <div class="card-content">
+        <b>{{localize "dsk.duration"}}</b>: {{testData.duration}}
+    </div>
+    {{#if immuneTo}}
+    <div class="card-content chat-button-gm maskfield">
+        {{#each immuneTo as |immunity|}}
+        <b>{{localize "dsk.DSKError.immuneTo" name=immunity.target condition=immunity.condition }}</b>
+        {{/each}}
+    {{/if}}
+    {{#if applyEffect}}
+    <div class="row-section" style="margin-top:10px">
+        <div class="col two center">
+            <button class="applyEffect selfButton" data-target="target"
+                data-tooltip="dsk.TT.applyEffectTargets">{{localize 'dsk.ActiveEffects.applyTarget'}}</button>
+        </div>
+    </div>
+    {{/if}}
+</div>

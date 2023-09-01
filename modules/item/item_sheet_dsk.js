@@ -32,6 +32,10 @@ export default class ItemSheetDSK extends ItemSheet {
         Items.registerSheet("dsk", ItemSheetTrait, { makeDefault: true, types: ["trait"] });
     }
 
+    setupEffect(ev) {
+        this.item.setupEffect().then(setupData => this.item.itemTest(setupData))
+    }
+
     _getHeaderButtons() {
         let buttons = super._getHeaderButtons();
         buttons.unshift({
@@ -532,6 +536,16 @@ class ItemSheetPoison extends ItemSheetObfuscation(ItemSheetDSK){
             resistances: DSK.magicResistanceModifiers
         })
         return data
+    }
+
+    _getHeaderButtons() {
+        let buttons = super._getHeaderButtons();
+        buttons.unshift({
+            class: "rolleffect",
+            icon: `fas fa-dice-d20`,
+            onclick: async ev => this.setupEffect(ev)
+        })
+        return buttons
     }
 }
 

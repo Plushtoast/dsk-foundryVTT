@@ -68,6 +68,7 @@ Hooks.once("init", () => {
     CONFIG.Combatant.documentClass = DSKCombatant
     CONFIG.ActiveEffect.documentClass = DSKActiveEffect
     CONFIG.ChatMessage.template = "systems/dsk/templates/chat/chat-message.html"
+    CONFIG.ActiveEffect.legacyTransferral = false
 })
 
 initHooks()

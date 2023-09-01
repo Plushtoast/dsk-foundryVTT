@@ -340,7 +340,7 @@ export default class DSKItemLibrary extends Application {
     async executeAdvancedFilter(search, index, selectSearches, textSearches, booleanSearches, rangeSearches = []) {
         const selFnct = (x) => {
             for (let k of selectSearches) {
-                if (x[2] ? (x[k[0]] != k[1]) : (x[k[0]].indexOf(k[1]) == -1)) return false
+                if (k[2] ? (x[k[0]] != k[1]) : (x[k[0]].indexOf(k[1]) == -1)) return false
             }
             return true
         }

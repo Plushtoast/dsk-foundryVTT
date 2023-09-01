@@ -6,6 +6,9 @@
         "attackFromBehind": "Angriff von Hinten",
         "defenseCount": "# Verteidigung (je {malus})",
         "characteristics": {
+            "poison": {
+                "name": "Gift"
+            },
             "mu": {
                 "abbr": "MU",
                 "name": "Mut"
@@ -723,6 +726,7 @@
             "AeP": "AeP",
             "FW": "FW",
             "fatePoints": "Schips",
+            "defenseMalus": "VM",
             "PW": "PW",
             "CR": "KR",
             "damage": "TP"
@@ -913,6 +917,7 @@
             "light": "Lichtquelle",
             "healing": "Heilmittel",
             "bags": "Behältnis",
+            "alcohol": "Alkohol",
             "wealth": "Schöne Dinge",
             "writing": "Schreibwaren",
             "alchemy": "Alchemie",

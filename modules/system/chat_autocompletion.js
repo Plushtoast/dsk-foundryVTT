@@ -1,6 +1,7 @@
 import DSKChatListeners from "./chat_listeners.js"
 import DSKUtility from "./dsk_utility.js"
 import RequestRoll from "./request-roll.js"
+import { UserMultipickDialog } from "../dialog/addTargetDialog.js"
 
 export default class DSKChatAutoCompletion {
     static skills = []
@@ -290,6 +291,10 @@ export default class DSKChatAutoCompletion {
 
             ev.stopPropagation()
             return false
+        })
+        html.on('click', '.postContentChat', async(ev) => {
+            const content = $(ev.currentTarget).closest('.postChatSection').find('.postChatContent').html()
+            UserMultipickDialog.getDialog(content)            
         })
         html.on('click', '.request-CH', ev => {
             DSKChatListeners.check3D20(undefined, ev.currentTarget.dataset.name, { modifier: Number(ev.currentTarget.dataset.modifier) || 0 })

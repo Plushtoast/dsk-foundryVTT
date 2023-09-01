@@ -40,6 +40,27 @@ export default class ItemDSK extends Item{
         }
     }
 
+    setupEffect(ev, options = {}, tokenId) {
+        return ItemDSK.getSubClass(this.type).setupDialog(ev, options, this, tokenId)
+    }
+
+    async itemTest({ testData, cardOptions }, options = {}) {
+        testData = await DiceDSK.rollDices(testData, cardOptions)
+        let result = await DiceDSK.rollTest(testData)
+
+        result.postFunction = "itemTest"
+
+        if (game.user.targets.size) {
+            cardOptions.isOpposedTest = testData.opposable
+            const opposed = ` - ${game.i18n.localize("dsk.Opposed")}`
+            if (cardOptions.isOpposedTest && cardOptions.title.match(opposed + "$") != opposed) cardOptions.title += opposed
+        }
+
+        if (!options.suppressMessage) DiceDSK.renderRollCard(cardOptions, result, options.rerenderMessage)
+
+        return { result, cardOptions }
+    }
+
     static attackStatEffect(situationalModifiers, value) {
         if (value != 0) {
             situationalModifiers.push({
@@ -302,6 +323,21 @@ export default class ItemDSK extends Item{
         return combatskills
     }
 
+    _setupCardOptions(template, title, tokenId) {
+        const speaker = ChatMessage.getSpeaker()
+        return {
+            speaker: {
+                alias: speaker.alias,
+                scene: speaker.scene,
+            },
+            flags: {
+                img: speaker.token ? canvas.tokens.get(speaker.token).document.img : this.img,
+            },
+            title,
+            template,
+        }
+    }
+
     static getSkZkModifier(data, source) {
         let skMod = []
         let zkMod = []
@@ -547,7 +583,7 @@ class ItemTrait extends ItemDSK {
             rollMode: options.rollMode,
             mode,
             hasSchips: this.hasSchips(actor),
-            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: multipleDefenseValue }),
+            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
         }
 
         const traitType = getProperty(item, "system.traitType")
@@ -564,7 +600,7 @@ class ItemTrait extends ItemDSK {
                 if (traitType == "meleeAttack") {
                     DSKCombatDialog.resolveMeleeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue, mode)
                 } else {
-                    DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options)
+                    DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue)
                 }
                 if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) actor.reduceSchips(0)
 
@@ -630,7 +666,7 @@ class ItemMeleeweapon extends ItemDSK{
             rollMode: options.rollMode,
             mode,
             hasSchips: this.hasSchips(actor),
-            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: multipleDefenseValue }),
+            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
         }
         let situationalModifiers = actor ? DSKStatusEffects.getRollModifiers(actor, item, { mode }) : []
         this.getSituationalModifiers(situationalModifiers, actor, data, item)
@@ -768,10 +804,12 @@ class ItemRangeweapon extends ItemDSK{
 
         if (!(await this.checkAmmunitionState(item, testData, actor, mode))) return
 
+        const multipleDefenseValue = RuleChaos.multipleDefenseValue(actor, testData.source);
         let data = {
             rollMode: options.rollMode,
             mode,
             hasSchips: this.hasSchips(actor),
+            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
         }
         let situationalModifiers = actor ? DSKStatusEffects.getRollModifiers(actor, item, { mode }) : []
         this.getSituationalModifiers(situationalModifiers, actor, data, item, tokenId)
@@ -782,7 +820,7 @@ class ItemRangeweapon extends ItemDSK{
             template: "/systems/dsk/templates/dialog/combatskill-enhanced-dialog.html",
             data,
             callback: (html, options = {}) => {
-                DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options)
+                DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue)
                 if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) actor.reduceSchips(0)
                 
                 Hooks.call("callbackDialogCombatDSK", testData, actor, html, item, tokenId)
@@ -991,6 +1029,73 @@ class ItemPoison extends ItemDSK{
         ]
     }
 
+    static getSituationalModifiers(situationalModifiers, actor, data, source) {
+        source = DSKUtility.toObjectIfPossible(source)
+        if (game.user.targets.size) {
+            game.user.targets.forEach((target) => {
+                if (target.actor)
+                    situationalModifiers.push(
+                        ...AdvantageRulesDSK.getVantageAsModifier(
+                            target.actor,
+                            game.i18n.localize("dsk.LocalizedIDs.poisonResistance"), -1,
+                            false,
+                            true
+                        )
+                    )
+            })
+        }
+        this.getSkZkModifier(data, source)
+        mergeObject(data, {
+            hasSKModifier: source.system.resist == "SK",
+            hasZKModifier: source.system.resist == "ZK",
+        })
+    }
+
+    static setupDialog(ev, options, item, actor, tokenId) {
+        let title = item.name + " " + game.i18n.localize("TYPES.Item." + item.type) + " " + game.i18n.localize("dsk.check")
+
+        let testData = {
+            opposable: false,
+            source: item,
+            extra: {
+                options,
+                speaker: ItemDSK.buildSpeaker(actor, tokenId),
+            },
+        }
+
+        let data = {
+            rollMode: options.rollMode,
+        }
+
+        let situationalModifiers = []
+        this.getSituationalModifiers(situationalModifiers, actor, data, item)
+        data.situationalModifiers = situationalModifiers
+
+        let dialogOptions = {
+            title,
+            template: "/systems/dsk/templates/dialog/poison-dialog.html",
+            data,
+            callback: (html, options = {}) => {
+                cardOptions.rollMode = html.find('[name="rollMode"]').val()
+                testData.situationalModifiers = ActorDSK._parseModifiers(html)
+
+                testData.situationalModifiers.push({
+                    name: game.i18n.localize("zkModifier"),
+                    value: html.find('[name="zkModifier"]').val() || 0,
+                })
+                testData.situationalModifiers.push({
+                    name: game.i18n.localize("skModifier"),
+                    value: html.find('[name="skModifier"]').val() || 0,
+                })
+                mergeObject(testData.extra.options, options)
+                return { testData, cardOptions }
+            },
+        }
+
+        let cardOptions = item._setupCardOptions(`systems/dsk/templates/chat/roll/${item.type}-card.html`, title, tokenId)
+
+        return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions })
+    }
 }
 
 class ItemSkill extends ItemDSK{

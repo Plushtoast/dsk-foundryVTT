@@ -1,0 +1,15 @@
+<form class="skill-test">
+    {{> systems/dsk/templates/dialog/default-dialog.html}} {{#if hasSKModifier}}
+    <div class="form-group">
+        <label>{{localize "dsk.skModifier"}}</label>
+        <input type="number" name="skModifier" value="{{SKModifier}}" />
+    </div>
+    {{/if}} {{#if hasZKModifier}}
+    <div class="form-group" data-tooltip="TT.zkModifer">
+        <label>{{localize "dsk.zkModifier"}}</label>
+        <input type="number" name="zkModifier" value="{{ZKModifier}}" />
+    </div>
+    {{/if}}
+
+    <div class="roll-dialog-tag">poison</div>
+</form>

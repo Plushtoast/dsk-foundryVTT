@@ -13,6 +13,45 @@ import SpecialabilityRulesDSK from "./specialability-rules.js"
 import TraitRulesDSK from "./trait_rules.js"
 
 export default class DiceDSK{
+    static async rollTest(testData) {
+        //testData.function = "rollTest"
+        let rollResults
+        switch (testData.source.type) {
+            case "ahnengabe":
+                rollResults = await this.rollSpell(testData)
+                break
+            case "skill":
+                rollResults = await this.rollTalent(testData)
+                break
+            case "combatskill":
+                rollResults = await this.rollCombatskill(testData)
+                break
+            case "regenerate":
+                rollResults = await this.rollRegeneration(testData)
+                break
+            case "trait":
+                rollResults = testData.mode == "damage" ? await this.rollDamage(testData) : await this.rollCombatTrait(testData)
+                if(testData.mode != "damage") await this.updateDefenseCount(rollResults)
+                break
+            case "meleeweapon":
+            case "rangeweapon":
+                rollResults = testData.mode == "damage" ? await this.rollDamage(testData) : await this.rollWeapon(testData)
+                if(testData.mode != "damage") await this.updateDefenseCount(rollResults)
+                break
+            case "poison":
+                rollResults = await this.rollItem(testData)
+                break
+            default:
+                rollResults = await this.rollAttribute(testData)
+        }
+        mergeObject(rollResults, deepClone(testData.extra))
+        return rollResults
+    }
+
+    static async updateDefenseCount(rollResults) {
+        if (game.combat) await game.combat.updateDefenseCount(Array.from(game.user.targets).map(x => x.id))
+    }
+
     static async setupDialog({ dialogOptions, testData, cardOptions }) {
         let rollMode = await game.settings.get("core", "rollMode")
         let sceneStress = 0
@@ -110,7 +149,8 @@ export default class DiceDSK{
     }
 
     static async getDefenseCount(testData) {
-        if (game.combat) return await game.combat.getDefenseCount(testData.extra.speaker)
+        const targets = Array.from(game.user.targets)
+        if (game.combat && targets[0]) return await game.combat.getDefenseCount({token: targets[0].id})
         
         return 0
     }
@@ -120,41 +160,6 @@ export default class DiceDSK{
         res["rollType"] = "talent"
         return res
     }
-
-    static async rollTest(testData) {
-        //testData.function = "rollTest"
-        let rollResults
-        switch (testData.source.type) {
-            case "ahnengabe":
-                rollResults = await this.rollSpell(testData)
-                break
-            case "skill":
-                rollResults = await this.rollTalent(testData)
-                break
-            case "combatskill":
-                rollResults = await this.rollCombatskill(testData)
-                break
-            case "regenerate":
-                rollResults = await this.rollRegeneration(testData)
-                break
-            case "trait":
-                rollResults = testData.mode == "damage" ? await this.rollDamage(testData) : await this.rollCombatTrait(testData)
-                break
-            case "meleeweapon":
-            case "rangeweapon":
-                rollResults = testData.mode == "damage" ? await this.rollDamage(testData) : await this.rollWeapon(testData)
-                break
-            case "poison":
-                rollResults = await this.rollItem(testData)
-                break
-            default:
-                rollResults = await this.rollAttribute(testData)
-        }
-        mergeObject(rollResults, deepClone(testData.extra))
-        return rollResults
-    }
-
-    
 
     static async rollAttribute(testData) {
         let result = await this._roll2D20(testData)
@@ -574,9 +579,9 @@ export default class DiceDSK{
             result: fws,
             characteristics: [0, 1].map((x) => {
                 return {
-                    char: testData.source.system[`characteristic${x + 1}`],
+                    char: testData.source.system[`characteristic${x + 1}`] || testData.source.type,
                     res: roll.terms[x * 2].results[0].result,
-                    tar: testData.extra.actor.system.characteristics[testData.source.system[`characteristic${x + 1}`]]?.value
+                    tar: testData.extra.actor?.system.characteristics[testData.source.system[`characteristic${x + 1}`]]?.value,
                 }
             }),
             qualityStep,
@@ -1001,10 +1006,9 @@ export default class DiceDSK{
                 case "poison":
                 case "disease":
                     let pColor = d3dColors("in")
-                    roll = await new Roll(`1d20+1d20+1d20`).evaluate({ async: true })
+                    roll = await new Roll(`1d20+1d20`).evaluate({ async: true })
                     mergeObject(roll.dice[0].options, pColor)
                     mergeObject(roll.dice[1].options, pColor)
-                    mergeObject(roll.dice[2].options, pColor)
                     break
                 default:
                     console.error("Unexpected roll mode")
@@ -1015,6 +1019,22 @@ export default class DiceDSK{
             testData.rollMode = cardOptions.rollMode
         }
         return testData
+    }
+
+    static async rollItem(testData) {
+        testData.source.attack = 20 + 2 * testData.source.system.level
+        let result = await this._roll2D20(testData)
+        switch (testData.source.type) {
+            case "poison":
+                let dur = testData.source.system.duration.split(" / ").map((x) => x.trim())
+                let effect = testData.source.system.effect.split(" / ").map((x) => x.trim())
+                result.duration = dur.length > 1 ? (result.successLevel > 0 ? dur[0] : dur[1]) : dur[0]
+                result.effect = effect.length > 1 ? (result.successLevel > 0 ? effect[0] : effect[1]) : effect[0]
+                break
+            case "disease":
+                break
+        }
+        return result
     }
 
     static async damageFormula(testData){

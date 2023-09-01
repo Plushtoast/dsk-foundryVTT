@@ -120,9 +120,11 @@ export class DSKCombat extends Combat {
 
     async updateDefenseCount(speaker) {
         if (game.user.isGM) {
-            const comb = this.getCombatantFromActor(speaker)
-            if (comb && !getProperty(comb.actor, "system.config.defense")) {
-                await comb.setFlag("dsk", "defenseCount", (comb.getFlag("dsk", "defenseCount") || 0) + 1)
+            for (let spe of speaker) {
+                const comb = this.getCombatantFromActor({token: spe})
+                if (comb && !getProperty(comb.actor, "system.config.defense")) {
+                    await comb.setFlag("dsk", "defenseCount", (comb.getFlag("dsk", "defenseCount") || 0) + 1)
+                }
             }
         } else {
             await game.socket.emit("system.dsk", {

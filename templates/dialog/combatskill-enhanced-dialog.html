@@ -21,11 +21,12 @@
                 <input type="checkbox" id="advantageousPosition" name="advantageousPosition" value="2">
             </div>
 
-            {{/if}} {{#if showDefense}}
+            {{/if}} 
             <div class="form-group">
                 <label>{{defenseCountString}}</label>
                 <input class="quantity-click" type="number" name="defenseCount" value="{{defenseCount}}" />
             </div>
+            {{#if showDefense}}            
             <div class="form-group">
                 <label>{{localize "dsk.attackFromBehind"}} (-4)</label>
                 <input type="checkbox" id="attackFromBehind" name="attackFromBehind" value="-4">
