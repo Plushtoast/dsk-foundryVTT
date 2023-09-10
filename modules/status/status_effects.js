@@ -185,7 +185,7 @@ export default class DSKStatusEffects{
         if(target.documentName == "Item") {
             appliedConditions = target.effects
         } else {
-            appliedConditions = target.allApplicableEffects()
+            appliedConditions = Array.from(target.allApplicableEffects())
 
             if(!game.user.isGM)
                 appliedConditions = appliedConditions.filter(e => { return !e.getFlag("dsk", "hidePlayers") })
