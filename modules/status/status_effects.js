@@ -180,21 +180,34 @@ export default class DSKStatusEffects{
         let appliedSystemConditions = []
         data.conditions = []
         data.transferedConditions = []
-        for (let condition of target.effects.filter(e => { return game.user.isGM || target.documentName == "Item" || !e.getFlag("dsk", "hidePlayers") })) {
-            condition.disabled = condition.disabled
-            condition.boolean = condition.getFlag("dsk", "value") == null
-            condition.icon = condition.icon
-            const statusesId = [...condition.statuses][0]
+        
+        let appliedConditions
+        if(target.documentName == "Item") {
+            appliedConditions = target.effects
+        } else {
+            appliedConditions = target.allApplicableEffects()
+
+            if(!game.user.isGM)
+                appliedConditions = appliedConditions.filter(e => { return !e.getFlag("dsk", "hidePlayers") })
+        }
+
+        for (let cnd of appliedConditions) {
+            let condition = cnd.toObject()
+            condition.boolean = cnd.getFlag("dsk", "value") == null
+            const statusesId = [...cnd.statuses][0]
             if (statusesId) {
-                condition.value = condition.getFlag("dsk", "value")
-                condition.editable = condition.getFlag("dsk", "editable")
+                condition.value = cnd.getFlag("dsk", "value")
+                condition.editable = cnd.getFlag("dsk", "editable")
                 condition.descriptor = statusesId
-                condition.manual = condition.getFlag("dsk", "manual")
+                condition.manual = cnd.getFlag("dsk", "manual")
                 appliedSystemConditions.push(statusesId)
             }
-            if ((condition.origin == target.uuid || !condition.origin) && !condition.notApplicable)
+            if(target.documentName == "Item") {
                 data.conditions.push(condition)
-            else if (!condition.notApplicable) {
+            } else if (cnd.parent?.documentName != "Item" && !cnd.notApplicable)
+                data.conditions.push(condition)
+            else if (!cnd.notApplicable) {
+                condition.uuid = cnd.uuid
                 data.transferedConditions.push(condition)
             }
         }

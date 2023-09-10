@@ -223,8 +223,8 @@ export default class ActorSheetDSK extends ActorSheet {
             await this.actor.updateEmbeddedDocuments("Item", [{ _id: itemId, "system.currentAmmo": $(ev.currentTarget).val() }]);
         })
 
-        html.find('.condition-edit').click(ev => {
-            const effect = this.actor.effects.get($(ev.currentTarget).attr("data-id"))
+        html.find('.condition-edit').click(async(ev) => {
+            const effect = ev.currentTarget.dataset.uuid ? (await fromUuid(ev.currentTarget.dataset.uuid)) : this.actor.effects.get(ev.currentTarget.dataset.id)
             effect.sheet.render(true)
         })
 

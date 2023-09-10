@@ -96,6 +96,12 @@ b {
 h1, h2, h3, h4, h5, h6, h7 {
   font-family: "Andalus";
   overflow: hidden;
+
+  a.entity-link {
+    background: none;
+    padding: 0;
+    border: none;
+  }
 }
 
 .obfuscateSection.pale{
