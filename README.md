@@ -4,7 +4,7 @@
 # Official Die Schwarze Katze system for Foundry
 
 ### Current Version and Compatibility:
-2.0.x - FoundryVTT 11.+
+2.1.x - FoundryVTT 11.+
 This system is intended for usage with [Foundry Virtual Tabletop](https://foundryvtt.com/) to play "Die Schwarze Katze".
 If you want to learn more checkout the [German](https://ulisses-spiele.de/virtual-tabletop-dsa-vtt/) or [English](https://ulisses-us.com/ulisses-virtual-tabletops/virtual-tabletop-dsa-vtt/) VTT Page by Ulisses Spiele.
 
@@ -53,7 +53,10 @@ https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/
 <a href="https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/regel-module/3436/die-schwarze-katze-bestiarium-fuer-foundry-vtt" target="_blank" data-tooltip="Die Schwarze Katze - Bestiarium">
     <img src="https://www.f-shop.de/media/image/13/ec/68/ESD091_0_0999.jpg" alt="Die Schwarze Katze - Bestiarium" style="margin-right: 5px; margin-bottom: 5px; text-align:center; width:210px;">
 </a>
-
+<h2>Abenteuer</h2>
+<a href="https://www.f-shop.de/detail/index/sArticle/3723" target="_blank" data-tooltip="Die Schwarze Katze - Einsteigerbox">
+    <img src="https://www.f-shop.de/media/image/86/d9/29/ESD092_0_0999.jpg" alt="Die Schwarze Katze - Einsteigerbox" style="margin-right: 5px; margin-bottom: 5px; text-align:center; width:210px;">
+</a>
 ## Other Recommended Modules
 The following modules are recommended for the best gaming experience:
 - [Dice So Nice!](https://gitlab.com/riccisi/foundryvtt-dice-so-nice) - Shows beautiful 3d dice on every roll. A must have! DSK fully integrates this module.
