@@ -53,6 +53,10 @@ https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/
 <a href="https://www.f-shop.de/virtual-tabletops/die-schwarze-katze-vtt/regel-module/3436/die-schwarze-katze-bestiarium-fuer-foundry-vtt" target="_blank" data-tooltip="Die Schwarze Katze - Bestiarium">
     <img src="https://www.f-shop.de/media/image/13/ec/68/ESD091_0_0999.jpg" alt="Die Schwarze Katze - Bestiarium" style="margin-right: 5px; margin-bottom: 5px; text-align:center; width:210px;">
 </a>
+<h2>Abenteuer</h2>
+<a href="https://www.f-shop.de/detail/index/sArticle/3723" target="_blank" data-tooltip="Die Schwarze Katze - Einsteigerbox">
+    <img src="https://www.f-shop.de/media/image/86/d9/29/ESD092_0_0999.jpg" alt="Die Schwarze Katze - Einsteigerbox" style="margin-right: 5px; margin-bottom: 5px; text-align:center; width:210px;">
+</a>
 
 ## Other Recommended Modules
 The following modules are recommended for the best gaming experience:
