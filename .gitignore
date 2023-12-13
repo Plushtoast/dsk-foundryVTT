@@ -5,3 +5,4 @@ webpack.config.js
 .babelrc
 test
 devTemp
+build.js

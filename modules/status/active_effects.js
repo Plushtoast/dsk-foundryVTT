@@ -52,12 +52,22 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
     }
 
     static async onEffectRemove(actor, effect) {
-        const onRemoveMacro = getProperty(effect, "flags.dsk.onRemove");
+        const onRemoveMacro = getProperty(effect, "flags.dsa5.onRemove");
         if (onRemoveMacro) {
             if (!game.user.can("MACRO_SCRIPT")) {
                 ui.notifications.warn(`You are not allowed to use JavaScript macros.`);
             } else {
-                await eval(`(async () => {${onRemoveMacro}})()`);
+                try {
+                    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
+                    const fn = new AsyncFunction("effect", "actor", onRemoveMacro)
+                    await fn.call(this, effect, actor);
+                } catch (err) {
+                    ui.notifications.error(
+                        `There was an error in your macro syntax. See the console (F12) for details`
+                    );
+                    console.error(err);
+                    console.warn(err.stack);
+                }
             }
         }
     }
@@ -497,9 +507,7 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
                 name: `${regenerate} - ${game.i18n.localize("dsk.AeP")}`,
                 val: "system.stats.regeneration.AePgearmodifier",
                 mode: 2,
-                ph: "1",
-                mode: 0,
-                ph: feature,
+                ph: "1"
             },
             {
                 name: `${game.i18n.localize("dsk.advanced")} - ${AePCost}`,

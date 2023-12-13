@@ -57,9 +57,6 @@ export function initReady(){
                     case "clearCombat":
                         if (game.combat) game.combat.nextRound()
                         break
-                    case "updateDefenseCount":
-                        if (game.combat) game.combat.updateDefenseCount(data.payload.speaker)
-                        break
                     case "trade":
                         {
                             let source = data.payload.source.token ? game.actors.tokens[data.payload.source.token] : game.actors.get(data.payload.source.actor)

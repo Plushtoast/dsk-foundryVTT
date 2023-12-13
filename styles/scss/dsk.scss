@@ -1657,6 +1657,11 @@ form.dsk.item-sheet {
     &:hover {
       box-shadow: inset 0 0 3px white;
     }
+
+    &.lastRound{
+      background-color: #02234d;
+      background-image: none;
+  }
 }
 
 #combat li.combatant .roll {
@@ -3281,6 +3286,7 @@ select.noAppearance {
 .initTracker {
   .newRound {
     border-color: #496fd7;
+    background-color: #496fd72d;
     box-shadow: inset 0px 0px 10px #496fd7;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
@@ -3916,9 +3922,22 @@ select.noAppearance {
   right: 0;
 }
 
-.toggleWorldIndex.on, .toggleAdvancedMode.on, .fulltextsearch.on {
-  color: darkred;
-}
+.libButton {
+  .label-text i{
+    font-size: 12px;
+  }
+  .fa-toggle-off {
+    color: darkred;
+    margin-right: 6px;
+  }
+  .on .fa-toggle-off{
+    color: green;
+
+    &:before{
+      content: "\f205";
+    }
+  }
+} 
 
 .advancedSearch {
   .groupbox {

@@ -38,8 +38,7 @@ Hooks.once("init", () => {
             Migrakel,
             DPS,
             DiceDSK,
-            DSKStatusEffects,
-            DSKInitializer
+            DSKStatusEffects            
         },
         documents: {
             ActorDSK,

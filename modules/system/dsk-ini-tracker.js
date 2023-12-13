@@ -109,6 +109,8 @@ export default class DSKIniTracker extends Application {
         }
         //if(!data.round) itemWidth = 20
 
+        data.isLastRound = data.turns[1]?.newRound
+
         this.position.width = itemWidth * 5 + 95
         this.position.height = itemWidth + 10
 

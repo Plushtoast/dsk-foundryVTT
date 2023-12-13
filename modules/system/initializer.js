@@ -109,7 +109,7 @@ export default class DSKInitializer extends Dialog {
                     k.folder = head.id
                     let existingItem = game.playlists.find(x => x.name == k.name && x.folder?.id == head.id)
                     if (existingItem) {
-                        k._id = existingItem.data._id
+                        k._id = existingItem._id
                         itemsToUpdate.push(k)
                     } else {
                         itemsToCreate.push(k)
@@ -240,6 +240,7 @@ export default class DSKInitializer extends Dialog {
                 let actorFolders = new Map()
                 let sort = 0
                 if (getProperty(bookData, "chapters")) {
+                    
                     for (const chapter of bookData.chapters) {
                         for (const subChapter of chapter.content) {
                             if (subChapter.actors) {

@@ -70,7 +70,7 @@ export default class BookWizard extends Application {
         this.scenes = null
         this.content = undefined
         this.journalIndex = null
-        this.fulltextsearch = false
+        this.fulltextsearch = true
         this.currentType = undefined
         this.loadPage(this._element)
     }

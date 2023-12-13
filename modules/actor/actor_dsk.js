@@ -53,7 +53,7 @@ export default class ActorDSK extends Actor {
 
             data.totalWeight = 0;
       
-            const armor = []
+            const wornArmor = []
 
             let containers = new Map();
             const bags = this.items.filter(x => x.type == "equipment" && x.system.category == "bags")
@@ -77,7 +77,7 @@ export default class ActorDSK extends Actor {
                       i.system.weight * (i.system.worn.value ? Math.max(0, i.system.quantity - 1) : i.system.quantity)
                     ).toFixed(3)
                   );
-                  if(i.system.worn.value) armor.push(i)
+                  if(i.system.worn.value) wornArmor.push(i)
                 } else {
                   i.system.preparedWeight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
                   data.totalWeight += Number(i.system.preparedWeight);
@@ -158,40 +158,13 @@ export default class ActorDSK extends Actor {
             data.stats.ini.value += data.stats.ini.gearmodifier - Math.min(4, encumbrance);
             const baseInit = Number((0.01 * data.stats.ini.value).toFixed(2));
             data.stats.ini.value *= data.stats.ini.multiplier || 1;
-            data.stats.ini.value = Math.round(data.stats.ini.value) + baseInit;
-
-            if (DSKUtility.isActiveGM()) {
-              const pain = this.woundPain(data)
-              const currentPain = this.effects.find(x => x.statuses.has("inpain"))?.flags.dsk.auto || 0
-      
-              const changePain = !this.changingPain && (currentPain != pain)
-              this.changingPain = currentPain != pain;
-      
-              if (changePain && !TraitRulesDSK.hasTrait(this, game.i18n.localize("dsk.LocalizedIDs.painImmunity")))
-                this.addCondition("inpain", pain * 2, true).then(() => this.changingPain = undefined);
-
-              let encumbrance = this.getArmorEncumbrance(this, armor);
-              if ((this.type != "creature" || this.canAdvance) && !this.isMerchant()) {
-                encumbrance += Math.max(0, Math.ceil((data.totalWeight - data.carrycapacity - 5) / 5)) * 2;
-              }
-      
-              const currentEncumbrance =  this.effects.find(x => x.statuses.has("encumbered"))?.flags.dsk.auto || 0
-      
-              const changeEncumbrance = !this.changingEncumbrance && (currentEncumbrance != encumbrance)
-              this.changingEncumbrance = currentEncumbrance != encumbrance;
-      
-              if(changeEncumbrance) this.addCondition("encumbered", encumbrance, true).then(() => this.changingEncumbrance = undefined);
-      
-              if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.blind"))) this.addCondition("blind");
-              if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.mute"))) this.addCondition("mute");
-              if (AdvantageRulesDSK.hasVantage(this, game.i18n.localize("dsk.LocalizedIDs.deaf"))) this.addCondition("deaf");
-      
-              if (this.isMerchant()) this.prepareMerchant()
-            }
+            data.stats.ini.value = Math.round(data.stats.ini.value) + baseInit;            
 
             for(let key of Object.keys(data.status)){
               data.status[key] = Math.clamped(data.status[key], 0, 8)
             }
+
+            data.armorEncumbrance = this.getArmorEncumbrance(this, wornArmor);
 
             this.effectivePain(data)
 
@@ -200,6 +173,53 @@ export default class ActorDSK extends Actor {
             console.error("Something went wrong with preparing actor data: " + error + error.stack);
             ui.notifications.error(game.i18n.format("dsk.DSKError.PreparationError", { name: this.name }) + error + error.stack);
         }
+    }
+
+    static async deferredEffectAddition(effect, actor, target) {
+      const current = actor.effects.find(x => x.statuses.has(effect))?.flags.dsk.auto || 0 
+      const isChange = current != target
+      const attr = `changing${effect}`
+      actor[attr] = isChange;
+  
+      if(isChange) 
+        await actor.addCondition(effect, target, true).then(() => actor[attr] = undefined);
+    }
+
+    static async postUpdateConditions(actor) {      
+      const data = actor.system
+      const isMerchant = actor.isMerchant()
+
+      if (!TraitRulesDSK.hasTrait(actor, game.i18n.localize("dsk.LocalizedIDs.painImmunity"))){
+        const pain = actor.woundPain(data)
+        await this.deferredEffectAddition("inpain", actor, pain * 2)
+      }     
+
+      let encumbrance = data.armorEncumbrance
+      if ((actor.type != "creature" || actor.canAdvance) && !isMerchant) {
+        encumbrance += Math.max(0, Math.ceil((data.totalWeight - data.carrycapacity - 5) / 5)) * 2;
+      }
+
+      await this.deferredEffectAddition("encumbered", actor, encumbrance)
+
+      if (AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.blind"))) await actor.addCondition("blind");
+      if (AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.mute"))) await actor.addCondition("mute");
+      if (AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.deaf"))) await actor.addCondition("deaf");
+
+      if (isMerchant) actor.prepareMerchant()      
+    }
+
+    static async _onCreateDocuments(documents, context) {
+      for(let doc of documents) {
+          await ActorDSK.postUpdateConditions(doc)
+      }
+      return super._onCreateDocuments(documents, context);
+    }
+  
+    static async _onUpdateDocuments(documents, context) {
+      for(let doc of documents) {
+          await ActorDSK.postUpdateConditions(doc)
+      }
+      return super._onUpdateDocuments(documents, context);
     }
 
     _calcBagweight(elem, containers, topLevel = true) {
@@ -313,6 +333,8 @@ export default class ActorDSK extends Actor {
       const changes = []
       let multiply = 1
       for ( const e of this.effects ) {
+        if(e.disabled) continue
+
         multiply = 1
         const flag = e.getFlag("dsk", "value")
         if(flag){
@@ -333,6 +355,8 @@ export default class ActorDSK extends Actor {
       let apply = true
       for(let item of this.items) {
         for(const e of item.effects) {
+          if(e.disabled) continue
+
           apply = true
           switch (item.type) {
               case "meleeweapon":
