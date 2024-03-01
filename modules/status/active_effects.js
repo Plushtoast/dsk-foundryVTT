@@ -155,7 +155,21 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
         for (const ef of source.effects) {
             try {
                 if (Number(getProperty(ef, "flags.dsk.advancedFunction")) == functionID) {
-                    eval(getProperty(ef, "flags.dsk.args3"));
+                    if (!game.user.can("MACRO_SCRIPT")) {
+                        ui.notifications.warn(`You are not allowed to use JavaScript macros.`);
+                    } else {
+                        try {
+                            const syncFunction = Object.getPrototypeOf(function(){}).constructor
+                            const fn = new syncFunction("ef", "callMacro", "actor", "msg", "source", getProperty(ef, "flags.dsa5.args3"))
+                            fn.call(this, ef, callMacro, actor, msg, source);
+                        } catch (err) {
+                            ui.notifications.error(
+                                `There was an error in your macro syntax. See the console (F12) for details`
+                            );
+                            console.error(err);
+                            console.warn(err.stack);
+                        }
+                    }
                 }
             } catch (exception) {
                 console.warn("Unable to apply advanced effect", exception, ef);
@@ -216,7 +230,17 @@ export default class DSKActiveEffectConfig extends ActiveEffectConfig {
                                 if (!game.user.can("MACRO_SCRIPT")) {
                                     ui.notifications.warn(`You are not allowed to use JavaScript macros.`);
                                 } else {
-                                    await eval(`(async () => {${getProperty(ef, "flags.dsk.args3")}})()`);
+                                    try {
+                                        const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
+                                        const fn = new AsyncFunction("effect", "actor", "callMacro", "msg", "source", "actor", "sourceActor", "testData", "qs", getProperty(ef, "flags.dsa5.args3"))
+                                        await fn.call(this, ef, actor, callMacro, msg, source, actor, sourceActor, testData, qs);
+                                    } catch (err) {
+                                        ui.notifications.error(
+                                            `There was an error in your macro syntax. See the console (F12) for details`
+                                        );
+                                        console.error(err);
+                                        console.warn(err.stack);
+                                    }
                                 }
                                 break;
                             case 3: // Creature Link

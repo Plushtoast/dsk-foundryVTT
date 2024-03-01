@@ -123,6 +123,30 @@ export default class ItemDSK extends Item{
         return DSKStatusEffects.hasCondition(this, conditionKey)
     }
 
+    static async _onCreateDocuments(documents, context) {
+        for(let doc of documents) {
+            if(doc.actor)
+                await ActorDSK.postUpdateConditions(doc.actor)
+        }
+        return super._onCreateDocuments(documents, context);
+      }
+
+    static async _onUpdateDocuments(documents, context) {
+        for(let doc of documents) {
+            if(doc.actor)
+                await ActorDSK.postUpdateConditions(doc.actor)
+        }
+        return super._onUpdateDocuments(documents, context);
+    }
+
+    static async _onDeleteDocuments(documents, context) {
+        for(let doc of documents) {
+            if(doc.actor)
+                await ActorDSK.postUpdateConditions(doc.actor)
+        }
+        return super._onDeleteDocuments(documents, context);
+    }
+
     static prepareMeleeAttack(situationalModifiers, actor, data, source, combatskills, wrongHandDisabled) {
         let targetWeaponSize = "short"
         game.user.targets.forEach((target) => {

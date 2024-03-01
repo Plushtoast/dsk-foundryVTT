@@ -1,3 +1,5 @@
+import ActorDSK from "../actor/actor_dsk.js";
+
 export default class DSKActiveEffect extends ActiveEffect {
     static itemChangeRegex = /^@/
 
@@ -26,6 +28,30 @@ export default class DSKActiveEffect extends ActiveEffect {
         const value = change.value
         const items = actor?.items?.filter(x => x.type == type && (x.name == itemName || x.id == itemName)) || []
         return { items, key, value }
+    }
+
+    static async _onCreateDocuments(documents, context) {
+        for(let doc of documents) {
+            if(doc.parent.documentName == "Actor")
+                await ActorDSK.postUpdateConditions(doc.parent)
+        }
+        return super._onCreateDocuments(documents, context);
+      }
+
+    static async _onUpdateDocuments(documents, context) {
+        for(let doc of documents) {
+            if(doc.parent.documentName == "Actor")
+                await ActorDSK.postUpdateConditions(doc.parent)
+        }
+        return super._onUpdateDocuments(documents, context);
+    }
+
+    static async _onDeleteDocuments(documents, context) {
+        for(let doc of documents) {
+            if(doc.parent.documentName == "Actor")
+                await ActorDSK.postUpdateConditions(doc.parent)
+        }
+        return super._onDeleteDocuments(documents, context);
     }
 
     async _preUpdate(changed, options, user) {
