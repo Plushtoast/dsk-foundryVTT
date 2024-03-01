@@ -2849,12 +2849,18 @@ a {
   }
 }
 
+.dskbox2 .editor.prosemirror,
 .editor.prosemirror{
   min-height: 300px;
 }
 
+.dskbox2 .editor,
 .maskfield .editor{
   z-index: 2;
+}
+
+.dskbox2 .editor{
+  min-height: 40px;
 }
 
 .maskfield:before {
