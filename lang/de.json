@@ -930,7 +930,8 @@
             "poison": "Gift",
             "ammunition": "Munition",
             "food": "Lebensmittel",
-            "animals": "Lebende Tiere"
+            "animals": "Lebende Tiere",
+            "consumable": "Verbrauchsgegenstand"
         },
         "LIGHT":{
             "daylight": "Tageslicht"
@@ -946,6 +947,21 @@
             "indexWorldItems": "Welt Items indexieren (Deaktivieren verbessert Leistung, erfordert neuladen der Welt)",
             "fullTextSearch": "Volltextsuche (Deaktivieren verbessert Leistung, erfordert neuladen der Welt)",
             "loading": "Lade {item}..."
+        },
+        "consumable": {
+            "category": {
+                "0": "Duftkugel"
+            },
+            "qs": {
+                "0": "Schwach",
+                "1": "Verbessert",
+                "2": "Stark",
+                "label": "Qualität"
+            },
+            "priceEachQL": "Preis pro QS",
+            "ingredients": "Zutaten",
+            "difficulty": "Schwierigkeit",
+            "effect": "Effekt"
         }
     },
     
@@ -968,6 +984,7 @@
     "TYPES.Item.information": "Information",
     "TYPES.Item.effectwrapper": "Effektcontainer",
     "TYPES.Item.trait": "Eigenschaft",
+    "TYPES.Item.consumable": "Verbrauchsgegenstand",
     "TYPES.Actor.character": "Charakter",
     "TYPES.Actor.npc": "Nichtspielercharakter",
     "TYPES.Actor.creature": "Kreatur",

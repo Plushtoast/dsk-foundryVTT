@@ -115,8 +115,6 @@ export default class Migrakel {
                 const upd = {
                     effects: find.effects.toObject()
                 }
-                if(find.type != "spellextension")
-                    upd.system = { effectFormula: find.system.effectFormula }
                     
                 return upd
             };
@@ -138,16 +136,6 @@ export default class Migrakel {
                             list: { value: find.system.list.value },
                         },
                     });
-                    if (find.system.category == "staff") {
-                        mergeObject(update, {
-                            system: {
-                                feature: getProperty(find, "system.feature") || "",
-                                AsPCost: getProperty(find, "system.AsPCost") || "",
-                                volume: Number(getProperty(find, "system.volume")) || 0,
-                                artifact: getProperty(find, "system.artifact") || ""
-                            },
-                        });
-                    }
                 }
                 this.updateMacro(update, find);
                 return update;
@@ -220,18 +208,6 @@ export default class Migrakel {
                     img: find.img,
                     effects: find.effects.toObject(),
                 };
-                if (!["poison", "consumable"].includes(find.type)) {
-                    mergeObject(update, {
-                        system: { effect: { value: find.system.effect } },
-                    });
-                }
-                if (["armor"].includes(find.type)) {
-                    mergeObject(update, {
-                        system: {
-                            subcategory: find.system.subcategory,
-                        },
-                    });
-                }
           
                 this.updateMacro(update, find);
                 return update;

@@ -189,7 +189,8 @@
             "combatskill",
             "effectwrapper",
             "information",
-            "trait"
+            "trait",
+            "consumable"
         ],
         "templates": {
             "description": {
@@ -386,6 +387,19 @@
             "range": "",
             "duration": "",
             "distribution": ""
+        },
+        "consumable": {
+            "templates": [
+                "gear",
+                "description"
+            ],
+            "category": 0,
+            "ingredients": "",
+            "effect0": "",
+            "effect1": "",
+            "effect2": "",
+            "qs": 0,
+            "difficulty": 0
         },
         "ahnengabe": {
             "description": {

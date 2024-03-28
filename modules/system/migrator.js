@@ -40,7 +40,7 @@ export default function migrateWorld() {
         //betaWarning()
         await setupDefaulTokenConfig()
         const currentVersion = await game.settings.get("dsk", "migrationVersion")
-        const NEEDS_MIGRATION_VERSION = 25
+        const NEEDS_MIGRATION_VERSION = 26
         const needsMigration = currentVersion < NEEDS_MIGRATION_VERSION
 
         if (!needsMigration) return;

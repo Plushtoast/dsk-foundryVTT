@@ -31,6 +31,7 @@ export default class ItemDSK extends Item{
             profession: "systems/dsk/icons/categories/profession.webp",
             poison: "systems/dsk/icons/categories/poison.webp",
             trait: "systems/dsk/icons/categories/trait.webp",
+            consumable: "systems/dsk/icons/categories/consumable.webp",
         }[key]
     }
 
@@ -462,7 +463,8 @@ export default class ItemDSK extends Item{
             combatskill: ItemCombatskill,
             effectwrapper: ItemEffectwrapper,
             information: ItemInformation,
-            trait: ItemTrait
+            trait: ItemTrait,
+            consumable: ItemConsumable
         }
     }
 
@@ -637,6 +639,22 @@ class ItemTrait extends ItemDSK {
         let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/combatskill-card.html", title, tokenId)
 
         return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions })
+    }
+}
+
+class ItemConsumable extends ItemDSK {
+    static chatData(data, name) {
+        let res = [
+            this._chatLineHelper("dsk.consumable.effect", data[`effect${data.qs}`]),
+            this._chatLineHelper("dsk.consumable.ingredients", data.ingredients),
+        ]
+
+        return res
+    }    
+
+    static consumablePrice(item) {
+        const prices = `${item.system.price}`.split(";")
+        return Number(prices[[item.system.qs]] || prices[0])
     }
 }
 

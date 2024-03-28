@@ -2755,6 +2755,8 @@ a {
   }
 }
 
+
+
 .chat-condition, .item-sheet .chatButton, .dskjournal .chatButton {
   padding: 0px 4px;
   border: 1px solid #4b4a44;
@@ -2802,6 +2804,7 @@ a {
   &:after{
     content: '';
     position: absolute;
+    pointer-events: none;
     top:46px;
     right:0;
     bottom:40px;
@@ -2840,6 +2843,7 @@ a {
     content: '';
     position: absolute;
     top:36px;
+    pointer-events: none;
     right:0;
     bottom:15px;
     left:0;
@@ -3508,6 +3512,21 @@ select.noAppearance {
 .window-app {
   &.initTracker .window-header, &.tokenQuickHot .window-header {
     display: none;
+  }
+
+  &.dsajournal .window-content,
+  &.bookWizardsheet .window-content {
+      a.content-link,
+      a.inline-roll {
+          border: none;
+          color: #b93d00;
+          font-weight: bold;
+          background: none;
+
+          i {
+              color: #b93d00;
+          }
+      }
   }
 
   &.dskDecent {

@@ -374,6 +374,7 @@ export default class ActorDSK extends Actor {
               case "combatskill":
               case "poison":
               case "ahnengabe":
+              case "consumable":
               case "ahnengeschenk":
                   apply = false;
                   break;
@@ -1136,6 +1137,11 @@ export default class ActorDSK extends Actor {
                 show: false,
                 dataType: "poison",
             },
+            consumable: {
+                items: [],
+                show: false,
+                dataType: "consumable",
+            },
         };
 
         for (let t in DSK.equipmentTypes) {
@@ -1200,6 +1206,10 @@ export default class ActorDSK extends Actor {
                         inventory.ammunition.items.push(ActorDSK.prepareMag(i));
                         inventory.ammunition.show = true;
                         break;
+                    case "consumable": 
+                        inventory.consumable.items.push(i);
+                        inventory.consumable.show = true;
+                        break
                     case "meleeweapon":
                         i.toggleValue = getProperty(i.system, "worn.value") || false;
                         i.toggle = true;

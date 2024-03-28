@@ -490,7 +490,7 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     }
 
     getItemPrice(item) {
-        return Number(getProperty(item, "flags.dsk.customPriceTag")) || (Number(item.system.price) * (item.type == "consumable" ? (Number(item.system.QL) || 0) : 1))
+        return Number(getProperty(item, "flags.dsk.customPriceTag")) || (item.type == "consumable" ? game.dsk.config.ItemSubClasses.consumable.consumablePrice(item) : Number(item.system.price))
     }
 
     prepareTradeFriend(data) {

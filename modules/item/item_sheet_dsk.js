@@ -30,6 +30,7 @@ export default class ItemSheetDSK extends ItemSheet {
         Items.registerSheet("dsk", ItemSheetInformation, { makeDefault: true, types: ["information"] });
         Items.registerSheet("dsk", ItemSheetEffectwrapper, { makeDefault: true, types: ["effectwrapper"] });
         Items.registerSheet("dsk", ItemSheetTrait, { makeDefault: true, types: ["trait"] });
+        Items.registerSheet("dsk", ItemSheetConsumable, { makeDefault: true, types: ["consumable"] });
     }
 
     setupEffect(ev) {
@@ -174,6 +175,17 @@ class ItemSheetInformation extends ItemSheetDSK {
         const data = await super.getData(options)
         mergeObject(data, {
             allSkills: (await DSKUtility.allSkillsList(["skill"])).skills
+        })
+        return data
+    }
+}
+
+class ItemSheetConsumable extends ItemSheetObfuscation(ItemSheetDSK) {
+    async getData(options) {
+        const data = await super.getData(options)
+
+        mergeObject(data, {
+            calculatedPrice: game.dsk.config.ItemSubClasses.consumable.consumablePrice(this.item)
         })
         return data
     }

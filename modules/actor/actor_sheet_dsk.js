@@ -784,6 +784,7 @@ export default class ActorSheetDSK extends ActorSheet {
                 case "rangeweapon":
                 case "equipment":
                 case "ammunition":
+                case "consumable":
                 case "armor":
                 case "poison":
                     return await this._addLoot(item)
