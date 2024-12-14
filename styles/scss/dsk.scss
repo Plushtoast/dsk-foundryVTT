@@ -3177,7 +3177,7 @@ select.noAppearance {
   }
 
   &.def:after {
-    content: attr(data-defenseCount);
+    content: attr(data-defense-count);
     position: absolute;
     left: 0;
     right: 0;

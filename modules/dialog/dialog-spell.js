@@ -97,7 +97,7 @@ export default class DSKpellDialog extends DialogShared {
 
         mod = 0;
         newPosition = baseCastingTime;
-        parent.find(".spellModifier[data-castingTime]:checked").each(function(index, element) {
+        parent.find(".spellModifier[data-casting-time]:checked").each(function(index, element) {
             if (bigCasts) {
                 let ind = DSKpellDialog.bigTimes.indexOf(Number(newPosition));
                 if (ind != undefined) {

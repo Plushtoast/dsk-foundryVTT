@@ -357,6 +357,7 @@ export default class ActorDSK extends Actor {
         for(const e of item.effects) {
           if(e.disabled) continue
 
+          multiply = 1
           apply = true
           switch (item.type) {
               case "meleeweapon":
@@ -1634,8 +1635,8 @@ export default class ActorDSK extends Actor {
             data.damageBonus = data.value;
             data.value = 0;
           }
-          if ($(this).attr("data-specAbId")) data.specAbId = $(this).attr("data-specAbId");
-          if ($(this).attr("data-armorPen")) data.armorPen = $(this).attr("data-armorPen");
+          if ($(this).attr("data-spec-ab-id")) data.specAbId = $(this).attr("data-spec-ab-id");
+          if ($(this).attr("data-armor-pen")) data.armorPen = $(this).attr("data-armor-pen");
     
           res.push(data);
         });

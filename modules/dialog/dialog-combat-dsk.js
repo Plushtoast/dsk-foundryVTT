@@ -48,7 +48,7 @@ export default class DSKCombatDialog extends DialogShared {
             }
             const elem = $(ev.currentTarget);
             let step = Number(elem.attr("data-step"));
-            const maxStep = Number(elem.attr("data-maxStep"));
+            const maxStep = Number(elem.attr("data-max-step"));
             const subcategory = Number(elem.attr("data-category"));
 
             if (ev.button == 0) {
