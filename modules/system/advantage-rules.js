@@ -33,7 +33,7 @@ export default class AdvantageRulesDSK extends ItemRulesDSK {
         if (adoption != null) {
             AdvantageRulesDSK.simpleAdoption(item, adoption, item.name, DSK.vantagesNeedingAdaption)
             item.name = `${item.name.replace(' ()', '')} (${adoption.name})`
-            if (adoption.data)
+            if (adoption.system)
                 item.system.ap = item.system.ap.split("/")[adoption.system.StF.charCodeAt(0) - 65].trim()
         }
         let res = actor.items.find(i => {
