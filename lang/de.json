@@ -960,7 +960,8 @@
         },
         "consumable": {
             "category": {
-                "0": "Duftkugel"
+                "0": "Duftkugel",
+                "1": "Akâmandra"
             },
             "qs": {
                 "0": "Schwach",
