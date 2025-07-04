@@ -737,6 +737,8 @@ export default class BookWizard extends Application {
 }
 
 class InitializerForm extends FormApplication {
+    static _warnedAppV1 = true;
+    
     render(mod, options) {
         new game.dsk.apps.DSKInitializer("DSK Module Initialization", game.i18n.format(`${options?.scope || mod}.importContent`, { defaultText: game.i18n.localize("dsk.importDefault") }), mod, game.i18n.lang, options).render(true)
     }

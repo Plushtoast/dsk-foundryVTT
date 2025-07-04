@@ -514,6 +514,7 @@
             "cannotpay": "<b>{actor}</b> kann seine/ihre Schulden von {amount} nicht bezahlen."
         },
         "DSKError": {
+            "invalidSkinCombination": "Die aktuelle DSK Version unterstützt nur den Light-mode.<br/>Verwende jede andere Kombination auf eigene Gefahr (und melde Probleme auf Github).<br/>Möchtest du jetzt das Standard-Skin setzen?",
             "notFound": "{category} {name} nicht gefunden",
             "requiresGM": "Diese Funktion funktioniert nur mit einem eingelogten Spielleiter.",
             "reportBug": "Fehler melden",

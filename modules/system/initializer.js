@@ -85,7 +85,7 @@ export default class DSKInitializer extends Dialog {
                 }
                 await Folder.updateDocuments(updates)
             }
-            if (json.items) {
+            if (json.items?.length) {
                 let head = await this.getFolderForType("Item")
                 let itemsToCreate = []
                 let itemsToUpdate = []
@@ -102,7 +102,7 @@ export default class DSKInitializer extends Dialog {
                 await ItemDSK.create(itemsToCreate)
                 await ItemDSK.updateDocuments(itemsToUpdate)
             }
-            if(json.playlists){
+            if(json.playlists?.length){
                 let head = await this.getFolderForType("Playlist")
                 let itemsToCreate = []
                 let itemsToUpdate = []
@@ -235,6 +235,7 @@ export default class DSKInitializer extends Dialog {
                 }
             }
             if (json.actors) {
+                
                 let head = await this.getFolderForType("Actor")
                 let actor = game.packs.get(json.actors)
                 let entries = (await actor.getDocuments()).map(x => x.toObject())

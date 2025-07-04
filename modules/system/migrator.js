@@ -55,6 +55,8 @@ function betaWarning() {
 
 export default function migrateWorld() {
     Hooks.once("ready", async function () {
+        setDefaultSkin();
+        
         if (!game.user.isGM) return
 
         //betaWarning()
@@ -68,6 +70,29 @@ export default function migrateWorld() {
         migrateDSK(currentVersion, NEEDS_MIGRATION_VERSION)
     })
 };
+
+async function setDefaultSkin() {
+  const uiConfig = game.settings.get('core', 'uiConfig');
+
+  const setDefaults = uiConfig.colorScheme.interface != 'light' || uiConfig.colorScheme.applications != 'light';
+  if (!setDefaults) return;
+
+  const proceed = await foundry.applications.api.DialogV2.confirm({
+    content: `<p>${game.i18n.localize('dsk.DSKError.invalidSkinCombination')}</p>`,
+    rejectClose: false,
+    modal: true
+  });
+  if (!proceed) return;
+
+  await game.settings.set('core', 'uiConfig', {
+    ...uiConfig,
+    colorScheme: {
+      ...uiConfig.colorScheme,
+      interface: 'light',
+      applications: 'light',
+    },
+  });
+}
 
 class PatchViewer extends Application {
     static _warnedAppV1 = true;

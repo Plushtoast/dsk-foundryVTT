@@ -13,7 +13,6 @@ import { initSidebar } from "./sidebar.js";
 import { initActorHooks } from "./actor.js"
 import { initDSN } from "./dicesonice.js";
 import { initChatlogHooks } from "./chatlog.js"
-import { initTokenHook } from "./token.js"
 import { initTokenHUD } from "./tokenHUD.js"
 import { initRollsFunction } from "../system/dskrolls.js"
 import DSKActiveEffectConfig from "../status/active_effects.js";
@@ -33,7 +32,6 @@ export function initHooks(){
     initActorHooks()
     initDSN()
     initChatlogHooks()
-    initTokenHook()
     initTokenHUD()
     initRollsFunction()
     migrateWorld()

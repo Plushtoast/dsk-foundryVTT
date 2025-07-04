@@ -267,6 +267,8 @@ export class DiceSoNiceCustomization extends Application {
 }
 
 class DiceSoNiceForm extends FormApplication {
+    static _warnedAppV1 = true;
+    
     render() {
         game.dsk.apps.DiceSoNiceCustomization.render(true)
     }

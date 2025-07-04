@@ -358,12 +358,16 @@ export function setupConfiguration(){
 }
 
 class ChangelogForm extends FormApplication {
+    static _warnedAppV1 = true;
+
     render() {
         showPatchViewer()
     }
 }
 
 class ResetTokenbar extends FormApplication {
+    static _warnedAppV1 = true;
+    
     async render() {
         await game.settings.set("dsk", "tokenhotbarPosition", {})
         await game.settings.set("dsk", "tokenhotbarLayout", 0)

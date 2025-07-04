@@ -23,6 +23,7 @@ import DiceDSK from "./system/dicedsk.js"
 import RollMemory from "./system/roll_memory.js"
 import MacroDSK from "./system/macroControl.js"
 import "./system/pause.js"
+import { DSKToken } from "./hooks/token.js"
 
 Hooks.once("init", () => {
     console.log("Initializing DSK system")
@@ -67,6 +68,7 @@ Hooks.once("init", () => {
     CONFIG.ActiveEffect.documentClass = DSKActiveEffect
     CONFIG.ChatMessage.template = "systems/dsk/templates/chat/chat-message.html"
     CONFIG.ActiveEffect.legacyTransferral = false
+    CONFIG.Token.objectClass = DSKToken
 })
 
 initHooks()
