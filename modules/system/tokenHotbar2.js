@@ -1,8 +1,11 @@
 import ActorDSK from "../actor/actor_dsk.js"
 import OnUseEffect from "./onUseEffects.js";
 const { getProperty, mergeObject, duplicate } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class TokenHotbar2 extends Application {
+    static _warnedAppV1 = true;
+
     static registerTokenHotbar() {
         if (!game.dsk.apps.tokenHotbar) game.dsk.apps.tokenHotbar = new TokenHotbar2()
     }
@@ -112,7 +115,7 @@ export default class TokenHotbar2 extends Application {
     activateListeners(html) {
         super.activateListeners(html);
         const container = html.find(".dragHandler");
-        new Draggable(this, html, container[0], this.options.resizable);
+        new foundry.applications.ux.Draggable(this, html, container[0], this.options.resizable);
 
         container.on('wheel', async(ev) => {
             ev.stopPropagation()
@@ -376,6 +379,8 @@ export default class TokenHotbar2 extends Application {
 }
 
 class AddEffectDialog extends Dialog {
+    static _warnedAppV1 = true;
+    
     static async showDialog() {
         const effects = duplicate(CONFIG.statusEffects).map(x => {
             return {

@@ -13,8 +13,11 @@ import SpecialabilityRulesDSK from "../system/specialability-rules.js"
 import ActorDSK from "./actor_dsk.js";
 import { itemFromDrop } from "../system/view_helper.js";
 const { mergeObject, getProperty, duplicate } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
-export default class ActorSheetDSK extends ActorSheet {
+export default class ActorSheetDSK extends foundry.appv1.sheets.ActorSheet {
+    static _warnedAppV1 = true;
+
     async _render(force = false, options = {}) {
         this._saveSearchFields()
         this._saveCollapsed()
@@ -126,10 +129,10 @@ export default class ActorSheetDSK extends ActorSheet {
         sheetData.isGM = game.user.isGM;
         sheetData["initDies"] = { "": "-", "1d6": "1d6", "2d6": "2d6", "3d6": "3d6", "4d6": "4d6" }
         DSKStatusEffects.prepareActiveEffects(this.actor, sheetData)
-        sheetData.enrichedOwnerdescription = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.owner"), { secrets: this.object.isOwner, async: true })
-        sheetData.enrichedGmdescription = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.gm"), { secrets: this.object.isOwner, async: true })
-        sheetData.enrichedNotes = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.description"), { secrets: this.object.isOwner, async: true })
-        sheetData.enrichedBiography = await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.biography"), { secrets: this.object.isOwner, async: true })
+        sheetData.enrichedOwnerdescription = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.owner"), { secrets: this.object.isOwner, async: true })
+        sheetData.enrichedGmdescription = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.gm"), { secrets: this.object.isOwner, async: true })
+        sheetData.enrichedNotes = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.description"), { secrets: this.object.isOwner, async: true })
+        sheetData.enrichedBiography = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.biography"), { secrets: this.object.isOwner, async: true })
 
         return sheetData;
     }

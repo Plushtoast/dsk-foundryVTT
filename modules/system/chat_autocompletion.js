@@ -68,8 +68,13 @@ export default class DSKChatAutoCompletion {
     }
 
     _completeCurrentEntry(target) {
-        $('#chat-message').val($('#chat-message').val().split(" ")[0] + " " + target.text()) + " "
-    }
+        const cmd = [$('#chat-message').val().split(' ')[0], ' ']
+        
+        if(/^\/w$/.test(cmd[0])) cmd.push(`[${target.text()}] `)
+        else cmd.push(target.text())
+    
+        $('#chat-message').val(cmd.join(''));
+      }
 
     _closeQuickfind() {
         this.filtering = false

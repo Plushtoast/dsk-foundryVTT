@@ -41,7 +41,7 @@ export function initHooks(){
     setActorDelta()
 
     Hooks.once("init", () => {
-        loadTemplates([
+        foundry.applications.handlebars.loadTemplates([
             "systems/dsk/templates/items/item-equipment.html",
             "systems/dsk/templates/items/item-header.html",
             "systems/dsk/templates/items/item-description.html",
@@ -78,15 +78,15 @@ export function initHooks(){
             "systems/dsk/templates/actors/parts/normalhead.html"
         ])
     })
-    Actors.unregisterSheet("core", ActorSheet);
-    Actors.registerSheet("dsk", ActorSheetCharacter, { types: ["character"], makeDefault: true });
-    Actors.registerSheet("dsk", ActorSheetCreature, { types: ["creature"], makeDefault: true });
-    Actors.registerSheet("dsk", ActorSheetNPC, { types: ["npc"], makeDefault: true });
-    Actors.registerSheet("dsk", MerchantSheetDSK, { types: ["npc"] });
-    Actors.registerSheet("dsk", CreatureMerchantSheetDSK, { types: ["creature"] })
-    Actors.registerSheet("dsk", CharacterSheetMerchantDSK, { types: ["character"] })
-    DocumentSheetConfig.registerSheet(ActiveEffect, "dsk", DSKActiveEffectConfig, { makeDefault: true })
-    Journal.registerSheet("dsk", DSKJournalSheet, {makeDefault: true})
+    foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
+    foundry.documents.collections.Actors.registerSheet("dsk", ActorSheetCharacter, { types: ["character"], makeDefault: true });
+    foundry.documents.collections.Actors.registerSheet("dsk", ActorSheetCreature, { types: ["creature"], makeDefault: true });
+    foundry.documents.collections.Actors.registerSheet("dsk", ActorSheetNPC, { types: ["npc"], makeDefault: true });
+    foundry.documents.collections.Actors.registerSheet("dsk", MerchantSheetDSK, { types: ["npc"] });
+    foundry.documents.collections.Actors.registerSheet("dsk", CreatureMerchantSheetDSK, { types: ["creature"] })
+    foundry.documents.collections.Actors.registerSheet("dsk", CharacterSheetMerchantDSK, { types: ["character"] })
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(ActiveEffect, "dsk", DSKActiveEffectConfig, { makeDefault: true })
+    foundry.documents.collections.Journal.registerSheet("dsk", DSKJournalSheet, {makeDefault: true})
 
 
     ItemSheetDSK.setupSheets()

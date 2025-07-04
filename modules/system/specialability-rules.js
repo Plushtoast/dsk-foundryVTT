@@ -1,6 +1,7 @@
 import DSK from "./config.js";
 import ItemRulesDSK from "./item-rules.js";
 const { duplicate } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class SpecialabilityRulesDSK extends ItemRulesDSK {
 

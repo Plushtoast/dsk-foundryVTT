@@ -104,6 +104,8 @@ export function initDSN() {
 }
 
 export class DiceSoNiceCustomization extends Application {
+    static _warnedAppV1 = true;
+    
     static unloadedModels = []
     static retries = 0
     static retrying = false

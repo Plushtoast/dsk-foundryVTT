@@ -186,6 +186,8 @@ export function initActorHooks() {
 }
 
 class AskForNameDialog extends Dialog{
+    static _warnedAppV1 = true;
+    
     static async getDialog(tokenObject, setting){
         new Dialog({
             title: game.i18n.localize("dsk.SETTINGS.obfuscateTokenNames"),

@@ -5,6 +5,7 @@ import SpecialabilityRulesDSK from "../system/specialability-rules.js"
 const { mergeObject, duplicate, getProperty } = foundry.utils
 
 export default class WizardDSK extends Application {
+    static _warnedAppV1 = true;
     
     constructor(app) {
         super(app)

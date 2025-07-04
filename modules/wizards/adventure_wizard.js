@@ -6,8 +6,11 @@ import DSKUtility from "../system/dsk_utility.js"
 import { slist } from "../system/view_helper.js"
 import DSK from "../system/config.js"
 const { mergeObject, duplicate } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class BookWizard extends Application {
+    static _warnedAppV1 = true;
+
     static wizard
 
     constructor(app) {
@@ -41,6 +44,8 @@ export default class BookWizard extends Application {
         game.dsk.apps.journalBrowser = BookWizard.wizard
 
         Hooks.on("renderJournalDirectory", (app, html) => {
+
+            html = $(html)
             let div = $('<div class="header-actions action-buttons flexrow"></div>')
             let button = $(`<button id="openJournalBrowser"><i class="fa fa-book"></i>${game.i18n.localize("dsk.Book.Wizard")}</button>`)
             button.on('click', () => { BookWizard.wizard.render(true) })
@@ -344,7 +349,7 @@ export default class BookWizard extends Application {
 
     async showSearchResults(pageContent) {
         if(this.searchString) {
-            await TextEditor._replaceTextContent(TextEditor._getTextNodes(pageContent), new RegExp(this.searchString, "ig"), (match, options) => {
+            await foundry.applications.ux.TextEditor._replaceTextContent(foundry.applications.ux.TextEditor._getTextNodes(pageContent), new RegExp(this.searchString, "ig"), (match, options) => {
                 return $(`<span class="searchMatch">${match[0]}</span>`)[0]
             })
         }
@@ -410,7 +415,7 @@ export default class BookWizard extends Application {
         this.pageTocs = pageTocs.join("")
         
         const pinIcon = this.findSceneNote(journal.getFlag("dsk", "initId"))
-        const enriched = await TextEditor.enrichHTML(content, {secrets: game.user.isGM, async: true})
+        const enriched = await foundry.applications.ux.TextEditor.enrichHTML(content, {secrets: game.user.isGM, async: true})
         
         return `<div><h1 class="journalHeader" data-uuid="${journal.uuid}">${journal.name}<div class="jrnIcons">${pinIcon}<a class="pinJournal"><i class="fas fa-thumbtack"></i></a><a class="showJournal"><i class="fas fa-eye"></i></a></div></h1>${enriched}`
     }

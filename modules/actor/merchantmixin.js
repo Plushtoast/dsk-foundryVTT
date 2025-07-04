@@ -5,6 +5,7 @@ import DSKUtility from "../system/dsk_utility.js";
 import DSKPayment from "../system/payment.js";
 import RuleChaos from "../system/rule_chaos.js";
 const { mergeObject, getProperty, duplicate } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 //todo add on use button to merchant sheet
 
 export const MerchantSheetMixin = (superclass) => class extends superclass {
@@ -532,6 +533,8 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
 }
 
 class SelectTradefriendDialog extends Dialog{
+    static _warnedAppV1 = true;
+    
     static get defaultOptions() {
         const options = super.defaultOptions;
         mergeObject(options, {

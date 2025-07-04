@@ -1,4 +1,4 @@
-export default class DSKHotbar extends Hotbar {
+export default class DSKHotbar extends foundry.applications.ui.Hotbar {
     async collapse() {
         if (this._collapsed) return true
 

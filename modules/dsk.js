@@ -22,7 +22,7 @@ import DPS from "./system/derepositioningsystem.js"
 import DiceDSK from "./system/dicedsk.js"
 import RollMemory from "./system/roll_memory.js"
 import MacroDSK from "./system/macroControl.js"
-import DSKPause from "./system/pause.js"
+import "./system/pause.js"
 
 Hooks.once("init", () => {
     console.log("Initializing DSK system")
@@ -62,7 +62,6 @@ Hooks.once("init", () => {
     CONFIG.ActiveEffect.documentClass = DSKActiveEffect
     CONFIG.ui.combat = DSKCombatTracker
     CONFIG.ui.hotbar = DSKHotbar
-    CONFIG.ui.pause = DSKPause
     CONFIG.Combat.documentClass = DSKCombat
     CONFIG.Combatant.documentClass = DSKCombatant
     CONFIG.ActiveEffect.documentClass = DSKActiveEffect

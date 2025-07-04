@@ -4,6 +4,7 @@ import DSKUtility from "./dsk_utility.js"
 import { showPatchViewer } from "./migrator.js"
 import RuleChaos from "./rule_chaos.js"
 const { duplicate } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class DSKChatListeners {
     static chatListeners(html) {

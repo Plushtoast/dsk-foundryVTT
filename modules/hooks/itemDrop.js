@@ -2,6 +2,7 @@ import DSKUtility from "../system/dsk_utility.js"
 import RuleChaos from "../system/rule_chaos.js"
 import DSK from "../system/config.js"
 const { getProperty } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export const dropToGround = async(sourceActor, item, data, amount) => {
     if (game.user.isGM) {
@@ -133,6 +134,8 @@ export const connectHook = () => {
 }
 
 class DropToGroundDialog extends Dialog {
+    static _warnedAppV1 = true;
+    
     activateListeners(html) {
         super.activateListeners(html)
         html.find('input[type="range"]').change(ev => {

@@ -2,6 +2,7 @@ import DSK from "../system/config.js"
 import DSKUtility from "../system/dsk_utility.js"
 import OnUseEffect from "../system/onUseEffects.js"
 const { getProperty, mergeObject } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class DSKTables {
     static async showBotchCard(dataset, options = {}) {

@@ -8,7 +8,8 @@ import DialogReactDSK from '../dialog/dialog-react.js';
 const { getProperty } = foundry.utils
 
 export function initChatlogHooks() {
-    Hooks.on('renderChatLog', (log, html, data) => {
+    Hooks.on('renderChatLogHTML', (log, html, data) => {
+        html = $(html)
         DiceDSK.chatListeners(html)
         DSKPayment.chatListeners(html)
         const autoComplete = new DSKChatAutoCompletion()
@@ -17,7 +18,8 @@ export function initChatlogHooks() {
         DSKChatListeners.chatListeners(html)
     });
 
-    Hooks.on("renderChatMessage", (app, html, msg) => {
+    Hooks.on("renderChatMessageHTML", (app, html, msg) => {
+        html = $(html)
         if (!game.user.isGM) {
             html.find(".chat-button-gm").remove();
             let actor

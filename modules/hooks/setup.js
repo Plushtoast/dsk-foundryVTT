@@ -56,6 +56,8 @@ const showWrongLanguageDialog = (forceLanguage) => {
 }
 
 class ForbiddenLanguageDialog extends Dialog{
+    static _warnedAppV1 = true;
+    
     async close(options = {}){
         if(!["de"].includes(game.i18n.lang)) return
 
@@ -89,7 +91,7 @@ const showForbiddenLanguageDialog = () => {
     new ForbiddenLanguageDialog(data).render(true)
 }
 
-class DaylightIlluminationShader extends AdaptiveIlluminationShader {
+class DaylightIlluminationShader extends foundry.canvas.rendering.shaders.AdaptiveIlluminationShader {
     static fragmentShader =  `
     ${this.SHADER_HEADER}
     ${this.PERCEIVED_BRIGHTNESS}

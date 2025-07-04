@@ -1,6 +1,7 @@
 import ItemRulesDSK from "./item-rules.js"
 import DSK from "./config.js"
 const { duplicate } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class AdvantageRulesDSK extends ItemRulesDSK {
     static setupFunctions() {}

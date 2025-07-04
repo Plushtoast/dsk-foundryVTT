@@ -202,7 +202,7 @@ export default class DSKCombatDialog extends DialogShared {
         this._resolveDefault(testData, cardOptions, html, actor, options);
 
         //TODO move this to situational modifiers only
-        const data = new FormDataExtended(html.find('form')[0]).object
+        const data = new foundry.applications.ux.FormDataExtended(html.find('form')[0]).object
             //testData.rangeModifier = html.find('[name="distance"]').val();
         testData.opposingWeaponSize = data.weaponsize
         testData.narrowSpace = data.narrowSpace
@@ -247,7 +247,7 @@ export default class DSKCombatDialog extends DialogShared {
         this._resolveDefault(testData, cardOptions, html, actor, options);
 
         //TODO move this to situational modifiers only
-        const data = new FormDataExtended(html.find('form')[0]).object
+        const data = new foundry.applications.ux.FormDataExtended(html.find('form')[0]).object
         testData.rangeModifier = data.distance
 
         testData.situationalModifiers.push({

@@ -7,31 +7,40 @@ import { svgAutoFit } from "../system/view_helper.js";
 import { ItemSheetObfuscation } from "./obfuscatemixin.js";
 import { itemFromDrop } from "../system/view_helper.js";
 const { mergeObject, getProperty } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
-export default class ItemSheetDSK extends ItemSheet {
-    static setupSheets(){
-        Items.unregisterSheet("core", ItemSheet)
+export default class ItemSheetDSK extends foundry.appv1.sheets.ItemSheet {
+    static _warnedAppV1 = true;
 
-        Items.registerSheet("dsk", ItemSheetMeleeweapon, { makeDefault: true, types: ["meleeweapon"] });
-        Items.registerSheet("dsk", ItemSheetRangeweapon, { makeDefault: true, types: ["rangeweapon"] });
-        Items.registerSheet("dsk", ItemSheetArmor, { makeDefault: true, types: ["armor"] });
-        Items.registerSheet("dsk", ItemSheetAmmunition, { makeDefault: true, types: ["ammunition"] });
-        Items.registerSheet("dsk", ItemSheetEquipment, { makeDefault: true, types: ["equipment"] });
-        Items.registerSheet("dsk", ItemSheetSpecies, { makeDefault: true, types: ["species"] });
-        Items.registerSheet("dsk", ItemSheetCulture, { makeDefault: true, types: ["culture"] });
-        Items.registerSheet("dsk", ItemSheetProfession, { makeDefault: true, types: ["profession"] });
-        Items.registerSheet("dsk", ItemSheetAdvantage, { makeDefault: true, types: ["advantage"] });
-        Items.registerSheet("dsk", ItemSheetDisadvantage, { makeDefault: true, types: ["disadvantage"] });
-        Items.registerSheet("dsk", ItemSheetSpecialability, { makeDefault: true, types: ["specialability"] });
-        Items.registerSheet("dsk", ItemSheetAhnengeschenk, { makeDefault: true, types: ["ahnengeschenk"] });
-        Items.registerSheet("dsk", ItemSheetAhnengabe, { makeDefault: true, types: ["ahnengabe"] });
-        Items.registerSheet("dsk", ItemSheetPoison, { makeDefault: true, types: ["poison"] });
-        Items.registerSheet("dsk", ItemSheetSkill, { makeDefault: true, types: ["skill"] });
-        Items.registerSheet("dsk", ItemSheetCombatskill, { makeDefault: true, types: ["combatskill"] });
-        Items.registerSheet("dsk", ItemSheetInformation, { makeDefault: true, types: ["information"] });
-        Items.registerSheet("dsk", ItemSheetEffectwrapper, { makeDefault: true, types: ["effectwrapper"] });
-        Items.registerSheet("dsk", ItemSheetTrait, { makeDefault: true, types: ["trait"] });
-        Items.registerSheet("dsk", ItemSheetConsumable, { makeDefault: true, types: ["consumable"] });
+    static setupSheets() {
+        const sheetMappings = [
+            { sheet: ItemSheetMeleeweapon, types: ["meleeweapon"] },
+            { sheet: ItemSheetRangeweapon, types: ["rangeweapon"] },
+            { sheet: ItemSheetArmor, types: ["armor"] },
+            { sheet: ItemSheetAmmunition, types: ["ammunition"] },
+            { sheet: ItemSheetEquipment, types: ["equipment"] },
+            { sheet: ItemSheetSpecies, types: ["species"] },
+            { sheet: ItemSheetCulture, types: ["culture"] },
+            { sheet: ItemSheetProfession, types: ["profession"] },
+            { sheet: ItemSheetAdvantage, types: ["advantage"] },
+            { sheet: ItemSheetDisadvantage, types: ["disadvantage"] },
+            { sheet: ItemSheetSpecialability, types: ["specialability"] },
+            { sheet: ItemSheetAhnengeschenk, types: ["ahnengeschenk"] },
+            { sheet: ItemSheetAhnengabe, types: ["ahnengabe"] },
+            { sheet: ItemSheetPoison, types: ["poison"] },
+            { sheet: ItemSheetSkill, types: ["skill"] },
+            { sheet: ItemSheetCombatskill, types: ["combatskill"] },
+            { sheet: ItemSheetInformation, types: ["information"] },
+            { sheet: ItemSheetEffectwrapper, types: ["effectwrapper"] },
+            { sheet: ItemSheetTrait, types: ["trait"] },
+            { sheet: ItemSheetConsumable, types: ["consumable"] }
+        ];
+
+        foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
+
+        for (const { sheet, types } of sheetMappings) {
+            foundry.documents.collections.Items.registerSheet("dsk", sheet, { makeDefault: true, types });
+        }
     }
 
     setupEffect(ev) {
@@ -71,8 +80,8 @@ export default class ItemSheetDSK extends ItemSheet {
             editable: this.isEditable,
             item: this.item,
             isGM: game.user.isGM,
-            enrichedDescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: this.object.isOwner, async: true}),
-            enrichedGmdescription: await TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: this.object.isOwner, async: true})
+            enrichedDescription: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: this.object.isOwner, async: true}),
+            enrichedGmdescription: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: this.object.isOwner, async: true})
         })
         DSKStatusEffects.prepareActiveEffects(this.item, data)
         return data
@@ -404,7 +413,7 @@ class ItemSheetProfession extends ItemSheetDSK{
     async getData(options) {
         const data = await super.getData(options);
         mergeObject(data, {
-            enrichedClothing: await TextEditor.enrichHTML(getProperty(this.item.system, "description.gear"), {secrets: this.object.isOwner, async: true})
+            enrichedClothing: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "description.gear"), {secrets: this.object.isOwner, async: true})
         })
         return data
     }
@@ -413,7 +422,7 @@ class ItemSheetProfession extends ItemSheetDSK{
 class ItemSheetAdvantage extends ItemSheetDSK{
     async getData(options){
         const data = await super.getData(options)
-        data.enrichedRule = await TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner, async: true })
+        data.enrichedRule = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner, async: true })
         return data
     }
 
@@ -461,7 +470,7 @@ class ItemSheetSpecialability extends ItemSheetDSK{
         mergeObject(data, {
             categories: DSK.specialAbilityCategories,
             subCategories: DSK.combatSkillSubCategories,
-            enrichedRule: await TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner, async: true }),
+            enrichedRule: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner, async: true }),
             canOnUseEffect: game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
         })
         return data

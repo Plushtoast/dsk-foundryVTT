@@ -3,21 +3,27 @@ import DSKUtility from "../system/dsk_utility.js";
 import { ActAttackDialog } from "../dialog/dialog-react.js"
 const { getProperty, mergeObject } = foundry.utils
 
-export class DSKCombatTracker extends CombatTracker {
-    static get defaultOptions() {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            template: "/systems/dsk/templates/system/combattracker.html"
-        });
-    }
+export class DSKCombatTracker extends foundry.applications.sidebar.tabs.CombatTracker {
+    static PARTS = {
+        header: {
+            template: 'templates/sidebar/tabs/combat/footer.hbs',
+        },
+        tracker: {
+            template: 'systems/dsk/templates/system/combattracker.hbs',
+        },
+        footer: {
+            template: 'templates/sidebar/tabs/combat/footer.hbs',
+        },
+    };
 
-    activateListeners(html) {
-        super.activateListeners(html)
+    static DEFAULT_OPTIONS = {
+        actions: {
+            aggroButton: this._onAggroButtonClicked,
+        },
+    };
 
-        html.find('.combatant.actor .aggroButton').click(ev => {
-            ev.preventDefault()
-            ev.stopPropagation()
-            DSKCombatTracker.runActAttackDialog()
-        })
+    static _onAggroButtonClicked() {
+        DSKCombatTracker.runActAttackDialog();
     }
 
     static runActAttackDialog() {
@@ -26,46 +32,50 @@ export class DSKCombatTracker extends CombatTracker {
         const combatant = game.combat.combatant
         if (game.user.isGM || combatant.isOwner)
             ActAttackDialog.showDialog(combatant.actor, combatant.tokenId)
-            
+
     }
 
-    async getData(options) {
-            const data = await super.getData(options);
+    async _prepareTurnContext(combat, combatant, index) {
+        const turn = await super._prepareTurnContext(combat, combatant, index);
+        const isAllowedToSeeEffects = (game.user.isGM || (combatant.actor && combatant.actor.testUserPermission(game.user, "OBSERVER")) || !(game.settings.get("dsk", "hideEffects")));
+        turn.defenseCount = combatant.getFlag("dsk", "defenseCount") || 0
 
-            for (let turn of data.turns) {
-                const combatant = data.combat.turns.find(x => x.id == turn.id)
-                const isAllowedToSeeEffects = (game.user.isGM || (combatant.actor && combatant.actor.testUserPermission(game.user, "OBSERVER")) || !(game.settings.get("dsk", "hideEffects")));
-                turn.defenseCount = combatant.getFlag("dsk", "defenseCount") || 0
-
-                let remainders = []
-                if (combatant.actor) {
-                    for (const x of combatant.actor.items) {
-                        if (x.type == "rangeweapon" && x.system.worn.value && x.system.reloadTimeprogress > 0) {
-                            const wpn = { name: x.name, remaining: ActorDSK.calcLZ(x, combatant.actor) - x.system.reloadTimeprogress }
-                            if (wpn.remaining > 0) remainders.push(wpn)
-                        } else if (["spell", "liturgy"].includes(x.type) && x.system.castingTime.modified > 0) {
-                            const wpn = { name: x.name, remaining: x.system.castingTime.modified - x.system.castingTime.progress }
-                            if (wpn.remaining > 0) remainders.push(wpn)
-                        }
-                    }
+        let remainders = []
+        if (combatant.actor) {
+            for (const x of combatant.actor.items) {
+                if (x.type == "rangeweapon" && x.system.worn.value && x.system.reloadTimeprogress > 0) {
+                    const wpn = { name: x.name, remaining: ActorDSK.calcLZ(x, combatant.actor) - x.system.reloadTimeprogress }
+                    if (wpn.remaining > 0) remainders.push(wpn)
+                } else if (["spell", "liturgy"].includes(x.type) && x.system.castingTime.modified > 0) {
+                    const wpn = { name: x.name, remaining: x.system.castingTime.modified - x.system.castingTime.progress }
+                    if (wpn.remaining > 0) remainders.push(wpn)
                 }
-                remainders = remainders.sort((a, b) => a.remaining - b.remaining)
-
-                if (remainders.length > 0) {
-                    turn.ongoings = `${game.i18n.localize('dsk.COMBATTRACKER.ongoing')}\n${remainders.map((x) => `${x.name} - ${x.remaining}`).join("\n")}`
-
-                turn.ongoing = remainders[0].remaining
             }
-
-            turn.effects = new Set();
-            if (combatant.actor) combatant.actor.temporaryEffects.forEach(e => {
-                if (e.statuses.has(CONFIG.Combat.defeatedStatusId)) turn.defeated = true;
-                else if (e.img && isAllowedToSeeEffects && !e.notApplicable && (game.user.isGM || !e.getFlag("dsk", "hidePlayers")) && !e.getFlag("dsk", "hideOnToken")) turn.effects.add(e.img);
-            })
         }
-        return data
+        remainders = remainders.sort((a, b) => a.remaining - b.remaining)
+
+        if (remainders.length > 0) {
+            turn.ongoings = `${game.i18n.localize('dsk.COMBATTRACKER.ongoing')}\n${remainders.map((x) => `${x.name} - ${x.remaining}`).join("\n")}`
+
+            turn.ongoing = remainders[0].remaining
+        }
+
+        const effects = [];
+        for (const e of combatant.actor?.temporaryEffects || []) {
+            if (e.statuses.has('defeated')) turn.defeated = true;
+            else if (e.img && isAllowedToSeeEffects && !e.notApplicable && (game.user.isGM || !e.getFlag('dsk', 'hidePlayers')) && !e.getFlag('dsk', 'hideOnToken')) {
+                effects.push({ img: e.img, name: e.name });
+            }
+        }
+        turn.effects = {
+            icons: effects,
+            tooltip: this._formatEffectsTooltip(effects),
+        };
+
+        return turn;
     }
 }
+
 export class DSKCombat extends Combat {
     constructor(data, context) {
         super(data, context);
@@ -88,7 +98,7 @@ export class DSKCombat extends Combat {
     async nextRound() {
         if (game.user.isGM) {
             for (let k of this.turns) {
-                await k.setFlag("dsk", "defenseCount", 0 )
+                await k.setFlag("dsk", "defenseCount", 0)
             }
         } else {
             await game.socket.emit("system.dsk", {
@@ -118,7 +128,7 @@ export class DSKCombat extends Combat {
     async updateDefenseCount(speaker) {
         if (game.user.isGM) {
             for (let spe of speaker) {
-                const comb = this.getCombatantFromActor({token: spe})
+                const comb = this.getCombatantFromActor({ token: spe })
                 if (comb && !getProperty(comb.actor, "system.config.defense")) {
                     await comb.setFlag("dsk", "defenseCount", (comb.getFlag("dsk", "defenseCount") || 0) + 1)
                 }
@@ -136,39 +146,39 @@ export class DSKCombat extends Combat {
 
 export class DSKCombatant extends Combatant {
     constructor(data, context) {
-        if(data.flags == undefined) data.flags = {}
+        if (data.flags == undefined) data.flags = {}
 
         mergeObject(data.flags, {
-            dsk: {defenseCount: 0}
+            dsk: { defenseCount: 0 }
         })
         super(data, context);
     }
 
-    async recalcInitiative(){
-        if(this.initiative){
+    async recalcInitiative() {
+        if (this.initiative) {
             const roll = await this.getFlag("dsk", "baseRoll") || 0
-            const update = { "initiative": roll + this.actor.system.stats.ini.value}
+            const update = { "initiative": roll + this.actor.system.stats.ini.value }
             await this.update(update)
         }
     }
 }
 
 Hooks.on("preCreateCombatant", (data, options, user) => {
-    const actor = DSKUtility.getSpeaker({actor: data.actorId, scene: data.sceneId, token: data.token_id})
-    if(getProperty(actor.system, "merchant.merchantType") == "loot") return false
+    const actor = DSKUtility.getSpeaker({ actor: data.actorId, scene: data.sceneId, token: data.token_id })
+    if (getProperty(actor.system, "merchant.merchantType") == "loot") return false
 })
 
 Hooks.on("updateCombatant", (combatant, change, user) => {
-    if(!game.user.isGM) return
-    
-    if(change.initiative){
+    if (!DSKUtility.isActiveGM()) return
+
+    if (change.initiative) {
         const baseRoll = combatant.getFlag("dsk", "baseRoll")
-        if(!baseRoll) {
+        if (!baseRoll) {
             const parts = `${change.initiative}`.split(".")
             const roll = Number(parts[0]) - Math.round(combatant.actor.system.stats.ini.value)
             combatant.setFlag("dsk", "baseRoll", roll)
         }
-    } else if("initiative" in change && change.initiative == null){
+    } else if ("initiative" in change && change.initiative == null) {
         combatant.update({ [`flags.dsk.-=baseRoll`]: null })
     }
 })
@@ -178,8 +188,8 @@ class RepeatingEffectsHelper {
         if (!updateData.round && !updateData.turn)
             return
 
-        if (combat.round != 0 && combat.turns && combat.active){
-            if(combat.previous.round < combat.current.round)
+        if (combat.round != 0 && combat.turns && combat.active) {
+            if (combat.previous.round < combat.current.round)
                 await RepeatingEffectsHelper.startOfRound(combat)
         }
     }
@@ -202,11 +212,11 @@ class RepeatingEffectsHelper {
         }
     }
 
-    static async startOfRoundEffects(turn){
+    static async startOfRoundEffects(turn) {
         const regenerationAttributes = ["LeP", "AeP"]
-        for(const attr of regenerationAttributes){
-            for (const ef of turn.actor.system.repeatingEffects.startOfRound[attr]){
-                if(getProperty(turn.actor.system.repeatingEffects, `disabled.${attr}`)) continue
+        for (const attr of regenerationAttributes) {
+            for (const ef of turn.actor.system.repeatingEffects.startOfRound[attr]) {
+                if (getProperty(turn.actor.system.repeatingEffects, `disabled.${attr}`)) continue
 
                 const damageRoll = await new Roll(ef.value).evaluate()
                 const damage = await damageRoll.render()
@@ -221,18 +231,18 @@ class RepeatingEffectsHelper {
     }
 
     static async applyBleeding(turn) {
-        if(turn.actor.system.stats.LeP.value <= 0) return 
+        if (turn.actor.system.stats.LeP.value <= 0) return
 
         await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format('dsk.CHATNOTIFICATION.bleeding', { actor: turn.actor.name })))
         await turn.actor.applyDamage(1)
     }
 
     static async applyBurning(turn, effect) {
-        if(turn.actor.system.stats.LeP.value <= 0) return 
-        
+        if (turn.actor.system.stats.LeP.value <= 0) return
+
         const step = Number(effect.getFlag("dsk", "value"))
         const protection = DSKStatusEffects.resistantToEffect(turn.actor, effect)
-        const die =  { 0: "1", 1: "1d3", 2: "1d6", 3: "2d6" }[step - protection] || "1"
+        const die = { 0: "1", 1: "1d3", 2: "1d6", 3: "2d6" }[step - protection] || "1"
         const damageRoll = await new Roll(die).evaluate()
         const damage = await damageRoll.render()
 

@@ -1,6 +1,9 @@
 import Migrakel from "../system/migrakel.js"
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class DialogActorConfig extends Dialog {
+    static _warnedAppV1 = true;
+    
     constructor(actor, options) {
         super(options)
         this.actor = actor

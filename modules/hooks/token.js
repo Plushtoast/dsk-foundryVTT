@@ -1,5 +1,6 @@
 import DPS from "../system/derepositioningsystem.js";
 const { getProperty } = foundry.utils
+const { Token } = foundry.canvas.placeables;
 
 export function initTokenHook() {
     Token.prototype.drawEffects = async function() {

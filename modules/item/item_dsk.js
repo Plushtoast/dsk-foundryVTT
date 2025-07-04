@@ -10,6 +10,7 @@ import SpecialabilityRulesDSK from "../system/specialability-rules.js"
 import DPS from "../system/derepositioningsystem.js"
 import CreatureType from "../system/creature-type.js"
 const { duplicate, mergeObject, getProperty } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class ItemDSK extends Item{
     static defaultImages(type, subtype = ""){
@@ -952,7 +953,7 @@ class ItemAhnengabe extends ItemDSK{
         ActorDSK.schipsModifier(html, testData.situationalModifiers)
         if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) actor.reduceSchips(0)
 
-        const formData = new FormDataExtended(html.find('form')[0]).object
+        const formData = new foundry.applications.ux.FormDataExtended(html.find('form')[0]).object
         testData.calculatedSpellModifiers = {
             castingTime: html.find(".castingTime").text(),
             cost: html.find(".aspcost").text(),

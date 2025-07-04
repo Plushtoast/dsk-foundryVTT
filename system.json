@@ -2,7 +2,7 @@
     "id": "dsk",
     "title": "Die Schwarze Katze/A Furry Tale",
     "description": "Das Rollenspiel Die Schwarze Katze spielt in Aventurien, in der Welt von Das Schwarze Auge. Jedoch schlüpfst du in die Rolle einer erwachten Katze und erlebst die Welt und Abenteuer aus einer ganz anderen Perspektive.",
-    "version": "3.0.10",
+    "version": "4.0.0",
     "download": "https://github.com/Plushtoast/dsk-foundryVTT/releases/download/3.0.10/dsk-foundryVTT-3.0.10.zip",
     "authors": [{
         "name": "Plushtoast"
@@ -58,12 +58,12 @@
     "primaryTokenAttribute": "stats.LeP",
     "secondaryTokenAttribute": "stats.AeP",
     "compatibility": {
-        "minimum": "12",
-        "verified": "12",
-        "maximum": "12"
+        "minimum": "13",
+        "verified": "13",
+        "maximum": "13"
     },
     "url": "https://github.com/Plushtoast/dsk-foundryVTT",
-    "manifest": "https://raw.githubusercontent.com/Plushtoast/dsk-foundryVTT/foundry12/system.json",
+    "manifest": "https://raw.githubusercontent.com/Plushtoast/dsk-foundryVTT/foundry13/system.json",
     "packFolders": [
         {
           "name": "Die Schwarze Katze",
@@ -73,5 +73,20 @@
             "patzer"
           ]
         }
-      ]
+      ],
+    "flags": {
+        "hotReload": {
+            "extensions": [
+                "css",
+                "html",
+                "hbs",
+                "json"
+            ],
+            "paths": [
+                "templates",
+                "styles/css",
+                "lang"
+            ]
+        }
+    }
 }

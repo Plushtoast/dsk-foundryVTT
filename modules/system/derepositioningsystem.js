@@ -46,8 +46,8 @@ export default class DPS {
     }
 
     static initDoorMinDistance() {
-        const originalDoorControl = DoorControl.prototype._onMouseDown
-        DoorControl.prototype._onMouseDown = function(event) {
+        const originalDoorControl = foundry.canvas.containers.DoorControl.prototype._onMouseDown
+        foundry.canvas.containers.DoorControl.prototype._onMouseDown = function(event) {
             if (!game.user.isGM && game.settings.get("dsk", "enableDPS")) {
                 if (!DPS.inDistance(this))
                     return ui.notifications.warn('dsk.DSKError.notInRangeToLoot', { localize: true })

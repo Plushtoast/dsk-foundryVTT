@@ -1,7 +1,4 @@
-export default class DSKPause extends Pause{
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        options.template = "systems/dsk/templates/system/pause.html";
-        return options;
-      }
-}
+Hooks.on('renderGamePause', (app, html, data, options) => {
+  const img = html.querySelector('img');
+  img.src = "systems/dsk/icons/backgrounds/dasbunteauge.webp"
+});

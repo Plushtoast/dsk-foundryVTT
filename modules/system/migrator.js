@@ -1,23 +1,42 @@
 import DSKUtility from "./dsk_utility.js"
 const { mergeObject } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 async function setupDefaulTokenConfig() {
     if (!game.settings.get("dsk", "defaultConfigFinished")) {
         console.log("Configuring default token settings")
-        let defaultToken = game.settings.get("core", "defaultToken")
+        let defaultToken = game.settings.get('core', 'prototypeTokenOverrides');
 
-        defaultToken.displayName = CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER
-        defaultToken.displayBars = CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER
-        defaultToken.disposition = CONST.TOKEN_DISPOSITIONS.NEUTRAL
+        defaultToken.base.displayName = CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER;
+        defaultToken.base.displayBars = CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER;
+        defaultToken.base.disposition = CONST.TOKEN_DISPOSITIONS.NEUTRAL;
         defaultToken.bar1 = { attribute: "status.wounds" }
-        await game.settings.set("core", "defaultToken", defaultToken)
+        defaultToken.character.sight.enabled = true;
+        await game.settings.set('core', 'prototypeTokenOverrides', defaultToken);
         await game.settings.set("core", "leftClickRelease", true)
         await game.settings.set("dsk", "defaultConfigFinished", true)
+        await migrateToV13()
     }
+}
+
+async function migrateToV13() {
+    const combatTrackerConfig = game.settings.get('core', 'combatTrackerConfig');
+    foundry.utils.mergeObject(combatTrackerConfig, {
+        turnMarker: {
+            src: 'systems/dsk/icons/backgrounds/dasbunteauge.webp',
+            animation: 'spin',
+        },
+    });
+    await game.settings.set('core', 'combatTrackerConfig', combatTrackerConfig);
 }
 
 async function migrateDSK(currentVersion, migrationVersion) {
     await showPatchViewer()
+
+    if (currentVersion < 28) {
+        await migrateToV13();
+    }
+
     await game.settings.set("dsk", "migrationVersion", migrationVersion)
 }
 
@@ -35,13 +54,13 @@ function betaWarning() {
 }
 
 export default function migrateWorld() {
-    Hooks.once("ready", async function() {
+    Hooks.once("ready", async function () {
         if (!game.user.isGM) return
 
         //betaWarning()
         await setupDefaulTokenConfig()
         const currentVersion = await game.settings.get("dsk", "migrationVersion")
-        const NEEDS_MIGRATION_VERSION = 27
+        const NEEDS_MIGRATION_VERSION = 28
         const needsMigration = currentVersion < NEEDS_MIGRATION_VERSION
 
         if (!needsMigration) return;
@@ -51,6 +70,8 @@ export default function migrateWorld() {
 };
 
 class PatchViewer extends Application {
+    static _warnedAppV1 = true;
+
     constructor(json, app) {
         super(app)
         this.json = json
@@ -69,7 +90,7 @@ class PatchViewer extends Application {
         options.resizable = true
         return options;
     }
-    
+
     async getData() {
         let version = this.json["notes"][this.json["notes"].length - 1]
         const patchName = this.json["default"].replace(/VERSION/g, version.version)
@@ -82,8 +103,8 @@ class PatchViewer extends Application {
 
         const prevVersions = [this.json["notes"][this.json["notes"].length - 2]].filter(x => x != undefined)
         const hasPrevVersions = prevVersions.length > 0
-        const prevChangeLogs = hasPrevVersions ? await Promise.all(prevVersions.map(async(x) => await renderTemplate(`systems/dsk/lazy/patchhtml/changelog_${lang}_${x.version}.html`))) : []
-        const prevNews = hasPrevVersions ? await Promise.all(prevVersions.map(async(x) => await renderTemplate(`systems/dsk/lazy/patchhtml/news_${lang}_${x.version}.html`))) : []
+        const prevChangeLogs = hasPrevVersions ? await Promise.all(prevVersions.map(async (x) => await renderTemplate(`systems/dsk/lazy/patchhtml/changelog_${lang}_${x.version}.html`))) : []
+        const prevNews = hasPrevVersions ? await Promise.all(prevVersions.map(async (x) => await renderTemplate(`systems/dsk/lazy/patchhtml/news_${lang}_${x.version}.html`))) : []
         const modules = await renderTemplate(`systems/dsk/lazy/patchhtml/modules_${lang}.html`)
 
         return {

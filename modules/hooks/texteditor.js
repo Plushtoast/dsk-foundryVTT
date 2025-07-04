@@ -1,4 +1,5 @@
 import DSK from "../system/config.js"
+const { renderTemplate } = foundry.applications.handlebars;
 
 export function setEnrichers() {
     const rolls = { "Rq": "roll" }

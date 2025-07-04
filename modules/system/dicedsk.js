@@ -12,6 +12,7 @@ import RequestRoll from "./request-roll.js"
 import SpecialabilityRulesDSK from "./specialability-rules.js"
 import TraitRulesDSK from "./trait_rules.js"
 const { mergeObject, deepClone, getProperty, duplicate } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class DiceDSK{
     static async rollTest(testData) {
@@ -669,7 +670,7 @@ export default class DiceDSK{
                 ChatMessage.getSpeakerActor(rerenderMessage.speaker) ||
                 game.users.get(rerenderMessage.author).character
             const rollData = actor ? actor.getRollData() : {}
-            const enriched = await TextEditor.enrichHTML(html, {rollData, async: true})
+            const enriched = await foundry.applications.ux.TextEditor.enrichHTML(html, {rollData, async: true})
             chatOptions["content"] = enriched
 
             const postFunction = getProperty(rerenderMessage, "flags.data.preData.extra.options.postFunction")

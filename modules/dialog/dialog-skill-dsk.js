@@ -42,7 +42,7 @@ export default class SkillDialogDSK extends DialogShared {
     }
 
     rememberFormData(ev) {
-        const data = new FormDataExtended(this.element.find('form')[0]).object
+        const data = new foundry.applications.ux.FormDataExtended(this.element.find('form')[0]).object
         data.situationalModifiers = ActorDSK._parseModifiers(this._element)
     }
 

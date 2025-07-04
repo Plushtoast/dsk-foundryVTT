@@ -1,25 +1,49 @@
+import DSKUtility from "../system/dsk_utility.js";
+
 const { getProperty } = foundry.utils
 
-export function initSidebar(){
+export function initSidebar() {
     Hooks.on("renderSettings", (app, html, data) => {
-        let button = $(`<button id="reportADSKBug"><i class="fas fa-bug"></i> ${game.i18n.localize("dsk.DSKError.reportBug")}</button>`)
-        button.click(() => { window.open("https://github.com/Plushtoast/dsk-foundryVTT/issues", "_blank") })
-        html.find("#settings-documentation").append(button)
+        const jHtml = $(html);
+        const documentation = jHtml.find('.documentation');
+        const buttons = [
+            {
+                icon: '<i class="fas fa-bug"></i>',
+                label: game.i18n.localize('dsk.DSKError.reportBug'),
+                link: 'https://github.com/Plushtoast/dsk-foundryVTT/issues',
+                attrs: { id: 'reportADSKBug' },
+            },
+            {
+                icon: '<i class="fas fa-info-circle"></i>',
+                label: game.i18n.localize('DSA5Wiki'),
+                link: `https://github.com/Plushtoast/dsa5-foundryVTT/wiki${game.i18n.lang == 'de' ? '/de-Home' : ''}`,
+            },
+            {
+                icon: '<div></div>',
+                label: 'F-Shop',
+                link: game.i18n.localize('dsk.fshopLink'),
+                attrs: { class: 'fshopButton' }
+            }
+        ]
 
-        button = $(`<button class="fshopButton"><div></div> F-Shop</button>`)
-        button.click(() => { window.open(game.i18n.localize("dsk.fshopLink"), "_blank") })
-        html.find("#settings-documentation").append(button)
+        buttons.forEach(({ icon, label, link, attrs }) => {
+            const joined_attrs = Object.entries(attrs || {}).map(([key, value]) => `${key}="${value}"`).join(' ');
+            const button = $(`<button ${joined_attrs}>${icon} ${label}</button>`);
+            button.on('click', () => window.open(link, '_blank'));
+            documentation.append(button);
+        });
 
-        const systemName = game.system.title.split("/")[game.i18n.lang == "de" ? 0 : 1]
-        const version = html.find('#game-details .system .system-info').html()
-        html.find('#game-details .system').html(`<span class="system-title">${systemName}</span><span class="system-info">${version}</span>`)
+        const systemName = game.system.title.split('/')[game.i18n.lang == 'de' ? 0 : 1];
+        jHtml.find('.system .label').text(systemName);
     })
 
     Hooks.on("renderCompendiumDirectory", (app, html, data) => {
-        const button = $(`<button id="openLibrary"><i class="fas fa-university"></i>${game.i18n.localize("dsk.ItemLibrary")}</button>`);
-        const headerActions = html.find(".header-actions")
-        headerActions.append(button);
-        button.click(() => { game.dsk.itemLibrary.render(true) })
+        const button = $(`<button type="button"><i class="fas fa-university"></i> <span>${game.i18n.localize('ItemLibrary')}</span></button>`);
+        const headerActions = $(html).find('.header-actions');
+        const container = $('<div class="header-actions action-buttons flexrow"></div>');
+        container.append(button);
+        headerActions.before(container);
+        button.on('click', () => DSKUtility.renderToggle(game.dsk.itemLibrary));
     })
 
     Hooks.once("renderCompendiumDirectory", (app, html, data) => {
@@ -27,18 +51,19 @@ export function initSidebar(){
         const packsToRemove = game.packs.filter(p => getProperty(p.metadata, "flags.dsklang") == toRemove)
 
         for (let pack of packsToRemove) {
-            let name = `${pack.metadata.packageName}.${pack.metadata.name}`
-            game.packs.delete(name)
-            game.data.packs = game.data.packs.filter(x => x.id != name)
-            html.find(`li[data-pack="${name}"]`).remove()
+            const id = pack.metadata.id;
+            game.packs.delete(id);
+            game.data.packs = game.data.packs.filter((x) => x.id != id);
+            $(html).find(`li[data-pack="${id}"]`).remove();
         }
     })
 
     Hooks.on("renderActorDirectory", (app, html, data) => {
         if (game.user.isGM) return
-        
-        for (let act of app.documents.filter(x => x.isMerchant() && getProperty(x, "system.merchant.hidePlayer"))) {
-            html.find(`[data-document-id="${act.id}"]`).remove()
+
+        const jHtml = $(html);
+        for (let act of app.options.collection.filter((x) => x.isMerchant() && x.system.merchant.hidePlayer)) {
+            jHtml.find(`[data-entry-id="${act.id}"]`).remove();
         }
     })
 }

@@ -2,6 +2,7 @@ import DSKUtility from "./../system/dsk_utility.js"
 import DSK from "./../system/config.js"
 import DiceDSK from "../system/dicedsk.js";
 const { mergeObject, getProperty, duplicate, setProperty } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 function automatedAnimation(successLevel, options = {}) {
     if (DSKUtility.moduleEnabled("autoanimations")) {
@@ -44,7 +45,7 @@ async function callMacro(packName, name, actor, item, qs, args = {}) {
     return result;
 };
 
-export default class DSKActiveEffectConfig extends ActiveEffectConfig {
+export default class DSKActiveEffectConfig extends foundry.applications.sheets.ActiveEffectConfig {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             resizable: true,

@@ -1,6 +1,7 @@
 import DSKUtility from "./dsk_utility.js"
 import ADVANCEDFILTERS from "./itemlibrary_advanced_filters.js"
 const { getProperty, debounce } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 //TODO merge existing index with advanced details
 //TODO create index with getIndex(fields)
 //TODO check if we can use the uuid right from the start
@@ -106,6 +107,8 @@ class AdvancedSearchDocument extends SearchDocument {
 }
 
 export default class DSKItemLibrary extends Application {
+    static _warnedAppV1 = true;
+
     constructor(app) {
         super(app)
         this.advancedFiltering = false
@@ -268,10 +271,10 @@ export default class DSKItemLibrary extends Application {
 
     buildFilter(elem) {
         let res = []
-        Object.keys(elem.categories).forEach(function(key) {
+        Object.keys(elem.categories).forEach(function (key) {
             res.push({ label: game.i18n.localize(`TYPES.Item.${key}`), selected: elem.categories[key], key: key })
         })
-        res = res.sort(function(a, b) {
+        res = res.sort(function (a, b) {
             return a.label.localeCompare(b.label);
         });
         return res
@@ -365,8 +368,8 @@ export default class DSKItemLibrary extends Application {
         }
 
         let result = index.where(x => (
-                search == "" ||
-                x.name.toLowerCase().indexOf(search) != -1) &&
+            search == "" ||
+            x.name.toLowerCase().indexOf(search) != -1) &&
             selFnct(x) &&
             txtFnct(x) &&
             cbFnct(x) &&
@@ -427,11 +430,11 @@ export default class DSKItemLibrary extends Application {
                 let result
                 let next = null
                 if (search == "") {
-                    result = index.search(filter, { field: ["itemType"], sort: "name", where: { itemType: filter }})
+                    result = index.search(filter, { field: ["itemType"], sort: "name", where: { itemType: filter } })
                 } else {
-                    result = index.search(search, {...fields, sort: "name", where: { itemType: filter }})
+                    result = index.search(search, { ...fields, sort: "name", where: { itemType: filter } })
                 }
-                
+
                 let startIndex = Number(page) || 0
                 result = result.slice(startIndex, Math.min(startIndex + 60, result.length))
 
@@ -444,7 +447,7 @@ export default class DSKItemLibrary extends Application {
         }
 
         if (!oneFilterSelected) {
-            filteredItems = index.search(search, { ...fields, limit: 60, page: page || true, sort: "name"})
+            filteredItems = index.search(search, { ...fields, limit: 60, page: page || true, sort: "name" })
             this.pages[category].next = filteredItems.next
         }
 
@@ -465,7 +468,7 @@ export default class DSKItemLibrary extends Application {
             if (!isPaged) resultField.empty()
 
             innerhtml = $(innerhtml)
-            innerhtml.each(function() {
+            innerhtml.each(function () {
                 const li = $(this)
                 li.attr("draggable", true).on("dragstart", event => {
                     let item = index.find($(li).attr("data-item-id"))
@@ -520,37 +523,51 @@ export default class DSKItemLibrary extends Application {
     async _createIndex(category, document, worldStuff) {
         if (this[`${category}Build`]) return
 
-        SceneNavigation.displayProgressBar({label: game.i18n.format('dsk.Library.loading', {item: ""}), pct: 0})
+        const progress = ui.notifications.info('dsk.Library.loading', { format: { item: "" }, progress: true });
         const target = $(this._element).find(`*[data-tab="${category}"]`)
         this.showLoading(target, category)
         const packs = game.packs.filter(p => p.documentName == document && (game.user.isGM || p.visible))
-        const percentage = 100 / (packs.length + 1)
+        const percentage = 1 / (packs.length + 1)
         let count = percentage
         const actorFields = ["name", "system.type", "system.description.value", "img"]
         let func
         if (document == "Actor") {
-            func = (p) => { return p.getIndex({actorFields})}
+            func = (p) => { return p.getIndex({ actorFields }) }
         } else if (document == "JournalEntry") {
-            func = (p) => { return p.getDocuments()}
+            func = (p) => { return p.getDocuments() }
         } else {
-            func = (p) => {return p.getDocuments({type__in: Object.keys(game.system.documentTypes.Item) })}
+            func = (p) => { return p.getDocuments({ type__in: Object.keys(game.system.documentTypes.Item) }) }
         }
         const items = this.indexWorldItems(worldStuff, category)
-        SceneNavigation.displayProgressBar({label: game.i18n.format('dsk.Library.loading', {item: "world items"}), pct: Math.round(percentage)})
+        progress.update({
+            message: 'dsk.Library.loading',
+            format: { item: "world items" },
+            pct: 0.1
+        });
 
-        let promise = packs.map(async(p) => {
+        let promise = packs.map(async (p) => {
             const index = await func(p)
             count += percentage
-            SceneNavigation.displayProgressBar({label: game.i18n.format('dsk.Library.loading', {item: `${p.metadata.label} (${p.metadata.id})`}), pct: Math.round(count)})
+            progress.update({
+                message: 'dsk.Library.loading',
+                format: { item: `${p.metadata.label} (${p.metadata.id})` },
+                pct: count
+            });
             items.push(...index.map(x => new SearchDocument(x, p.metadata)))
         })
 
-        return Promise.all(promise).then(indexes => {
-            this[`${category}Index`].add(items)
-            this[`${category}Build`] = true
-            SceneNavigation.displayProgressBar({label: game.i18n.format('dsk.Library.loading', {item: ""}), pct: 100})
-            this.hideLoading(target, category)
-        })
+        await Promise.all(promise)        
+        
+        this[`${category}Index`].add(items)
+        this[`${category}Build`] = true
+        
+
+        progress.update({
+            message: 'dsk.Library.loading',
+            format: { item: '' },
+            pct: 1
+        });
+       this.hideLoading(target, category)
     }
 
     subcategoryFields(subcategory) {
@@ -661,7 +678,7 @@ export default class DSKItemLibrary extends Application {
             this.filterItems(tab, category);
         })
 
-        html.on("click", ".filter", async(ev) => {
+        html.on("click", ".filter", async (ev) => {
             const tab = $(ev.currentTarget).closest('.tab')
             const category = tab.attr("data-tab")
             const subcategory = $(ev.currentTarget).attr("data-category")
@@ -715,17 +732,17 @@ export default class DSKItemLibrary extends Application {
         })
         const source = this
 
-        $(this._element).find('.window-content').on('scroll.infinit', debounce(function(ev) {
-                if (source.advancedFiltering) return
+        $(this._element).find('.window-content').on('scroll.infinit', debounce(function (ev) {
+            if (source.advancedFiltering) return
 
-                const log = $(ev.target);
-                const pct = (log.scrollTop() + log.innerHeight()) >= log[0].scrollHeight - 100;
-                const category = html.find('.tabs .item.active').attr("data-tab")
-                if (pct && source.pages[category].next) {
-                    const tab = html.find('.tab.active')
-                    source.filterItems.call(source, tab, category, source.pages[category].next)
-                }
-            },
+            const log = $(ev.target);
+            const pct = (log.scrollTop() + log.innerHeight()) >= log[0].scrollHeight - 100;
+            const category = html.find('.tabs .item.active').attr("data-tab")
+            if (pct && source.pages[category].next) {
+                const tab = html.find('.tab.active')
+                source.filterItems.call(source, tab, category, source.pages[category].next)
+            }
+        },
             100));
     }
 

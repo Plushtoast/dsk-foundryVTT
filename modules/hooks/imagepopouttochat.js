@@ -1,4 +1,5 @@
 import DSKUtility from "../system/dsk_utility.js";
+const { renderTemplate } = foundry.applications.handlebars;
 
 export function initImagePopoutTochat(){
     Hooks.on("getImagePopoutHeaderButtons", (app, buttons) => {

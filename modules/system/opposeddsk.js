@@ -4,6 +4,7 @@ import DSKActiveEffectConfig from "../status/active_effects.js";
 import DiceDSK from "./dicedsk.js";
 import DSKUtility from "./dsk_utility.js";
 const { getProperty } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class OpposedDSK{
     static async handleOpposedTarget(message) {

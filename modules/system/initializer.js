@@ -3,6 +3,8 @@ import DSKUtility from "./dsk_utility.js"
 const { getProperty } = foundry.utils
 
 export default class DSKInitializer extends Dialog {
+    static _warnedAppV1 = true;
+    
     constructor(title, content, module, lang = "") {
         let data = {
             title: title,
@@ -226,7 +228,7 @@ export default class DSKInitializer extends Dialog {
 
                 if (json.initialScene) {
                     const initialScene = this.scenes[json.initialScene]
-                    await game.settings.set("core", NotesLayer.TOGGLE_SETTING, true)
+                    await game.settings.set("core", foundry.canvas.layers.NotesLayer.TOGGLE_SETTING, true)
                     await initialScene.activate()
                     await initialScene.update({ navigation: true })
 

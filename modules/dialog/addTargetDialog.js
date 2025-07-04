@@ -1,8 +1,11 @@
 import DPS from "../system/derepositioningsystem.js"
 import DSKUtility from "../system/dsk_utility.js"
 const { mergeObject } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export class AddTargetDialog extends Dialog{
+    static _warnedAppV1 = true;
+
     static async getDialog(speaker){
         const targets = Array.from(game.user.targets).map(x => x.id)
         const selectables = []
@@ -70,6 +73,8 @@ export class AddTargetDialog extends Dialog{
 }
 
 export class SelectUserDialog extends Dialog{
+    static _warnedAppV1 = true;
+
     static get defaultOptions() {
         const options = super.defaultOptions;
         mergeObject(options, {
@@ -118,6 +123,8 @@ export class SelectUserDialog extends Dialog{
 }
 
 export class UserMultipickDialog extends Dialog{
+    static _warnedAppV1 = true;
+    
     static async getDialog(content){
         const users = game.users.filter(x => x.active && !x.isGM)
         

@@ -1,7 +1,10 @@
 import RuleChaos from "../system/rule_chaos.js"
 import { AddTargetDialog } from "./addTargetDialog.js"
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class DialogShared extends Dialog {
+    static _warnedAppV1 = true;
+    
     static roman = ['', ' I', ' II', ' III', ' IV', ' V', ' VI', ' VII', ' VIII', ' IX',' X']
 
     recallSettings(speaker, source, mode) {

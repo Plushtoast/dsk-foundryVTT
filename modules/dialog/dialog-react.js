@@ -2,8 +2,11 @@ import ActorDSK from "../actor/actor_dsk.js"
 import DSKUtility from "../system/dsk_utility.js"
 import OpposedDSK from "../system/opposeddsk.js"
 const { mergeObject } = foundry.utils
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class DialogReactDSK extends Dialog {
+    static _warnedAppV1 = true;
+
     static async showDialog(startMessage) {
         let fun = this.callbackResult
         new DialogReactDSK({
@@ -87,6 +90,8 @@ export class ReactToSkillDialog extends DialogReactDSK {
 }
 
 export class ActAttackDialog extends Dialog {
+    static _warnedAppV1 = true;
+    
     static async showDialog(actor, tokenId) {
         const dialog = new ActAttackDialog({
             title: game.i18n.localize("dsk.attacktest"),

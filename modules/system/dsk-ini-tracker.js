@@ -2,6 +2,8 @@ import { DSKCombatTracker } from "../hooks/combat_tracker.js";
 const { mergeObject, duplicate } = foundry.utils
 
 export default class DSKIniTracker extends Application {
+    static _warnedAppV1 = true;
+
     static get defaultOptions() {
         const options = super.defaultOptions;
         mergeObject(options, {
@@ -168,7 +170,7 @@ export default class DSKIniTracker extends Application {
         super.activateListeners(html)
 
         const container = html.find(".dragHandler");
-        new Draggable(this, html, container[0], this.options.resizable);
+        new foundry.applications.ux.Draggable(this, html, container[0], this.options.resizable);
 
         container.on('wheel', async(ev) => {
             ev.stopPropagation()

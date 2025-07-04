@@ -11,7 +11,8 @@ import SpecialabilityRulesDSK from "../system/specialability-rules.js";
 import DSKDialog from "../dialog/dialog-dsk.js";
 import TraitRulesDSK from "../system/trait_rules.js"
 import DSKActiveEffectConfig from "../status/active_effects.js";
-const { getProperty, mergeObject, duplicate } = foundry.utils
+const { getProperty, mergeObject, duplicate } = foundry.utils;
+const { renderTemplate } = foundry.applications.handlebars;
 
 export default class ActorDSK extends Actor {
     static _baseCarryItems = new Set(["armor", "meleeweapon", "ammunition", "rangeweapon", "plant", "poison", "money", "consumable", "equipment"])
