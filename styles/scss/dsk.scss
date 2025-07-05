@@ -436,6 +436,7 @@ input[type=text].emphasize {
   transition: background-color 0.3s linear;
 }
 
+.application,
 .window-app.npc-sheet.app .window-content {
   box-shadow: none;
 }
@@ -478,6 +479,7 @@ input[type=text].emphasize {
 
 }
 
+.application .window-content select:not([multiple]) option,
 .window-app .window-content select:not([multiple]) option {
   color: white;
   background: rgb(29, 28, 28);
@@ -608,6 +610,7 @@ select[multiple] option {
   flex: 50%;
 }
 
+.application,
 .window-app {
   &.bookWizardsheet:after {
     border: none;
@@ -1266,9 +1269,14 @@ a.img-entity-link {
   content: "\f255";
 }
 
+.application,
 .window-app {
-  &.actor .window-content {
+  /*&.actor .window-content {
     box-shadow: 0 0 20px #000;
+  }*/
+
+  &.image-popout {
+    backdrop-filter: unset;
   }
 
   &.image-popout .window-content {
@@ -1290,6 +1298,7 @@ a.img-entity-link {
   color: white;
 }
 
+.application,
 .window-app {
   .window-content {
     background: url('../../icons/backgrounds/sheet2.webp') no-repeat;
@@ -1396,7 +1405,9 @@ a.img-entity-link {
   background: rgba(0, 0, 0, 0.6);
 }
 
+.application,
 .window-app {
+
   &.dskjournal .editor-content p {
     margin-right: 10px;
   }
@@ -1412,9 +1423,17 @@ form.dsk.item-sheet {
   padding-right: 10px;
 }
 
+.application,
 .window-app {
   background: none;
   box-shadow: none;
+  border: none;
+  --color-text-primary: #191813;
+  --color-fieldset-border: var(--border-color);
+  --color-form-label: #181712cd;
+  --color-form-hint: #2a271a;
+  --color-text-emphatic: #000000;
+  --color-text-secondary: #333230;
 
   &.dialog .window-content {
     padding-top: 14px;
@@ -1632,6 +1651,7 @@ form.dsk.item-sheet {
   max-height: max-content;
 }
 
+.application,
 .window-app {
   .window-header {
     background-image: url('../../icons/backgrounds/bottop.webp');
@@ -1929,6 +1949,7 @@ form.dsk.item-sheet {
   color: rgb(51, 51, 51);
 }
 
+.application,
 .window-app {
   &.creature-sheet .window-content {
     box-shadow: none;
@@ -2533,26 +2554,57 @@ input[type="search"] {
 #hotbar {
   &:before {
     background-image: url('../../icons/backgrounds/hotbarpart.webp'), url('../../icons/backgrounds/hotbarpart.webp'), url('../../icons/backgrounds/hotbar4.webp');
-    background-size: 30px 48px, 66px 48px, 100% 100%;
+    background-size:
+      30px 57px,
+      60px 57px,
+      100% 105%;
     background-repeat: no-repeat;
     content: '';
     position: absolute;
-    left: 0px;
-    right: -32px;
-    bottom: -10px;
+    left: -11px;
+    right: -11px;
+    bottom: -12px;
     top: -10px;
     z-index: -1;
-    background-position: 8px 11px, calc(100% - 8px) 11px, center;
+    background-position:
+      11px 12px,
+      calc(100% - 11px) 12px,
+      center;
   }
 
-  &.collapsedHotbar:before {
-    background-image: url('../../icons/backgrounds/hotbarpart.webp');
+  button {
+    color: black;
   }
 
+  &.md {
+    &:before {
+      background-size:
+        50px 123.5px,
+        60px 123.5px,
+        100% 120%;
+      background-position:
+        7px 12px,
+        calc(100% - 7px) 12px,
+        center;
+    }
+  }
+
+  #action-bar {
+    gap: 0px;
+  }
+
+  .slot,
   .macro {
     background: none;
     border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 0;
 
+    &:hover {
+      border: 1px solid rgba(197, 59, 0, 0.5);
+      box-shadow: inset 0px 0px 15px rgba(197, 59, 0, 1);
+    }
+
+    &.full,
     &.active {
       box-shadow: inset 0px 0px 25px #403014;
       background: url('../../icons/backgrounds/macrobg.webp');
@@ -2564,6 +2616,15 @@ input[type="search"] {
       &.attack {
         box-shadow: inset 0px 0px 15px #7e0202;
       }
+    }
+  }
+
+  .hotbar-controls button {
+    background: none;
+    border: none;
+
+    &:hover {
+      box-shadow: inset 0px 0px 5px rgba(197, 59, 0, 1);
     }
   }
 
@@ -2588,6 +2649,43 @@ input[type="search"] {
     }
   }
 }
+
+@media (max-width: 1120px) {
+    #hotbar {
+      &:before {
+        background-size:
+          36px 88px,
+          66px 88px,
+          190% 100%;
+        background-position:
+          -3px 18px,
+          calc(100% + 3px) 18px,
+          center;
+        right: -58px;
+        left: 6px;
+      }
+
+      &.hotbarV3:before {
+        background-size:
+          36px 105px,
+          66px 105px,
+          190% 100%;
+        background-position:
+          -1px 24px,
+          calc(100% + 30px) 24px,
+          center;
+        left: 0px;
+        right: 0px;
+      }
+
+      #hotbar-controls-right,
+      #hotbar-controls-left {
+        a {
+          margin: 6px 0;
+        }
+      }
+    }
+  }
 
 .dsklist {
   list-style-type: none;
@@ -3152,6 +3250,18 @@ a {
   background: none;
 }
 
+.application {
+  &.dskjournal {
+    .journal-sidebar {
+      background: rgba(0, 0, 0, 0.8);
+
+      .heading-link:before {
+        filter: invert(1);
+      }
+    }
+  }
+}
+
 .nobr {
   white-space: nowrap;
 }
@@ -3251,6 +3361,7 @@ select.noAppearance {
 }
 
 .tocList {
+
   ul,
   ol {
     padding: 0;
@@ -3328,7 +3439,7 @@ select.noAppearance {
   font-weight: normal;
   font-family: var(--normalFont);
 
-  i:before{
+  i:before {
     color: darkred;
     margin-right: 5px;
   }

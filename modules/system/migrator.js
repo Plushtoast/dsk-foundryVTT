@@ -33,7 +33,7 @@ async function migrateToV13() {
 async function migrateDSK(currentVersion, migrationVersion) {
     await showPatchViewer()
 
-    if (currentVersion < 28) {
+    if (currentVersion < 29) {
         await migrateToV13();
     }
 
@@ -62,7 +62,7 @@ export default function migrateWorld() {
         //betaWarning()
         await setupDefaulTokenConfig()
         const currentVersion = await game.settings.get("dsk", "migrationVersion")
-        const NEEDS_MIGRATION_VERSION = 28
+        const NEEDS_MIGRATION_VERSION = 29
         const needsMigration = currentVersion < NEEDS_MIGRATION_VERSION
 
         if (!needsMigration) return;

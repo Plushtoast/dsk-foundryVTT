@@ -57,7 +57,7 @@ export default class WizardDSK extends Application {
     }
 
     async parseToItem(value, types) {
-        if (value.trim() == "")
+        if (value.trim() == "" || value.trim() == "-") 
             return []
 
         return await Promise.all(value.split(", ").map(async(x) => {
