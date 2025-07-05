@@ -1,5 +1,4 @@
 {
-    
     "dsk": {
         "QL": "QS",
         "manual": "Händisch",
@@ -54,6 +53,7 @@
                 "name": "Ahnenenergie"
             }
         },
+        "waitingInfo": "Rechts-<i class=\"fas fa-computer-mouse\"></i> um jetzt zu handeln.",
         "SKILL": {
             "body": "Körperfertigkeiten",
             "social": "Gesellschaftsfertigkeiten",
@@ -297,6 +297,7 @@
         "schips": "Schicksalspunkte",
         "sk": "Seelenkraft",
         "weaponModifier": "Waffenmodifikator",
+        "temporaryInitiative": "Tempörarer Initiativewert für diese Runde",
         "zk": "Zähigkeit",
         "CHATFATE": {
             "fatepointUsed": "Das Schicksal ändert sich",
@@ -319,6 +320,8 @@
         },
         "SETTINGS": {
             "moneyChoice": "Währung",
+            "iniTrackerCount": "DSA Kampftracker Anzahl",
+            "iniTrackerCountHint": "Anzahl der angezeigten Akteure im Kampftracker",
             "moneyChoiceHint": "Währungsbezeichnung für die Anzeige von Geldbeträgen",
             "hideOpposedDamage": "Ergebnis bei Vergleichsprobe verstecken",
             "hideOpposedDamageHint": "Versteckt z.B. den berechneten Schadenswert bei einer Vergleichsprobe.",
@@ -367,7 +370,6 @@
             "scrollingFontsizeHint": "Die Schriftgröße für einige der scrollenden Token Texte (z.B. +- LeP)",
             "expandChatModifierlist": "Modifikatoren Liste ausgeklappt",
             "expandChatModifierlistHint": "Zeige die Modifikatorenliste im Chat immer ausgeklappt.",
-            
             "inventorySound": "Inventar Geräusche",
             "inventorySoundHint": "Aktiviere Interface Geräusche im Inventar (benötigt game audio bundles)",
             "yesNumbered": "Ja (Nummeriert)",
@@ -708,7 +710,7 @@
             "value": "Wert",
             "modifiers": "Mod.",
             "advances": "Zukauf",
-            "max": "Max", 
+            "max": "Max",
             "AoE": "Größe in Schritt, Template",
             "awvw": "AW/VW",
             "AW": "Angriffswert",
@@ -944,7 +946,7 @@
             "animals": "Lebende Tiere",
             "consumable": "Verbrauchsgegenstand"
         },
-        "LIGHT":{
+        "LIGHT": {
             "daylight": "Tageslicht"
         },
         "Library": {
@@ -975,7 +977,6 @@
             "effect": "Effekt"
         }
     },
-    
     "TYPES.Item.meleeweapon": "Nahkampfwaffe",
     "TYPES.Item.rangeweapon": "Fernkampfwaffe",
     "TYPES.Item.armor": "Rüstung",
@@ -1004,5 +1005,4 @@
     "TYPES.Item.creature": "Kreatur",
     "TYPES.Item.feature": "Merkmal",
     "TYPES.Item.skillglobal": "Global"
-
 }

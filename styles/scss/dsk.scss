@@ -622,6 +622,7 @@ select[multiple] option {
   .window-header>a {
     width: 15px;
     height: 15px;
+    margin-top: -7px;
 
     i {
       width: 22px;
@@ -1420,6 +1421,17 @@ form.dsk.item-sheet {
     padding-bottom: 14px;
   }
 
+  &.initTracker {
+
+    &::after,
+    .window-content {
+      background: none;
+      margin: 0;
+      padding: 0;
+      overflow: visible;
+    }
+  }
+
   &.item .window-header {
     background-image: url('../../icons/backgrounds/sidebar-top.webp');
     border: none;
@@ -1526,10 +1538,70 @@ form.dsk.item-sheet {
 
 }
 
+.changes {
+  .key input {
+    width: 90%;
+  }
+
+  .selMenu {
+    /*width: 8%;
+      position: absolute;
+      background: #efe4e4;*/
+
+    &+.select2 {
+      width: 8%;
+      background: #efe4e4;
+      color: black;
+      position: absolute;
+
+      .select2-selection__rendered {
+        width: 0px;
+        padding: 0;
+      }
+
+      &.select2-container--open {
+        width: 100%;
+        left: 0;
+
+        .select2-selection__rendered {
+          width: 100%;
+          padding: 0;
+        }
+      }
+    }
+
+    /*&:focus {
+        width: 100%;
+        left: 0;
+      }*/
+  }
+}
+
+.gap5px {
+  gap: 5px;
+
+  .breaker {
+    margin-left: -5px;
+  }
+}
+
+.gap10px {
+  gap: 10px;
+}
+
+.gap2px {
+  gap: 2px;
+}
+
+.gap0px {
+  gap: 0px;
+}
+
 .dskrelative,
 .statusEffectMenu,
 .dsklist li,
 #chat-form,
+.changes .key,
 .browser-item,
 .effect-change .key,
 .inputTooltipAvailable,
@@ -1776,9 +1848,8 @@ form.dsk.item-sheet {
   }
 }
 
-.sidebar-popout .dice-tray input[type="text"],
-#sidebar .dice-tray input[type="text"] {
-  color: black;
+.initTracker .inline-control {
+  color: unset;
 }
 
 #sidebar .button:not(.icon),
@@ -1816,6 +1887,10 @@ form.dsk.item-sheet {
   }
 }
 
+.dragSortMarker {
+  border-top: 5px solid darkred;
+}
+
 #combat li.combatant .roll {
   background-image: url('../../icons/dice/d6white.svg');
   position: relative;
@@ -1826,7 +1901,7 @@ form.dsk.item-sheet {
     color: white;
     left: 0;
     right: 0;
-    top: -2px;
+    top: 13px;
     bottom: 0;
   }
 
@@ -3511,6 +3586,13 @@ select.noAppearance {
   line-height: 28px;
 }
 
+#combat li.combatant {
+  .token-initiative .initiative,
+  .token-name {
+    text-shadow: none;
+  }
+}
+
 .initTracker .waitingTackerList li {
   width: calc(var(--iniTrackerSize) * 0.5);
   height: calc(var(--iniTrackerSize) * 0.5);
@@ -3520,16 +3602,23 @@ select.noAppearance {
   position: absolute;
   top: calc(var(--iniTrackerSize) * -0.5);
   left: 30px;
-  z-index: -1;
 }
 
 .initTracker {
+  position: absolute;
+
+  .iniItem.newRound,
   .newRound {
     border-color: #496fd7;
     background-color: #496fd72d;
     box-shadow: inset 0px 0px 10px #496fd7;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
+
+    .iniNumber {
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
+    }
   }
 
   .turnRound {
@@ -3622,6 +3711,10 @@ select.noAppearance {
   margin: 0;
   padding: 0;
   display: inline-block;
+
+  li:last-child {
+    margin-bottom: 0.25rem;
+  }
 }
 
 .initTracker {
@@ -3793,6 +3886,18 @@ select.noAppearance {
   }
 }
 
+.application {
+  &.initTracker .window-header,
+  &.tokenQuickHot .window-header {
+    display: none;
+  }
+
+  &.initTracker,
+  &.tokenQuickHot {
+    padding: 0;
+  }
+}
+
 .initTracker {
   .controls {
     display: inline-block;
@@ -3805,15 +3910,31 @@ select.noAppearance {
 }
 
 .iniDetailsList {
-  margin: 30px 29px 0 29px;
+  margin: 10px 29px 0 29px;
   padding: 0;
   display: none;
 
   li {
-    height: 20px;
     text-align: center;
-    background: rgba(0, 0, 0, 0.5);
     color: white;
+    background: none;
+
+    .iniNumber button {
+      width: 100%;
+    }
+  }
+
+  .token-effects {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px 0;
+    min-height: 30px;
+
+    img {
+      width: 20px;
+      border: none;
+      box-shadow: 0px 0px 10px #000 inset;
+    }
   }
 }
 
@@ -4387,7 +4508,7 @@ input[type="checkbox"].autoCheckbox {
   }
 }
 
-#pause.dsa5Pause {
+#pause.dskpause {
   top: calc(57vh);
 }
 
@@ -4548,6 +4669,15 @@ input[type="checkbox"].autoCheckbox {
 
 #playlists.sidebar-tab .directory-list .directory-item.playlist.collapsed {
   color: #555;
+}
+
+.changes input::placeholder {
+  color: #a9a7a0;
+}
+
+.changes .ol {
+  padding: 0;
+  margin: 0;
 }
 
 .effect-change input::placeholder {

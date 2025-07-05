@@ -1,37 +1,48 @@
 import { DSKCombatTracker } from "../hooks/combat_tracker.js";
 const { mergeObject, duplicate } = foundry.utils
 
-export default class DSKIniTracker extends Application {
-    static _warnedAppV1 = true;
-
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, {
-            classes: options.classes.concat(["dsk", "initTracker"]),
-            template: "systems/dsk/templates/system/initracker.html",
-            dragDrop: [{ dragSelector: ".iniItem", dropSelector: [".iniTrackerList"] }],
+export default class DSKIniTracker extends foundry.applications.api.HandlebarsApplicationMixin(foundry.applications.api.ApplicationV2) {
+    static DEFAULT_OPTIONS = {
+        position: {
+            width: 440,
             top: 100,
             left: 170,
-            title: "dsk.DSKIniTracker"
+        },
+        window: {
+            title: 'dsk.DSKIniTracker',
+            resizable: true,
+            frame: false,
+        },
+        actions: {
+            aggroButton: function () {
+                DSKCombatTracker.runActAttackDialog();
+            },
+            rollMine: this.rollMyChars,
+            waitInit: this.waitInit,
+            restoreInit: { handler: this.restoreInit, buttons: [0, 2] },
+            panToCombatant: this.#onCombatantControl,
+            pingCombatant: this.#onCombatantControl,
+            rollInitiative: this.#onCombatantControl,
+            toggleDefeated: this.#onCombatantControl,
+            toggleHidden: this.#onCombatantControl,
+            activateCombatant: this.#onCombatantMouseDown,
+        },
+        classes: ['dsk', 'initTracker'],
+    };
+
+    static PARTS = {
+        main: {
+            template: 'systems/dsk/templates/system/initracker.hbs',
+        },
+    };
+
+    setPosition(position) {
+        const currentPosition = super.setPosition(position);
+        game.settings.set('dsk', 'iniTrackerPosition', {
+            left: currentPosition.left,
+            top: currentPosition.top,
         });
-        const position = game.settings.get("dsk", "iniTrackerPosition")
-        mergeObject(options, position)
-        return options;
-    }
-
-    setPosition({ left, top, width, height, scale } = {}) {
-        const currentPosition = super.setPosition({ left, top, width, height, scale })
-        const el = this.element[0];
-
-        if (!el.style.width || width) {
-            const tarW = width || el.offsetWidth;
-            const maxW = el.style.maxWidth || window.innerWidth;
-            currentPosition.width = width = Math.clamp(tarW, 0, maxW);
-            el.style.width = width + "px";
-            if ((width + currentPosition.left) > window.innerWidth) left = currentPosition.left;
-        }
-        game.settings.set("dsk", "iniTrackerPosition", { left: currentPosition.left, top: currentPosition.top })
-        return currentPosition
+        return currentPosition;
     }
 
     static connectHooks() {
@@ -57,102 +68,108 @@ export default class DSKIniTracker extends Application {
         this.render(true)
     }
 
-    async getData(options) {
-        const data = this.combatData
-        let itemWidth = game.settings.get("dsk", "iniTrackerSize")
+    _onClickAction(event, target) {
+        ui.combat._onClickAction(event, target);
+    }
 
-        const combatStarted = data.round
-        const turnsToUse = data.turns
+    async _prepareContext(options) {
+        const data = this.combatData;
+        mergeObject(options, { position: game.settings.get('dsk', 'iniTrackerPosition') });
+        const itemWidth = game.settings.get('dsk', 'iniTrackerSize');
+        const actorCount = game.settings.get('dsk', 'iniTrackerCount');
 
-        const waitingTurns = []
-        const skipDefeated = game.settings.get("core", Combat.CONFIG_SETTING).skipDefeated
+        const combatStarted = data.combat.round;
+        const turnsToUse = data.turns;
 
-       
-        let unRolled = data.turns.some(x => x.owner && !x.hasRolled && (!game.user.isGM || data.combat.combatants.get(x.id).isNPC))
+        const waitingTurns = [];
+        const skipDefeated = game.settings.get('core', Combat.CONFIG_SETTING).skipDefeated;
+
+
+        const anyActive = turnsToUse.some((x) => x.active);
+        let unRolled = data.turns.some((x) => x.isOwner && !x.initiative && (!game.user.isGM || data.combat.combatants.get(x.id).isNPC));
         if (turnsToUse.length) {
-            const filteredTurns = []
+            const filteredTurns = [];
 
-            let toAdd = 5
-            let started = false
-            let startIndex = -1
-            let index = 0
-            let loops = 0
-            let currentRound
-            while (!(toAdd == 0 || loops == 5)) {
-                const turn = duplicate(turnsToUse[index])
-                const combatant = data.combat.combatants.get(turn.id)
-                if (started && (index == startIndex)) turn.css = turn.css.replace("active", "")
+            let toAdd = actorCount;
+            let started = false;
+            let startIndex = -1;
+            let index = 0;
+            let loops = 0;
+            let currentRound;
+            while (!(toAdd == 0 || loops == actorCount)) {
+                const turn = duplicate(turnsToUse[index]);
+                const combatant = data.combat.combatants.get(turn.id);
+                if (started && index == startIndex) turn.css = turn.css.replace('active', '');
 
-                if (!combatStarted || (turn.active && !started)) {
-                    started = true
-                    startIndex = index
-                } else if (combatant.getFlag("dsk", "waitInit") == data.round + loops && !combatant.defeated && (game.user.isGM || !combatant.hidden)) {
-                    waitingTurns.push(turn)
+                if (!combatStarted || (turn.active && !started) || (!anyActive && !started)) {
+                    started = true;
+                    startIndex = index;
+                } else if (combatant.getFlag('dsk', 'waitInit') == data.combat.round + loops && !combatant.defeated && (game.user.isGM || !combatant.hidden)) {
+                    waitingTurns.push(turn);
                 }
 
                 if (started && !(skipDefeated && combatant.defeated) && (game.user.isGM || !combatant.hidden)) {
-                    turn.round = data.round + loops
-                    if (turn.owner && combatant.token?.actor) {
-                        turn.maxLP = combatant.token.actor.system.stats.LeP.max
-                        turn.currentLP = combatant.token.actor.system.stats.LeP.value
+                    turn.round = data.combat.round + loops;
+                    if (turn.isOwner && combatant.token?.actor) {
+                        turn.maxLP = combatant.token.actor.system.stats.LeP.max;
+                        turn.currentLP = combatant.token.actor.system.stats.LeP.value;
                     }
-                    if (currentRound && currentRound != turn.round) turn.newRound = "newRound"
+                    if (currentRound && currentRound != turn.round) turn.newRound = 'newRound';
 
-                    currentRound = turn.round
-                    filteredTurns.push(turn)
-                    toAdd--
+                    currentRound = turn.round;
+                    filteredTurns.push(turn);
+                    toAdd--;
                 }
-                index++
+                index++;
                 if (index >= turnsToUse.length) {
-                    index = 0
-                    loops++
+                    index = 0;
+                    loops++;
                 }
             }
-            data.turns = filteredTurns
+            data.turns = filteredTurns;
         }
-        //if(!data.round) itemWidth = 20
 
-        data.isLastRound = data.turns[1]?.newRound
+        data.isLastRound = data.turns[1]?.newRound;
 
-        this.position.width = itemWidth * 5 + 95
-        this.position.height = itemWidth + 10
+        options.position.width = itemWidth * actorCount + actorCount * 3 + 75;
+        options.position.height = itemWidth + 10;
 
-        mergeObject(data, {
+        Object.assign(data, {
             itemWidth,
             unRolled,
-            waitingTurns
-        })
-                
-        this.conditionalPanToCurrentCombatant(data)
+            waitingTurns,
+        });
 
-        return data
+        this.conditionalPanToCurrentCombatant(data);
+
+        return data;
     }
 
-    hasChangedTurn(data){
-        const res = data.turn != this.lastTurnUpdate || data.round != this.lastRoundUpdate
-        this.lastTurnUpdate = data.turn
-        this.lastRoundUpdate = data.round
-        return res
+    hasChangedTurn(data) {
+        const res = data.turn != this.lastTurnUpdate || data.round != this.lastRoundUpdate;
+        this.lastTurnUpdate = data.turn;
+        this.lastRoundUpdate = data.round;
+        return res;
     }
 
     async conditionalPanToCurrentCombatant(data) {
-        if (!game.settings.get("dsk", "enableCombatPan")) return
+        if (!game.settings.get('dsk', 'enableCombatPan')) return;
 
-        const firstTurn = data.turns[0]
-        if(!firstTurn) return
-        
-        const combatant = data.combat.combatants.get(firstTurn.id)
+        const firstTurn = data.turns[0];
+        if (!firstTurn) return;
 
-        if(!combatant || !this.hasChangedTurn(data)) return
+        const combatant = data.combat.combatants.get(firstTurn.id);
+
+        if (!combatant || !this.hasChangedTurn(data)) return;
 
         setTimeout(() => {
             const token = combatant.token;
             if (!token || !token.object || !token.object.isVisible) return;
             canvas.animatePan({ x: token.x, y: token.y });
-    
-            if (!combatant.actor || !combatant.actor.isOwner) return
+
+            if (!combatant.actor || !combatant.actor.isOwner) return;
             token.object.control({ releaseOthers: true });
-        }, 300)        
+        }, 300);
     }
 
     async _onWheelResize(ev) {
@@ -166,117 +183,91 @@ export default class DSKIniTracker extends Application {
         await this.render(true)
     }
 
-    activateListeners(html) {
-        super.activateListeners(html)
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+        const html = $(this.element);
 
         const container = html.find(".dragHandler");
         new foundry.applications.ux.Draggable(this, html, container[0], this.options.resizable);
 
-        container.on('wheel', async(ev) => {
+        container.on('wheel', async (ev) => {
             ev.stopPropagation()
             ev.preventDefault()
             await this._onWheelResize(ev)
             return false
         })
 
-        html.find('.combat-control').click(ev => this._onCombatControl(ev))
-        const turns = html.find('.iniItem')
-        turns.hover(this._onCombatantHoverIn.bind(this), this._onCombatantHoverOut.bind(this));
-        turns.click(this._onCombatantMouseDown.bind(this));
+        const turns = html.find('.iniItem');
+        turns.on('pointerover', this._onCombatantHoverIn.bind(this))
+        turns.on('pointerout', this._onCombatantHoverOut.bind(this));
+        turns.on('dblclick', this._onCombatantMouseDown.bind(this));
 
-        html.find('.waitingTackerList .iniItem').mousedown(ev => this._onRightClick(ev))
+        if (!game.user.isGM) return;
 
-        html.find('.combatant-control').click(ev => this._onCombatantControl(ev));
-
-        html.find('.combatant .aggroButton').click(ev => {
-            ev.preventDefault()
-            ev.stopPropagation()
-            DSKCombatTracker.runActAttackDialog()
-        })
-        html.find('.rollMine').click(ev => this.rollMyChars())
-
-        if (!game.user.isGM) return
-
-        html.find('.rolledInit').click(ev => this.editCombatant(ev))
+        html.find('.rolledInit').on('click', (ev) => this.editCombatant(ev));
     }
 
-    rollMyChars() {
+    static rollMyChars() {
         if (game.user.isGM) {
-            this._getCombatApp().viewed.rollNPC({})
+            ui.combat.viewed.rollNPC({});
         } else {
-            this._getCombatApp().viewed.rollAll({})
+            ui.combat.viewed.rollAll({});
         }
     }
 
-    _onRightClick(ev) {
-        if (ev.button == 2) {
-            const combatant = game.combat.combatants.get(ev.currentTarget.dataset.combatantId)
-            if (combatant.isOwner) {
-                combatant.unsetFlag("dsk", "waitInit")
-            }
+    async _onFirstRender(context, options) {
+        await super._onFirstRender(context, options);
+
+        this._createContextMenu(this._getDskIniTrackerEntryContextOptions, ".iniTrackerList:not(.waitingTackerList) .combatant", { fixed: true });
+    }
+
+    _getDskIniTrackerEntryContextOptions() {
+        return ui.combat._getEntryContextOptions();
+    }
+
+    static #onCombatantControl(event, target) {
+        ui.combat._onCombatantControl(event, target);
+    }
+
+    static async waitInit(ev, target) {
+        const combatant = game.combat.combatants.get(game.combat.current.combatantId);
+        await combatant.setFlag('dsk', 'waitInit', game.combat.current.round);
+        target.dataset.action = 'nextTurn';
+        this._onClickAction(ev, target);
+    }
+
+    static async restoreInit(ev, target) {
+        const combatant = game.combat.combatants.get(target.dataset.combatantId);
+        if (ev.button == 2 && combatant.isOwner) {
+            const currentTurn = game.combat.combatants.get(game.combat.current.combatantId);
+            const roundInitiative = currentTurn.properInitiative;
+            await combatant.unsetFlag('dsk', 'waitInit');
+            await combatant.update({
+                "system.roundInitiative": roundInitiative + 0.00001,
+            });
+            await game.combat.update({ turn: game.combat.turn - 1 })
         }
-    }
-
-    editCombatant(ev) {
-        this._getCombatApp()._onConfigureCombatant($(ev.currentTarget))
-    }
-
-    _onCombatantControl(ev) {
-        this._getCombatApp()._onCombatantControl(ev)
-    }
-
-    _onCombatControl(ev) {
-        if (ev.currentTarget.dataset.control == "waitInit") {
-            this.waitInit(ev)
-        } else {
-            this._getCombatApp()._onCombatControl(ev)
-        }
-    }
-
-    async waitInit(ev) {
-        const combatant = game.combat.combatants.get(game.combat.current.combatantId)
-        await combatant.setFlag("dsk", "waitInit", game.combat.current.round)
-        ev.currentTarget.dataset.control = "nextTurn"
-        this._getCombatApp()._onCombatControl(ev)
+        else ui.combat._onCombatantMouseDown(ev, target);
     }
 
     _onCombatantHoverOut(ev) {
-        this._getCombatApp()._onCombatantHoverOut(ev)
+        ui.combat._onCombatantHoverOut(ev);
     }
 
     _onCombatantHoverIn(ev) {
-        this._getCombatApp()._onCombatantHoverIn(ev)
+        ui.combat._onCombatantHoverIn(ev);
+    }
+
+    static #onCombatantMouseDown(ev, target) {
+        ui.combat._onCombatantMouseDown(ev, target);
+    }
+
+    editCombatant(ev) {
+        ui.combat.viewed.combatants.get(ev.currentTarget.dataset.combatantId)?.sheet.render(true)
     }
 
     _onCombatantMouseDown(ev) {
-        this._getCombatApp()._onCombatantMouseDown(ev)
+        ui.combat._onCombatantMouseDown(ev, ev.target.closest("[data-combatant-id]"));
     }
 
-    _getCombatApp() {
-        return game.combats.apps[0]
-    }
-
-    _canDragStart(selector) {
-        return false // game.user.isGM;
-    }
-
-    _canDragDrop(selector) {
-        return false // game.user.isGM;
-    }
-
-    _onDragStart(event) {
-        const combatantId = $(event.currentTarget).closestData('combatant-id');
-        event.dataTransfer.setData("text/plain", JSON.stringify({
-            type: "IniChange",
-            combatantId: combatantId,
-        }));
-    }
-
-    _onDrop(event) {
-        const data = JSON.parse(event.dataTransfer.getData("text/plain"));
-
-        if (data.type == "IniChange") {
-            //TODO init tracker resorting
-        }
-    }
 }

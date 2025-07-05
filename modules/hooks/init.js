@@ -58,7 +58,7 @@ export function initHooks(){
             "systems/dsk/templates/actors/creature/creature-combat.html",
             "systems/dsk/templates/actors/creature/creature-main.html",
             "systems/dsk/templates/actors/creature/creature-magic.html",
-            "systems/dsk/templates/status/advanced_functions.html",
+            "systems/dsk/templates/status/advanced_functions.hbs",
             "systems/dsk/templates/actors/creature/creature-loot.html",
             "systems/dsk/templates/dialog/default-dialog.html",
             "systems/dsk/templates/actors/character/actor-magic.html",
@@ -83,9 +83,12 @@ export function initHooks(){
     foundry.documents.collections.Actors.registerSheet("dsk", MerchantSheetDSK, { types: ["npc"] });
     foundry.documents.collections.Actors.registerSheet("dsk", CreatureMerchantSheetDSK, { types: ["creature"] })
     foundry.documents.collections.Actors.registerSheet("dsk", CharacterSheetMerchantDSK, { types: ["character"] })
+    foundry.applications.apps.DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", foundry.applications.sheets.ActiveEffectConfig)
     foundry.applications.apps.DocumentSheetConfig.registerSheet(ActiveEffect, "dsk", DSKActiveEffectConfig, { makeDefault: true })
     foundry.documents.collections.Journal.registerSheet("dsk", DSKJournalSheet, {makeDefault: true})
 
+
+    console.warn("DSK | Initializing DSK system hooks")
 
     ItemSheetDSK.setupSheets()
 

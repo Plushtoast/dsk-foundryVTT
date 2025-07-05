@@ -48,6 +48,7 @@ export function setupHandlebars() {
     dskMoneyValue: () => {
       return game.i18n.format('dsk.UNITS.money', { money: DSKUtility.moneyLocalization() });
     },
+    hasElem: (a, b) => a.some((x) => b == x),
     selfObj: (a) => {
       return a.reduce((acc, val) => {
         acc[val] = val;

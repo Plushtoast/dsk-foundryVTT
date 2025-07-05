@@ -1,4 +1,4 @@
-<section class="tab" data-tab="advanced">
+<section class="tab scrollable" data-group="sheet" data-tab="advanced" data-application-part="advanced">
     <div class="form-group">
         <label class="label-text">{{localize 'dsk.ActiveEffects.hideOnToken'}}</label>
         <input type="checkbox" name="flags.dsk.hideOnToken" {{checked effect.flags.dsk.hideOnToken}} />
@@ -27,7 +27,7 @@
         <input type="text" name="flags.dsk.resistRoll" value="{{effect.flags.dsk.resistRoll}}" placeholder="{{localize 'dsk.LocalizedIDs.perception'}} -2" />
     </div>
     <div class="advancedFunctions">
-        {{> systems/dsk/templates/status/advanced_functions.html}}
+        {{> systems/dsk/templates/status/advanced_functions.hbs}}
     </div>
     {{/if}}
     <div class="form-group full-height">

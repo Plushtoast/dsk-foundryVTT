@@ -1,10 +1,12 @@
+![Version](https://img.shields.io/github/v/tag/Plushtoast/dsk-foundryVTT?label=Version&style=flat-square&color=2577a1) ![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FPlushtoast%2Fdsk-foundryVTT%2Ffoundry13%2Fsystem.json&label=Foundry%20Core%20Compatible%20Version&query=$.compatibility.verified&style=flat-square&color=ff6400)
+
 ![alt text](https://github.com/Plushtoast/dsk-foundryVTT/blob/master/icons/githublogo.webp?raw=true)
 
 # Official Die Schwarze Katze system for Foundry
 
 ### Current Version and Compatibility:
 
-3.0.x - FoundryVTT 12.+
+4.0.x - FoundryVTT 13.+
 This system is intended for usage with [Foundry Virtual Tabletop](https://foundryvtt.com/) to play "Die Schwarze Katze".
 If you want to learn more checkout the [German](https://ulisses-spiele.de/virtual-tabletop-dsa-vtt/) or [English](https://ulisses-us.com/ulisses-virtual-tabletops/virtual-tabletop-dsa-vtt/) VTT Page by Ulisses Spiele.
 

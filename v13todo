@@ -1,10 +1,12 @@
-must be appv2
-* DSKActiveEffectConfig
-* DSKPause
-* initializer should only do folders if not empty
-dskinitracker button
-popout style css
 journal browser style
-chat context
-journal sheet style
-auto set skin
+hotbar
+journal hooks
+hooks
+fix dsk tables
+character wizards
+headerbuttons
+tokenhotbar
+
+dialog to dialogv2
+app 2 application css style
+h1 svg

@@ -1,0 +1,62 @@
+{{#if (or (eq document.flags.dsk.advancedFunction '1') (eq document.flags.dsk.advancedFunction 1))}}
+  <div class='form-group'>
+    <label>{{localize 'dsk.effect'}}</label>
+    <div class='form-fields'>
+      <select name='flags.dsk.args0'>
+        {{selectOptions config.systemEffects selected=document.flags.dsk.args0 valueAttr='id' labelAttr='name'}}
+      </select>
+    </div>
+  </div>
+  <div class='form-group'>
+    <label>{{localize 'dsk.stepValue'}}</label>
+    <div class='form-fields'>
+      <input type='text' name='flags.dsk.args1' value='{{document.flags.dsk.args1}}' />
+    </div>
+  </div>
+{{/if}}
+{{#if (hasElem macroIndexes document.flags.dsk.advancedFunction)}}
+  <div class='form-group full-height'>
+    <label>{{localize 'dsk.ActiveEffects.advancedFunctions.macro'}}</label>
+    <div class='form-fields height100'>
+      {{#if config.canEditMacros}}
+        <code-mirror language="javascript" indent="2" name="flags.dsk.args3" data-tooltip="dsk.ActiveEffects.placeholder.macros">{{~document.flags.dsk.args3~}}</code-mirror>
+      {{else}}
+        <p class='input-text'>{{#if document.flags.dsk.args3}}{{document.flags.dsk.args3}}{{else}} - {{/if}}</p>
+      {{/if}}
+    </div>
+
+  </div>
+{{/if}}
+{{#if (or (eq document.flags.dsk.advancedFunction '3') (eq document.flags.dsk.advancedFunction 3))}}
+  <div class='form-group'>
+    <label>{{localize 'dsk.ActiveEffects.creature'}}</label>
+    <div class='form-fields'>
+      <input type='text' name='flags.dsk.args4' value='{{document.flags.dsk.args4}}' />
+    </div>
+
+  </div>
+{{/if}}
+{{#if (or (eq document.flags.dsk.advancedFunction '4') (eq document.flags.dsk.advancedFunction 4))}}
+  <div class='form-group full-height'>
+    <label>{{localize 'dsk.ActiveEffects.advancedFunctions.armorPostprocess'}}</label>
+    <div class='form-fields height100'>
+      {{#if config.canEditMacros}}
+        <code-mirror language="javascript" indent="2" name="flags.dsk.args3" data-tooltip="dsk.ActiveEffects.placeholder.armorPostprocess">{{~document.flags.dsk.args3~}}</code-mirror>
+      {{else}}
+        <p class='input-text'>{{#if document.flags.dsk.args3}}{{document.flags.dsk.args3}}{{else}} - {{/if}}</p>
+      {{/if}}
+    </div>
+  </div>
+{{/if}}
+{{#if (or (eq document.flags.dsk.advancedFunction '5') (eq document.flags.dsk.advancedFunction 5))}}
+  <div class='form-group full-height'>
+    <label>{{localize 'dsk.ActiveEffects.advancedFunctions.damagePostprocess'}}</label>
+    <div class='form-fields height100'>
+      {{#if config.canEditMacros}}
+        <code-mirror language="javascript" indent="2" name="flags.dsk.args3" data-tooltip="dsk.ActiveEffects.placeholder.armorPostprocess">{{~document.flags.dsk.args3~}}</code-mirror>
+      {{else}}
+        <p class='input-text'>{{#if document.flags.dsk.args3}}{{document.flags.dsk.args3}}{{else}} - {{/if}}</p>
+      {{/if}}
+    </div>
+  </div>
+{{/if}}

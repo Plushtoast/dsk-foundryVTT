@@ -46,11 +46,39 @@ async function callMacro(packName, name, actor, item, qs, args = {}) {
 };
 
 export default class DSKActiveEffectConfig extends foundry.applications.sheets.ActiveEffectConfig {
-    static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+    static macroIndexes = [2, 6, 7];
+    
+    static DEFAULT_OPTIONS = {
+        window: {
             resizable: true,
-        });
-    }
+        },
+        position: {
+            width: 600,
+        },
+    };
+
+    static PARTS = {
+        header: super.PARTS.header,
+        tabs: super.PARTS.tabs,
+        details: super.PARTS.details,
+        duration: super.PARTS.duration,
+        changes: { template: 'systems/dsk/templates/status/changes.hbs', scrollable: [''] },
+        advanced: { template: 'systems/dsk/templates/status/advanced_effect.hbs' },
+        footer: super.PARTS.footer,
+    };
+
+    static TABS = {
+        sheet: {
+            tabs: [
+                { id: 'details', icon: 'fa-solid fa-book' },
+                { id: 'duration', icon: 'fa-solid fa-clock' },
+                { id: 'changes', icon: 'fa-solid fa-cogs' },
+                { id: 'advanced', icon: 'fa-solid fa-shield-alt', label: 'dsk.advanced' },
+            ],
+            initial: 'details',
+            labelPrefix: 'EFFECT.TABS',
+        },
+    };
 
     static async onEffectRemove(actor, effect) {
         const onRemoveMacro = getProperty(effect, "flags.dsk.onRemove");
@@ -59,7 +87,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
                 ui.notifications.warn(`You are not allowed to use JavaScript macros.`);
             } else {
                 try {
-                    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
+                    const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor
                     const fn = new AsyncFunction("effect", "actor", onRemoveMacro)
                     await fn.call(this, effect, actor);
                 } catch (err) {
@@ -79,69 +107,59 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
         return isInstalled
     }
 
-    async _render(force = false, options = {}) {
-        await super._render(force, options);
-        let index = -1;
-        const advancedFunctions = ["none", "systemEffect", "macro", "creature"].map((x) => {
-            return { name: `dsk.ActiveEffects.advancedFunctions.${x}`, index: (index += 1) };
-        });
-        const itemType = getProperty(this.object, "parent.type");
-        const effectConfigs = {
-            hasSpellEffects: [
-                    "ahnengabe",
-                    "consumable",
-                    "poison",
-                    "ammunition",
-                    "meleeweapon",
-                    "rangeweapon",
-                ].includes(itemType) ||
-                (["specialability"].includes(itemType) && getProperty(this.object, "parent.system.category") == "Combat") ||
-                (itemType == "trait" && ["meleeAttack", "rangeAttack"].includes(getProperty(this.object, "parent.system.traitType")))
-                ,
-            hasDamageTransformation: ["ammunition"].includes(itemType),
-        };
-        if (effectConfigs.hasDamageTransformation) {
-            advancedFunctions.push({ name: "ActiveEffects.advancedFunctions.armorPostprocess", index: 4 }, { name: "ActiveEffects.advancedFunctions.damagePostprocess", index: 5 });
+    async _preparePartContext(partId, context) {
+        const partContext = await super._preparePartContext(partId, context);
+        if (partId in partContext.tabs) partContext.tab = partContext.tabs[partId];
+        const document = this.document;
+        switch (partId) {
+            case 'advanced':
+                let index = -1;
+                const advancedFunctions = ["none", "systemEffect", "macro", "creature"].map((x) => {
+                    return { name: `dsk.ActiveEffects.advancedFunctions.${x}`, index: (index += 1) };
+                });
+                const itemType = document.parent.type;
+                const item = document.parent;
+                const effectConfigs = {
+                    hasSpellEffects: [
+                        "ahnengabe",
+                        "consumable",
+                        "poison",
+                        "ammunition",
+                        "meleeweapon",
+                        "rangeweapon",
+                    ].includes(itemType) ||
+                        (["specialability"].includes(itemType) && getProperty(item, "parent.system.category") == "Combat") ||
+                        (itemType == "trait" && ["meleeAttack", "rangeAttack"].includes(getProperty(item, "parent.system.traitType")))
+                    ,
+                    hasDamageTransformation: ["ammunition"].includes(itemType),
+                };
+                if (effectConfigs.hasDamageTransformation) {
+                    advancedFunctions.push({ name: "ActiveEffects.advancedFunctions.armorPostprocess", index: 4 }, { name: "ActiveEffects.advancedFunctions.damagePostprocess", index: 5 });
+                }
+                
+                mergeObject(partContext, {  
+                    advancedFunctions,
+                    effectConfigs,
+                    config: this.getConfig(),
+                    macroIndexes: DSKActiveEffectConfig.macroIndexes,
+                })
+                break
         }
-        const config = {
+
+        return partContext;
+    }
+
+    getConfig() {
+        return {
             systemEffects: this.getStatusEffects(),
-            canEditMacros: game.user.isGM || (await game.settings.get("dsk", "playerCanEditSpellMacro")),
+            canEditMacros: game.user.isGM || game.settings.get('dsk', 'playerCanEditSpellMacro'),
         };
-        let elem = $(this._element);
-        elem
-            .find(".tabs")
-            .append(`<a class="item" data-tab="advanced"><i class="fas fa-shield-alt"></i>${game.i18n.localize("dsk.advanced")}</a>`);
-        let template = await renderTemplate("systems/dsk/templates/status/advanced_effect.html", {
-            effect: this.object,
-            advancedFunctions,
-            effectConfigs,
-            config,
-        });
-        elem.find('.tab[data-tab="effects"]').after($(template));
-
-        elem.find(".advancedSelector").change((ev) => {
-            let effect = this.object;
-            effect.flags.dsk.advancedFunction = $(ev.currentTarget).val();
-
-            renderTemplate("systems/dsk/templates/status/advanced_functions.html", { effect, config }).then((template) => {
-                elem.find(".advancedFunctions").html(template);
-            });
-        });
-        if (this.object.statuses.size && game.i18n.has(this.object.description)) {
-            elem.find('[data-tab="details"] .editor').replaceWith(`<p>${game.i18n.localize(this.object.description)}</p>`);
-        }
-        this.checkTimesUpInstalled()
     }
 
     getStatusEffects() {
         return duplicate(CONFIG.statusEffects).map((x) => {
             return { id: x.id, name: game.i18n.localize(x.name) };
         }).sort((a, b) => a.name.localeCompare(b.name))
-    }
-
-    getData(options) {
-        const data = super.getData(options);
-        return data;
     }
 
     static applyRollTransformation(actor, options, functionID) {
@@ -154,7 +172,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
                         ui.notifications.warn(`You are not allowed to use JavaScript macros.`);
                     } else {
                         try {
-                            const syncFunction = Object.getPrototypeOf(function(){}).constructor
+                            const syncFunction = Object.getPrototypeOf(function () { }).constructor
                             const fn = new syncFunction("ef", "callMacro", "actor", "msg", "source", getProperty(ef, "flags.dsk.args3"))
                             fn.call(this, ef, callMacro, actor, msg, source);
                         } catch (err) {
@@ -226,7 +244,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
                                     ui.notifications.warn(`You are not allowed to use JavaScript macros.`);
                                 } else {
                                     try {
-                                        const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
+                                        const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor
                                         const fn = new AsyncFunction("effect", "actor", "callMacro", "msg", "source", "actor", "sourceActor", "testData", "qs", getProperty(ef, "flags.dsk.args3"))
                                         await fn.call(this, ef, actor, callMacro, msg, source, actor, sourceActor, testData, qs);
                                     } catch (err) {
@@ -270,7 +288,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
         const actor = DSKUtility.getSpeaker(target)
         if (actor) {
             const skill = actor.items.find((x) => x.type == "skill" && x.name == data.skill);
-            actor.setupSkill(skill, { modifier: data.mod }, data.token).then(async(setupData) => {
+            actor.setupSkill(skill, { modifier: data.mod }, data.token).then(async (setupData) => {
                 setupData.testData.opposable = false;
                 const res = await actor.basicTest(setupData);
                 const availableQs = res.result.qualityStep || 0;
@@ -295,8 +313,8 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
             testData.qualityStep = testData.successLevel > 0 ? 2 : 1;
         }
 
-        const attacker = DSKUtility.getSpeaker(speaker) || 
-            DSKUtility.getSpeaker(getProperty(message.flags, "data.preData.extra.speaker")) || 
+        const attacker = DSKUtility.getSpeaker(speaker) ||
+            DSKUtility.getSpeaker(getProperty(message.flags, "data.preData.extra.speaker")) ||
             game.actors.get(getProperty(message.flags, "data.preData.extra.actor.id"))
 
         let sourceActor = attacker;
@@ -423,7 +441,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
         const closeCombat = game.i18n.localize("dsk.closeCombatAttacks");
         const rangeCombat = game.i18n.localize("dsk.rangeCombatAttacks");
         const combatReg = `${regenerate} (${game.i18n.localize("dsk.CHARAbbrev.CR")})`;
-        const AePCost = game.i18n.localize("dsk.AePCost");       
+        const AePCost = game.i18n.localize("dsk.AePCost");
         const descriptor = `${game.i18n.localize("dsk.description")} 1`
         const feature = `${game.i18n.localize("Healing")} 1`
 
@@ -543,7 +561,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
         }
 
         const cummulativeEffects = ["inpain", "selfconfidence", "encumbered", "stunned", "feared"]
-        for(const k of cummulativeEffects) {
+        for (const k of cummulativeEffects) {
             optns.push({
                 name: game.i18n.localize(`dsk.CONDITION.${k}`),
                 val: `system.status.${k}`,
@@ -579,18 +597,43 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
         return `<select class="selMenu">${optns}</select>`;
     }
 
-    activateListeners(html) {
-        super.activateListeners(html);
-        const dropDown = this.dropDownMenu();
-        html.find(".changes-list .effect-change .key").append(dropDown);
-        html.find(".selMenu").change((ev) => {
-            const elem = $(ev.currentTarget);
-            elem.siblings("input").val(elem.val());
-            const parent = elem.closest(".effect-change");
-            const data = elem.find("option:selected");
-            parent.find(".mode select").val(data.attr("data-mode"));
-            parent.find(".value input").attr("placeholder", data.attr("data-ph"));
-            elem.blur();
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
+
+        html.find('.advancedSelector').on('change', (ev) => {
+            let effect = this.document;
+            effect.flags.dsk.advancedFunction = Number($(ev.currentTarget).val());
+
+            renderTemplate('systems/dsk/templates/status/advanced_functions.hbs', {
+                document: this.document,
+                config: this.getConfig(),
+                macroIndexes: DSKActiveEffectConfig.macroIndexes,
+            }).then((template) => {
+                html.find('.advancedFunctions').html(template);
+            });
         });
+        if (this.document.statuses.size && game.i18n.has(this.document.description)) {
+            html.find('[data-tab="details"] .editor').replaceWith(`<p>${game.i18n.localize(this.document.description)}</p>`);
+        }
+        const dropDown = this.dropDownMenu();
+        html.find('.changes .ol .key').append(dropDown);
+        html
+            .find('.selMenu')
+            .select2({ width: 'element' })
+            .on('change', (ev) => {
+                const elem = $(ev.currentTarget);
+                elem.siblings('input').val(elem.val());
+                const parent = elem.closest('.row-section');
+                const data = elem.find('option:selected');
+                parent.find('.mode select').val(data.attr('data-mode'));
+                parent.find('.value input').attr('placeholder', data.attr('data-ph'));
+                elem.trigger('blur');
+            });
+        html.find('.select2').each((i, el) => {
+            $(el)[0].style.removeProperty('width');
+        });
+        this.checkTimesUpInstalled();
     }
 }

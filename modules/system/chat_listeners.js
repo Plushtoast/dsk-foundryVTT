@@ -9,9 +9,9 @@ const { renderTemplate } = foundry.applications.handlebars;
 export default class DSKChatListeners {
     static chatListeners(html) {
         html.on('click', '.openJournalBrowser', () => game.dsk.apps.journalBrowser.render(true))
-        let helpButton = $('<a class="button showHelp" data-tooltip="dsk.HELP.showHelp"><i class="fas fa-question"></i></a>')
-        helpButton.click(() => { DSKChatListeners.getHelp() })
-        $(html.find('.control-buttons')).prepend(helpButton)
+        const helpButton = $(`<button type="button" class="ui-control icon fas fa-question" data-tooltip="dsk.HELP.showHelp" aria-label="Help"></button>`);
+        helpButton.on('click', () => DSKChatListeners.getHelp());
+        html.find('.control-buttons').prepend(helpButton);
         html.on('click', '.showPatchViewer', () => showPatchViewer())
         html.on('click', '.functionswitch', (ev) => RuleChaos[ev.currentTarget.dataset.function](ev))
         html.on('click', '.panToToken', ev => DSKChatListeners.panToToken(ev))
@@ -36,7 +36,7 @@ export default class DSKChatListeners {
     }
 
     static getHelp() {
-            let msg = DSK.helpContent.map(x => `<h2>${game.i18n.localize(`dsk.HELP.${x.name}`)}</h2>
+        let msg = DSK.helpContent.map(x => `<h2>${game.i18n.localize(`dsk.HELP.${x.name}`)}</h2>
             <p><b>${game.i18n.localize("dsk.HELP.command")}</b>: ${x.command}</p>
             <p><b>${game.i18n.localize("dsk.HELP.example")}</b>: ${x.example}</p>
             <p><b>${game.i18n.localize("dsk.description")}</b>: ${game.i18n.localize(`dsk.HELP.descr${x.name}`)}`).join("") + `<br>
@@ -44,7 +44,7 @@ export default class DSKChatListeners {
         ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
     }
 
-    static showConditions(){
+    static showConditions() {
         let effects = duplicate(CONFIG.statusEffects).map(x => {
             x.name = game.i18n.localize(x.name)
             return x
@@ -53,18 +53,18 @@ export default class DSKChatListeners {
         ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
     }
 
-    static async check3D20(target, skill, options = {}){
+    static async check3D20(target, skill, options = {}) {
         let attrs = 12
-        if(target){
+        if (target) {
             target = target.get(0)
             skill = await DSKUtility.skillByName(target.textContent)
-            if(target.dataset.attrs) attrs = target.dataset.attrs.split("|")
-        }else if(skill){
+            if (target.dataset.attrs) attrs = target.dataset.attrs.split("|")
+        } else if (skill) {
             skill = await DSKUtility.skillByName(skill)
         }
-        if(skill) skill= skill.toObject()
+        if (skill) skill = skill.toObject()
 
-        if(!skill){
+        if (!skill) {
             skill = {
                 name: "2d20",
                 type: "skill",
@@ -83,8 +83,8 @@ export default class DSKChatListeners {
         })
     }
 
-    static async showTables(){
-        const msg = await renderTemplate('systems/dsk/templates/tables/systemtables.html', {tables: DSK.systemTables})
+    static async showTables() {
+        const msg = await renderTemplate('systems/dsk/templates/tables/systemtables.html', { tables: DSK.systemTables })
         ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
     }
 }

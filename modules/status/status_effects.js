@@ -21,12 +21,12 @@ export default class DSKStatusEffects{
         html.on('click', '.chat-condition', ev => DSKChatListeners.postStatus($(ev.currentTarget).attr("data-id")))
     }
 
-    static createCustomEffect(owner, description = "", label) {
-        label = label || game.i18n.localize("dsk.CONDITION.custom")
-        if (description == "") description = label
+    static createCustomEffect(owner, description = "", name) {
+        name = name || game.i18n.localize("dsk.CONDITION.custom")
+        if (description == "") description = name
 
         owner.addCondition({
-            label,
+            name,
             img: "icons/svg/aura.svg",
             origin: owner.uuid,
             flags: {

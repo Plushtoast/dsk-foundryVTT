@@ -6,7 +6,7 @@ const { getProperty, mergeObject } = foundry.utils
 export class DSKCombatTracker extends foundry.applications.sidebar.tabs.CombatTracker {
     static PARTS = {
         header: {
-            template: 'templates/sidebar/tabs/combat/footer.hbs',
+            template: 'templates/sidebar/tabs/combat/header.hbs',
         },
         tracker: {
             template: 'systems/dsk/templates/system/combattracker.hbs',
@@ -38,7 +38,8 @@ export class DSKCombatTracker extends foundry.applications.sidebar.tabs.CombatTr
     async _prepareTurnContext(combat, combatant, index) {
         const turn = await super._prepareTurnContext(combat, combatant, index);
         const isAllowedToSeeEffects = (game.user.isGM || (combatant.actor && combatant.actor.testUserPermission(game.user, "OBSERVER")) || !(game.settings.get("dsk", "hideEffects")));
-        turn.defenseCount = combatant.getFlag("dsk", "defenseCount") || 0
+        turn.defenseCount = combatant.system.defenseCount;
+        turn.roundInitiative = combatant.system.roundInitiative;
 
         let remainders = []
         if (combatant.actor) {
@@ -74,6 +75,94 @@ export class DSKCombatTracker extends foundry.applications.sidebar.tabs.CombatTr
 
         return turn;
     }
+
+    _canSortInitiative(event) {
+        return game.user.isGM;
+    }
+
+    _dragStartInitiativeSort(event) {
+        const dataTransfer = {
+            type: 'CombatantSort',
+            data: {
+                combatantId: event.currentTarget.dataset.combatantId,
+            },
+        };
+        event.dataTransfer.setData('text/plain', JSON.stringify(dataTransfer));
+    }
+
+    _dragOverInitiativeSort(event) {
+        event.preventDefault();
+        const fieldset = event.target.closest('.combatant');
+
+        if (fieldset) {
+            if (this.lastFieldset !== fieldset) {
+                if (this.lastFieldset) {
+                    this.lastFieldset.classList.remove('dragSortMarker');
+                }
+                fieldset.classList.add('dragSortMarker');
+                this.lastFieldset = fieldset;
+            }
+        } else if (this.lastFieldset) {
+            this.lastFieldset.classList.remove('dragSortMarker');
+            this.lastFieldset = null;
+        }
+    }
+
+    async _dropInitiativeSort(event) {
+        event.preventDefault();
+        if (this.lastFieldset) {
+            this.lastFieldset.classList.remove('dragSortMarker');
+            this.lastFieldset = null;
+        }
+
+        const hoverTarget = event.target.closest('.combatant');
+        if (!hoverTarget) return;
+
+        const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+
+        if (data.type !== 'CombatantSort') return;
+
+        const combatantId = data.data.combatantId;
+        const targetId = hoverTarget.dataset.combatantId;
+
+        if (targetId === combatantId) return;
+
+        const combatant = game.combat.combatants.get(combatantId);
+        const targetCombatant = game.combat.combatants.get(targetId);
+
+        const roundInitiative = targetCombatant.properInitiative;
+        let update = {};
+        if (event.ctrlKey) {
+            update.initiative = roundInitiative + 0.00001;
+            update.system = {
+                roundInitiative: -1,
+            };
+        } else {
+            update.system = {
+                roundInitiative: roundInitiative + 0.00001,
+            };
+        }
+
+        await combatant.update(update);
+    }
+
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        new foundry.applications.ux.DragDrop.implementation({
+            dragSelector: ".combatant",
+            dropSelector: ".combat-tracker",
+            permissions: {
+                dragstart: this._canSortInitiative.bind(this),
+                drop: this._canSortInitiative.bind(this)
+            },
+            callbacks: {
+                dragstart: this._dragStartInitiativeSort.bind(this),
+                dragover: this._dragOverInitiativeSort.bind(this),
+                drop: this._dropInitiativeSort.bind(this)
+            }
+        }).bind(this.element);
+    }
 }
 
 export class DSKCombat extends Combat {
@@ -95,62 +184,76 @@ export class DSKCombat extends Combat {
         this.refreshTokenbars()
     }
 
+    async previousRound() {
+        await this.clearRoundState();
+        return await super.previousRound();
+    }
+
     async nextRound() {
-        if (game.user.isGM) {
-            for (let k of this.turns) {
-                await k.setFlag("dsk", "defenseCount", 0)
-            }
-        } else {
-            await game.socket.emit("system.dsk", {
-                type: "clearCombat",
-                payload: {}
-            })
-        }
+        await this.clearRoundState();
         return await super.nextRound()
     }
 
-    async getDefenseCount(speaker) {
-        const comb = this.getCombatantFromActor(speaker)
-        return comb ? (comb.getFlag("dsk", "defenseCount") || 0) : 0
+    _sortCombatants(a, b) {
+        let ia = Number.isNumeric(a.initiative) ? a.initiative : -Infinity;
+        let ib = Number.isNumeric(b.initiative) ? b.initiative : -Infinity;
+
+        if (a.system.roundInitiative >= 0) ia = a.system.roundInitiative;
+        if (b.system.roundInitiative >= 0) ib = b.system.roundInitiative
+
+        return (ib - ia) || (a.id > b.id ? 1 : -1);
     }
 
-    //TODO very clonky
-    getCombatantFromActor(speaker) {
-        let id
-        if (speaker.token) {
-            id = Array.from(this.combatants).find(x => x.tokenId == speaker.token)
+    async clearRoundState() {
+        if (game.user.isGM) {
+            for (let k of this.turns) {
+                await k.update({ 'system.defenseCount': 0, "system.roundInitiative": -1 });
+            }
         } else {
-            id = Array.from(this.combatants).find(x => x.actorId == speaker.actor)
+            await game.socket.emit('system.dsk', {
+                type: 'clearCombat',
+                payload: {},
+            });
         }
-        return id ? this.combatants.get(id.id) : undefined
+    }
+
+    async getDefenseCount(speaker) {
+        const comb = this.getCombatantFromActor(speaker);
+        return comb?.system.defenseCount
+    }
+
+    getCombatantFromActor(speaker) {
+        if (!speaker) return undefined;
+
+        if (speaker.token) {
+            return this.combatants.find(combatant => combatant.tokenId === speaker.token);
+        } else if (speaker.actor) {
+            return this.combatants.find(combatant => combatant.actorId === speaker.actor);
+        }
+
+        return undefined;
     }
 
     async updateDefenseCount(speaker) {
         if (game.user.isGM) {
-            for (let spe of speaker) {
-                const comb = this.getCombatantFromActor({ token: spe })
-                if (comb && !getProperty(comb.actor, "system.config.defense")) {
-                    await comb.setFlag("dsk", "defenseCount", (comb.getFlag("dsk", "defenseCount") || 0) + 1)
-                }
+            const comb = this.getCombatantFromActor(speaker);
+            if (comb && !comb.actor.system.config.defense) {
+                await comb.update({ 'system.defenseCount': comb.system.defenseCount + 1 });
             }
         } else {
-            await game.socket.emit("system.dsk", {
-                type: "updateDefenseCount",
+            await game.socket.emit('system.dsa5', {
+                type: 'updateDefenseCount',
                 payload: {
-                    speaker
-                }
-            })
+                    speaker,
+                },
+            });
         }
     }
 }
 
 export class DSKCombatant extends Combatant {
     constructor(data, context) {
-        if (data.flags == undefined) data.flags = {}
-
-        mergeObject(data.flags, {
-            dsk: { defenseCount: 0 }
-        })
+        if (!data.type) data.type = 'dsacombatant';
         super(data, context);
     }
 
@@ -160,6 +263,10 @@ export class DSKCombatant extends Combatant {
             const update = { "initiative": roll + this.actor.system.stats.ini.value }
             await this.update(update)
         }
+    }
+
+    get properInitiative() {
+        return this.system.roundInitiative >= 0 ? this.system.roundInitiative : this.initiative;
     }
 }
 

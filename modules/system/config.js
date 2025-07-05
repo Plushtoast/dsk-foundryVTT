@@ -1,12 +1,10 @@
 const DSK = {}
 
-//TODO label should not be required anymore, but foundry11 bug?
 DSK.statusEffects = [
     {
         img: "icons/svg/skull.svg",
         id: "dead",
         name: "dsk.CONDITION.defeated",
-        label: "dsk.CONDITION.defeated",
         description: "dsk.CONDITIONDESCRIPTION.defeated",
         flags: {
             dsk: {

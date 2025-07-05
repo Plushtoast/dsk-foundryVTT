@@ -71,16 +71,16 @@ export default class OnUseEffect {
         }
     }
 
-    effectDummy(label, changes, duration) {
+    effectDummy(name, changes, duration) {
         return {
-            label,
+            name,
             img: "icons/svg/aura.svg",
             changes,
             duration,
             flags: {
                 dsk: {
                     value: null,
-                    description: label
+                    description: name
                 },
             },
         };

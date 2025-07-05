@@ -1,7 +1,7 @@
 import DSKSoundEffect from "../system/dsk-soundeffect.js";
 import { showPatchViewer } from "../system/migrator.js";
 
-export function setupConfiguration(){
+export function setupConfiguration() {
     game.settings.register("dsk", "migrationVersion", {
         name: "migrationVersion",
         scope: "world",
@@ -74,7 +74,7 @@ export function setupConfiguration(){
         type: String,
         choices: {
             dsk: game.i18n.localize('dsk.moneys.dsk'),
-            fasar: game.i18n.localize('dsk.moneys.fasar'),            
+            fasar: game.i18n.localize('dsk.moneys.fasar'),
         }
     });
     game.settings.register("dsk", "expandChatModifierlist", {
@@ -172,7 +172,7 @@ export function setupConfiguration(){
         config: true,
         default: "",
         type: String,
-        onChange: async() => { DSKSoundEffect.loadSoundConfig() }
+        onChange: async () => { DSKSoundEffect.loadSoundConfig() }
     });
     game.settings.register("dsk", "allowPhysicalDice", {
         name: "dsk.SETTINGS.allowPhysicalDice",
@@ -271,7 +271,7 @@ export function setupConfiguration(){
             max: 140,
             step: 5
         },
-        onChange: async(val) => {
+        onChange: async (val) => {
             game.dsk.apps.tokenHotbar.constructor.defaultOptions.itemWidth = val
         }
     });
@@ -290,6 +290,23 @@ export function setupConfiguration(){
         config: false,
         default: {},
         type: Object
+    });
+
+    game.settings.register('dsk', 'iniTrackerCount', {
+        name: 'dsk.SETTINGS.iniTrackerCount',
+        hint: 'dsk.SETTINGS.iniTrackerCountHint',
+        scope: 'client',
+        config: true,
+        default: 5,
+        type: Number,
+        range: {
+            min: 3,
+            max: 25,
+            step: 1,
+        },
+        onChange: async (val) => {
+            if (game.dsk.apps.initTracker) game.dsk.apps.initTracker.constructor.defaultOptions.actorCount = val;
+        },
     });
 
     game.settings.registerMenu("dsk", "changelog", {
@@ -320,7 +337,7 @@ export function setupConfiguration(){
             max: 100,
             step: 5
         },
-        onChange: async(val) => {
+        onChange: async (val) => {
             game.dsk.apps.tokenHotbar.constructor.defaultOptions.itemWidth = val
         }
     });
@@ -367,7 +384,7 @@ class ChangelogForm extends FormApplication {
 
 class ResetTokenbar extends FormApplication {
     static _warnedAppV1 = true;
-    
+
     async render() {
         await game.settings.set("dsk", "tokenhotbarPosition", {})
         await game.settings.set("dsk", "tokenhotbarLayout", 0)
