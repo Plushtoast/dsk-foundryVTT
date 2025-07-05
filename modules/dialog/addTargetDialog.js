@@ -98,12 +98,13 @@ export class SelectUserDialog extends Dialog{
 
             const userSelect = {
                 name: "targetUser",
-                title: game.i18n.localize("dsk.CONTROLS.targetForUser"),
+                title: "dsk.CONTROLS.targetForUser",
                 icon: "fa fa-bullseye",
                 button: true,
-                onClick: async() => { (await SelectUserDialog.getDialog()).render(true) }
+                order: 2,
+                onChange: async() => { (await SelectUserDialog.getDialog()).render(true) }
             }
-            btns[0].tools.splice(2, 0, userSelect)
+            btns.tokens.tools.targetUser = userSelect;
         })
     }
 
