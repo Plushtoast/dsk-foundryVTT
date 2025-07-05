@@ -6,7 +6,7 @@ export default class RequestRoll {
         const { actor, tokenId } = DSKChatAutoCompletion._getActor()
 
         if (actor) {
-            game.user.updateTokenTargets([])
+            game.user._onUpdateTokenTargets([]);
             let options = { modifier }
 
             switch (category) {

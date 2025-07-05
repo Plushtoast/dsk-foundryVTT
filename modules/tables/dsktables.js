@@ -16,7 +16,7 @@ export default class DSKTables {
         const table = DSK.systemTables.find(x => x.name == dataset.table)
         const tableResult = await DSKTables.getRollTable(table.pack[game.i18n.lang], game.i18n.localize(`dsk.TABLENAMES.${dataset.table}`), dataset)
         const hasEffect = options.speaker ? await DSKTables.hasEffect(tableResult) : false
-        const result = DSKUtility.replaceDies(DSKUtility.replaceConditions(tableResult.results[0].text))
+        const result = DSKUtility.replaceDies(DSKUtility.replaceConditions(tableResult.results[0].description))
         const title = `${game.i18n.localize("dsk.TABLENAMES." + dataset.table)}`
 
         const content = await renderTemplate(`systems/dsk/templates/tables/tableCard.html`, { result, title, hasEffect })

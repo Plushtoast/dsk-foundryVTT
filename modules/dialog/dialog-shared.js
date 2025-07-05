@@ -73,7 +73,7 @@ export default class DialogShared extends Dialog {
         game.user.targets.forEach((x) => {
             if (id != x.id) newIds.push(x.id);
         });
-        game.user.updateTokenTargets(newIds)
+        game.user._onUpdateTokenTargets(newIds);
     }
 
     readTargets() {

@@ -8,15 +8,20 @@ import DialogReactDSK from '../dialog/dialog-react.js';
 const { getProperty } = foundry.utils
 
 export function initChatlogHooks() {
-    Hooks.on('renderChatLogHTML', (log, html, data) => {
+    Hooks.on('renderChatLog', (log, html, data) => {
         html = $(html)
+        console.warn("Chatlog hooks are deprecated and will be removed in the future. Please use the new chat listeners system instead.")
         DiceDSK.chatListeners(html)
         DSKPayment.chatListeners(html)
-        const autoComplete = new DSKChatAutoCompletion()
-        Hooks.call("startDSKChatAutoCompletion", autoComplete)
-        autoComplete.chatListeners(html)
+        game.dsk.autoComplete = new DSKChatAutoCompletion()
+        Hooks.call("startDSKChatAutoCompletion", game.dsk.autoComplete)
+        game.dsk.autoComplete.chatListeners(html)
         DSKChatListeners.chatListeners(html)
     });
+
+    Hooks.on('chatInput', (event, inputOptions) => {
+        return game.dsk.autoComplete._navigateQuickFind(event);
+    })
 
     Hooks.on("renderChatMessageHTML", (app, html, msg) => {
         html = $(html)
@@ -48,7 +53,7 @@ export function initChatlogHooks() {
             html.find(".hideData").remove()
             const hiddenForMe = getProperty(msg.message, `flags.dsk.userHidden.${game.user.id}`)
             if (hiddenForMe) { html.find(".payButton").remove() }
-        }else{
+        } else {
             html.find(".chat-button-player").remove()
         }
         if (game.settings.get("dsk", "expandChatModifierlist")) {

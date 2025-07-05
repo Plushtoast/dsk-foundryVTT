@@ -117,7 +117,7 @@ export class SelectUserDialog extends Dialog{
         const targetIds = Array.from(game.user.targets).map(x => x.id)
         const userId = ev.currentTarget.dataset.userId
         const user = game.users.get(userId)
-        user.updateTokenTargets(targetIds)
+        user._onUpdateTokenTargets(targetIds);
         game.socket.emit('userActivity', userId, { targets: targetIds})
         this.close()
     }
