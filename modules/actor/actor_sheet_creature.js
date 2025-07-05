@@ -15,8 +15,8 @@ export default class ActorSheetCreature extends ActorSheetDSK{
 
     async getData(options) {
         const data = await super.getData(options);        
-        data.enrichedBehaviour = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.fight"), {secrets: this.object.isOwner, async: true})
-        data.enrichedSpecialrules = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.specialRules"), {secrets: this.object.isOwner, async: true})
+        data.enrichedBehaviour = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.fight"), {secrets: this.object.isOwner })
+        data.enrichedSpecialrules = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.specialRules"), {secrets: this.object.isOwner })
         return data;
     }
 

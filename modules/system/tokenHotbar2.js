@@ -384,12 +384,12 @@ class AddEffectDialog extends Dialog {
     static async showDialog() {
         const effects = duplicate(CONFIG.statusEffects).map(x => {
             return {
-                label: game.i18n.localize(x.name),
+                name: game.i18n.localize(x.name),
                 icon: x.img,
                 description: game.i18n.localize(x.description),
                 id: x.id
             }
-        }).sort((a, b) => a.label.localeCompare(b.label))
+        }).sort((a, b) => a.name.localeCompare(b.name))
 
         const dialog = new AddEffectDialog({
             title: game.i18n.localize("dsk.CONDITION.add"),

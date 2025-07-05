@@ -670,7 +670,7 @@ export default class DiceDSK{
                 ChatMessage.getSpeakerActor(rerenderMessage.speaker) ||
                 game.users.get(rerenderMessage.author).character
             const rollData = actor ? actor.getRollData() : {}
-            const enriched = await foundry.applications.ux.TextEditor.enrichHTML(html, {rollData, async: true})
+            const enriched = await foundry.applications.ux.TextEditor.enrichHTML(html, {rollData })
             chatOptions["content"] = enriched
 
             const postFunction = getProperty(rerenderMessage, "flags.data.preData.extra.options.postFunction")

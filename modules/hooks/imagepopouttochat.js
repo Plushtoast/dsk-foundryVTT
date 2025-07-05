@@ -13,8 +13,8 @@ export function initImagePopoutTochat() {
 }
 
 async function postImage(app) {
-    const image = app.object
-    const template = await renderTemplate("systems/dsk/templates/chat/imagetochat.html", { image })
+    const image = app.options.src
+    const template = await renderTemplate("systems/dsk/templates/chat/imagetochat.hbs", { image })
     ChatMessage.create(DSKUtility.chatDataSetup(template));
 }
 

@@ -1,6 +1,7 @@
-<div class="tokenHotbarInner direction{{direction}}" style="--tokenQuickhotsize:{{itemWidth}}px;--tokenQuickhotdistance:{{itemWidth}}px;">
+<div class="tokenHotbarInner flexrow gap0px direction{{direction}}" style="--tokenQuickhotsize:{{itemWidth}}px;--tokenQuickhotdistance:{{itemWidth}}px;">
     <ul>
-        {{#each items as |cat i|}} {{#each cat as |item j|}}
+        {{#each items as |cat i|}} 
+        {{#each cat as |item j|}}
         <li class="{{item.cssClass}} primary" data-category="{{item.cssClass}}" data-id="{{item.id}}" data-tooltip="{{item.name}}" data-name="{{item.name}}" data-subfunction="{{item.subfunction}}">
             <div style="background-image:url('{{item.icon}}')">{{item.abbrev}}</div>
             {{#if item.more}}
@@ -23,7 +24,7 @@
         {{/each}} {{/each}}
     </ul>
     {{#if count}}
-    <section class="dragHandler" data-tooltip="dsk.TT.resizer">
+    <section class="dragHandler flex0" data-tooltip="dsk.TT.resizer">
         <i class="fas fa-grip-vertical"></i>
     </section>
     {{/if}}

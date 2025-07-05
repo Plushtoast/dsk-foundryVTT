@@ -121,10 +121,11 @@ export default class DSKUtility {
     }
 
     static async showArtwork({ img, name, uuid, isOwner }, hide = false) {
-        new ImagePopout(img, {
-            title: hide ? (isOwner ? name : "-") : name,
+        new foundry.applications.apps.ImagePopout({
+            window: { title: hide ? (isOwner ? name : "-") : name },
             shareable: true,
-            uuid
+            uuid,
+            src: img
         }).render(true)
     }
 

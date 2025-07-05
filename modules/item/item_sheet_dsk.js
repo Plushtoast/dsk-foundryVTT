@@ -80,8 +80,8 @@ export default class ItemSheetDSK extends foundry.appv1.sheets.ItemSheet {
             editable: this.isEditable,
             item: this.item,
             isGM: game.user.isGM,
-            enrichedDescription: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: this.object.isOwner, async: true}),
-            enrichedGmdescription: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: this.object.isOwner, async: true})
+            enrichedDescription: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "description.value"), {secrets: this.object.isOwner }),
+            enrichedGmdescription: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "description.gminfo"), {secrets: this.object.isOwner })
         })
         DSKStatusEffects.prepareActiveEffects(this.item, data)
         return data
@@ -413,7 +413,7 @@ class ItemSheetProfession extends ItemSheetDSK{
     async getData(options) {
         const data = await super.getData(options);
         mergeObject(data, {
-            enrichedClothing: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "description.gear"), {secrets: this.object.isOwner, async: true})
+            enrichedClothing: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "description.gear"), {secrets: this.object.isOwner })
         })
         return data
     }
@@ -422,7 +422,7 @@ class ItemSheetProfession extends ItemSheetDSK{
 class ItemSheetAdvantage extends ItemSheetDSK{
     async getData(options){
         const data = await super.getData(options)
-        data.enrichedRule = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner, async: true })
+        data.enrichedRule = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner })
         return data
     }
 
@@ -470,7 +470,7 @@ class ItemSheetSpecialability extends ItemSheetDSK{
         mergeObject(data, {
             categories: DSK.specialAbilityCategories,
             subCategories: DSK.combatSkillSubCategories,
-            enrichedRule: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner, async: true }),
+            enrichedRule: await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.item.system, "rule"), { secrets: this.object.isOwner }),
             canOnUseEffect: game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
         })
         return data

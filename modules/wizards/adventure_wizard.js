@@ -52,7 +52,7 @@ export default class BookWizard extends Application {
             div.append(button)
             html.find(".header-actions:first-child").after(div)
         })
-    } 
+    }
 
     _getHeaderButtons() {
         let buttons = super._getHeaderButtons();
@@ -91,24 +91,26 @@ export default class BookWizard extends Application {
         this.loadPage(this._element)
     }
 
-    async toggleBookVisibility(id, type, toggle){
+    async toggleBookVisibility(id, type, toggle) {
         const config = game.settings.get("dsk", "expansionPermissions")
         config[id] = toggle
         await game.settings.set("dsk", "expansionPermissions", config)
 
         let book = this[type].find(x => x.id == id)
         const json = await (await fetch(book.path)).json()
-        const keys = ["actors","journal","scenes"]
-        for(const key of keys){
-            if(!json[key]) continue
+        const keys = ["actors", "journal", "scenes"]
+        for (const key of keys) {
+            if (!json[key]) continue
 
             let pack = game.packs.get(json[key]);
             let visibility = toggle ? "OBSERVER" : "NONE"
 
-            const ownership = { ownership: {
-                PLAYER: visibility,
-                TRUSTED: visibility
-            }}
+            const ownership = {
+                ownership: {
+                    PLAYER: visibility,
+                    TRUSTED: visibility
+                }
+            }
 
             await pack.configure(ownership)
         }
@@ -118,7 +120,7 @@ export default class BookWizard extends Application {
     activateListeners(html) {
         super.activateListeners(html)
 
-        html.on('click', '.toggleVisibility', async(ev) => {
+        html.on('click', '.toggleVisibility', async (ev) => {
             const id = ev.currentTarget.dataset.itemid
             const type = ev.currentTarget.dataset.type
             const toggle = $(ev.currentTarget).find('i').hasClass("fa-toggle-off")
@@ -135,26 +137,26 @@ export default class BookWizard extends Application {
 
         html.on("click", ".heading-link", ev => this._onClickPageLink(ev))
 
-        html.on('click', '.show-item', async(ev) => {
+        html.on('click', '.show-item', async (ev) => {
             //TODO maybe try to open imported character
             let itemId = ev.currentTarget.dataset.uuid
             const item = await fromUuid(itemId)
             item.sheet.render(true)
         })
 
-        html.on('click', '.movePage', async(ev) => this.movePage(ev))
+        html.on('click', '.movePage', async (ev) => this.movePage(ev))
 
         html.on('click', '.loadBook', ev => {
             this.loadBook($(ev.currentTarget).text(), html, ev.currentTarget.dataset.type)
         })
         html.on('click', '.getChapter', ev => {
-            this.selectedType = $(ev.currentTarget).closest('.toc').attr("data-type")
+            this.selectedType = $(ev.currentTarget).closest('.tocList').attr("data-type")
             this.selectedChapter = ev.currentTarget.dataset.id
             this.content = undefined
             this.pageTocs = undefined
             this.loadPage(html)
         })
-        html.on('click', '.subChapter', async(ev) => {
+        html.on('click', '.subChapter', async (ev) => {
             const name = $(ev.currentTarget).text()
             const jid = ev.currentTarget.dataset.jid
             if (jid) {
@@ -169,7 +171,7 @@ export default class BookWizard extends Application {
             html.find('.toc').html(await this.getToc())
             this._restoreScrollPositions(html)
 
-            if(this.searchString) this.filterToc(this.searchString)
+            if (this.searchString) this.filterToc(this.searchString)
         })
 
         DSKChatAutoCompletion.bindRollCommands(html)
@@ -178,7 +180,7 @@ export default class BookWizard extends Application {
             $(ev.currentTarget).find('i').toggleClass("fa-chevron-right fa-chevron-left")
             html.find(".tocCollapsing").toggleClass('expanded')
         })
-        html.on("mousedown", '.openPin', async(ev) => {
+        html.on("mousedown", '.openPin', async (ev) => {
             const uuid = ev.currentTarget.dataset.uuid
 
             if (ev.button == 0) this.showJournal(await fromUuid(uuid))
@@ -211,7 +213,7 @@ export default class BookWizard extends Application {
 
         DSKStatusEffects.bindButtons(html)
 
-        html.on('click', '.importBook', async() => this.importBook())
+        html.on('click', '.importBook', async () => this.importBook())
 
         bindImgToCanvasDragStart(html)
 
@@ -229,8 +231,8 @@ export default class BookWizard extends Application {
         let { journals, targetindex } = await this.getPagy(this.selectedChapter, this.selectedSubChapter)
         let flattenedChapters = []
 
-        for(let chap of this.bookData.chapters){
-            for(let sub of chap.content){
+        for (let chap of this.bookData.chapters) {
+            for (let sub of chap.content) {
                 flattenedChapters.push(sub.name)
             }
         }
@@ -238,28 +240,28 @@ export default class BookWizard extends Application {
         let curChapterIndex = flattenedChapters.findIndex(x => x == this.selectedChapter)
         this.bookData.chapters.findIndex(x => x.name == this.selectedChapter)
 
-        if(dir == "next") targetindex++
+        if (dir == "next") targetindex++
         else targetindex--
 
-        if(targetindex < 0) {
+        if (targetindex < 0) {
             this.selectedChapter = flattenedChapters[curChapterIndex - 1]
-            if(!this.selectedChapter) return
+            if (!this.selectedChapter) return
 
             journals = (await this.getPagy(this.selectedChapter, undefined)).journals
             targetindex = 0
-        } else if( targetindex >= journals.length) {
+        } else if (targetindex >= journals.length) {
             this.selectedChapter = flattenedChapters[curChapterIndex + 1]
-            if(!this.selectedChapter) return
+            if (!this.selectedChapter) return
 
             journals = (await this.getPagy(this.selectedChapter, undefined)).journals
             targetindex = 0
         }
 
-        if(["prep", "foundryUsage"].includes(this.selectedChapter)) return
+        if (["prep", "foundryUsage"].includes(this.selectedChapter)) return
 
         let journal = journals[targetindex]
 
-        if(journal) {
+        if (journal) {
             await this.loadJournalById(journal.id)
         }
 
@@ -270,7 +272,7 @@ export default class BookWizard extends Application {
     }
 
     async loadJournal(name) {
-        await this.showJournal(this.journals.find(x => x.name == name && x.flags.dsk.parent == this.selectedChapter ))
+        await this.showJournal(this.journals.find(x => x.name == name && x.flags.dsk.parent == this.selectedChapter))
     }
 
     async loadJournalById(id) {
@@ -290,16 +292,16 @@ export default class BookWizard extends Application {
         container.find('.searchLines').remove()
         const findings = html.find('.searchMatch')
 
-        if(findings.length == 0) return
+        if (findings.length == 0) return
 
         const markers = []
         const boundingRect = html.find("> div")[0].getBoundingClientRect()
-        for(let finding of findings){
+        for (let finding of findings) {
             const bounding = finding.getBoundingClientRect()
-            markers.push(`<div class="marker" style="top:${(bounding.top - boundingRect.top)/boundingRect.height*100}%"></div>`)
-            
+            markers.push(`<div class="marker" style="top:${(bounding.top - boundingRect.top) / boundingRect.height * 100}%"></div>`)
+
         }
-        const lines = $(`<div class="searchLines">${markers.join("")}</div>`)        
+        const lines = $(`<div class="searchLines">${markers.join("")}</div>`)
         container.append(lines)
     }
 
@@ -348,75 +350,99 @@ export default class BookWizard extends Application {
     }
 
     async showSearchResults(pageContent) {
-        if(this.searchString) {
-            await foundry.applications.ux.TextEditor._replaceTextContent(foundry.applications.ux.TextEditor._getTextNodes(pageContent), new RegExp(this.searchString, "ig"), (match, options) => {
-                return $(`<span class="searchMatch">${match[0]}</span>`)[0]
-            })
+        if (this.searchString) {
+            const html = document.createElement("div");
+            html.innerHTML = $(pageContent).html();
+            await TextEditor._applyCustomEnrichers({
+                pattern: new RegExp(this.searchString, 'ig'),
+                enricher: (match, options) => {
+                    return $(`<span class="searchMatch">${match[0]}</span>`)[0];
+                }
+            }, BookWizard.#getTextNodes(html), {});
+            return html.innerHTML;
+        } else {
+            return $(pageContent).html();
         }
+    }
+
+    static #getTextNodes(parent) {
+        const text = [];
+        const walk = document.createTreeWalker(parent, NodeFilter.SHOW_TEXT);
+        while (walk.nextNode()) text.push(walk.currentNode);
+        return text;
     }
 
     _onClickPageLink(ev) {
-        const anchor = ev.currentTarget.closest("[data-anchor]")?.dataset.anchor;        
-        if ( anchor ) {
-          const element = this.element[0].querySelector(`.chapter [data-anchor="${anchor}"]`)
-          if ( element ) {
-            element.scrollIntoView({behavior: "smooth"});
-            return;
-          }
+        const anchor = ev.currentTarget.closest("[data-anchor]")?.dataset.anchor;
+        if (anchor) {
+            const element = this.element[0].querySelector(`.chapter [data-anchor="${anchor}"]`)
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+                return;
+            }
         }
         const page = this.element[0].querySelector(`.journalHeader`);
-        page?.scrollIntoView({behavior: "smooth"});
+        page?.scrollIntoView({ behavior: "smooth" });
     }
 
     async _renderHeadings(toc, shiftFirst = false) {
-        const headings = Object.values(toc);
-        
-        if(shiftFirst) headings.shift();
+        let headings = Object.values(toc);
+
+        if (shiftFirst) headings.shift();
+
+        headings.sort((a, b) => a.order - b.order);
 
         const minLevel = Math.min(...headings.map(node => node.level));
-
-        return await renderTemplate("templates/journal/journal-page-toc.html", {
-          headings: headings.reduce((arr, {text, level, slug, element}) => {
-            if ( element ) element.dataset.anchor = slug;
-            if ( level < minLevel + 2 ) {
-                arr.push({text, slug, level: level - minLevel + 2});
-                
-            }
+        headings = headings.reduce((arr, { text, level, slug, element }) => {
+            if (element) element.dataset.anchor = slug;
+            if (level < minLevel + 2) arr.push({ text, slug, level: level - minLevel + 2 });
             return arr;
-          }, [])
-        });
-        //tocNode.querySelectorAll(".heading-link").forEach(el => el.addEventListener("click", this._onClickPageLink.bind(this)));
+        }, []);
+        return await foundry.applications.handlebars.renderTemplate("templates/journal/toc.hbs", { headings });
     }
 
     async renderContent(journal) {
         this.content = journal.id
-        let content = ""
+        let content = ''
         const pageTocs = []
-        for(let page of journal.pages){
+        for (let page of journal.pages) {
             const sheet = journal.sheet.getPageSheet(page.id)
-            const data = await sheet.getData();
-            const view = (await sheet._renderInner(data)).get();
-            const pageName = page.name.replace(/ Text$/gi, "")
-            const equalName = journal.name == pageName
+            let view
+            let pageContent
+
+            const pageName = page.name.replace(/ Text$/gi, '');
+            const equalName = journal.name == pageName;
+
+            if (sheet.isV2) {
+                const oldShow = sheet.page?.title?.show;
+                if (oldShow != undefined) sheet.page.title.show = !equalName;
+                await sheet.render(true);
+                view = sheet.element
+                pageContent = view
+
+                if (oldShow != undefined) sheet.page.title.show = oldShow;
+            } else {
+                const data = await sheet.getData();
+                view = (await sheet._renderInner(data)).get();
+                pageContent = view[view.length - 1];
+            }
 
             const pageToc = JournalEntryPage.implementation.buildTOC(view)
             pageTocs.push(await this._renderHeadings(pageToc, equalName))
 
-            let pageContent = view[view.length -1]
-            await this.showSearchResults(pageContent)
-            pageContent = $(pageContent).html()           
+            pageContent = await this.showSearchResults(pageContent);
 
-            if(page.type == "video") pageContent = `<div class="video-container">${pageContent}</div>`
-            if(!equalName) pageContent = `<h2 data-anchor="${page.name.slugify()}">${pageName}</h2>${pageContent}`
+            if (page.type == "video") pageContent = `<div class="video-container">${pageContent}</div>`
+            if (!equalName) pageContent = `<h2 data-anchor="${page.name.slugify()}">${pageName}</h2>${pageContent}`
 
             content += pageContent
         }
 
         this.pageTocs = pageTocs.join("")
-        
+
         const pinIcon = this.findSceneNote(journal.getFlag("dsk", "initId"))
-        const enriched = await foundry.applications.ux.TextEditor.enrichHTML(content, {secrets: game.user.isGM, async: true})
-        
+        const enriched = await foundry.applications.ux.TextEditor.enrichHTML(content, { secrets: game.user.isGM })
+
         return `<div><h1 class="journalHeader" data-uuid="${journal.uuid}">${journal.name}<div class="jrnIcons">${pinIcon}<a class="pinJournal"><i class="fas fa-thumbtack"></i></a><a class="showJournal"><i class="fas fa-eye"></i></a></div></h1>${enriched}`
     }
 
@@ -434,7 +460,7 @@ export default class BookWizard extends Application {
             const dataset = ev.currentTarget.dataset
             if (this.bookData && dataset.pack == this.bookData.journal) {
                 //todo make this work for pages
-                if(dataset.type != "JournalEntryPage") {
+                if (dataset.type != "JournalEntryPage") {
                     ev.stopPropagation()
                     this.loadJournalById(dataset.id)
                 }
@@ -455,7 +481,7 @@ export default class BookWizard extends Application {
         if (game.user.isGM) new InitializerForm().render(this.bookData.moduleName, this.bookData.options)
     }
 
-    async loadBook(id, html, type) {        
+    async loadBook(id, html, type) {
         this.selectedChapter = undefined
         this.selectedType = undefined
         this.content = undefined
@@ -467,7 +493,7 @@ export default class BookWizard extends Application {
         await fetch(this.book.path).then(async r => r.json()).then(async json => {
             this.bookData = json
             let journal = game.packs.get(json.journal)
-                //Need this to replace links
+            //Need this to replace links
             await journal.getIndex()
             let entries = await journal.getDocuments()
             this.journals = entries
@@ -487,7 +513,7 @@ export default class BookWizard extends Application {
     }
 
     checkChapters(journal) {
-        if(this.bookData.chapters) return
+        if (this.bookData.chapters) return
 
         this.bookData.isDynamic = true
         this.bookData.chapters = [
@@ -608,8 +634,8 @@ export default class BookWizard extends Application {
 
     getSubChapters() {
         let jrns
-        if(this.bookData.isDynamic) {
-           jrns = this.journals.filter(x => x.folder.id == this.selectedChapter)
+        if (this.bookData.isDynamic) {
+            jrns = this.journals.filter(x => x.folder.id == this.selectedChapter)
                 .sort((a, b) => a.sort > b.sort ? 1 : -1)
         } else {
             jrns = this.journals.filter(x => x.flags.dsk.parent == this.selectedChapter)
@@ -618,7 +644,7 @@ export default class BookWizard extends Application {
 
         return jrns.map(x => {
             const selected = this.selectedSubChapter == x.id
-            return {name: x.name, id: x.id, selected, cssClass: selected ? "selected" : ""}
+            return { name: x.name, id: x.id, selected, cssClass: selected ? "selected" : "" }
         })
     }
 
@@ -632,17 +658,17 @@ export default class BookWizard extends Application {
                     chapter = k.content.find(x => x.id == this.selectedChapter)
                     if (chapter) break
                 }
-                if(chapter) {
+                if (chapter) {
                     chapter.cssClass = "selected"
                     chapter.subChapters = this.getSubChapters()
                 }
             }
-            return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_toc.html', { 
-                chapters, 
-                searchString: this.searchString, 
+            return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_toc.html', {
+                chapters,
+                searchString: this.searchString,
                 book: this.book,
                 pageTocs: this.pageTocs,
-                fulltextsearch: this.fulltextsearch ? "on" : "" 
+                fulltextsearch: this.fulltextsearch ? "on" : ""
             })
         } else {
             return '<div class="libraryImg"></div>'
@@ -729,7 +755,7 @@ export default class BookWizard extends Application {
     }
 
     moduleEnabled(id) {
-        if(game.modules.get(id)) {
+        if (game.modules.get(id)) {
             return game.modules.get(id).active ? "fa-check" : "fa-dash"
         }
         return "fa-times"
@@ -738,7 +764,7 @@ export default class BookWizard extends Application {
 
 class InitializerForm extends FormApplication {
     static _warnedAppV1 = true;
-    
+
     render(mod, options) {
         new game.dsk.apps.DSKInitializer("DSK Module Initialization", game.i18n.format(`${options?.scope || mod}.importContent`, { defaultText: game.i18n.localize("dsk.importDefault") }), mod, game.i18n.lang, options).render(true)
     }

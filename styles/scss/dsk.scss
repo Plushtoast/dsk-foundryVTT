@@ -3229,13 +3229,61 @@ select.noAppearance {
     color: darkred;
   }
 
-  .toc {
+  .tocList {
     list-style-type: none;
-    padding-left: 8px;
+    padding-left: 4px;
+    --scroll-margin: 0;
 
     ul {
       list-style-type: none;
-      padding-left: 8px;
+      padding-left: 0px;
+    }
+
+    .headings {
+      margin: 0 0 0 14px;
+    }
+
+    .heading-link {
+      text-indent: 0;
+      font-family: var(--normalFont);
+    }
+  }
+}
+
+.tocList {
+  ul,
+  ol {
+    padding: 0;
+  }
+
+  //might not need with appv2
+  .getChapter {
+
+    border-color: transparent;
+    background: rgba(0, 0, 0, 0.15);
+  }
+
+  button {
+    text-align: left;
+    line-height: unset;
+  }
+
+  ul li {
+    display: block;
+    padding: 4px;
+    margin: 0;
+
+    li {
+      a {
+        padding: 4px;
+        width: 100%;
+      }
+    }
+
+    button {
+      border-color: transparent;
+      width: 100%;
+      justify-content: left;
     }
   }
 }
@@ -3279,6 +3327,11 @@ select.noAppearance {
 .subChapter {
   font-weight: normal;
   font-family: var(--normalFont);
+
+  i:before{
+    color: darkred;
+    margin-right: 5px;
+  }
 }
 
 .toc ul li {
@@ -3316,7 +3369,7 @@ select.noAppearance {
     }
   }
 
-  .toc {
+  .tocList {
     scrollbar-width: 6px;
 
     &::-webkit-scrollbar {
@@ -3587,6 +3640,7 @@ select.noAppearance {
 }
 
 #combat li.combatant {
+
   .token-initiative .initiative,
   .token-name {
     text-shadow: none;
@@ -3743,6 +3797,15 @@ select.noAppearance {
 
 .tokenQuickHot {
   .tokenHotbarInner {
+    ul {
+      margin: 0;
+      padding: 0;
+
+      li {
+        margin: 0;
+      }
+    }
+
     .skill {
       &.body {
         background: rgb(79, 109, 101);
@@ -3791,7 +3854,6 @@ select.noAppearance {
         line-height: 35px;
         text-align: center;
         width: 100px;
-        ;
       }
 
       div {
@@ -3834,6 +3896,38 @@ select.noAppearance {
 
     &.skill {
       box-shadow: inset 0px 0px 10px #0d813e;
+    }
+  }
+}
+
+.bookWizardsheet {
+  .window-content {
+    padding: 0;
+  }
+
+  .sheet.journal-entry {
+    background: none;
+
+    .toc {
+      .headings {
+        display: block;
+        margin: 0 0 0 18px;
+
+        li {
+          border-radius: 4px;
+          border: 1px solid transparent;
+          display: flex;
+          align-items: center;
+
+          &:last-child {
+            margin-bottom: 0.1rem;
+          }
+
+          &:hover {
+            background: #c9593f;
+          }
+        }
+      }
     }
   }
 }
@@ -3887,6 +3981,7 @@ select.noAppearance {
 }
 
 .application {
+
   &.initTracker .window-header,
   &.tokenQuickHot .window-header {
     display: none;
@@ -3975,7 +4070,7 @@ select.noAppearance {
 }
 
 .tokenHotbarInner>ul>li.effect>div:before {
-  font-family: "Font Awesome 5 Free";
+  font-family: "Font Awesome 6 Pro";
   font-weight: 900;
   content: "\f067";
 }
