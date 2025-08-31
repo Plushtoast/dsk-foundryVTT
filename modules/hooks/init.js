@@ -24,7 +24,7 @@ import { initChatContext } from "./chat_context.js";
 import { initHook } from "./nobgmapnote.js";
 import { setActorDelta } from "./actordelta.js";
 
-export function initHooks(){
+export function initHooks() {
     setupJournal()
     setupHandlebars()
     setupMacros()
@@ -75,23 +75,22 @@ export function initHooks(){
             "systems/dsk/templates/actors/merchant/merchant-commerce.html",
             "systems/dsk/templates/actors/parts/normalhead.html"
         ])
-    })
-    foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
-    foundry.documents.collections.Actors.registerSheet("dsk", ActorSheetCharacter, { types: ["character"], makeDefault: true });
-    foundry.documents.collections.Actors.registerSheet("dsk", ActorSheetCreature, { types: ["creature"], makeDefault: true });
-    foundry.documents.collections.Actors.registerSheet("dsk", ActorSheetNPC, { types: ["npc"], makeDefault: true });
-    foundry.documents.collections.Actors.registerSheet("dsk", MerchantSheetDSK, { types: ["npc"] });
-    foundry.documents.collections.Actors.registerSheet("dsk", CreatureMerchantSheetDSK, { types: ["creature"] })
-    foundry.documents.collections.Actors.registerSheet("dsk", CharacterSheetMerchantDSK, { types: ["character"] })
-    foundry.applications.apps.DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", foundry.applications.sheets.ActiveEffectConfig)
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(ActiveEffect, "dsk", DSKActiveEffectConfig, { makeDefault: true })
-    foundry.documents.collections.Journal.registerSheet("dsk", DSKJournalSheet, {makeDefault: true})
 
+        foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
+        foundry.documents.collections.Actors.registerSheet("dsk", ActorSheetCharacter, { types: ["character"], makeDefault: true });
+        foundry.documents.collections.Actors.registerSheet("dsk", ActorSheetCreature, { types: ["creature"], makeDefault: true });
+        foundry.documents.collections.Actors.registerSheet("dsk", ActorSheetNPC, { types: ["npc"], makeDefault: true });
+        foundry.documents.collections.Actors.registerSheet("dsk", MerchantSheetDSK, { types: ["npc"] });
+        foundry.documents.collections.Actors.registerSheet("dsk", CreatureMerchantSheetDSK, { types: ["creature"] })
+        foundry.documents.collections.Actors.registerSheet("dsk", CharacterSheetMerchantDSK, { types: ["character"] })
+        foundry.applications.apps.DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", foundry.applications.sheets.ActiveEffectConfig)
+        foundry.applications.apps.DocumentSheetConfig.registerSheet(ActiveEffect, "dsk", DSKActiveEffectConfig, { makeDefault: true })
+        foundry.documents.collections.Journal.registerSheet("dsk", DSKJournalSheet, { makeDefault: true })
+
+        ItemSheetDSK.setupSheets()
+    })
 
     console.warn("DSK | Initializing DSK system hooks")
-
-    ItemSheetDSK.setupSheets()
-
     
     initReady()
     initSetup()
