@@ -9,58 +9,72 @@ const { getProperty } = foundry.utils
 
 export function initChatlogHooks() {
     Hooks.on('renderChatLog', (log, html, data) => {
-        html = $(html)
-        console.warn("Chatlog hooks are deprecated and will be removed in the future. Please use the new chat listeners system instead.")
-        DiceDSK.chatListeners(html)
-        DSKPayment.chatListeners(html)
-        game.dsk.autoComplete = new DSKChatAutoCompletion()
-        Hooks.call("startDSKChatAutoCompletion", game.dsk.autoComplete)
-        game.dsk.autoComplete.chatListeners(html)
-        DSKChatListeners.chatListeners(html)
+        html = $(html);
+        DiceDSK.chatListeners(html);
+        DSKPayment.chatListeners(html);
+        game.dsk.autoComplete = new DSKChatAutoCompletion();
+        Hooks.call("startDSKChatAutoCompletion", game.dsk.autoComplete);
+        game.dsk.autoComplete.chatListeners(html);
+        DSKChatListeners.chatListeners(html);
     });
+
+    Hooks.on('renderChatInput', applyNotificationListeners);
+
+    function applyNotificationListeners(app, html, context) {
+        if (context.previousParent.id != 'chat-notifications') return;
+
+        const chatNotifications = $(context.previousParent);
+
+        DiceDSK.chatListeners(chatNotifications);
+        DSKPayment.chatListeners(chatNotifications);
+        DSKChatListeners.chatListeners(chatNotifications);
+
+        Hooks.call('dskApplyNotificationListeners', chatNotifications);
+        Hooks.off('renderChatInput', applyNotificationListeners);
+    }
 
     Hooks.on('chatInput', (event, inputOptions) => {
         return game.dsk.autoComplete._navigateQuickFind(event);
     })
 
     Hooks.on("renderChatMessageHTML", (app, html, msg) => {
-        html = $(html)
+        html = $(html);
         if (!game.user.isGM) {
             html.find(".chat-button-gm").remove();
-            let actor
-            const reaction = html.find(".chat-button-target")
+            let actor;
+            const reaction = html.find(".chat-button-target");
             if (reaction.length) {
-                actor = DialogReactDSK.getTargetActor(msg.message)
-                if (actor && actor.actor && !actor.actor.isOwner) reaction.remove()
+                actor = DialogReactDSK.getTargetActor(msg.message);
+                if (actor && actor.actor && !actor.actor.isOwner) reaction.remove();
             }
 
-            const speaker = DSKUtility.getSpeaker(msg.message.speaker)
+            const speaker = DSKUtility.getSpeaker(msg.message.speaker);
             if (speaker && !speaker.isOwner) {
-                html.find(".selfButton").remove()
-                html.find('.d20').data('tooltip', '')
+                html.find(".selfButton").remove();
+                html.find('.d20').attr('data-tooltip', '');
             }
 
-            const onlyTarget = html.find(".onlyTarget")
+            const onlyTarget = html.find(".onlyTarget");
             if (onlyTarget.length) {
                 actor = DSKUtility.getSpeaker({
                     token: onlyTarget.attr("data-token"),
                     actor: onlyTarget.attr("data-actor"),
                     scene: canvas.scene ? canvas.scene.id : null
-                })
-                if (actor && !actor.isOwner) onlyTarget.remove()
+                });
+                if (actor && !actor.isOwner) onlyTarget.remove();
             }
 
-            html.find(".hideData").remove()
-            const hiddenForMe = getProperty(msg.message, `flags.dsk.userHidden.${game.user.id}`)
-            if (hiddenForMe) { html.find(".payButton").remove() }
+            html.find(".hideData").remove();
+            const hiddenForMe = getProperty(msg.message, `flags.dsk.userHidden.${game.user.id}`);
+            if (hiddenForMe) { html.find(".payButton").remove(); }
         } else {
-            html.find(".chat-button-player").remove()
+            html.find(".chat-button-player").remove();
         }
         if (game.settings.get("dsk", "expandChatModifierlist")) {
-            html.find('.expand-mods i').toggleClass("fa-minus fa-plus")
-            html.find('.expand-mods + ul').css({ "display": "block" })
+            html.find('.expand-mods i').toggleClass("fa-minus fa-plus");
+            html.find('.expand-mods + ul').css({ "display": "block" });
         }
-        DSKStatusEffects.bindButtons(html)
+        DSKStatusEffects.bindButtons(html);
     });
 
     Hooks.on("chatMessage", (html, content, msg) => {

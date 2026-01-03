@@ -35,12 +35,23 @@ export function setupJournal() {
         });
     })
 
-    Hooks.on("renderJournalEntryPageSheet", (obj, html, data) => {
-        html = $(html);
-        DSKChatAutoCompletion.bindRollCommands(html)
-        DSKStatusEffects.bindButtons(html)
-        html.find('img').mousedown(ev => { if (ev.button == 2) game.dsk.apps.DSKUtility.showArtwork({ name: obj.name, uuid: "", img: $(ev.currentTarget).attr("src") }) })
-        bindImgToCanvasDragStart(html)
+    Hooks.on("renderJournalEntryPageSheet", (app, jhtml, data, options) => {
+        if (!app.isView) return;
+
+        for (const child of jhtml.children) {
+            const html = $(child);
+            DSKChatAutoCompletion.bindRollCommands(html)
+            DSKStatusEffects.bindButtons(html)
+            html.find('img').on('mousedown', ev => {
+                if (ev.button == 2)
+                    game.dsk.apps.DSKUtility.showArtwork({
+                        name: app.document.name,
+                        uuid: "",
+                        img: ev.currentTarget.getAttribute("src")
+                    })
+            })
+            bindImgToCanvasDragStart(html)
+        }
     })
 }
 

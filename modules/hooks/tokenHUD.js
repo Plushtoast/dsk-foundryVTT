@@ -1,6 +1,6 @@
 export function initTokenHUD() {
-    Hooks.on('renderTokenHUD', (app, html, data) => {
-        html = $(html);
+    Hooks.on('renderTokenHUD', (app, jhtml, data) => {
+        const html = $(jhtml);
         const actor = app.object.actor
         if (actor) {
             if (game.dsk.apps.LightDialog) game.dsk.apps.LightDialog.lightHud(html, actor, data)
