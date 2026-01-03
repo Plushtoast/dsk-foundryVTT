@@ -30,7 +30,7 @@
         </div>
         {{#each this as |item i|}}
         <div class="row-section wrap skills lineheight tableOdd item{{#if (eq item.system.level 0)}} notLearned{{/if}}" data-item-id="{{item._id}}">
-            <div class="col sixty">
+            <div class="col sixty withContext">
                 <a class="item-edit talentName">{{item.name}}</a> {{#if item.canAdvance}}
                 <a class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
                 <a class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a> {{/if}}
@@ -65,7 +65,7 @@
         </div>
         {{#each this as |item i|}}
         <div class="row-section wrap skills lineheight tableOdd item{{#if (eq item.system.level 0)}} notLearned{{/if}}" data-item-id="{{item._id}}">
-            <div class="col sixty">
+            <div class="col sixty withContext">
                 <a class="item-edit talentName">{{item.name}}</a> {{#if item.canAdvance}}
                 <a class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
                 <a class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}

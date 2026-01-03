@@ -16,9 +16,13 @@ import { AppV2Mixin } from "./mixins/appv2_mixin.js";
 import OnUseEffect from "../system/onUseEffects.js";
 const { mergeObject, getProperty, duplicate } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
-const { TextEditor } = foundry.applications.ux;
+const { TextEditor, SearchFilter, ContextMenu } = foundry.applications.ux;
 
 export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.HandlebarsApplicationMixin(foundry.applications.sheets.ActorSheetV2)) {
+
+    #talentSearch;
+    #gearSearch;
+    #conditionSearch;
 
     static TABS = {
         sheet: {
@@ -466,16 +470,12 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
             html.find(".filterTalents").addClass("filtered");
             html.find(".allTalents").removeClass("showAll");
         }
+        // Note: SearchFilter handles input restoration via binding
         const talentSearchInput = html.find(".talentSearch");
         talentSearchInput.val(this.searchFields.searchText);
-        if (this.searchFields.searchText != "") {
-            this._filterTalentsInput(talentSearchInput);
-        }
+
         const gearSearchInput = html.find(".gearSearch");
         gearSearchInput.val(this.searchFields.gearSearch);
-        if (this.searchFields.gearSearch != "") {
-            this._filterGear(gearSearchInput);
-        }
     }
 
     _saveCollapsed() {
@@ -533,6 +533,83 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
     getTokenId() {
         return this.token ? this.token.id : undefined;
+    }
+
+    async _onFirstRender(context, options) {
+        await super._onFirstRender(context, options);
+
+        // Setup context menus using v13 ContextMenu API
+        new ContextMenu(this.element, '.item .withContext', [], {
+            onOpen: this._onItemContext.bind(this),
+            jQuery: false,
+            fixed: true
+        });
+        new ContextMenu(this.element, '.effectConfig', [], {
+            onOpen: this._onStatusEffectContext.bind(this),
+            jQuery: false,
+            fixed: true
+        });
+    }
+
+    _onItemContext(target) {
+        const item = this.actor.items.get($(target).closest('.item').attr('data-item-id'));
+        if (!item) return;
+        ui.context.menuItems = this._getItemContextOptions(item);
+        Hooks.call('dsk.getItemContextOptions', item, ui.context.menuItems);
+    }
+
+    _onStatusEffectContext(target) {
+        const effectId = $(target).closest('.statusEffect').attr('data-id');
+        const effect = this.actor.effects.get(effectId);
+        if (!effect) return;
+        ui.context.menuItems = this._getStatusEffectContextOptions(effect);
+    }
+
+    _getItemContextOptions(item) {
+        return [
+            {
+                name: "dsk.SHEET.EditItem",
+                icon: "<i class='fas fa-edit fa-fw'></i>",
+                callback: () => item.sheet.render(true)
+            },
+            {
+                name: "dsk.SHEET.PostItem",
+                icon: "<i class='fas fa-comment fa-fw'></i>",
+                callback: () => item.postItem()
+            },
+            {
+                name: "dsk.SHEET.DuplicateItem",
+                icon: "<i class='fas fa-copy fa-fw'></i>",
+                callback: () => this.handleItemCopy(item.toObject(), item.type)
+            },
+            {
+                name: "dsk.SHEET.DeleteItem",
+                icon: "<i class='fas fa-trash fa-fw'></i>",
+                callback: () => this._deleteItem(item.id)
+            }
+        ];
+    }
+
+    _getStatusEffectContextOptions(effect) {
+        return [
+            {
+                name: "dsk.SHEET.EditItem",
+                icon: "<i class='fas fa-edit fa-fw'></i>",
+                callback: () => effect.sheet.render(true)
+            },
+            {
+                name: "dsk.SHEET.DeleteItem",
+                icon: "<i class='fas fa-trash fa-fw'></i>",
+                callback: () => this._deleteActiveEffect(effect.id)
+            }
+        ];
+    }
+
+    _tearDown(options) {
+        super._tearDown(options);
+        this.#talentSearch?.unbind();
+        this.#gearSearch?.unbind();
+        this.#conditionSearch?.unbind();
     }
 
     async _onRender(context, options) {
@@ -599,21 +676,27 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
             });
         });
 
-        // Search inputs
-        const filterTalents = ev => this._filterTalentsInput($(ev.currentTarget));
-        const talSearch = html.find('.talentSearch');
-        talSearch.on('keyup', event => this._filterTalentsInput($(event.currentTarget)));
-        talSearch[0]?.addEventListener("search", filterTalents, false);
+        // Search filters using v13 SearchFilter API
+        this.#talentSearch ??= new SearchFilter({
+            inputSelector: ".talentSearch",
+            contentSelector: ".allTalents",
+            callback: this._filterTalents.bind(this)
+        });
+        this.#talentSearch.bind(this.element);
 
-        const filterConditions = ev => this._filterConditions($(ev.currentTarget));
-        const condSearch = html.find('.conditionSearch');
-        condSearch.on('keyup', event => this._filterConditions($(event.currentTarget)));
-        condSearch[0]?.addEventListener("search", filterConditions, false);
+        this.#gearSearch ??= new SearchFilter({
+            inputSelector: ".gearSearch",
+            contentSelector: "[data-application-part=inventory]",
+            callback: this._filterGear.bind(this)
+        });
+        this.#gearSearch.bind(this.element);
 
-        const filterGear = ev => this._filterGear($(ev.currentTarget));
-        const gearSearch = html.find('.gearSearch');
-        gearSearch.on('keyup', event => this._filterGear($(event.currentTarget)));
-        gearSearch[0]?.addEventListener("search", filterGear, false);
+        this.#conditionSearch ??= new SearchFilter({
+            inputSelector: ".conditionSearch",
+            contentSelector: ".statusEffectMenu",
+            callback: this._filterConditions.bind(this)
+        });
+        this.#conditionSearch.bind(this.element);
 
         // Char image right click
         html.find('.charimg').on('mousedown', ev => {
@@ -751,42 +834,56 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         onUse.executeOnUseEffect()
     }
 
-    _filterGear(tar) {
-        if (tar.val() != undefined) {
-            let val = tar.val().toLowerCase().trim()
-            let gear = $(this.element).find('.inventory .item')
-            gear.removeClass('filterHide')
-            gear.filter(function () {
-                return $(this).find('a.item-edit').text().toLowerCase().trim().indexOf(val) == -1
-            }).addClass('filterHide')
+    _filterGear(_event, query, rgx, html) {
+        for (const entry of html.querySelectorAll(".item")) {
+            if (!query) {
+                entry.hidden = false;
+                continue;
+            }
+
+            const title = entry.querySelector('[data-action="itemEdit"]')?.textContent || '';
+            if (!title) {
+                entry.hidden = false;
+                continue;
+            }
+            const isMatch = [title].some(q => rgx.test(SearchFilter.cleanQuery(q)));
+            entry.hidden = !isMatch;
         }
     }
 
-    //TODO replace this with foundry SearchFilter
-    _filterTalentsInput(tar) {
-        if (tar.val() != undefined) {
-            let val = tar.val().toLowerCase().trim()
-            let talents = $(this.element).find('.allTalents')
-            talents.find('.item, .table-header, .table-title').removeClass('filterHide')
-            talents.addClass('showAll').find('.item').filter(function () {
-                return $(this).find('.talentName').text().toLowerCase().trim().indexOf(val) == -1
-            }).addClass('filterHide')
-            if (val.length > 0) {
-                talents.find('.table-header, .table-title:not(:eq(0))').addClass("filterHide")
-                talents.addClass("filterfull")
-            } else
-                talents.removeClass("filterfull")
+    _filterTalents(_event, query, rgx, html) {
+        const show = !!query;
+        html.classList.add('showAll');
+        html.classList.toggle('filterfull', show);
+        html.querySelectorAll('.table-header').forEach(el => el.classList.toggle('dsahidden', show));
+        html.querySelectorAll('.table-title:not(:first-of-type)').forEach(el => el.classList.toggle('dsahidden', show));
+
+        for (const entry of html.querySelectorAll(".item")) {
+            if (!query) {
+                entry.hidden = false;
+                continue;
+            }
+
+            const title = entry.querySelector('.talentName')?.textContent || '';
+            if (!title) {
+                entry.hidden = false;
+                continue;
+            }
+            const isMatch = [title].some(q => rgx.test(SearchFilter.cleanQuery(q)));
+            entry.hidden = !isMatch;
         }
     }
 
-    _filterConditions(tar) {
-        if (tar.val() != undefined) {
-            let val = tar.val().toLowerCase().trim()
-            let conditions = $(this.element).find('.statusEffectMenu li:not(.search)')
-            conditions.removeClass('filterHide')
-            conditions.filter(function () {
-                return game.i18n.localize($(this).find('a').attr('data-tooltip')).toLowerCase().trim().indexOf(val) == -1
-            }).addClass('filterHide')
+    _filterConditions(_event, query, rgx, html) {
+        for (const entry of html.querySelectorAll("li:not(.search)")) {
+            if (!query) {
+                entry.hidden = false;
+                continue;
+            }
+
+            const title = game.i18n.localize(entry.querySelector('button')?.dataset?.tooltip || entry.querySelector('a')?.dataset?.tooltip) || '';
+            const isMatch = [title].some(q => rgx.test(SearchFilter.cleanQuery(q)));
+            entry.hidden = !isMatch;
         }
     }
 
@@ -868,10 +965,6 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 break
         }
         await this.actor.deleteEmbeddedDocuments("Item", itemsToDelete);
-    }
-
-    _getItemId(ev) {
-        return $(ev.currentTarget).parents(".item").attr("data-item-id")
     }
 
     _onDragStart(event) {
