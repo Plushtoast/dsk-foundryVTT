@@ -63,34 +63,38 @@ export default class AdvantageRulesDSK extends ItemRulesDSK {
             let callback
             if (DSK.vantagesNeedingAdaption[item.name].items == "text") {
                 template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-string-dialog.html', { original: item })
-                callback = function(dlg) {
+                callback = function(event, button, dialog) {
+                    let dlg = $(button.form);
                     let adoption = { name: dlg.find('[name="entryselection"]').val() }
                     AdvantageRulesDSK._vantageReturnFunction(actor, item, typeClass, adoption)
                 }
             } else {
                 let items = actor.items.filter(x => DSK.vantagesNeedingAdaption[item.name].items.includes(x.type))
                 template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-dialog.html', { items: items, original: item })
-                callback = function(dlg) {
+                callback = function(event, button, dialog) {
+                    let dlg = $(button.form);
                     let adoption = items.find(x => x.name == dlg.find('[name="entryselection"]').val())
                     AdvantageRulesDSK._vantageReturnFunction(actor, item, typeClass, adoption)
                 }
             }
-            await new Dialog({
-                title: game.i18n.localize("dsk.DIALOG.ItemRequiresAdoption"),
+            await foundry.applications.api.DialogV2.wait({
+                window: { title: game.i18n.localize("dsk.DIALOG.ItemRequiresAdoption") },
                 content: template,
-                buttons: {
-                    Yes: {
-                        icon: '<i class="fa fa-check"></i>',
+                buttons: [
+                    {
+                        action: "yes",
+                        icon: "fa fa-check",
                         label: game.i18n.localize("dsk.yes"),
+                        default: true,
                         callback: callback
                     },
-                    cancel: {
-                        icon: '<i class="fas fa-times"></i>',
+                    {
+                        action: "cancel",
+                        icon: "fas fa-times",
                         label: game.i18n.localize("dsk.cancel")
                     },
-                },
-                default: 'Yes'
-            }).render(true)
+                ],
+            });
         } else {
             AdvantageRulesDSK._vantageReturnFunction(actor, item, typeClass, null)
         }

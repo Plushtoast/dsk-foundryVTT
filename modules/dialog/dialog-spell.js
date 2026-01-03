@@ -1,19 +1,19 @@
 import DSKUtility from "../system/dsk_utility.js";
 import DSKDialog from "./dialog-dsk.js";
 import DialogShared from "./dialog-shared.js";
-const { mergeObject, duplicate } = foundry.utils
+const { duplicate } = foundry.utils
 
 export default class DSKpellDialog extends DialogShared {
     static rollChanges = ["defenseMalus"]
 
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, {
-            width: 700,
+    static DEFAULT_OPTIONS = {
+        position: {
+            width: 700
+        },
+        window: {
             resizable: true,
-        });
-        return options;
-    }
+        },
+    };
 
     static bigTimes = [5, 30, 120, 480, 960, 1920];
 
@@ -30,24 +30,24 @@ export default class DSKpellDialog extends DialogShared {
             let modified = testData.source.system.castingTime.modified;
             if (LZ && testData.extra.speaker.token != "emptyActor") {
                 const progressLabel = modified > 0 ? ` (${progress}/${modified})` : "";
-                mergeObject(buttons, {
-                    reloadButton: {
-                        label: `${game.i18n.localize("dsk.SPELL.reload")}${progressLabel}`,
-                        callback: async(dlg) => {
-                            const actor = await DSKUtility.getSpeaker(testData.extra.speaker);
-                            let reloadUpdate = { _id: testData.source._id, "system.castingTime.progress": progress + 1 };
-                            if (modified == 0) {
-                                modified = Number(dlg.find(".castingTime").text()) - 1;
-                                reloadUpdate["system.castingTime.modified"] = modified;
-                            }
-                            await actor.updateEmbeddedDocuments("Item", [reloadUpdate]);
-                            const infoMsg = game.i18n.format("dsk.SPELL.isReloading", {
-                                actor: testData.extra.actor.name,
-                                item: testData.source.name,
-                                status: `${progress + 1}/${modified}`,
-                            });
-                            await ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
-                        },
+                buttons.push({
+                    action: "reloadButton",
+                    label: `${game.i18n.localize("dsk.SPELL.reload")}${progressLabel}`,
+                    callback: async (event, button, dialog) => {
+                        const dlg = $(button.form);
+                        const actor = await DSKUtility.getSpeaker(testData.extra.speaker);
+                        let reloadUpdate = { _id: testData.source._id, "system.castingTime.progress": progress + 1 };
+                        if (modified == 0) {
+                            modified = Number(dlg.find(".castingTime").text()) - 1;
+                            reloadUpdate["system.castingTime.modified"] = modified;
+                        }
+                        await actor.updateEmbeddedDocuments("Item", [reloadUpdate]);
+                        const infoMsg = game.i18n.format("dsk.SPELL.isReloading", {
+                            actor: testData.extra.actor.name,
+                            item: testData.source.name,
+                            status: `${progress + 1}/${modified}`,
+                        });
+                        await ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
                     },
                 });
             }
@@ -145,19 +145,21 @@ export default class DSKpellDialog extends DialogShared {
             }
         });
         reach.attr("data-mod", mod);
-        html.find(".reloadButton").prop("disabled", Number(html.find(".castingTime").text()) < 2);
+        $(this.element).find(".reloadButton").prop("disabled", Number($(this.element).find(".castingTime").text()) < 2);
     }
 
-    activateListeners(html) {
-        super.activateListeners(html);
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
         html.find(".reloadButton").prop("disabled", Number(html.find(".castingTime").text()) < 2);
 
-        html.find(".specAbs").mousedown((ev) => {
+        html.find(".specAbs").on('mousedown', (ev) => {
             $(ev.currentTarget).toggleClass("active");
-            this.recalcSpellModifiers(html)
+            this.recalcSpellModifiers(html);
         });
 
-        html.find(".variableBaseCost").change((ev) => {
+        html.find(".variableBaseCost").on('change', (ev) => {
             let parent = $(ev.currentTarget).parents(".skill-test");
             let oldVal = parent.find(".aspcost").attr("data-base");
             let newVal = $(ev.currentTarget).val();
@@ -165,14 +167,14 @@ export default class DSKpellDialog extends DialogShared {
             parent.find(".aspcost").text((Number(parent.find(".aspcost").text()) * newVal) / oldVal);
         });
 
-        html.find(".spellModifier").change((event) => this.recalcSpellModifiers(html, event))
-        
+        html.find(".spellModifier").on('change', (event) => this.recalcSpellModifiers(html, event));
+
         let targets = this.readTargets();
 
         if (targets.length == 0) {
             this.setRollButtonWarning();
         }
-        // not great
+
         const that = this;
         this.checkTargets = setInterval(function() {
             targets = that.compareTargets(html, targets);

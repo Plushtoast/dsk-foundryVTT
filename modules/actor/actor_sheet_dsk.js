@@ -660,22 +660,24 @@ export default class ActorSheetDSK extends foundry.appv1.sheets.ActorSheet {
         let item = this.actor.items.get(itemId)
         let message = game.i18n.format("dsk.DIALOG.DeleteItemDetail", { item: item.name })
         renderTemplate('systems/dsk/templates/dialog/delete-item-dialog.html', { message }).then(html => {
-            new Dialog({
-                title: game.i18n.localize("dsk.DIALOG.deleteConfirmation"),
+            foundry.applications.api.DialogV2.wait({
+                window: { title: game.i18n.localize("dsk.DIALOG.deleteConfirmation") },
                 content: html,
-                buttons: {
-                    Yes: {
-                        icon: '<i class="fa fa-check"></i>',
+                buttons: [
+                    {
+                        action: "yes",
+                        icon: "fa fa-check",
                         label: game.i18n.localize("dsk.yes"),
+                        default: true,
                         callback: () => this._cleverDeleteItem(itemId)
                     },
-                    cancel: {
-                        icon: '<i class="fas fa-times"></i>',
+                    {
+                        action: "cancel",
+                        icon: "fas fa-times",
                         label: game.i18n.localize("dsk.cancel")
                     }
-                },
-                default: 'Yes'
-            }).render(true)
+                ],
+            });
         });
     }
 

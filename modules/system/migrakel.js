@@ -3,30 +3,32 @@ const { mergeObject } = foundry.utils
 export default class Migrakel {
     static async showDialog(content) {
         let [result] = await new Promise((resolve, reject) => {
-            new Dialog({
-                title: game.i18n.localize("dsk.Migrakel.Migration"),
+            foundry.applications.api.DialogV2.wait({
+                window: { title: game.i18n.localize("dsk.Migrakel.Migration") },
                 content,
-                default: "Yes",
-                buttons: {
-                    Yes: {
-                        icon: '<i class="fa fa-check"></i>',
+                buttons: [
+                    {
+                        action: "yes",
+                        icon: "fa fa-check",
                         label: game.i18n.localize("dsk.yes"),
+                        default: true,
                         callback: () => {
                             resolve([true]);
                         },
                     },
-                    cancel: {
-                        icon: '<i class="fas fa-times"></i>',
+                    {
+                        action: "cancel",
+                        icon: "fas fa-times",
                         label: game.i18n.localize("dsk.cancel"),
                         callback: () => {
                             resolve([false]);
                         },
                     },
-                },
+                ],
                 close: () => {
                     resolve([false]);
                 },
-            }).render(true);
+            });
         });
         return result;
     }

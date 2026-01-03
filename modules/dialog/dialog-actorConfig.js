@@ -1,42 +1,43 @@
 import Migrakel from "../system/migrakel.js"
 const { renderTemplate } = foundry.applications.handlebars;
 
-export default class DialogActorConfig extends Dialog {
-    static _warnedAppV1 = true;
-    
+export default class DialogActorConfig extends foundry.applications.api.DialogV2 {
     constructor(actor, options) {
         super(options)
         this.actor = actor
         this.lock = false
     }
+
     static async buildDialog(actor) {
         const template = await renderTemplate("systems/dsk/templates/actors/parts/actorConfig.html", { actor })
         new DialogActorConfig(actor, {
-            title: game.i18n.localize("dsk.SHEET.actorConfig"),
+            window: { title: game.i18n.localize("dsk.SHEET.actorConfig") },
             content: template,
-            default: 'Save',
-            buttons: {
-                Save: {
-                    icon: '<i class="fa fa-check"></i>',
+            buttons: [
+                {
+                    action: "save",
+                    icon: "fa fa-check",
                     label: game.i18n.localize("dsk.save"),
-                    callback: dlg => {
-                        actor.update({ 
+                    default: true,
+                    callback: (event, button, dialog) => {
+                        const dlg = $(button.form);
+                        actor.update({
                             "system.config.autoBar": dlg.find('[name="autoBar"]').is(":checked"),
                             "system.config.autoSize": dlg.find('[name="autoSize"]').is(":checked")
                         })
                     }
                 },
-                cancel: {
-                    icon: '<i class="fas fa-times"></i>',
+                {
+                    action: "cancel",
+                    icon: "fas fa-times",
                     label: game.i18n.localize("dsk.cancel")
                 }
-            }
+            ]
         }).render(true)
     }
 
     async updateWrapper(fnct, ev) {
         return ui.notifications.warn("There is nothing to migrate yet.")
-
 
         if (this.lock) return
 
@@ -50,12 +51,14 @@ export default class DialogActorConfig extends Dialog {
         upd()
     }
 
-    activateListeners(html) {
-        super.activateListeners(html)
-        html.find('.updateSpells').click(async(ev) => this.updateWrapper("updateSpellsAndLiturgies", ev))
-        html.find('.updateAbilities').click(async(ev) => this.updateWrapper("updateSpecialAbilities", ev))
-        html.find('.updatecSkills').click(async(ev) => this.updateWrapper("updateCombatskills", ev))
-        html.find('.updateSkills').click(async(ev) => this.updateWrapper("updateSkills", ev))
-        html.find('.updateGear').click(async(ev) => this.updateWrapper("updateGear", ev))
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
+        html.find('.updateSpells').on('click', async(ev) => this.updateWrapper("updateSpellsAndLiturgies", ev));
+        html.find('.updateAbilities').on('click', async(ev) => this.updateWrapper("updateSpecialAbilities", ev));
+        html.find('.updatecSkills').on('click', async(ev) => this.updateWrapper("updateCombatskills", ev));
+        html.find('.updateSkills').on('click', async(ev) => this.updateWrapper("updateSkills", ev));
+        html.find('.updateGear').on('click', async(ev) => this.updateWrapper("updateGear", ev));
     }
 }

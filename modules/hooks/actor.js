@@ -185,19 +185,19 @@ export function initActorHooks() {
     })
 }
 
-class AskForNameDialog extends Dialog{
-    static _warnedAppV1 = true;
-    
+class AskForNameDialog {
     static async getDialog(tokenObject, setting){
-        new Dialog({
-            title: game.i18n.localize("dsk.SETTINGS.obfuscateTokenNames"),
+        await foundry.applications.api.DialogV2.wait({
+            window: { title: game.i18n.localize("dsk.SETTINGS.obfuscateTokenNames") },
             content: `<label for="name">${game.i18n.localize('dsk.SETTINGS.rename')}</label> <input dtype="string" name="name" type="text" value="${tokenObject.actor.name}"/>`,
-            default: 'Yes',
-            buttons: {
-                Yes: {
-                    icon: '<i class="fa fa-check"></i>',
+            buttons: [
+                {
+                    action: "yes",
+                    icon: "fa fa-check",
                     label: game.i18n.localize("dsk.yes"),
-                    callback: async(html) => {
+                    default: true,
+                    callback: async (event, button, dialog) => {
+                        const html = $(button.form);
                         const tokenId = tokenObject.id || tokenObject._id
                         let name = html.find('[name="name"]').val()
                         if(setting == 2){
@@ -210,20 +210,22 @@ class AskForNameDialog extends Dialog{
                         await token.update({ name })
                     }
                 },
-                unknown: {
-                    icon: '<i class="fa fa-question"></i>',
+                {
+                    action: "unknown",
+                    icon: "fa fa-question",
                     label: game.i18n.localize("dsk.unknown"),
-                    callback: async(html) => {
+                    callback: async (event, button, dialog) => {
                         const tokenId = tokenObject.id || tokenObject._id
                         const token = canvas.scene.tokens.get(tokenId)
                         await token.update({ name: game.i18n.localize("dsk.unknown") })
                     }
                 },
-                cancel: {
-                    icon: '<i class="fas fa-times"></i>',
+                {
+                    action: "cancel",
+                    icon: "fas fa-times",
                     label: game.i18n.localize("dsk.cancel")
                 }
-            }
-        }).render(true)
+            ]
+        });
     }
 }

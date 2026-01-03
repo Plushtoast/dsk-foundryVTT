@@ -2,31 +2,31 @@ import ItemDSK from "../item/item_dsk.js"
 import DSKUtility from "./dsk_utility.js"
 const { getProperty } = foundry.utils
 
-export default class DSKInitializer extends Dialog {
-    static _warnedAppV1 = true;
-    
+export default class DSKInitializer extends foundry.applications.api.DialogV2 {
     constructor(title, content, module, lang = "") {
-        let data = {
-            title: title,
-            content: content,
-            buttons: {
-                initialize: {
-                    label: game.i18n.localize("dsk.initialize"),
-                    callback: async() => {
-                        if (this.lock) return
-                        await this.initialize()
-                    }
-                },
-                cancel: {
-                    label: game.i18n.localize("dsk.cancel"),
-                    callback: async() => {
-                        if (this.lock) return
-                        await this.dontInitialize()
-                    }
+        const buttons = [
+            {
+                action: "initialize",
+                label: game.i18n.localize("dsk.initialize"),
+                callback: async (event, button, dialog) => {
+                    if (dialog.lock) return
+                    await dialog.initialize()
+                }
+            },
+            {
+                action: "cancel",
+                label: game.i18n.localize("dsk.cancel"),
+                callback: async (event, button, dialog) => {
+                    if (dialog.lock) return
+                    await dialog.dontInitialize()
                 }
             }
-        }
-        super(data)
+        ];
+        super({
+            window: { title: title },
+            content: content,
+            buttons: buttons
+        });
         this.module = module
         this.lang = lang
         this.folders = {}
@@ -38,7 +38,7 @@ export default class DSKInitializer extends Dialog {
 
     async initialize() {
         this.lock = true
-        let initButton = $(this._element).find('.initialize')
+        let initButton = $(this.element).find('.initialize')
         initButton.prepend('<i class="fas fa-spinner fa-spin"></i>')
         let bookData = {}
         try {
@@ -139,35 +139,38 @@ export default class DSKInitializer extends Dialog {
                     let found = game.scenes.find(x => x.name == entry.name && x.folder?.id == head.id)
                     if (!resetAll && found) {
                         [resetScene, resetAll] = await new Promise((resolve, reject) => {
-                            new Dialog({
-                                title: game.i18n.localize("dsk.Book.sceneReset"),
+                            foundry.applications.api.DialogV2.wait({
+                                window: { title: game.i18n.localize("dsk.Book.sceneReset") },
                                 content: game.i18n.format("dsk.Book.sceneResetDescription", { name: entry.name }),
-                                default: 'Yes',
-                                buttons: {
-                                    Yes: {
-                                        icon: '<i class="fa fa-check"></i>',
+                                buttons: [
+                                    {
+                                        action: "yes",
+                                        icon: "fa fa-check",
                                         label: game.i18n.localize("dsk.yes"),
+                                        default: true,
                                         callback: () => {
                                             resolve([true, false])
                                         }
                                     },
-                                    all: {
-                                        icon: '<i class="fa fa-check"></i>',
+                                    {
+                                        action: "all",
+                                        icon: "fa fa-check",
                                         label: game.i18n.localize("dsk.LocalizedIDs.all"),
                                         callback: () => {
                                             resolve([true, true])
                                         }
                                     },
-                                    cancel: {
-                                        icon: '<i class="fas fa-times"></i>',
+                                    {
+                                        action: "cancel",
+                                        icon: "fas fa-times",
                                         label: game.i18n.localize("dsk.cancel"),
                                         callback: () => {
                                             resolve([false, false])
                                         }
                                     }
-                                },
+                                ],
                                 close: () => { resolve([false, false]) }
-                            }).render(true)
+                            })
                         })
                     }
                     if (found && !resetScene) {

@@ -1,34 +1,36 @@
 import ActorDSK from "../actor/actor_dsk.js"
 import DSKUtility from "../system/dsk_utility.js"
 import OpposedDSK from "../system/opposeddsk.js"
-const { mergeObject } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
 
-export default class DialogReactDSK extends Dialog {
-    static _warnedAppV1 = true;
+export default class DialogReactDSK extends foundry.applications.api.DialogV2 {
+    static DEFAULT_OPTIONS = {
+        window: {
+            resizable: true,
+        },
+    };
 
     static async showDialog(startMessage) {
         let fun = this.callbackResult
-        new DialogReactDSK({
-            title: game.i18n.localize("dsk.Unopposed"),
+        await foundry.applications.api.DialogV2.wait({
+            window: { title: game.i18n.localize("dsk.Unopposed"), resizable: true },
             content: await this.getTemplate(startMessage),
-            default: 'ok',
-            buttons: {
-                ok: {
-                    icon: '<i class="fa fa-check"></i>',
+            buttons: [
+                {
+                    action: "ok",
+                    icon: "fa fa-check",
                     label: game.i18n.localize("dsk.ok"),
-                    callback: dlg => {
-                        fun(dlg.find('[name="entryselection"]').val(), startMessage)
+                    callback: (event, button, dialog) => {
+                        fun($(button.form).find('[name="entryselection"]').val(), startMessage)
                     }
                 },
-                cancel: {
-                    icon: '<i class="fas fa-times"></i>',
+                {
+                    action: "cancel",
+                    icon: "fas fa-times",
                     label: game.i18n.localize("dsk.cancel"),
-
                 }
-            }
-
-        }).render(true)
+            ]
+        });
     }
 
     static getTargetActor(message) {
@@ -50,14 +52,6 @@ export default class DialogReactDSK extends Dialog {
     static async getTemplate(startMessage) { return "" }
 
     static callbackResult(selection, message, ev) {}
-
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, {
-            resizable: true
-        });
-        return options;
-    }
 }
 
 
@@ -89,26 +83,32 @@ export class ReactToSkillDialog extends DialogReactDSK {
     }
 }
 
-export class ActAttackDialog extends Dialog {
-    static _warnedAppV1 = true;
-    
+export class ActAttackDialog extends foundry.applications.api.DialogV2 {
+    static DEFAULT_OPTIONS = {
+        position: {
+            width: 550
+        },
+    };
+
     static async showDialog(actor, tokenId) {
         const dialog = new ActAttackDialog({
-            title: game.i18n.localize("dsk.attacktest"),
+            window: { title: game.i18n.localize("dsk.attacktest") },
             content: await this.getTemplate(actor),
-            buttons: {}
+            buttons: []
         })
         dialog.actor = actor
         dialog.tokenId = tokenId
         dialog.render(true)
     }
 
-    activateListeners(html) {
-        super.activateListeners(html);
-        html.find('.reactClick').click(ev => {
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
+        html.find('.reactClick').on('click', ev => {
             this.callbackResult(ev.currentTarget.dataset.value, this.actor, this.tokenId)
             this.close()
-        })
+        });
     }
 
     static async getTemplate(actor) {
@@ -138,7 +138,7 @@ export class ActAttackDialog extends Dialog {
         }
         return await renderTemplate('systems/dsk/templates/dialog/dialog-reaction-attack.html', { dieClass: "die-mu", items, title: "dsk.DIALOG.selectAction" })
     }
-    
+
     callbackResult(text, actor, tokenId) {
         const types = ["meleeweapon", "trait", "rangeweapon"]
         const result = actor.items.find(x => { return types.includes(x.type) && x.name == text })
@@ -147,13 +147,5 @@ export class ActAttackDialog extends Dialog {
                 actor.basicTest(setupData)
             });
         }
-    }
-    
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, {
-            width: 550,
-        });
-        return options;
     }
 }

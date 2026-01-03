@@ -343,43 +343,47 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
 
     async randomGoods(ev) {
         const html = await renderTemplate('systems/dsk/templates/dialog/randomGoods-dialog.html', { categories: DSK.equipmentCategories })
-        new Dialog({
-            title: game.i18n.localize("dsk.MERCHANT.randomGoods"),
+        foundry.applications.api.DialogV2.wait({
+            window: { title: game.i18n.localize("dsk.MERCHANT.randomGoods") },
             content: html,
-            default: 'Yes',
-            buttons: {
-                Yes: {
-                    icon: '<i class="fa fa-check"></i>',
+            buttons: [
+                {
+                    action: "yes",
+                    icon: "fa fa-check",
                     label: game.i18n.localize("dsk.yes"),
-                    callback: dlg => this.addRandomGoods(this.actor, dlg, ev)
+                    default: true,
+                    callback: (event, button, dialog) => this.addRandomGoods(this.actor, $(button.form), ev)
                 },
-                cancel: {
-                    icon: '<i class="fas fa-times"></i>',
+                {
+                    action: "cancel",
+                    icon: "fas fa-times",
                     label: game.i18n.localize("dsk.cancel")
                 }
-            }
-        }).render(true)
+            ]
+        });
     }
 
     async clearInventory(ev) {
-        new Dialog({
-            title: game.i18n.localize("dsk.MERCHANT.clearInventory"),
+        foundry.applications.api.DialogV2.wait({
+            window: { title: game.i18n.localize("dsk.MERCHANT.clearInventory") },
             content: game.i18n.localize("dsk.MERCHANT.deleteAllGoods"),
-            default: 'Yes',
-            buttons: {
-                Yes: {
-                    icon: '<i class="fa fa-check"></i>',
+            buttons: [
+                {
+                    action: "yes",
+                    icon: "fa fa-check",
                     label: game.i18n.localize("dsk.yes"),
+                    default: true,
                     callback: () => {
                         this.removeAllGoods(this.actor, ev)
                     }
                 },
-                cancel: {
-                    icon: '<i class="fas fa-times"></i>',
+                {
+                    action: "cancel",
+                    icon: "fas fa-times",
                     label: game.i18n.localize("dsk.cancel")
                 }
-            }
-        }).render(true)
+            ]
+        });
     }
 
     async addRandomGoods(actor, dlg, ev) {
@@ -532,33 +536,26 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     }
 }
 
-class SelectTradefriendDialog extends Dialog{
-    static _warnedAppV1 = true;
-    
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, {
-        });
-        return options;
-    }
-
+class SelectTradefriendDialog extends foundry.applications.api.DialogV2 {
     static async getDialog(actor){
         const users = await game.dsk.apps.gameMasterMenu?.getTrackedHeros()
 
         if(!users) return ui.notifications.warn("The required functionality is not yet available.")
 
         const dialog = new SelectTradefriendDialog({
-            title: game.i18n.localize("dsk.DIALOG.setTargetToUser"),
+            window: { title: game.i18n.localize("dsk.DIALOG.setTargetToUser") },
             content: await renderTemplate('systems/dsk/templates/dialog/selectTradeFriend.html', { users }),
-            buttons: {},
+            buttons: [],
         })
         dialog.actor = actor
         return dialog
     }
 
-    activateListeners(html){
-        super.activateListeners(html)
-        html.find('.combatant').click(ev => this.setTargetToUser(ev))
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
+        html.find('.combatant').on('click', ev => this.setTargetToUser(ev));
     }
 
     setTargetToUser(ev){

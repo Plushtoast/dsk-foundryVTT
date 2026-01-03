@@ -33,62 +33,57 @@ export function initSetup(){
 }
 
 const showWrongLanguageDialog = (forceLanguage) => {
-    let data = {
-        title: game.i18n.localize("dsk.SETTINGS.forceLanguage"),
+    foundry.applications.api.DialogV2.wait({
+        window: { title: game.i18n.localize("dsk.SETTINGS.forceLanguage") },
         content: game.i18n.format("dsk.DSKError.wrongLanguage", { lang: forceLanguage }),
-        buttons: {
-            ok: {
-                icon: '<i class="fa fa-check"></i>',
+        buttons: [
+            {
+                action: "ok",
+                icon: "fa fa-check",
                 label: game.i18n.localize("dsk.ok"),
-                callback: async() => { 
-                    await game.settings.set("core", "language", forceLanguage) 
+                callback: async () => {
+                    await game.settings.set("core", "language", forceLanguage)
                     foundry.utils.debouncedReload()
                 }
             },
-            cancel: {
-                icon: '<i class="fas fa-times"></i>',
+            {
+                action: "cancel",
+                icon: "fas fa-times",
                 label: game.i18n.localize("dsk.cancel"),
-
             }
-        }
-    }
-    new Dialog(data).render(true)
-}
-
-class ForbiddenLanguageDialog extends Dialog{
-    static _warnedAppV1 = true;
-    
-    async close(options = {}){
-        if(!["de"].includes(game.i18n.lang)) return
-
-        return super.close(options)
-    }
+        ]
+    });
 }
 
 const showForbiddenLanguageDialog = () => {
-    let data = {
-        title: game.i18n.localize("language"),
+    foundry.applications.api.DialogV2.wait({
+        window: { title: game.i18n.localize("language") },
         content: "Your foundry language is not supported by this system. Due to technical reasons your foundry language setting has to be switched to german.",
-        buttons: {
-            de: {
-                icon: '<i class="fa fa-check"></i>',
-                label: "en",
-                callback: async() => { 
-                    await game.settings.set("core", "language", "de") 
+        buttons: [
+            {
+                action: "de",
+                icon: "fa fa-check",
+                label: "de",
+                callback: async () => {
+                    await game.settings.set("core", "language", "de")
                     foundry.utils.debouncedReload()
                 }
             },
-            logout: {
-                icon: '<i class="fas fa-door-closed"></i>',
+            {
+                action: "logout",
+                icon: "fas fa-door-closed",
                 label: game.i18n.localize('SETTINGS.Logout'),
-                callback: async() => { 
+                callback: async () => {
                     ui.menu.items.logout.onClick()
                 }
-            }            
+            }
+        ],
+        close: (event, dialog) => {
+            // Only allow closing if language is supported
+            if (!["de"].includes(game.i18n.lang)) return false;
+            return true;
         }
-    }
-
-    new ForbiddenLanguageDialog(data).render(true)
+    });
 }
 
 class DaylightIlluminationShader extends foundry.canvas.rendering.shaders.AdaptiveIlluminationShader {

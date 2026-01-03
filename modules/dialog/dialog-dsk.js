@@ -2,64 +2,65 @@ import DSKCombatDialog from './dialog-combat-dsk.js'
 import DialogShared from './dialog-shared.js'
 import SkillDialogDSK from './dialog-skill-dsk.js'
 import DSKSpellDialog from './dialog-spell.js'
-const { mergeObject } = foundry.utils
 
 export default class DSKDialog extends DialogShared {
+    static DEFAULT_OPTIONS = {
+        window: {
+            resizable: true,
+        },
+    };
+
     static getDialogForItem(type) {
         switch (type) {
             case "rangeweapon":
             case "meleeweapon":
             case "trait":
-                return DSKCombatDialog
+                return DSKCombatDialog;
             case "ahnengabe":
-                return DSKSpellDialog
+                return DSKSpellDialog;
             case "skill":
-                return SkillDialogDSK
-            
+                return SkillDialogDSK;
         }
-        return DSKDialog
+        return DSKDialog;
     }
 
-    static getRollButtons(testData, dialogOptions, resolve, reject){
-        let buttons = {
-            rollButton: {
-                label: game.i18n.localize("dsk.check"),
-                callback: (html) => {
-                    game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html)
-                    resolve(dialogOptions.callback(html))
+    static getRollButtons(testData, dialogOptions, resolve, reject) {
+        const buttons = [
+            {
+                action: 'rollButton',
+                label: game.i18n.localize("dsk.Roll"),
+                callback: (event, button, dialog) => {
+                    const html = $(button.form);
+                    game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html);
+                    resolve(dialogOptions.callback(html));
                 },
-            },
-        }
-        if (game.user.isGM) {
-            mergeObject(buttons, {
-                cheat: {
-                    label: game.i18n.localize("dsk.DIALOG.cheat"),
-                    callback: (html) => {
-                        game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html)
-                        resolve(dialogOptions.callback(html, { cheat: true }))
-                    },
-                },
-            })
-        }
-        return buttons
-    }
-
-    activateListeners(html) {
-        super.activateListeners(html)
-        html.find(".dieButton").click(ev => {
-            let elem = $(ev.currentTarget)
-            if (elem.attr("data-single") == "true") {
-                elem.closest(".dialog-content").find(".dieButton").removeClass("dieSelected")
             }
-            elem.toggleClass('dieSelected')
-        })
+        ];
+
+        if (game.user.isGM) {
+            buttons.push({
+                action: 'cheat',
+                label: game.i18n.localize("dsk.DIALOG.cheat"),
+                callback: (event, button, dialog) => {
+                    const html = $(button.form);
+                    game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html);
+                    resolve(dialogOptions.callback(html, { cheat: true }));
+                },
+            });
+        }
+        return buttons;
     }
 
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, {
-            resizable: true
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
+        html.find('.dieButton').on('click', (ev) => {
+            const elem = $(ev.currentTarget);
+            if (ev.currentTarget.dataset.single === 'true') {
+                elem.closest('.dialog-content').find('.dieButton').removeClass('dieSelected');
+            }
+            elem.toggleClass('dieSelected');
         });
-        return options;
     }
 }

@@ -1,11 +1,8 @@
 import DPS from "../system/derepositioningsystem.js"
 import DSKUtility from "../system/dsk_utility.js"
-const { mergeObject } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
 
-export class AddTargetDialog extends Dialog{
-    static _warnedAppV1 = true;
-
+export class AddTargetDialog extends foundry.applications.api.DialogV2 {
     static async getDialog(speaker){
         const targets = Array.from(game.user.targets).map(x => x.id)
         const selectables = []
@@ -23,19 +20,23 @@ export class AddTargetDialog extends Dialog{
                 selectables.push(combatant)
             })
         }
-        return new AddTargetDialog({
-            title: game.i18n.localize("dsk.DIALOG.addTarget"),
+        const dialog = new AddTargetDialog({
+            window: { title: game.i18n.localize("dsk.DIALOG.addTarget") },
             content: await renderTemplate('systems/dsk/templates/dialog/addTarget-dialog.html', { selectables }),
-            buttons: {},
+            buttons: [],
         })
+        return dialog
     }
 
-    activateListeners(html){
-        super.activateListeners(html)
-        const combatants = html.find('.combatant')
-        combatants.click(ev => this.setTargets(ev))
-        combatants.hover(this._onCombatantHoverIn.bind(this), this._onCombatantHoverOut.bind(this));
-        combatants.mousedown(ev => this._onRightClick(ev))
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
+        const combatants = html.find('.combatant');
+        combatants.on('click', ev => this.setTargets(ev));
+        combatants.on('mouseenter', this._onCombatantHoverIn.bind(this));
+        combatants.on('mouseleave', this._onCombatantHoverOut.bind(this));
+        combatants.on('mousedown', ev => this._onRightClick(ev));
     }
 
     _onCombatantHoverOut(ev) {
@@ -72,23 +73,17 @@ export class AddTargetDialog extends Dialog{
     }
 }
 
-export class SelectUserDialog extends Dialog{
-    static _warnedAppV1 = true;
-
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, {
-            classes: options.classes.concat(["dsk5Decent"]),
-        });
-        return options;
-    }
+export class SelectUserDialog extends foundry.applications.api.DialogV2 {
+    static DEFAULT_OPTIONS = {
+        classes: ["dsk5Decent"],
+    };
 
     static async getDialog(){
         const users = game.users.filter(x => x.active && !x.isGM)
         return new SelectUserDialog({
-            title: game.i18n.localize("dsk.DIALOG.setTargetToUser"),
+            window: { title: game.i18n.localize("dsk.DIALOG.setTargetToUser") },
             content: await renderTemplate('systems/dsk/templates/dialog/selectForUserDialog.html', { users }),
-            buttons: {},
+            buttons: [],
         })
     }
 
@@ -108,9 +103,11 @@ export class SelectUserDialog extends Dialog{
         })
     }
 
-    activateListeners(html){
-        super.activateListeners(html)
-        html.find('.combatant').click(ev => this.setTargetToUser(ev))
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
+        html.find('.combatant').on('click', ev => this.setTargetToUser(ev));
     }
 
     setTargetToUser(ev){
@@ -123,29 +120,29 @@ export class SelectUserDialog extends Dialog{
     }
 }
 
-export class UserMultipickDialog extends Dialog{
-    static _warnedAppV1 = true;
-    
+export class UserMultipickDialog extends foundry.applications.api.DialogV2 {
     static async getDialog(content){
         const users = game.users.filter(x => x.active && !x.isGM)
-        
+
         new UserMultipickDialog({
-            title: game.i18n.localize("dsk.SHEET.PostItem"),
+            window: { title: game.i18n.localize("dsk.SHEET.PostItem") },
             content: await renderTemplate('systems/dsk/templates/dialog/usermultipickdialog.html', { users }),
-            default: "Yes",
-            buttons: {
-                Yes: {
-                    icon: '<i class="fa fa-check"></i>',
+            buttons: [
+                {
+                    action: "yes",
+                    icon: "fa fa-check",
                     label: game.i18n.localize("dsk.yes"),
-                    callback: (dlg) => {
-                        this.postContent(dlg, content)
+                    default: true,
+                    callback: (event, button, dialog) => {
+                        this.postContent($(button.form), content)
                     }
                 },
-                cancel: {
-                    icon: '<i class="fas fa-times"></i>',
+                {
+                    action: "cancel",
+                    icon: "fas fa-times",
                     label: game.i18n.localize("dsk.cancel")
                 }
-            },
+            ],
         }).render(true)
     }
 
@@ -158,15 +155,16 @@ export class UserMultipickDialog extends Dialog{
             });
             chatOptions.whisper = ids
         }
-        
+
         ChatMessage.create(chatOptions)
     }
 
-    activateListeners(html){
-        super.activateListeners(html)
+    async _onRender(context, options) {
+        await super._onRender(context, options);
 
-        html.find('[name="sel_all"]').change(ev => {
+        const html = $(this.element);
+        html.find('[name="sel_all"]').on('change', ev => {
             html.find('.usersel').prop('disabled', ev.currentTarget.checked).prop('checked', ev.currentTarget.checked)
-        })
+        });
     }
 }

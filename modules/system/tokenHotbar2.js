@@ -378,11 +378,20 @@ export default class TokenHotbar2 extends Application {
     }
 }
 
-class AddEffectDialog extends Dialog {
-    static _warnedAppV1 = true;
-    
+class AddEffectDialog extends foundry.applications.api.DialogV2 {
+    static DEFAULT_OPTIONS = {
+        classes: ["dsk", "tokenStatusEffects"],
+        position: {
+            width: 700,
+            height: Math.ceil(CONFIG.statusEffects?.length || 20 / 3) * 32
+        },
+        window: {
+            resizable: true,
+        },
+    };
+
     static async showDialog() {
-        const effects = duplicate(CONFIG.statusEffects).map(x => {
+        const effects = foundry.utils.duplicate(CONFIG.statusEffects).map(x => {
             return {
                 name: game.i18n.localize(x.name),
                 icon: x.img,
@@ -392,22 +401,26 @@ class AddEffectDialog extends Dialog {
         }).sort((a, b) => a.name.localeCompare(b.name))
 
         const dialog = new AddEffectDialog({
-            title: game.i18n.localize("dsk.CONDITION.add"),
+            window: { title: game.i18n.localize("dsk.CONDITION.add") },
             content: await renderTemplate('systems/dsk/templates/dialog/addstatusdialog.html', { effects }),
-            buttons: {}
+            buttons: [],
+            position: {
+                height: Math.ceil(effects.length / 3) * 36 + 170
+            }
         })
-        dialog.position.height = Math.ceil(effects.length / 3) * 36 + 170
         dialog.render(true)
     }
 
-    activateListeners(html) {
-        super.activateListeners(html);
-        html.find('.reactClick').click(ev => this.addEffect(ev))
+    async _onRender(context, options) {
+        await super._onRender(context, options);
 
-        let filterConditions = ev => this._filterConditions($(ev.currentTarget), html)
+        const html = $(this.element);
+        html.find('.reactClick').on('click', ev => this.addEffect(ev));
 
-        let search = html.find('.conditionSearch')
-        search.keyup(event => this._filterConditions($(event.currentTarget), html))
+        let filterConditions = ev => this._filterConditions($(ev.currentTarget), html);
+
+        let search = html.find('.conditionSearch');
+        search.on('keyup', event => this._filterConditions($(event.currentTarget), html));
         search[0] && search[0].addEventListener("search", filterConditions, false);
     }
 
@@ -428,18 +441,5 @@ class AddEffectDialog extends Dialog {
         }
         game.dsk.apps.tokenHotbar.render(true)
         this.close()
-    }
-
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        const height = Math.ceil(CONFIG.statusEffects.length / 3) * 32
-
-        mergeObject(options, {
-            classes: ["dsk", "tokenStatusEffects"],
-            width: 700,
-            resizable: true,
-            height
-        });
-        return options;
     }
 }

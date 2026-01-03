@@ -2,121 +2,124 @@ import RuleChaos from "../system/rule_chaos.js"
 import { AddTargetDialog } from "./addTargetDialog.js"
 const { renderTemplate } = foundry.applications.handlebars;
 
-export default class DialogShared extends Dialog {
-    static _warnedAppV1 = true;
-    
-    static roman = ['', ' I', ' II', ' III', ' IV', ' V', ' VI', ' VII', ' VIII', ' IX',' X']
+export default class DialogShared extends foundry.applications.api.DialogV2 {
+    static roman = ['', ' I', ' II', ' III', ' IV', ' V', ' VI', ' VII', ' VIII', ' IX', ' X'];
 
-    recallSettings(speaker, source, mode) {
-        this.recallData = game.dsk.memory.recall(speaker, source, mode)
+    recallSettings(speaker, source, mode, renderData) {
+        this.recallData = game.dsk.memory.recall(speaker, source, mode);
         this.dialogData = {
             mode,
             speaker,
-            source
-        }
-        return this
-    }
-
-    async _render(force, options) {
-        await super._render(force, options)
-        this.prepareFormRecall($(this._element))
+            source,
+            renderData,
+        };
+        return this;
     }
 
     setRollButtonWarning() {
-        if (this.dialogData.mode == "attack") {
-            const noTarget = game.i18n.localize("dsk.DIALOG.noTarget")
-            return `<span class="missingTarget"><i class="fas fa-exclamation-circle"></i> ${noTarget}</span>`
+        if (this.dialogData.mode === "attack") {
+            const noTarget = game.i18n.localize("dsk.DIALOG.noTarget");
+            return `<span class="missingTarget"><i class="fas fa-exclamation-circle"></i> ${noTarget}</span>`;
         }
-        return ""
+        return "";
     }
 
     setMultipleTargetsWarning() {
-        if (this.dialogData.mode == "attack") {
-            const noTarget = game.i18n.localize("dsk.DIALOG.multipleTarget")
-            return `<span class="multipleTarget"><i class="fas fa-exclamation-circle"></i> ${noTarget}</span>`
+        if (this.dialogData.mode === "attack") {
+            const noTarget = game.i18n.localize("dsk.DIALOG.multipleTarget");
+            return `<span class="multipleTarget"><i class="fas fa-exclamation-circle"></i> ${noTarget}</span>`;
         }
-        return ""
+        return "";
     }
 
-    renderRollValueDie(){
-        if(this.dialogData.rollValue && this.dialogData.mode != "damage"){
-            const dieClass = this.dialogData.mode == "attack" ? "die-mu" : "die-in"
-            const modifier = this.dialogData.modifier || 0
-            return `<span class="rollValue ${dieClass} d20">${this.dialogData.rollValue + modifier}</span>`
-        }else{
-            return ""
-        }
+    renderRollValueDie() {
+        if (!this.dialogData.rollValue || this.dialogData.mode === "damage") return "";
+
+        const dieClass = this.dialogData.mode === "attack" ? "die-mu" : "die-in";
+        const modifier = this.dialogData.modifier || 0;
+        return `<span class="rollValue ${dieClass} d20">${this.dialogData.rollValue + modifier}</span>`;
     }
 
-    async updateRollButton(targets){
-        let rollTag = this.renderRollValueDie() + game.i18n.localize('dsk.Roll')
-        if (targets.length > 0) {
-            if(targets.length > 1){
-                rollTag += this.setMultipleTargetsWarning()
-            }
-        } else {
-            rollTag += this.setRollButtonWarning()
+    async updateRollButton(targets) {
+        let rollTag = this.renderRollValueDie() + game.i18n.localize('dsk.Roll');
+
+        if (targets.length === 0) {
+            rollTag += this.setRollButtonWarning();
+        } else if (targets.length > 1) {
+            rollTag += this.setMultipleTargetsWarning();
         }
-        $(this._element).find(".dialog-buttons .rollButton").html(rollTag)
+
+        $(this.element).find('.form-footer [data-action="rollButton"]').html(rollTag);
     }
 
     async updateTargets(html, targets) {
-        const template = await renderTemplate('systems/dsk/templates/dialog/parts/targets.html', {targets})
+        const template = await renderTemplate('systems/dsk/templates/dialog/parts/targets.html', { targets });
         html.find(".targets").html(template);
-        this.updateRollButton(targets)
+        this.updateRollButton(targets);
     }
 
-    removeTarget(ev){
-        const id = ev.currentTarget.dataset.id
-        $(ev.currentTarget).remove()
-        const newIds = []
-        game.user.targets.forEach((x) => {
-            if (id != x.id) newIds.push(x.id);
-        });
-        game.user._onUpdateTokenTargets(newIds);
+    removeTarget(ev) {
+        const id = ev.currentTarget.dataset.id;
+        $(ev.currentTarget).remove();
+        
+        const newIds = Array.from(game.user.targets)
+            .filter(target => id !== target.id)
+            .map(target => target.id);
+
+        if (game.canvas.ready) {
+            game.user._onUpdateTokenTargets(newIds);
+        }
     }
 
     readTargets() {
-        let targets = [];
-        game.user.targets.forEach((x) => {
-            if (x.actor) targets.push({ name: x.actor.name, img: x.actor.img, id: x.id });
-        });
-        return targets;
+        return Array.from(game.user.targets)
+            .filter(target => target.actor)
+            .map(target => ({
+                name: target.actor.name,
+                img: target.actor.img,
+                id: target.id
+            }));
     }
 
     compareTargets(html, targets) {
-        let newTargets = this.readTargets();
-        if (JSON.stringify(targets) != JSON.stringify(newTargets)) {
-            targets = newTargets;
-            this.updateTargets(html, targets);
+        const newTargets = this.readTargets();
+        if (JSON.stringify(targets) !== JSON.stringify(newTargets)) {
+            this.updateTargets(html, newTargets);
+            return newTargets;
         }
-        return targets
+        return targets;
     }
 
-    activateListeners(html) {
-        super.activateListeners(html)
-        html.find('.quantity-click').mousedown(ev => {
-            const quantityFocus = ev.currentTarget.dataset.quantityfocus
-            const target = $(ev.currentTarget)
-            if(quantityFocus && !(target.is(":focus"))){
-                setTimeout(function() {target.select(), 100})
-                return
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+        this.prepareFormRecall($(this.element));
+
+        const html = $(this.element);
+
+        html.find('.quantity-click').on('mousedown', ev => {
+            const quantityFocus = ev.currentTarget.dataset.quantityfocus;
+            const target = $(ev.currentTarget);
+            if (quantityFocus && !target.is(":focus")) {
+                setTimeout(function() { target.select(); }, 100);
+                return;
             }
-            const val = { val: Number(target.val()) }
-            RuleChaos.increment(ev, val, "val")
-            target.val(val.val)
+            const val = { val: Number(target.val()) };
+            RuleChaos.increment(ev, val, "val");
+            target.val(val.val);
         });
-        html.find(".modifiers option").mousedown((ev) => {
+
+        html.find(".modifiers option").on('mousedown', (ev) => {
             ev.preventDefault();
             $(ev.currentTarget).prop("selected", !$(ev.currentTarget).prop("selected"));
             return false;
         });
-        html.on('click', '.rollTarget', (ev) => this.removeTarget(ev))
-        html.on('click', '.addTarget', (ev) => this.addTarget(ev))
+
+        html.on('click', '.rollTarget', (ev) => this.removeTarget(ev));
+        html.on('click', '.addTarget', (ev) => this.addTarget(ev));
     }
 
-    async addTarget(ev){
-         (await AddTargetDialog.getDialog(this.dialogData.speaker)).render(true)
+    async addTarget(ev) {
+        (await AddTargetDialog.getDialog(this.dialogData.speaker)).render(true);
     }
 
     prepareFormRecall(html) {

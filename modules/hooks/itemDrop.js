@@ -79,22 +79,28 @@ const handleItemDrop = async(canvas, data) => {
 
     const content = await renderTemplate("systems/dsk/templates/dialog/dropToGround.html", { name: item.name, count: item.system.quantity })
 
-    new DropToGroundDialog({
-        title: data.name,
+    const dialog = new DropToGroundDialog({
+        window: { title: data.name },
         content,
-        default: 'Yes',
-        buttons: {
-            Yes: {
-                icon: '<i class="fa fa-check"></i>',
+        buttons: [
+            {
+                action: "yes",
+                icon: "fa fa-check",
                 label: game.i18n.localize("dsk.yes"),
-                callback: async(dlg) => dropToGround(sourceActor, item, data, Number(dlg.find('[name="count"]').val()))
+                default: true,
+                callback: async (event, button, dlg) => {
+                    const html = $(button.form);
+                    dropToGround(sourceActor, item, data, Number(html.find('[name="count"]').val()))
+                }
             },
-            cancel: {
-                icon: '<i class="fas fa-times"></i>',
+            {
+                action: "cancel",
+                icon: "fas fa-times",
                 label: game.i18n.localize("dsk.cancel")
             }
-        }
-    }).render(true)
+        ]
+    });
+    dialog.render(true);
 }
 
 const handleGroupDrop = async(canvas, data) => {
@@ -133,13 +139,13 @@ export const connectHook = () => {
     })
 }
 
-class DropToGroundDialog extends Dialog {
-    static _warnedAppV1 = true;
-    
-    activateListeners(html) {
-        super.activateListeners(html)
-        html.find('input[type="range"]').change(ev => {
+class DropToGroundDialog extends foundry.applications.api.DialogV2 {
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
+        html.find('input[type="range"]').on('change', ev => {
             $(ev.currentTarget).closest('.row-section').find('.range-value').html($(ev.currentTarget).val())
-        })
+        });
     }
 }

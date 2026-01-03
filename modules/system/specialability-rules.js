@@ -82,36 +82,40 @@ export default class SpecialabilityRulesDSK extends ItemRulesDSK {
                 if (rule.items == "array") {
                     let items = rule.elems.map(x => { return { name: x } })
                     template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-dialog.html', { items: items, original: item, area: rule.area })
-                    callback = function(dlg) {
+                    callback = function(event, button, dialog) {
+                        let dlg = $(button.form);
                         let adoption = items.find(x => x.name == dlg.find('[name="entryselection"]').val())
                         SpecialabilityRulesDSK._specialabilityReturnFunction(actor, item, typeClass, adoption)
                     }
                 } else {
                     let items = actor.items.filter(x => rule.items.includes(x.type)).sort((a, b) => a.name.localeCompare(b.name))
                     template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-dialog.html', { items: items, original: item, area: rule.area })
-                    callback = function(dlg) {
+                    callback = function(event, button, dialog) {
+                        let dlg = $(button.form);
                         let adoption = items.find(x => x.name == dlg.find('[name="entryselection"]').val())
                         adoption.customEntry = dlg.find('[name="custom"]').val()
                         SpecialabilityRulesDSK._specialabilityReturnFunction(actor, item, typeClass, adoption)
                     }
                 }
             }
-            await new Dialog({
-                title: game.i18n.localize("dsk.DIALOG.ItemRequiresAdoption"),
+            await foundry.applications.api.DialogV2.wait({
+                window: { title: game.i18n.localize("dsk.DIALOG.ItemRequiresAdoption") },
                 content: template,
-                buttons: {
-                    Yes: {
-                        icon: '<i class="fa fa-check"></i>',
+                buttons: [
+                    {
+                        action: "yes",
+                        icon: "fa fa-check",
                         label: game.i18n.localize("dsk.yes"),
+                        default: true,
                         callback: callback
                     },
-                    cancel: {
-                        icon: '<i class="fas fa-times"></i>',
+                    {
+                        action: "cancel",
+                        icon: "fas fa-times",
                         label: game.i18n.localize("dsk.cancel")
                     },
-                },
-                default: 'Yes'
-            }).render(true)
+                ],
+            });
         } else {
             SpecialabilityRulesDSK._specialabilityReturnFunction(actor, item, typeClass, null)
         }

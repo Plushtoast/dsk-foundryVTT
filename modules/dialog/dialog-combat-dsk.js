@@ -7,22 +7,25 @@ import SpecialabilityRulesDSK from "../system/specialability-rules.js";
 import DSKDialog from "./dialog-dsk.js";
 import DialogShared from "./dialog-shared.js";
 import DSK from "../system/config.js";
-const { mergeObject, getProperty } = foundry.utils
+const { getProperty } = foundry.utils
 
 export default class DSKCombatDialog extends DialogShared {
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, {
-            width: 700,
+    static DEFAULT_OPTIONS = {
+        position: {
+            width: 700
+        },
+        window: {
             resizable: true,
-        });
-        return options;
-    }
+        },
+    };
 
-    activateListeners(html) {
-        super.activateListeners(html);
-        let specAbs = html.find(".specAbs");
-        specAbs.mouseenter((ev) => {
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+
+        const html = $(this.element);
+        const specAbs = html.find(".specAbs");
+
+        specAbs.on('mouseenter', (ev) => {
             if (ev.currentTarget.getElementsByClassName("hovermenu").length == 0) {
                 let div = document.createElement("div");
                 div.classList.add("hovermenu");
@@ -34,10 +37,10 @@ export default class DSKCombatDialog extends DialogShared {
                 ev.currentTarget.appendChild(div);
             }
         });
-        specAbs.mouseleave((ev) => {
+
+        specAbs.on('mouseleave', (ev) => {
             let e = ev.toElement || ev.relatedTarget;
             if (e.parentNode == this || e == this) return;
-
             ev.currentTarget.querySelectorAll(".hovermenu").forEach((e) => e.remove());
         });
 
@@ -59,7 +62,7 @@ export default class DSKCombatDialog extends DialogShared {
                     siblings.find(".step").text(DialogShared.roman[0]);
                 }
             } else if (ev.button == 2) {
-                step = Math.clamp(maxStep, 0, step - 1)
+                step = Math.clamp(maxStep, 0, step - 1);
             }
             elem.attr("data-step", step);
             if (step > 0) {
@@ -68,24 +71,25 @@ export default class DSKCombatDialog extends DialogShared {
                 elem.removeClass("active");
             }
             elem.find(".step").text(DialogShared.roman[step]);
-            this.calculateModifier()
+            this.calculateModifier();
         });
-        html.find(".opportunityAttack").change((ev) => {
+
+        html.find(".opportunityAttack").on('change', (ev) => {
             if ($(ev.currentTarget).is(":checked")) {
                 for (let k of html.find(".specAbs")) {
                     $(k).removeClass("active").attr("data-step", 0).find(".step").text("");
                 }
             }
         });
-        html.on("change", "input,select", ev => this.calculateModifier(ev))
-        html.find(".modifiers option").mousedown((ev) => {
-            this.calculateModifier(ev)
-        })
-        html.find('.quantity-click').mousedown(ev => this.calculateModifier(ev));
+
+        html.on("change", "input,select", ev => this.calculateModifier(ev));
+        html.find(".modifiers option").on('mousedown', (ev) => this.calculateModifier(ev));
+        html.find('.quantity-click').on('mousedown', ev => this.calculateModifier(ev));
+
         let targets = this.readTargets();
-        this.calculateModifier()
-            // not great
-        const that = this
+        this.calculateModifier();
+
+        const that = this;
         this.checkTargets = setInterval(function() {
             targets = that.compareTargets(html, targets);
         }, 500);
@@ -297,7 +301,7 @@ export default class DSKCombatDialog extends DialogShared {
         testData.situationalModifiers = ActorDSK._parseModifiers(html);
         ActorDSK.schipsModifier(html, testData.situationalModifiers)
         testData.vw = html.find('[name="vw"]').val()
-        mergeObject(testData.extra.options, options);
+        foundry.utils.mergeObject(testData.extra.options, options);
     }
 
     static attackOfOpportunity(situationalModifiers, formData) {
@@ -335,21 +339,20 @@ export default class DSKCombatDialog extends DialogShared {
                 ActorDSK.calcLZ(testData.source, testData.extra.actor)
             const progress = testData.source.system.reloadTimeprogress
             if (progress < LZ) {
-                mergeObject(buttons, {
-                    reloadButton: {
-                        label: `${game.i18n.localize("dsk.WEAPON.reload")} (${progress}/${LZ})`,
-                        callback: async() => {
-                            const actor = await DSKUtility.getSpeaker(testData.extra.speaker)
-                            await actor.updateEmbeddedDocuments("Item", [
-                                { _id: testData.source._id, "system.reloadTimeprogress": progress + 1 },
-                            ])
-                            const infoMsg = game.i18n.format("dsk.WEAPON.isReloading", {
-                                actor: testData.extra.actor.name,
-                                item: testData.source.name,
-                                status: `${progress + 1}/${LZ}`,
-                            })
-                            await ChatMessage.create(DSKUtility.chatDataSetup(infoMsg))
-                        },
+                buttons.push({
+                    action: "reloadButton",
+                    label: `${game.i18n.localize("dsk.WEAPON.reload")} (${progress}/${LZ})`,
+                    callback: async (event, button, dialog) => {
+                        const actor = await DSKUtility.getSpeaker(testData.extra.speaker)
+                        await actor.updateEmbeddedDocuments("Item", [
+                            { _id: testData.source._id, "system.reloadTimeprogress": progress + 1 },
+                        ])
+                        const infoMsg = game.i18n.format("dsk.WEAPON.isReloading", {
+                            actor: testData.extra.actor.name,
+                            item: testData.source.name,
+                            status: `${progress + 1}/${LZ}`,
+                        })
+                        await ChatMessage.create(DSKUtility.chatDataSetup(infoMsg))
                     },
                 })
             }

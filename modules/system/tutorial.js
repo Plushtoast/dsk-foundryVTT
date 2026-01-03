@@ -14,20 +14,17 @@ export default class DSKTutorial {
 
     static firstTimeLanguage() {
         const langs = ["de"]
-        let data = {
-            title: game.i18n.localize("dsk.DIALOG.firstTime"),
-            content: game.i18n.localize("dsk.DIALOG.firstTimeWarning"),
-            default: 'de',
-            buttons: {}
-        }
-        for (const lang of langs) {
-            data.buttons[lang] = {
-                label: game.i18n.localize(lang),
-                callback: () => DSKTutorial.setLanguage(lang)
-            }
-        }
+        const buttons = langs.map(lang => ({
+            action: lang,
+            label: game.i18n.localize(lang),
+            callback: () => DSKTutorial.setLanguage(lang)
+        }));
 
-        new Dialog(data).render(true)
+        foundry.applications.api.DialogV2.wait({
+            window: { title: game.i18n.localize("dsk.DIALOG.firstTime") },
+            content: game.i18n.localize("dsk.DIALOG.firstTimeWarning"),
+            buttons: buttons
+        });
     }
 
     static async setLanguage(lang) {

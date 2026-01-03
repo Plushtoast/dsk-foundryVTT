@@ -1385,27 +1385,29 @@ export default class ActorDSK extends Actor {
             let result = false;
 
             [result, newXp] = await new Promise((resolve, reject) => {
-                new Dialog({
-                    title: game.i18n.localize("dsk.DSKError.NotEnoughXP"),
+                foundry.applications.api.DialogV2.wait({
+                    window: { title: game.i18n.localize("dsk.DSKError.NotEnoughXP") },
                     content: template,
-                    default: "Yes",
-                    buttons: {
-                        Yes: {
-                            icon: '<i class="fa fa-check"></i>',
+                    buttons: [
+                        {
+                            action: "yes",
+                            icon: "fa fa-check",
                             label: game.i18n.localize("dsk.yes"),
-                            callback: (dlg) => {
-                                resolve([true, dlg.find('[name="APsel"]')[0].value]);
+                            default: true,
+                            callback: (event, button, dialog) => {
+                                resolve([true, $(button.form).find('[name="APsel"]')[0].value]);
                             },
                         },
-                        cancel: {
-                            icon: '<i class="fas fa-times"></i>',
+                        {
+                            action: "cancel",
+                            icon: "fas fa-times",
                             label: game.i18n.localize("dsk.cancel"),
                             callback: () => {
                                 resolve([false, 0]);
                             },
                         },
-                    },
-                }).render(true);
+                    ],
+                });
             });
             if (result) {
                 await this.update({ "system.details.experience.total": Number(newXp) });
