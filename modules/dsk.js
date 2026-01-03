@@ -24,7 +24,7 @@ import RollMemory from "./system/roll_memory.js"
 import MacroDSK from "./system/macroControl.js"
 import "./system/pause.js"
 import { DSKToken } from "./hooks/token.js"
-import { CombatantDataModels } from "./data/model.js"
+import { CombatantDataModels, DSK_ACTOR_MODELS, DSK_ITEM_MODELS, registerDataModels } from "./data/model.js"
 
 Hooks.once("init", () => {
     console.log("Initializing DSK system")
@@ -58,7 +58,9 @@ Hooks.once("init", () => {
         memory: new RollMemory(),
         itemLibrary: new DSKItemLibrary(),
         dataModels: {
-            Combatant: CombatantDataModels
+            Combatant: CombatantDataModels,
+            Actor: DSK_ACTOR_MODELS,
+            Item: DSK_ITEM_MODELS
         },
     }
 
@@ -74,6 +76,9 @@ Hooks.once("init", () => {
     CONFIG.ChatMessage.template = "systems/dsk/templates/chat/chat-message.html"
     CONFIG.ActiveEffect.legacyTransferral = false
     CONFIG.Token.objectClass = DSKToken
+
+    // Register DataModels for Actors and Items
+    registerDataModels()
 })
 
 initHooks()

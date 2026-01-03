@@ -1,0 +1,73 @@
+import { DSKDataModel } from './abstract.js';
+const { renderTemplate } = foundry.applications.handlebars;
+
+/**
+ * Base DataModel class for all DSK items
+ * Provides common functionality for item data handling
+ */
+export class ItemDataModel extends DSKDataModel {
+  /**
+   * Prepare data for the item sheet
+   * @async
+   * @param {Object} data - The data to prepare
+   * @returns {Promise<Object>} The prepared sheet data
+   */
+  async getSheetData(data) {
+    return data;
+  }
+
+  /**
+   * Get the associated actor if any
+   * @returns {Actor|null} The parent actor or null
+   */
+  get actor() {
+    return this.parent?.actor || null;
+  }
+
+  /**
+   * Helper function to format a chat line
+   * @param {Object} options - Line data options
+   * @param {string} options.key - The key to be localized
+   * @param {string} options.val - The value to display
+   * @param {boolean} [options.localizeVal=false] - Whether to localize the value
+   * @returns {string} Formatted HTML line
+   */
+  static _chatLineHelper({ key, val, localizeVal = false }) {
+    const displayValue = localizeVal ? game.i18n.localize(val) : val;
+    return `<b>${game.i18n.localize(key)}</b>: ${displayValue || '-'}`;
+  }
+
+  /**
+   * Get chat data for the item
+   * @param {Object} data - The item data
+   * @param {string} name - The item name
+   * @returns {Array} Array of chat data objects
+   */
+  static chatData(data, name) {
+    return [];
+  }
+
+  /**
+   * Post item data to chat
+   * @async
+   * @param {Item} item - The item to post
+   * @returns {Promise<ChatMessage>} The created chat message
+   */
+  static async _postItem(item) {
+    const chatData = foundry.utils.duplicate(item);
+    const properties = this.chatData(chatData.system, item.name).map(x => this._chatLineHelper(x));
+
+    const html = await renderTemplate('systems/dsk/templates/chat/post-item.hbs', {
+      item,
+      properties,
+    });
+
+    const chatMessage = {
+      user: game.user.id,
+      content: html,
+      speaker: ChatMessage.getSpeaker(),
+    };
+
+    return ChatMessage.create(chatMessage);
+  }
+}

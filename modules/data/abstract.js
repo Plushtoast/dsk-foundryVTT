@@ -1,4 +1,8 @@
-export class DSADataModel extends foundry.abstract.TypeDataModel {
+/**
+ * Base DataModel class for DSK system
+ * Provides mixin support for template composition
+ */
+export class DSKDataModel extends foundry.abstract.TypeDataModel {
   static _schemaTemplates = [];
 
   static _immiscible = new Set([
@@ -22,7 +26,7 @@ export class DSADataModel extends foundry.abstract.TypeDataModel {
     const schema = {};
     for (const template of this._schemaTemplates) {
       if (!template.defineSchema) {
-        throw new Error(`Invalid dsa5 template mixin ${template} defined on class ${this.constructor}`);
+        throw new Error(`Invalid dsk template mixin ${template} defined on class ${this.constructor}`);
       }
       this.mergeSchema(schema, template.defineSchema());
     }
@@ -92,8 +96,8 @@ export class DSADataModel extends foundry.abstract.TypeDataModel {
 
   static mixin(...templates) {
     for (const template of templates) {
-      if (!(template.prototype instanceof DSADataModel)) {
-        throw new Error(`${template.name} is not a subclass of DSADataModel`);
+      if (!(template.prototype instanceof DSKDataModel)) {
+        throw new Error(`${template.name} is not a subclass of DSKDataModel`);
       }
     }
 
@@ -118,10 +122,4 @@ export class DSADataModel extends foundry.abstract.TypeDataModel {
 
     return Base;
   }
-
-  // todo toembed
 }
-
-
-
-

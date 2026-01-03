@@ -1,0 +1,35 @@
+import { ItemDataModel } from '../baseitem.js';
+import DescriptionTemplate from './templates/description.js';
+import EquipmentTemplate from './templates/equipment.js';
+import WornTemplate from './templates/worn.js';
+
+const { StringField, NumberField } = foundry.data.fields;
+
+/**
+ * DataModel for Equipment items
+ */
+export default class EquipmentData extends ItemDataModel.mixin(
+  DescriptionTemplate,
+  EquipmentTemplate,
+  WornTemplate
+) {
+  static defineSchema() {
+    return this.mergeSchema(super.defineSchema(), {
+      category: new StringField({ initial: 'misc' }),
+      capacity: new NumberField({ initial: 0 }),
+    });
+  }
+
+  /**
+   * Check if this equipment is a container
+   */
+  get isContainer() {
+    return (this.capacity || 0) > 0;
+  }
+
+  static chatData(data, name) {
+    return [
+      { key: 'dsk.category', val: `dsk.equipmentType.${data.category}`, localizeVal: true },
+    ];
+  }
+}

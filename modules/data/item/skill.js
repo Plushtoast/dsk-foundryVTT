@@ -1,0 +1,38 @@
+import { ItemDataModel } from '../baseitem.js';
+import DescriptionTemplate from './templates/description.js';
+import SkillTemplate from './templates/skill.js';
+import EncumbranceTemplate from './templates/encumbrance.js';
+
+const { StringField } = foundry.data.fields;
+
+/**
+ * DataModel for Skill items
+ */
+export default class SkillData extends ItemDataModel.mixin(
+  DescriptionTemplate,
+  SkillTemplate,
+  EncumbranceTemplate
+) {
+  static defineSchema() {
+    return this.mergeSchema(super.defineSchema(), {
+      group: new StringField({ 
+        initial: 'body',
+        choices: {
+          body: 'dsk.skillGroup.body',
+          social: 'dsk.skillGroup.social',
+          mental: 'dsk.skillGroup.mental',
+          trade: 'dsk.skillGroup.trade',
+        }
+      }),
+    });
+  }
+
+  static chatData(data, name) {
+    return [
+      { key: 'dsk.characteristic1', val: `dsk.CH.${data.characteristic1}`, localizeVal: true },
+      { key: 'dsk.characteristic2', val: `dsk.CH.${data.characteristic2}`, localizeVal: true },
+      { key: 'dsk.encumbers', val: data.encumbers, localizeVal: true },
+      { key: 'dsk.StF', val: data.StF },
+    ];
+  }
+}
