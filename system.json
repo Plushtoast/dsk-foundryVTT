@@ -84,6 +84,155 @@
     "documentTypes": {
         "Combatant": {
             "dsacombatant": {}
+        },
+        "Actor": {
+            "character": {
+                "htmlFields": [
+                    "notes.owner",
+                    "notes.gm",
+                    "notes.description",
+                    "notes.biography"
+                ]
+            },
+            "creature": {
+                "htmlFields": [
+                    "notes.description",
+                    "notes.behavior",
+                    "notes.specialRules",
+                    "notes.owner"
+                ]
+            },
+            "npc": {
+                "htmlFields": [
+                    "notes.owner",
+                    "notes.gm",
+                    "notes.description",
+                    "notes.biography"
+                ]
+            }
+        },
+        "Item": {
+            "equipment": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "armor": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "ammunition": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "rangeweapon": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "meleeweapon": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "skill": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "combatskill": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "specialability": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "advantage": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "disadvantage": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "trait": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "species": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "culture": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "profession": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo",
+                    "description.gear"
+                ]
+            },
+            "ahnengabe": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "ahnengeschenk": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "poison": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "consumable": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "information": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            },
+            "effectwrapper": {
+                "htmlFields": [
+                    "description.value",
+                    "description.gminfo"
+                ]
+            }
         }
     },
     "flags": {

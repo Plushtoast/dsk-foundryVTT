@@ -94,32 +94,48 @@ async function setDefaultSkin() {
   });
 }
 
-class PatchViewer extends Application {
-    static _warnedAppV1 = true;
+import { DefaultAppv2 } from "../actor/baseapp.js"
 
+class PatchViewer extends DefaultAppv2 {
     constructor(json, app) {
         super(app)
         this.json = json
     }
 
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        options.tabs = [{ navSelector: ".tabs", contentSelector: ".content", initial: "newcontent" }]
-        mergeObject(options, {
-            classes: options.classes.concat(["dsk", "largeDialog", "patches"]),
+    static DEFAULT_OPTIONS = {
+        classes: ['dsk', 'largeDialog', 'patches'],
+        position: {
             width: 740,
             height: 740,
-            title: "Changelog"
-        });
-        options.template = 'systems/dsk/templates/system/patchviewer.hbs'
-        options.resizable = true
-        return options;
-    }
+        },
+        window: {
+            title: 'Changelog',
+            resizable: true,
+        },
+    };
 
-    async getData() {
+    static PARTS = {
+        main: {
+            template: 'systems/dsk/templates/system/patchviewer.hbs',
+        },
+    };
+
+    static TABS = {
+        sheet: {
+            tabs: [
+                { id: 'newcontent', label: 'News' },
+                { id: 'changelog', label: 'Changelog' },
+                { id: 'content', label: 'dsk.patchViewer.tab.store' },
+            ],
+            initial: 'newcontent',
+        },
+    };
+
+    async _prepareContext(_options) {
+        const data = await super._prepareContext(_options);
         let version = this.json["notes"][this.json["notes"].length - 1]
         const patchName = this.json["default"].replace(/VERSION/g, version.version)
-        let msg = `<h1>CHANGELOG</h1><p>${patchName}. </br><b>Important updates</b>: ${version.text}</p><p>For details or proposals visit our github page at <a href="https://github.com/Plushtoast/dsk-foundryVT" target="_blank">Github</a> or show the <a style="text-decoration: underline;color:#ff6400;" class="showPatchViewer">Full Changelog in Foundry</a>. Have fun.</p>`
+        let msg = `<h1>CHANGELOG</h1><p>${patchName}. </br><b>Important updates</b>: ${version.text}</p><p>For details or proposals visit our github page at <a href="https://github.com/Plushtoast/dsk-foundryVTT" target="_blank">Github</a> or show the <a style="text-decoration: underline;color:#ff6400;" class="showPatchViewer">Full Changelog in Foundry</a>. Have fun.</p>`
         await ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
 
         const lang = game.i18n.lang
@@ -133,6 +149,7 @@ class PatchViewer extends Application {
         const modules = await renderTemplate(`systems/dsk/lazy/patchhtml/modules_${lang}.html`)
 
         return {
+            ...data,
             patchName,
             changelog,
             news,

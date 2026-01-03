@@ -374,17 +374,15 @@ export function setupConfiguration() {
     });
 }
 
-class ChangelogForm extends FormApplication {
-    static _warnedAppV1 = true;
+import { FormAppv2 } from "../actor/formapp.js"
 
+class ChangelogForm extends FormAppv2 {
     render() {
         showPatchViewer()
     }
 }
 
-class ResetTokenbar extends FormApplication {
-    static _warnedAppV1 = true;
-
+class ResetTokenbar extends FormAppv2 {
     async render() {
         await game.settings.set("dsk", "tokenhotbarPosition", {})
         await game.settings.set("dsk", "tokenhotbarLayout", 0)

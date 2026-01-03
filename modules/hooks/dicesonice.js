@@ -1,5 +1,6 @@
 import DSKUtility from "../system/dsk_utility.js";
-const { mergeObject } = foundry.utils
+import { DefaultAppv2 } from "../actor/baseapp.js";
+import { FormAppv2 } from "../actor/formapp.js";
 
 export function initDSN() {
     Hooks.once('init', () => {
@@ -103,9 +104,7 @@ export function initDSN() {
     });
 }
 
-export class DiceSoNiceCustomization extends Application {
-    static _warnedAppV1 = true;
-    
+export class DiceSoNiceCustomization extends DefaultAppv2 {
     static unloadedModels = []
     static retries = 0
     static retrying = false
@@ -151,12 +150,13 @@ export class DiceSoNiceCustomization extends Application {
         return { colorset: value }
     }
 
-    activateListeners(html) {
-        super.activateListeners()
-        html.find('[name="entryselection"]').change(async(ev) => {
+    async _onRender(context, options) {
+        await super._onRender(context, options);
+        const html = $(this.element);
+        html.find('[name="entryselection"]').on('change', async (ev) => {
             await game.settings.set("dsk", `dice3d_${ev.currentTarget.dataset.attr}`, ev.currentTarget.value)
         })
-        html.find('[name="systemselection"]').change(async(ev) => {
+        html.find('[name="systemselection"]').on('change', async (ev) => {
             await game.settings.set("dsk", `dice3d_system_${ev.currentTarget.dataset.attr}`, ev.currentTarget.value)
             DiceSoNiceCustomization.preloadDiceAssets([ev.currentTarget.value])
             game.socket.emit("system.dsk", {
@@ -240,8 +240,8 @@ export class DiceSoNiceCustomization extends Application {
         }
     }
 
-    async getData(options) {
-        const data = await super.getData(options);
+    async _prepareContext(_options) {
+        const data = await super._prepareContext(_options);
         data.choices = game.dice3d.exports.Utils.prepareColorsetList()
         delete data.choices.custom
         data.systems = game.dice3d.exports.Utils.prepareSystemList()
@@ -255,20 +255,23 @@ export class DiceSoNiceCustomization extends Application {
         return data
     }
 
-    static get defaultOptions() {
-        const options = super.defaultOptions
-        mergeObject(options, {
+    static DEFAULT_OPTIONS = {
+        position: {
+            width: 600,
+        },
+        window: {
+            title: "dsk.SETTINGS.dicesonicesettings",
+        },
+    };
+
+    static PARTS = {
+        main: {
             template: 'systems/dsk/templates/wizard/dicesonice-configuration.hbs',
-            title: game.i18n.localize("dsk.SETTINGS.dicesonicesettings"),
-            width: 600
-        });
-        return options
-    }
+        },
+    };
 }
 
-class DiceSoNiceForm extends FormApplication {
-    static _warnedAppV1 = true;
-    
+class DiceSoNiceForm extends FormAppv2 {
     render() {
         game.dsk.apps.DiceSoNiceCustomization.render(true)
     }
