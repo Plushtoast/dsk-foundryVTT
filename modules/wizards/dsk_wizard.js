@@ -2,29 +2,61 @@ import AdvantageRulesDSK from "../system/advantage-rules.js"
 import DSKUtility from "../system/dsk_utility.js"
 import ItemRulesDSK from "../system/item-rules.js"
 import SpecialabilityRulesDSK from "../system/specialability-rules.js"
+import { DefaultAppv2 } from "../actor/baseapp.js";
 const { mergeObject, duplicate, getProperty } = foundry.utils
 
-export default class WizardDSK extends Application {
-    static _warnedAppV1 = true;
-    
-    constructor(app) {
-        super(app)
+export default class WizardDSK extends DefaultAppv2 {
+    static DEFAULT_OPTIONS = {
+        classes: ['dsk', 'largeDialog'],
+        position: {
+            width: 750,
+            height: 640,
+        },
+        window: {
+            resizable: true,
+        },
+        actions: {
+            ok: this._onOk,
+            cancel: this._onCancel,
+            showItem: this._showItem,
+        },
+    };
+
+    static TABS = {
+        sheet: {
+            tabs: [
+                { id: 'description', label: 'Description' },
+            ],
+            initial: 'description',
+        },
+    };
+
+    constructor(options = {}) {
+        super(options)
         this.items = []
         this.errors = []
         this.attributes = []
         this.updating = false
     }
 
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        options.tabs = [{ navSelector: ".tabs", contentSelector: ".content", initial: "description" }]
-        mergeObject(options, {
-            classes: options.classes.concat(["dsk", "largeDialog"]),
-            width: 750,
-            height: 640,
-        });
-        options.resizable = true
-        return options;
+    // Static action handlers
+    static _onOk(ev, target) {
+        if (!this.updating) {
+            this.updating = true
+            this.updateCharacter().then(
+                () => this.updating = false
+            )
+        }
+    }
+
+    static _onCancel(ev, target) {
+        this.close()
+    }
+
+    static _showItem(ev, target) {
+        let itemId = target.dataset.id
+        const item = this.items.find(i => i.id == itemId)
+        item.sheet.render(true)
     }
 
     async updateSkill(skills, itemType, factor = 1, bonus = true) {
@@ -97,22 +129,9 @@ export default class WizardDSK extends Application {
         }))
     }
 
-    activateListeners(html) {
-        super.activateListeners(html)
-        html.find('button.ok').click(() => {
-            if (!this.updating) {
-                this.updating = true
-                this.updateCharacter().then(
-                    () => this.updating = false
-                )
-            }
-        })
-        html.find('button.cancel').click(() => { this.close() })
-        html.find('.show-item').click(ev => {
-            let itemId = $(ev.currentTarget).attr("data-id")
-            const item = this.items.find(i => i.id == itemId)
-            item.sheet.render(true)
-        })
+    _onRender(context, options) {
+        super._onRender(context, options);
+        const html = $(this.element);
 
         html.find('.optional').change(ev => {
             let parent = $(ev.currentTarget).closest('.content')
@@ -252,7 +271,7 @@ export default class WizardDSK extends Application {
         if (this.errors.length == 0) {
             this.close()
         } else {
-            $(this._element).find('.dialog-buttons').html(`<div class="error"><p>${game.i18n.localize('dsk.DSKError.notUnderstood')}</p><ul><li>${this.errors.join("</li><li>")}</li></ul></div>`)
+            $(this.element).find('.dialog-buttons').html(`<div class="error"><p>${game.i18n.localize('dsk.DSKError.notUnderstood')}</p><ul><li>${this.errors.join("</li><li>")}</li></ul></div>`)
         }
     }
 }

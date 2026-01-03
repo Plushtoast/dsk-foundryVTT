@@ -5,16 +5,76 @@ import DSKChatAutoCompletion from "../system/chat_autocompletion.js"
 import DSKUtility from "../system/dsk_utility.js"
 import { slist } from "../system/view_helper.js"
 import DSK from "../system/config.js"
+import { DefaultAppv2 } from "../actor/baseapp.js";
 const { mergeObject, duplicate } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
 
-export default class BookWizard extends Application {
-    static _warnedAppV1 = true;
-
+export default class BookWizard extends DefaultAppv2 {
     static wizard
 
-    constructor(app) {
-        super(app)
+    static DEFAULT_OPTIONS = {
+        classes: ['dsk', 'largeDialog', 'noscrollWizard', 'bookWizardsheet', 'dskjournalbrowser'],
+        position: {
+            width: 800,
+            height: 880,
+        },
+        window: {
+            resizable: true,
+            title: 'dsk.Book.Wizard',
+            controls: [
+                {
+                    action: 'increaseFontSize',
+                    label: 'dsk.SHEET.increaseFontSize',
+                    icon: 'fas fa-arrows-up-down',
+                },
+                {
+                    action: 'showBooks',
+                    label: 'dsk.Book.home',
+                    icon: 'fas fa-book',
+                },
+            ],
+        },
+        actions: {
+            increaseFontSize: this._increaseFontSize,
+            showBooks: this._showBooksAction,
+            toggleVisibility: this._toggleVisibility,
+            showMapNote: this._showMapNote,
+            showItem: this._showItem,
+            movePage: this._movePage,
+            loadBook: this._loadBook,
+            getChapter: this._getChapter,
+            subChapter: this._subChapter,
+            tocCollapser: this._tocCollapser,
+            openPin: { handler: this._openPin, buttons: [0, 2] },
+            showJournal: this._showJournalAction,
+            pinJournal: this._pinJournalAction,
+            activateScene: this._activateScene,
+            fulltextsearchToggle: this._fulltextsearchToggle,
+            importBook: this._importBook,
+        },
+    };
+
+    static TABS = {
+        sheet: {
+            tabs: [
+                { id: 'description', label: 'Description' },
+            ],
+            initial: 'description',
+        },
+    };
+
+    static PARTS = {
+        wizard: {
+            template: 'systems/dsk/templates/wizard/adventure/adventure_wizard.html',
+        },
+    };
+
+    get template() {
+        return BookWizard.PARTS.wizard.template;
+    }
+
+    constructor(options = {}) {
+        super(options)
         this.adventures = []
         this.books = []
         this.rshs = []
@@ -22,20 +82,101 @@ export default class BookWizard extends Application {
         this.fulltextsearch = true
     }
 
-    static get defaultOptions() {
-        const options = super.defaultOptions
-        options.tabs = [{ navSelector: ".tabs", contentSelector: ".content", initial: "description" }]
-        mergeObject(options, {
-            classes: options.classes.concat(["dsk", "largeDialog", "noscrollWizard", "bookWizardsheet", "dskjournalbrowser"]),
-            width: 800,
-            height: 880,
-            scrollY: [".pages-list .scrollable"],
-            template: 'systems/dsk/templates/wizard/adventure/adventure_wizard.html',
-            title: game.i18n.localize("dsk.Book.Wizard"),
-            resizable: true,
-            dragDrop: [{ dragSelector: ".item-list .item", dropSelector: null }]
-        });
-        return options
+    // Static action handlers
+    static _increaseFontSize(ev, target) {
+        increaseFontSize($(this.element).find('.chapter'))
+    }
+
+    static _showBooksAction(ev, target) {
+        this._showBooks()
+    }
+
+    static async _toggleVisibility(ev, target) {
+        const id = target.dataset.itemid
+        const type = target.dataset.type
+        const toggle = $(target).find('i').hasClass("fa-toggle-off")
+        this.toggleBookVisibility(id, type, toggle)
+    }
+
+    static _showMapNote(ev, target) {
+        game.journal.get(target.dataset.entryId).panToNote()
+    }
+
+    static async _showItem(ev, target) {
+        let itemId = target.dataset.uuid
+        const item = await fromUuid(itemId)
+        item.sheet.render(true)
+    }
+
+    static _movePage(ev, target) {
+        this.movePage(ev)
+    }
+
+    static _loadBook(ev, target) {
+        this.loadBook($(target).text(), $(this.element), target.dataset.type)
+    }
+
+    static _getChapter(ev, target) {
+        this.selectedType = $(target).closest('.tocList').attr("data-type")
+        this.selectedChapter = target.dataset.id
+        this.content = undefined
+        this.pageTocs = undefined
+        this.loadPage($(this.element))
+    }
+
+    static async _subChapter(ev, target) {
+        const name = $(target).text()
+        const jid = target.dataset.jid
+        if (jid) {
+            await this.loadJournalById(jid)
+        } else {
+            $(this.element).find('.subChapter').removeClass('selected')
+            $(this.element).find(`[data-id="${name}"]`).addClass("selected")
+            await this.loadJournal(name)
+        }
+
+        const html = $(this.element)
+        this._saveScrollPositions(html)
+        html.find('.toc').html(await this.getToc())
+        this._restoreScrollPositions(html)
+
+        if (this.searchString) this.filterToc(this.searchString)
+    }
+
+    static _tocCollapser(ev, target) {
+        $(target).find('i').toggleClass("fa-chevron-right fa-chevron-left")
+        $(this.element).find(".tocCollapsing").toggleClass('expanded')
+    }
+
+    static async _openPin(ev, target) {
+        const uuid = target.dataset.uuid
+        if (ev.button == 0) this.showJournal(await fromUuid(uuid))
+        else if (ev.button == 2) this.unpinJournal(uuid)
+    }
+
+    static _showJournalAction(ev, target) {
+        this.popJournal($(target).closest("h1").attr("data-uuid"))
+    }
+
+    static _pinJournalAction(ev, target) {
+        const parent = $(target).closest("h1")
+        const id = parent.attr("data-uuid")
+        const name = parent.text()
+        this.pinJournal(id, name)
+    }
+
+    static _activateScene(ev, target) {
+        this.showSzene(target.dataset.id, target.dataset.mode)
+    }
+
+    static _fulltextsearchToggle(ev, target) {
+        this.fulltextsearch = !this.fulltextsearch
+        $(target).toggleClass("on")
+        this.filterToc($(this.element).find('.filterJournals').val())
+    }
+
+    static _importBook(ev, target) {
+        this.importBook()
     }
 
     static initHook() {
@@ -54,25 +195,6 @@ export default class BookWizard extends Application {
         })
     }
 
-    _getHeaderButtons() {
-        let buttons = super._getHeaderButtons();
-        buttons.unshift({
-            class: "increaseFontSize",
-            tooltip: "dsk.SHEET.increaseFontSize",
-            icon: "fas fa-arrows-up-down",
-            onclick: async () => increaseFontSize($(this._element).find('.chapter'))
-        })
-
-        buttons.unshift({
-            label: "Library",
-            class: "library",
-            tooltip: "dsk.Book.home",
-            icon: `fas fa-book`,
-            onclick: async () => this._showBooks()
-        })
-        return buttons
-    }
-
     _showBooks() {
         this.book = null
         this.bookData = null
@@ -88,7 +210,7 @@ export default class BookWizard extends Application {
         this.currentType = undefined
         this.pageTocs = undefined
         this.selectedSubChapter = undefined
-        this.loadPage(this._element)
+        this.loadPage($(this.element))
     }
 
     async toggleBookVisibility(id, type, toggle) {
@@ -117,19 +239,9 @@ export default class BookWizard extends Application {
         this.render()
     }
 
-    activateListeners(html) {
-        super.activateListeners(html)
-
-        html.on('click', '.toggleVisibility', async (ev) => {
-            const id = ev.currentTarget.dataset.itemid
-            const type = ev.currentTarget.dataset.type
-            const toggle = $(ev.currentTarget).find('i').hasClass("fa-toggle-off")
-            this.toggleBookVisibility(id, type, toggle)
-        })
-
-        html.on('click', '.showMapNote', ev => {
-            game.journal.get(ev.currentTarget.dataset.entryId).panToNote()
-        })
+    _onRender(context, options) {
+        super._onRender(context, options);
+        const html = $(this.element);
 
         html.on("search keyup", ".filterJournals", ev => {
             this.filterToc(ev.currentTarget.value)
@@ -137,86 +249,14 @@ export default class BookWizard extends Application {
 
         html.on("click", ".heading-link", ev => this._onClickPageLink(ev))
 
-        html.on('click', '.show-item', async (ev) => {
-            //TODO maybe try to open imported character
-            let itemId = ev.currentTarget.dataset.uuid
-            const item = await fromUuid(itemId)
-            item.sheet.render(true)
-        })
-
-        html.on('click', '.movePage', async (ev) => this.movePage(ev))
-
-        html.on('click', '.loadBook', ev => {
-            this.loadBook($(ev.currentTarget).text(), html, ev.currentTarget.dataset.type)
-        })
-        html.on('click', '.getChapter', ev => {
-            this.selectedType = $(ev.currentTarget).closest('.tocList').attr("data-type")
-            this.selectedChapter = ev.currentTarget.dataset.id
-            this.content = undefined
-            this.pageTocs = undefined
-            this.loadPage(html)
-        })
-        html.on('click', '.subChapter', async (ev) => {
-            const name = $(ev.currentTarget).text()
-            const jid = ev.currentTarget.dataset.jid
-            if (jid) {
-                await this.loadJournalById(jid)
-            } else {
-                $(this._element).find('.subChapter').removeClass('selected')
-                $(this._element).find(`[data-id="${name}"]`).addClass("selected")
-                await this.loadJournal(name)
-            }
-
-            this._saveScrollPositions(html)
-            html.find('.toc').html(await this.getToc())
-            this._restoreScrollPositions(html)
-
-            if (this.searchString) this.filterToc(this.searchString)
-        })
-
-        DSKChatAutoCompletion.bindRollCommands(html)
-
-        html.find('.tocCollapser').click((ev) => {
-            $(ev.currentTarget).find('i').toggleClass("fa-chevron-right fa-chevron-left")
-            html.find(".tocCollapsing").toggleClass('expanded')
-        })
-        html.on("mousedown", '.openPin', async (ev) => {
-            const uuid = ev.currentTarget.dataset.uuid
-
-            if (ev.button == 0) this.showJournal(await fromUuid(uuid))
-            else if (ev.button == 2) this.unpinJournal(uuid)
-        })
-
-        html.on('click', '.showJournal', ev => {
-            this.popJournal($(ev.currentTarget).closest("h1").attr("data-uuid"))
-        })
-        html.on('click', '.pinJournal', ev => {
-            const parent = $(ev.currentTarget).closest("h1")
-            const id = parent.attr("data-uuid")
-            const name = parent.text()
-            this.pinJournal(id, name)
-        })
-        html.on('click', '.activateScene', ev => {
-            this.showSzene(ev.currentTarget.dataset.id, ev.currentTarget.dataset.mode)
-        })
-        html.on('click', '.fulltextsearch', (ev) => {
-            this.fulltextsearch = !this.fulltextsearch
-            $(ev.currentTarget).toggleClass("on")
-
-            this.filterToc(html.find('.filterJournals').val())
-        })
-
         html.on('mousedown', ".chapter img", ev => {
             let name = this.book.id
             if (ev.button == 2) DSKUtility.showArtwork({ name: name, uuid: "", img: $(ev.currentTarget).attr("src") })
         })
 
+        DSKChatAutoCompletion.bindRollCommands(html)
         DSKStatusEffects.bindButtons(html)
-
-        html.on('click', '.importBook', async () => this.importBook())
-
         bindImgToCanvasDragStart(html)
-
         slist(html, '.breadcrumbs', this.resaveBreadCrumbs)
     }
 
@@ -266,9 +306,9 @@ export default class BookWizard extends Application {
         }
 
         const toc = await this.getToc()
-        this._saveScrollPositions(this._element)
-        this._element.find('.toc').html(toc)
-        this._restoreScrollPositions(this._element)
+        this._saveScrollPositions($(this.element))
+        $(this.element).find('.toc').html(toc)
+        this._restoreScrollPositions($(this.element))
     }
 
     async loadJournal(name) {
@@ -336,15 +376,15 @@ export default class BookWizard extends Application {
                 }
                 result = result.map(x => `<li class="fas fa-caret-right"><a data-jid="${x.id}" class="subChapter">${x.name}</a></li>`)
 
-                $(this._element).find('.tocContent').html(`<ul>${result.join("\n")}</ul>`)
+                $($(this.element)).find('.tocContent').html(`<ul>${result.join("\n")}</ul>`)
             } else {
                 const content = await this.getToc()
-                $(this._element).find('.toc').html(content).find(".filterJournals").trigger("focus")
+                $($(this.element)).find('.toc').html(content).find(".filterJournals").trigger("focus")
             }
         }
 
         const journal = await this.getChapter()
-        const chapter = $(this._element).find('.chapter')
+        const chapter = $($(this.element)).find('.chapter')
         chapter.html(journal)
         this.markFindings(chapter)
     }
@@ -447,13 +487,13 @@ export default class BookWizard extends Application {
     }
 
     async showJournal(journal) {
-        const chapter = $(this._element).find('.chapter')
+        const chapter = $($(this.element)).find('.chapter')
         chapter.html(await this.renderContent(journal))
 
         this.selectedSubChapter = journal.id
 
-        $(this._element).find('.subChapter').removeClass('selected')
-        $(this._element).find(`[data-jid="${journal.id}"]`).addClass("selected")
+        $($(this.element)).find('.subChapter').removeClass('selected')
+        $($(this.element)).find(`[data-jid="${journal.id}"]`).addClass("selected")
         bindImgToCanvasDragStart(chapter)
         this.markFindings(chapter)
         chapter.find('.documentName-link, .content-link').on('click', ev => {

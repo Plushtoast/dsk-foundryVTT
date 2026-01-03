@@ -1,16 +1,44 @@
 import ActorDSK from "../actor/actor_dsk.js"
+import { DefaultAppv2 } from "../actor/baseapp.js";
 import OnUseEffect from "./onUseEffects.js";
 const { getProperty, mergeObject, duplicate } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
 
-export default class TokenHotbar2 extends Application {
-    static _warnedAppV1 = true;
+export default class TokenHotbar2 extends DefaultAppv2 {
+    static DEFAULT_OPTIONS = {
+        id: 'token-hotbar',
+        classes: ['dsk', 'tokenQuickHot'],
+        position: {
+            width: 'auto',
+            height: 'auto',
+        },
+        window: {
+            frame: true,
+            minimizable: false,
+            resizable: false,
+            title: "TokenHotbar"
+        },
+        actions: {
+            executeItem: { handler: this._executeItem, buttons: [0, 2] },
+            cycleLayout: { handler: this._cycleLayout, buttons: [2] },
+        },
+    };
+
+    static PARTS = {
+        hotbar: {
+            template: 'systems/dsk/templates/status/tokenHotbar.html',
+        },
+    };
+
+    get template() {
+        return TokenHotbar2.PARTS.hotbar.template;
+    }
 
     static registerTokenHotbar() {
         if (!game.dsk.apps.tokenHotbar) game.dsk.apps.tokenHotbar = new TokenHotbar2()
     }
 
-    constructor(options) {
+    constructor(options = {}) {
         super(options);
 
         this.combatSkills = ["selfControl", "featOfStrength", "bodyControl", "perception"].map(x => game.i18n.localize(`dsk.LocalizedIDs.${x}`))
@@ -71,66 +99,29 @@ export default class TokenHotbar2 extends Application {
         this.position.top = hotbarPosition.top - itemWidth - 25
     }
 
-    static get defaultOptions() {
-        const options = super.defaultOptions;
+    _getInitialPosition() {
         const hotbarPosition = $('#hotbar').first().position()
         const itemWidth = game.settings.get("dsk", "tokenhotbarSize")
         const position = game.settings.get("dsk", "tokenhotbarPosition")
-
-        mergeObject(options, {
-            classes: options.classes.concat(["dsk", "tokenQuickHot"]),
-            itemWidth,
-            resizable: false,
-            height: itemWidth + 45,
-            zIndex: 61,
-            left: hotbarPosition.left + 8,
-            top: hotbarPosition.top - itemWidth - 25,
-            template: "systems/dsk/templates/status/tokenHotbar.html",
-            title: "TokenHotbar"
-        });
-        mergeObject(options, position)
-        return options;
-    }
-
-    async _onWheelResize(ev) {
-        let newVal = game.settings.get("dsk", "tokenhotbarSize")
-        if (ev.originalEvent.deltaY > 0) {
-            newVal = Math.min(100, newVal + 5)
-        } else {
-            newVal = Math.max(15, newVal - 5)
-        }
-        await game.settings.set("dsk", "tokenhotbarSize", newVal)
-        await this.render(true)
-    }
-
-    async _cycleLayout(ev) {
-        if (ev.button == 2) {
-            let newVal = game.settings.get("dsk", "tokenhotbarLayout") + 1
-            if (newVal == 4) newVal = 0
-            await game.settings.set("dsk", "tokenhotbarLayout", newVal)
-            await this.render(true)
+        return {
+            left: position.left ?? hotbarPosition.left + 8,
+            top: position.top ?? hotbarPosition.top - itemWidth - 25,
+            width: itemWidth,
+            height: itemWidth + 45
         }
     }
 
-    activateListeners(html) {
-        super.activateListeners(html);
+    _onRender(context, options) {
+        super._onRender(context, options);
+        const html = $(this.element);
+        
         const container = html.find(".dragHandler");
-        new foundry.applications.ux.Draggable(this, html, container[0], this.options.resizable);
+        new foundry.applications.ux.Draggable(this, html, container[0], false);
 
         container.on('wheel', async(ev) => {
             ev.stopPropagation()
             ev.preventDefault()
             await this._onWheelResize(ev)
-            return false
-        })
-
-        container.on('mousedown', async(ev) => {
-            await this._cycleLayout(ev)
-        })
-
-        html.on('mousedown', 'li', async(ev) => {
-            ev.stopPropagation()
-            await this.executeQuickButton(ev)
             return false
         })
                  
@@ -151,6 +142,30 @@ export default class TokenHotbar2 extends Application {
                     html.find(`.secondary[data-category="${cat}"]`).removeClass("shown")
             },50)
         })
+    }
+
+    static async _executeItem(ev, target) {
+        ev.stopPropagation()
+        await this.executeQuickButton(ev)
+        return false
+    }
+
+    static async _cycleLayout(ev, target) {
+        let newVal = game.settings.get("dsk", "tokenhotbarLayout") + 1
+        if (newVal == 4) newVal = 0
+        await game.settings.set("dsk", "tokenhotbarLayout", newVal)
+        await this.render({ force: true })
+    }
+
+    async _onWheelResize(ev) {
+        let newVal = game.settings.get("dsk", "tokenhotbarSize")
+        if (ev.originalEvent.deltaY > 0) {
+            newVal = Math.min(100, newVal + 5)
+        } else {
+            newVal = Math.max(15, newVal - 5)
+        }
+        await game.settings.set("dsk", "tokenhotbarSize", newVal)
+        await this.render({ force: true })
     }
 
     async executeQuickButton(ev) {
@@ -205,8 +220,8 @@ export default class TokenHotbar2 extends Application {
         return `style="width:${Math.ceil(items.length / defaultCount) * 200}px"`
     }
 
-    async getData() {
-        const data = await super.getData()
+    async _prepareContext(options) {
+        const data = {}
         const actor = this.actor
         const items = {
             attacks: [],
@@ -337,10 +352,10 @@ export default class TokenHotbar2 extends Application {
         return data
     }
 
-    async render(force, options = {}) {
-        const rend = await super.render(force, options)
-        if (this._element) {
-            this._element.css({ zIndex: 61 });
+    async render(options = {}, _options = {}) {
+        const rend = await super.render(options, _options)
+        if (this.element) {
+            $(this.element).css({ zIndex: 61 });
         }
         return rend
     }
@@ -374,7 +389,7 @@ export default class TokenHotbar2 extends Application {
         if (controlled.length >= 1) {
             this.showEffects = true
         }
-        await this.render(true)
+        await this.render({ force: true })
     }
 }
 

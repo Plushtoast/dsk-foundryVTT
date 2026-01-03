@@ -1,5 +1,6 @@
 import DSKUtility from "./dsk_utility.js"
 import ADVANCEDFILTERS from "./itemlibrary_advanced_filters.js"
+import { DefaultAppv2 } from "../actor/baseapp.js";
 const { getProperty, debounce } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
 //TODO merge existing index with advanced details
@@ -106,11 +107,55 @@ class AdvancedSearchDocument extends SearchDocument {
     }
 }
 
-export default class DSKItemLibrary extends Application {
-    static _warnedAppV1 = true;
+export default class DSKItemLibrary extends DefaultAppv2 {
+    static DEFAULT_OPTIONS = {
+        id: 'DSKItemLibrary',
+        classes: ['dsk', 'itemlibrary'],
+        position: {
+            width: 800,
+            height: 800,
+        },
+        window: {
+            resizable: true,
+            title: 'dsk.ItemLibrary',
+        },
+        actions: {
+            toggleAdvancedMode: this._toggleAdvancedMode,
+            filterChange: this._filterChange,
+            filterItem: this._filterItem,
+            itemName: { handler: this._itemName, buttons: [0, 2] },
+            showDetails: this._showDetails,
+            toggleWorldIndex: this._toggleWorldIndex,
+            fulltextsearch: this._fulltextsearch,
+            tabClick: this._tabClick,
+        },
+    };
 
-    constructor(app) {
-        super(app)
+    static PARTS = {
+        library: {
+            template: 'systems/dsk/templates/system/itemlibrary.html',
+        },
+    };
+
+    static TABS = {
+        sheet: {
+            tabs: [
+                { id: 'equipment', label: 'Equipment' },
+                { id: 'character', label: 'Character' },
+                { id: 'spell', label: 'Spell' },
+                { id: 'journal', label: 'Journal' },
+                { id: 'zoo', label: 'Zoo' },
+            ],
+            initial: 'equipment',
+        },
+    };
+
+    get template() {
+        return DSKItemLibrary.PARTS.library.template;
+    }
+
+    constructor(options = {}) {
+        super(options)
         this.advancedFiltering = false
         this.journalBuild = false
         this.journalWorldBuild = false
@@ -233,8 +278,8 @@ export default class DSKItemLibrary extends Application {
 
     }
 
-    async getData(options) {
-        const data = await super.getData(options);
+    async _prepareContext(options) {
+        const data = {}
         data.categories = this.translateFilters()
         data.isGM = game.user.isGM
         data.items = this.items
@@ -263,9 +308,9 @@ export default class DSKItemLibrary extends Application {
                 this.filters[key]["categories"][subkey] = false
             }
         }
-        $(this._element).find('.filter[type="checkbox"]').prop("checked", false)
+        $(this.element).find('.filter[type="checkbox"]').prop("checked", false)
         this.buildDetailFilter("none", "none").then(templ => {
-            $(this._element).find('.advancedSearch .groupbox').html(templ)
+            $(this.element).find('.advancedSearch .groupbox').html(templ)
         })
     }
 
@@ -278,19 +323,6 @@ export default class DSKItemLibrary extends Application {
             return a.label.localeCompare(b.label);
         });
         return res
-    }
-
-    static get defaultOptions() {
-        const options = super.defaultOptions
-        options.id = "DSKItemLibrary"
-        options.classes.push("dsk", "itemlibrary")
-        options.height = 800
-        options.width = 800
-        options.resizable = true
-        options.title = game.i18n.localize("dsk.ItemLibrary")
-        options.template = "systems/dsk/templates/system/itemlibrary.html"
-        options.tabs = [{ navSelector: ".tabs", contentSelector: ".content", initial: "equipment" }]
-        return options
     }
 
     async getRandomItems(category, limit) {
@@ -385,7 +417,7 @@ export default class DSKItemLibrary extends Application {
     }
 
     async advancedFilterStuff(category, page) {
-        const dataFilters = $(this._element).find('.detailFilters')
+        const dataFilters = $(this.element).find('.detailFilters')
         const subcategory = dataFilters.attr("data-subc")
         let search = this.filters[category].filterBy.search.toLowerCase()
         let index = this.detailFilter[subcategory]
@@ -459,7 +491,7 @@ export default class DSKItemLibrary extends Application {
     }
 
     setBGImage(filterdItems, category) {
-        $(this._element).find(`.${category} .libcontainer`)[`${filterdItems.length > 0 ? "remove" : "add"}Class`]("libraryImg")
+        $(this.element).find(`.${category} .libcontainer`)[`${filterdItems.length > 0 ? "remove" : "add"}Class`]("libraryImg")
     }
 
     renderResult(html, filteredItems, { index, itemType }, isPaged) {
@@ -511,9 +543,10 @@ export default class DSKItemLibrary extends Application {
         return { index, itemType }
     }
 
-    async _render(force = false, options = {}) {
-        await super._render(force, options)
+    async render(options = {}, _options = {}) {
+        const result = await super.render(options, _options)
         this.buildEquipmentIndex()
+        return result
     }
 
     async buildEquipmentIndex() {
@@ -524,7 +557,7 @@ export default class DSKItemLibrary extends Application {
         if (this[`${category}Build`]) return
 
         const progress = ui.notifications.info('dsk.Library.loading', { format: { item: "" }, progress: true });
-        const target = $(this._element).find(`*[data-tab="${category}"]`)
+        const target = $(this.element).find(`*[data-tab="${category}"]`)
         this.showLoading(target, category)
         const packs = game.packs.filter(p => p.documentName == document && (game.user.isGM || p.visible))
         const percentage = 1 / (packs.length + 1)
@@ -592,7 +625,7 @@ export default class DSKItemLibrary extends Application {
     async createDetailIndex(category, subcategory) {
         if (!this.detailFilter[subcategory]) {
             const field = this.subcategoryFields(subcategory)
-            const target = $(this._element).find(`*[data-tab="${category}"]`)
+            const target = $(this.element).find(`*[data-tab="${category}"]`)
             target.find('.searchResult ul').html('')
             this.showLoading(target, category)
             this.detailFilter[subcategory] = new FlexSearch({
@@ -657,48 +690,82 @@ export default class DSKItemLibrary extends Application {
         }
     }
 
-    activateListeners(html) {
-        super.activateListeners(html)
+    // Static action handlers
+    static _toggleAdvancedMode(ev, target) {
+        this.advancedFiltering = !this.advancedFiltering
+        if (this.advancedFiltering) {
+            $(this.element).find('.toggleAdvancedMode').addClass("on")
+            $(this.element).find('.advancedSearch').fadeIn()
+            this.purgeAdvancedFilters()
+        } else {
+            $(this.element).find('.toggleAdvancedMode').removeClass("on")
+            $(this.element).find('.advancedSearch').fadeOut()
+        }
+    }
 
-        html.on("click", ".toggleAdvancedMode", () => {
-            this.advancedFiltering = !this.advancedFiltering
-            if (this.advancedFiltering) {
-                $(this._element).find('.toggleAdvancedMode').addClass("on")
-                $(this._element).find('.advancedSearch').fadeIn()
-                this.purgeAdvancedFilters()
-            } else {
-                $(this._element).find('.toggleAdvancedMode').removeClass("on")
-                $(this._element).find('.advancedSearch').fadeOut()
-            }
-        })
+    static async _filterChange(ev, target) {
+        const tab = $(this.element).find('.tab.active')
+        const category = tab.attr("data-tab")
+        this.filterItems(tab, category);
+    }
+
+    static async _filterItem(ev, target) {
+        const tab = $(target).closest('.tab')
+        const category = tab.attr("data-tab")
+        const subcategory = $(target).attr("data-category")
+        const isChecked = $(target).is(":checked")
+        if (this.advancedFiltering && isChecked) {
+            this.purgeAdvancedFilters()
+            this.subcategory = subcategory
+            $(target).prop("checked", isChecked)
+            $(this.element).find('.advancedSearch .groupbox').html(await this.buildDetailFilter(category, subcategory))
+        }
+        this.filters[category].categories[subcategory] = isChecked
+        this.filterItems(tab, category);
+    }
+
+    static _itemName(ev, target) {
+        if (ev.button == 2) {
+            DSKUtility.showArtwork(this.getItemFromHTML(ev))
+        } else {
+            this.getItemFromHTML(ev).render()
+        }
+    }
+
+    static _showDetails(ev, target) {
+        const tab = $(target).attr("data-btn")
+        $(target).find('i').toggleClass("fa-caret-left fa-caret-right")
+        $(this.element).find(`.${tab} .detailBox`).toggleClass("dskhidden")
+    }
+
+    static _toggleWorldIndex(ev, target) {
+        game.settings.set("dsk", "indexWorldItems", !game.settings.get("dsk", "indexWorldItems"))
+        this.checkWorldStuffIndex()
+        $(target).toggleClass("on")
+    }
+
+    static _fulltextsearch(ev, target) {
+        game.settings.set("dsk", "indexDescription", !game.settings.get("dsk", "indexDescription"))
+        $(target).toggleClass("on")
+    }
+
+    static _tabClick(ev, target) {
+        const tabName = target.dataset.tab
+        if (tabName === "journal") {
+            this._createIndex("journal", "JournalEntry", game.journal)
+        } else if (tabName === "zoo") {
+            this._createIndex("zoo", "Actor", game.actors)
+        }
+    }
+
+    _onRender(context, options) {
+        super._onRender(context, options);
+        const html = $(this.element);
 
         html.on("change", ".detailFilters input, .detailFilters select", () => {
-            const tab = $(this._element).find('.tab.active')
+            const tab = $(this.element).find('.tab.active')
             const category = tab.attr("data-tab")
             this.filterItems(tab, category);
-        })
-
-        html.on("click", ".filter", async (ev) => {
-            const tab = $(ev.currentTarget).closest('.tab')
-            const category = tab.attr("data-tab")
-            const subcategory = $(ev.currentTarget).attr("data-category")
-            const isChecked = $(ev.currentTarget).is(":checked")
-            if (this.advancedFiltering && isChecked) {
-                this.purgeAdvancedFilters()
-                this.subcategory = subcategory
-                $(ev.currentTarget).prop("checked", isChecked)
-                $(this._element).find('.advancedSearch .groupbox').html(await this.buildDetailFilter(category, subcategory))
-            }
-            this.filters[category].categories[subcategory] = isChecked
-            this.filterItems(tab, category);
-        })
-
-        html.on("click", ".item-name", ev => {
-            this.getItemFromHTML(ev).render()
-        })
-
-        html.on("mousedown", ".item-name", ev => {
-            if (ev.button == 2) DSKUtility.showArtwork(this.getItemFromHTML(ev))
         })
 
         html.on("keyup", ".filterBy-search", ev => {
@@ -708,31 +775,9 @@ export default class DSKItemLibrary extends Application {
             this.filterItems(tab, category);
         })
 
-        html.find(`*[data-tab="journal"]`).click(x => {
-            this._createIndex("journal", "JournalEntry", game.journal)
-        })
-        html.find(`*[data-tab="zoo"]`).click(x => {
-            this._createIndex("zoo", "Actor", game.actors)
-        })
-
-        html.find('.showDetails').click(ev => {
-            const tab = $(ev.currentTarget).attr("data-btn")
-            $(ev.currentTarget).find('i').toggleClass("fa-caret-left fa-caret-right")
-            html.find(`.${tab} .detailBox`).toggleClass("dskhidden")
-        })
-
-        html.find('.toggleWorldIndex').click((ev) => {
-            game.settings.set("dsk", "indexWorldItems", !game.settings.get("dsk", "indexWorldItems"))
-            this.checkWorldStuffIndex()
-            $(ev.currentTarget).toggleClass("on")
-        })
-        html.find('.fulltextsearch').click((ev) => {
-            game.settings.set("dsk", "indexDescription", !game.settings.get("dsk", "indexDescription"))
-            $(ev.currentTarget).toggleClass("on")
-        })
         const source = this
 
-        $(this._element).find('.window-content').on('scroll.infinit', debounce(function (ev) {
+        $(this.element).find('.window-content').on('scroll.infinit', debounce(function (ev) {
             if (source.advancedFiltering) return
 
             const log = $(ev.target);

@@ -2,21 +2,27 @@ import ActorSheetDSK from "./actor_sheet_dsk.js";
 import SpeciesWizard from "../wizards/species_wizard.js"
 import CultureWizard from "../wizards/culture_wizard.js"
 import CareerWizard from "../wizards/career_wizard.js"
-const { mergeObject } = foundry.utils
 
-export default class ActorSheetCharacter extends ActorSheetDSK{
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, {
-            classes: options.classes.concat(["dsk", "actor", "character-sheet"]),
+export default class ActorSheetCharacter extends ActorSheetDSK {
+    static DEFAULT_OPTIONS = {
+        position: {
             width: 795,
-        });
-        return options;
-    }
+        },
+        classes: ['dsk', 'actor', 'character-sheet'],
+    };
+
+    static PARTS = {
+        main: {
+            template: "systems/dsk/templates/actors/actor-sheet.html",
+        },
+        limited: {
+            template: "systems/dsk/templates/actors/npc-limited.html",
+        },
+    };
 
     get template() {
-        if (this.showLimited()) return "systems/dsk/templates/actors/npc-limited.html";
-        return "systems/dsk/templates/actors/actor-sheet.html";
+        if (this.showLimited()) return ActorSheetCharacter.PARTS.limited.template;
+        return ActorSheetCharacter.PARTS.main.template;
     }
 
     async _manageDragItems(item, typeClass) {

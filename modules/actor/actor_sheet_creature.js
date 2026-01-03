@@ -1,20 +1,27 @@
 import ActorSheetDSK from "./actor_sheet_dsk.js";
-const { mergeObject, getProperty } = foundry.utils
+const { getProperty } = foundry.utils
 
-export default class ActorSheetCreature extends ActorSheetDSK{
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, { classes: options.classes.concat(["dsk", "actor", "creature-sheet", "character-sheet"]) });
-        return options;
-    }
+export default class ActorSheetCreature extends ActorSheetDSK {
+    static DEFAULT_OPTIONS = {
+        classes: ['dsk', 'actor', 'creature-sheet', 'character-sheet'],
+    };
+
+    static PARTS = {
+        main: {
+            template: "systems/dsk/templates/actors/creature-sheet.html",
+        },
+        limited: {
+            template: "systems/dsk/templates/actors/creature-limited.html",
+        },
+    };
 
     get template() {
-        if (this.showLimited()) return "systems/dsk/templates/actors/creature-limited.html";
-        return "systems/dsk/templates/actors/creature-sheet.html";
+        if (this.showLimited()) return ActorSheetCreature.PARTS.limited.template;
+        return ActorSheetCreature.PARTS.main.template;
     }
 
-    async getData(options) {
-        const data = await super.getData(options);        
+    async _prepareContext(options) {
+        const data = await super._prepareContext(options);        
         data.enrichedBehaviour = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.fight"), {secrets: this.object.isOwner })
         data.enrichedSpecialrules = await foundry.applications.ux.TextEditor.enrichHTML(getProperty(this.actor.system, "notes.specialRules"), {secrets: this.object.isOwner })
         return data;

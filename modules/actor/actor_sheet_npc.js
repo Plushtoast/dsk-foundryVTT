@@ -1,15 +1,21 @@
 import ActorSheetCharacter from "./actor_sheet_character.js";
-const { mergeObject } = foundry.utils
 
-export default class ActorSheetNPC extends ActorSheetCharacter{
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, { classes: options.classes.concat(["dsk", "actor", "npc-sheet"]) });
-        return options;
-    }
+export default class ActorSheetNPC extends ActorSheetCharacter {
+    static DEFAULT_OPTIONS = {
+        classes: ['dsk', 'actor', 'npc-sheet'],
+    };
+
+    static PARTS = {
+        main: {
+            template: "systems/dsk/templates/actors/npc-sheet.html",
+        },
+        limited: {
+            template: "systems/dsk/templates/actors/npc-limited.html",
+        },
+    };
 
     get template() {
-        if (this.showLimited()) return "systems/dsk/templates/actors/npc-limited.html";
-        return "systems/dsk/templates/actors/npc-sheet.html";
+        if (this.showLimited()) return ActorSheetNPC.PARTS.limited.template;
+        return ActorSheetNPC.PARTS.main.template;
     }
 }

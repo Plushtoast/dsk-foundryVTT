@@ -3,11 +3,24 @@ import DSK from "../system/config.js";
 const { mergeObject, duplicate } = foundry.utils
 
 export default class SpeciesWizard extends WizardDSK {
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        options.title = game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.species")}` })
-        options.template = 'systems/dsk/templates/wizard/add-species-wizard.html'
-        return options;
+    static DEFAULT_OPTIONS = {
+        window: {
+            title: 'dsk.WIZARD.addItem',
+        },
+    };
+
+    static PARTS = {
+        wizard: {
+            template: 'systems/dsk/templates/wizard/add-species-wizard.html',
+        },
+    };
+
+    get template() {
+        return SpeciesWizard.PARTS.wizard.template;
+    }
+
+    get title() {
+        return game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.species")} ${this.species?.name || ''}` });
     }
 
     async _parseBonus(text){
@@ -32,8 +45,8 @@ export default class SpeciesWizard extends WizardDSK {
         return { anyAttributeRequirements, attributeRequirements, optionals }
     }
 
-    async getData(options) {
-        const data = await super.getData(options);
+    async _prepareContext(options) {
+        const data = {}
         const {anyAttributeRequirements, attributeRequirements, optionals} = await this._parseBonus(this.species.system.advantages)
         const generalToChose = anyAttributeRequirements
         mergeObject(data, {
@@ -55,11 +68,11 @@ export default class SpeciesWizard extends WizardDSK {
     }
 
     async updateCharacter() {
-        let parent = $(this._element)
+        let parent = $(this.element)
         parent.find("button.ok i").toggleClass("fa-check fa-spinner fa-spin")
 
         let apCost = Number(parent.find('.apCost').text())
-        if (!this._validateInput($(this._element)) || !(await this.actor.checkEnoughXP(apCost)) || await this.alreadyAdded(this.actor.system.details.species, "species")) {
+        if (!this._validateInput($(this.element)) || !(await this.actor.checkEnoughXP(apCost)) || await this.alreadyAdded(this.actor.system.details.species, "species")) {
             parent.find("button.ok i").toggleClass("fa-check fa-spinner fa-spin")
             return
         }

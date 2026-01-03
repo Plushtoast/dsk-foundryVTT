@@ -4,15 +4,28 @@ import WizardDSK from "./dsk_wizard.js"
 const { mergeObject, duplicate } = foundry.utils
 
 export default class CareerWizard extends WizardDSK {
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        options.title = game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.profession")}` })
-        options.template = 'systems/dsk/templates/wizard/add-career-wizard.html'
-        return options;
+    static DEFAULT_OPTIONS = {
+        window: {
+            title: 'dsk.WIZARD.addItem',
+        },
+    };
+
+    static PARTS = {
+        wizard: {
+            template: 'systems/dsk/templates/wizard/add-career-wizard.html',
+        },
+    };
+
+    get template() {
+        return CareerWizard.PARTS.wizard.template;
     }
 
-    async getData(options) {
-        const data = await super.getData(options);
+    get title() {
+        return game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.profession")} ${this.career?.name || ''}` });
+    }
+
+    async _prepareContext(options) {
+        const data = {}
         const requirements =
             [
                 ...await this.parseToItem(this.career.system.requirements.advantage, ["disadvantage", "advantage"]),
@@ -82,11 +95,11 @@ export default class CareerWizard extends WizardDSK {
     }
 
     async updateCharacter() {
-        let parent = $(this._element)
+        let parent = $(this.element)
         parent.find("button.ok i").toggleClass("fa-check fa-spinner fa-spin")
 
         let apCost = Number(parent.find('.apCost').text())
-        if (!this._validateInput($(this._element)) || !(await this.actor.checkEnoughXP(apCost)) || await this.alreadyAdded(this.actor.system.details.profession, "profession")) {
+        if (!this._validateInput($(this.element)) || !(await this.actor.checkEnoughXP(apCost)) || await this.alreadyAdded(this.actor.system.details.profession, "profession")) {
             parent.find("button.ok i").toggleClass("fa-check fa-spinner fa-spin")
             return
         }

@@ -9,11 +9,38 @@ const { renderTemplate } = foundry.applications.handlebars;
 //todo add on use button to merchant sheet
 
 export const MerchantSheetMixin = (superclass) => class extends superclass {
-    static get defaultOptions() {
-        const options = super.defaultOptions;
-        mergeObject(options, { classes: options.classes.concat(["merchant-sheet"]) });
-        return options;
-    }
+    static DEFAULT_OPTIONS = {
+        classes: ['merchant-sheet'],
+        actions: {
+            ...superclass.DEFAULT_OPTIONS?.actions,
+            allowMerchant: this._allowMerchant,
+            toggleAllAllowMerchant: this._toggleAllAllowMerchant,
+            lockTradeSection: this._lockTradeSection,
+            tradeLock: this._tradeLock,
+            randomGoods: this._randomGoods,
+            clearInventory: this._clearInventory,
+            removeOtherTradeFriend: this._removeOtherTradeFriend,
+            choseTradefriend: this._choseTradefriend,
+            setCustomPrice: this._setCustomPrice,
+            buyItem: this._buyItem,
+            sellItem: this._sellItem,
+            externalEdit: this._externalEdit,
+            changeAmountAllItems: { handler: this._changeAmountAllItems, buttons: [0, 2] },
+        },
+        majorButtons: [
+            ...(superclass.DEFAULT_OPTIONS?.majorButtons || []),
+            {
+                action: 'playerview',
+                icon: function () {
+                    return `fas fa-toggle-${getProperty(this.actor.system, "merchant.playerView") ? 'on' : 'off'}`;
+                },
+                label: 'dsk.SHEET.switchLimited',
+                visible: function () {
+                    return this.actor.isOwner;
+                },
+            },
+        ],
+    };
 
     static get merchantTemplate() {
         return "systems/dsk/templates/actors/merchant/merchant-sheet.html";
@@ -49,47 +76,80 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         await this.actor.update({ ownership: curPermissions }, { diff: false, recursive: false, noHook: true })
     }
 
-    activateListeners(html) {
-        super.activateListeners(html);
-        html.find('.allowMerchant').click(async(ev) => {
-            const id = $(ev.currentTarget).attr("data-user-id")
-            const i = $(ev.currentTarget).find('i')
-            await this.allowMerchant([id], !(i.hasClass("fa-check-circle")))
-            i.toggleClass("fa-circle fa-check-circle")
-        })
-        html.find('.toggleAllAllowMerchant').click(async(ev) => {
-            const ids = game.users.filter(x => !x.isGM).map(x => x.id)
-            const allow = ev.currentTarget.dataset.lock == "true"
-            await this.allowMerchant(ids, allow)
-            this.render()
-        })
-        html.find('.lockTradeSection').click(ev => this.lockTradeSection(ev))
-        html.find('.item-tradeLock').click(ev => this.toggleTradeLock(ev))
-        html.find('.randomGoods').click(ev => this.randomGoods(ev))
-        html.find(".clearInventory").click(ev => this.clearInventory(ev))
-        html.find('.removeOtherTradeFriend').click(() => this.removeOtherTradeFriend())
-        html.find('.choseTradefriend').click(() => this.choseTradefriend())
-        html.find('.setCustomPrice').click(ev => $(ev.currentTarget).addClass("edit"))
-        html.find('.customPriceTag').change(async ev => this.setCustomPrice(ev))
-            .blur(ev => $(ev.currentTarget).closest('.setCustomPrice').removeClass("edit"))
+    _onRender(context, options) {
+        super._onRender(context, options);
+        const html = $(this.element);
+        html.find('.customPriceTag').on('change', async (ev) => this._handleCustomPriceChange(ev))
+            .on('blur', (ev) => $(ev.currentTarget).closest('.setCustomPrice').removeClass("edit"));
+        html.find('.gearSearch').prop("disabled", false);
+    }
 
-        html.find('.buy-item').click(ev => {
-            this.advanceWrapper(ev, "buyItem", ev)
-            DSKSoundEffect.playMoneySound()
-        })
-        html.find('.sell-item').click(ev => {
-            this.advanceWrapper(ev, "sellItem", ev)
-            DSKSoundEffect.playMoneySound()
-        })
-        html.find('.item-external-edit').click(ev => {
-            ev.preventDefault()
-            let itemId = this._getItemId(ev);
-            const item = this.getTradeFriend().items.get(itemId)
-            item.sheet.render(true);
-        });
-        html.find('.changeAmountAllItems').mousedown(ev => this.changeAmountAllItems(ev))
+    // Static action handlers for AppV2
+    static async _allowMerchant(ev, target) {
+        const id = target.dataset.userId;
+        const i = $(target).find('i');
+        await this.allowMerchant([id], !(i.hasClass("fa-check-circle")));
+        i.toggleClass("fa-circle fa-check-circle");
+    }
 
-        html.find('.gearSearch').prop("disabled", false)
+    static async _toggleAllAllowMerchant(ev, target) {
+        const ids = game.users.filter(x => !x.isGM).map(x => x.id);
+        const allow = target.dataset.lock == "true";
+        await this.allowMerchant(ids, allow);
+        this.render();
+    }
+
+    static _lockTradeSection(ev, target) {
+        this.lockTradeSection(ev);
+    }
+
+    static _tradeLock(ev, target) {
+        this.toggleTradeLock(ev);
+    }
+
+    static _randomGoods(ev, target) {
+        this.randomGoods(ev);
+    }
+
+    static _clearInventory(ev, target) {
+        this.clearInventory(ev);
+    }
+
+    static _removeOtherTradeFriend(ev, target) {
+        this.removeOtherTradeFriend();
+    }
+
+    static _choseTradefriend(ev, target) {
+        this.choseTradefriend();
+    }
+
+    static _setCustomPrice(ev, target) {
+        $(target).addClass("edit");
+    }
+
+    static _buyItem(ev, target) {
+        this.advanceWrapper(ev, "buyItem", ev);
+        DSKSoundEffect.playMoneySound();
+    }
+
+    static _sellItem(ev, target) {
+        this.advanceWrapper(ev, "sellItem", ev);
+        DSKSoundEffect.playMoneySound();
+    }
+
+    static _externalEdit(ev, target) {
+        ev.preventDefault();
+        let itemId = this._getItemId(ev);
+        const item = this.getTradeFriend().items.get(itemId);
+        item.sheet.render(true);
+    }
+
+    static _changeAmountAllItems(ev, target) {
+        this.changeAmountAllItems(ev);
+    }
+
+    async _handleCustomPriceChange(ev) {
+        await this.setCustomPrice(ev);
     }
 
     _canDragStart(selector) {
@@ -166,6 +226,105 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     }
     async sellItem(ev) {
         await this.transferItem(this.getTradeFriend(), this.actor, ev, false)
+    }
+
+    async randomGoods(ev) {
+        const html = await renderTemplate('systems/dsk/templates/dialog/randomGoods-dialog.html', { categories: DSK.equipmentCategories })
+        foundry.applications.api.DialogV2.wait({
+            window: { title: game.i18n.localize("dsk.MERCHANT.randomGoods") },
+            content: html,
+            buttons: [
+                {
+                    action: "yes",
+                    icon: "fa fa-check",
+                    label: game.i18n.localize("dsk.yes"),
+                    default: true,
+                    callback: (event, button, dialog) => this.addRandomGoods(this.actor, $(button.form), ev)
+                },
+                {
+                    action: "cancel",
+                    icon: "fas fa-times",
+                    label: game.i18n.localize("dsk.cancel")
+                }
+            ]
+        });
+    }
+
+    async clearInventory(ev) {
+        foundry.applications.api.DialogV2.wait({
+            window: { title: game.i18n.localize("dsk.MERCHANT.clearInventory") },
+            content: game.i18n.localize("dsk.MERCHANT.deleteAllGoods"),
+            buttons: [
+                {
+                    action: "yes",
+                    icon: "fa fa-check",
+                    label: game.i18n.localize("dsk.yes"),
+                    default: true,
+                    callback: () => {
+                        this.removeAllGoods(this.actor, ev)
+                    }
+                },
+                {
+                    action: "cancel",
+                    icon: "fas fa-times",
+                    label: game.i18n.localize("dsk.cancel")
+                }
+            ]
+        });
+    }
+
+    async addRandomGoods(actor, dlg, ev) {
+        let text = $(ev.currentTarget).text()
+        $(ev.currentTarget).html(' <i class="fa fa-spin fa-spinner"></i>')
+
+        let categories = []
+        dlg.find('input[type="checkbox"]:checked').each(function() {
+            const name = $(this).val()
+            categories.push({
+                name,
+                count: Number(dlg.find(`input[name="each_${name}"]`).val()),
+                number: Number(dlg.find(`input[name="number_${name}"]`).val())
+            })
+        })
+
+        const itemLibrary = game.dsk.itemLibrary
+        if (!itemLibrary.equipmentBuild) {
+            await itemLibrary.buildEquipmentIndex()
+        }
+
+        let items = []
+        for (let cat of categories) {
+            const randomItems = (await itemLibrary.getRandomItems(cat.name, cat.number)).map(x => {
+                const elem = x.toObject()
+                elem.system.quantity = cat.count
+                return elem
+            })
+
+            items.push(...randomItems)
+        }
+
+        let seen = {}
+        items = items.filter(function(x) {
+            let domain = getProperty(x, "system.effect")
+            domain = typeof domain === 'object' && domain !== null ? getProperty(domain, "attributes") || "" : ""
+            const price = Number(getProperty(x, "system.price")) || 0
+            if (domain != "" || price > 10000) return false
+
+            let seeName = `${x.type}_${x.name}`
+            return (seen.hasOwnProperty(seeName) ? false : (seen[seeName] = true)) && actor.items.filter(function(y) {
+                return y.type == x.type && y.name == x.name
+            }).length == 0
+        })
+        await actor.createEmbeddedDocuments("Item", items)
+        $(ev.currentTarget).text(text)
+    }
+
+    async removeAllGoods(actor, ev) {
+        let text = $(ev.currentTarget).text()
+        $(ev.currentTarget).html(' <i class="fa fa-spin fa-spinner"></i>')
+        let ids = actor.items.filter(x => DSK.equipmentCategories.includes(x.type) && !getProperty(x, "worn.value")).map(x => x.id)
+        await actor.deleteEmbeddedDocuments("Item", ids);
+        $(ev.currentTarget).text(text)
     }
 
     async transferItem(source, target, ev, buy = true) {
@@ -316,132 +475,16 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         }
     }
 
-    async _render(force = false, options = {}) {
+    async render(options = {}, _options = {}) {
         if (!game.user.isGM && getProperty(this.actor.system, "merchant.merchantType") == "loot" && getProperty(this.actor.system, "merchant.locked")) {
             foundry.audio.AudioHelper.play({ src: "sounds/lock.wav", loop: false }, false);
             return
         }
-        await super._render(force, options);
+        return await super.render(options, _options);
     }
 
-    _getHeaderButtons() {
-        let buttons = super._getHeaderButtons();
-        if (this.actor.isOwner) {
-            buttons.unshift({
-                class: "playerview",
-                tooltip: "dsk.SHEET.switchLimited",
-                icon: `fas fa-toggle-on`,
-                onclick: async ev => this._togglePlayerview(ev)
-            })
-        }
-        return buttons
-    }
-
-    _togglePlayerview(ev) {
-        this.actor.update({ "system.merchant.playerView": !getProperty(this.actor.system, "merchant.playerView") })
-    }
-
-    async randomGoods(ev) {
-        const html = await renderTemplate('systems/dsk/templates/dialog/randomGoods-dialog.html', { categories: DSK.equipmentCategories })
-        foundry.applications.api.DialogV2.wait({
-            window: { title: game.i18n.localize("dsk.MERCHANT.randomGoods") },
-            content: html,
-            buttons: [
-                {
-                    action: "yes",
-                    icon: "fa fa-check",
-                    label: game.i18n.localize("dsk.yes"),
-                    default: true,
-                    callback: (event, button, dialog) => this.addRandomGoods(this.actor, $(button.form), ev)
-                },
-                {
-                    action: "cancel",
-                    icon: "fas fa-times",
-                    label: game.i18n.localize("dsk.cancel")
-                }
-            ]
-        });
-    }
-
-    async clearInventory(ev) {
-        foundry.applications.api.DialogV2.wait({
-            window: { title: game.i18n.localize("dsk.MERCHANT.clearInventory") },
-            content: game.i18n.localize("dsk.MERCHANT.deleteAllGoods"),
-            buttons: [
-                {
-                    action: "yes",
-                    icon: "fa fa-check",
-                    label: game.i18n.localize("dsk.yes"),
-                    default: true,
-                    callback: () => {
-                        this.removeAllGoods(this.actor, ev)
-                    }
-                },
-                {
-                    action: "cancel",
-                    icon: "fas fa-times",
-                    label: game.i18n.localize("dsk.cancel")
-                }
-            ]
-        });
-    }
-
-    async addRandomGoods(actor, dlg, ev) {
-        let text = $(ev.currentTarget).text()
-        $(ev.currentTarget).html(' <i class="fa fa-spin fa-spinner"></i>')
-
-        let categories = []
-        dlg.find('input[type="checkbox"]:checked').each(function() {
-            const name = $(this).val()
-            categories.push({
-                name,
-                count: Number(dlg.find(`input[name="each_${name}"]`).val()),
-                number: Number(dlg.find(`input[name="number_${name}"]`).val())
-            })
-        })
-
-        const itemLibrary = game.dsk.itemLibrary
-        if (!itemLibrary.equipmentBuild) {
-            await itemLibrary.buildEquipmentIndex()
-        }
-
-        let items = []
-        for (let cat of categories) {
-            const randomItems = (await itemLibrary.getRandomItems(cat.name, cat.number)).map(x => {
-                const elem = x.toObject()
-                elem.system.quantity = cat.count
-                return elem
-            })
-
-            items.push(...randomItems)
-        }
-
-        let seen = {}
-        items = items.filter(function(x) {
-            let domain = getProperty(x, "system.effect")
-            domain = typeof domain === 'object' && domain !== null ? getProperty(domain, "attributes") || "" : ""
-            const price = Number(getProperty(x, "system.price")) || 0
-            if (domain != "" || price > 10000) return false
-
-            let seeName = `${x.type}_${x.name}`
-            return (seen.hasOwnProperty(seeName) ? false : (seen[seeName] = true)) && actor.items.filter(function(y) {
-                return y.type == x.type && y.name == x.name
-            }).length == 0
-        })
-        await actor.createEmbeddedDocuments("Item", items)
-        $(ev.currentTarget).text(text)
-    }
-
-    async removeAllGoods(actor, ev) {
-        let text = $(ev.currentTarget).text()
-        $(ev.currentTarget).html(' <i class="fa fa-spin fa-spinner"></i>')
-        let ids = actor.items.filter(x => DSK.equipmentCategories.includes(x.type) && !getProperty(x, "worn.value")).map(x => x.id)
-        await actor.deleteEmbeddedDocuments("Item", ids);
-        $(ev.currentTarget).text(text)
-    }
-
-    async getData(options) {
-        const data = await super.getData(options);
+    async _prepareContext(options) {
+        const data = await super._prepareContext(options);
         data["merchantType"] = getProperty(this.actor.system, "merchant.merchantType") || "none"
         data["merchantTypes"] = {
             none: game.i18n.localize("dsk.MERCHANT.typeNone"),
