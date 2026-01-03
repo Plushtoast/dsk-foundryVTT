@@ -1,4 +1,4 @@
-{{> systems/dsk/templates/actors/parts/gearSearch.html}} {{#each prepare.inventory as |section sid|}} {{#if section.show}}
+{{> systems/dsk/templates/actors/parts/gearSearch.hbs}} {{#each prepare.inventory as |section sid|}} {{#if section.show}}
 <div class="groupbox">
     <div class="row-section table-title">
         <div class="col eight"></div>
@@ -62,7 +62,7 @@
             </div>
             <div class="row-section lineheight expandDetails {{item.detailed}}">
                 <div class="col">
-                    {{#if item.children}} {{> systems/dsk/templates/actors/parts/containerContent.html this}} {{/if}}
+                    {{#if item.children}} {{> systems/dsk/templates/actors/parts/containerContent.hbs this}} {{/if}}
                 </div>
             </div>
 
@@ -105,6 +105,6 @@
         </div>
     </div>
     <div class="col two">
-        {{> systems/dsk/templates/actors/parts/purse.html}}
+        {{> systems/dsk/templates/actors/parts/purse.hbs}}
     </div>
 </div>

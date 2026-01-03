@@ -1,6 +1,6 @@
 <form class="{{cssClass}} lock{{prepare.sheetLocked}}" autocomplete="off">
 
-    {{> systems/dsk/templates/actors/parts/normalhead.html}}
+    {{> systems/dsk/templates/actors/parts/normalhead.hbs}}
     <!-- TABS -->
     <section id="tab-sections">
         <nav id="dsk-primarytabs" class="sheet-tabs tabs">
@@ -20,27 +20,27 @@
 
         <section class="content">
             <div class="tab skills save-scroll" data-tab="skills">
-                {{> systems/dsk/templates/actors/actor-talents.html}}
+                {{> systems/dsk/templates/actors/actor-talents.hbs}}
             </div>
             <div class="tab combat save-scroll" data-tab="combat">
-                {{> systems/dsk/templates/actors/actor-combat.html}}
+                {{> systems/dsk/templates/actors/actor-combat.hbs}}
             </div>
             <div class="tab inventory save-scroll" data-tab="inventory">
-                {{> systems/dsk/templates/actors/merchant/merchant-commerce.html}}
+                {{> systems/dsk/templates/actors/merchant/merchant-commerce.hbs}}
             </div>
             <div class="tab status save-scroll" data-tab="status">
-                {{> systems/dsk/templates/actors/parts/status_effects.html}}
+                {{> systems/dsk/templates/actors/parts/status_effects.hbs}}
             </div>
             <div class="tab save-scroll" data-tab="notes">
-                {{> systems/dsk/templates/actors/actor-notes.html}}
+                {{> systems/dsk/templates/actors/actor-notes.hbs}}
             </div>
             {{#if prepare.magic.hasSpells}}
             <div class="tab magic save-scroll" data-tab="magic">
-                {{> systems/dsk/templates/actors/character/actor-magic.html}}
+                {{> systems/dsk/templates/actors/character/actor-magic.hbs}}
             </div>
             {{/if}}
             <div class="tab main save-scroll" data-tab="main">
-                {{> systems/dsk/templates/actors/actor-main.html}}
+                {{> systems/dsk/templates/actors/actor-main.hbs}}
             </div>
         </section>
     </section>

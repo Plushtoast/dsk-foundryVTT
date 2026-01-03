@@ -360,6 +360,8 @@
             "dicesonicesettings": "Wähle Farbschemen für Würfeltypen",
             "hideEffects": "Status Effekte verbergen",
             "hideEffectsHint": "Zeige Status Effekte an Tokens nur deren Besitzer",
+            "dskTokenRuler": "DSK Token Distanzmesswerkzeug",
+            "dskTokenRulerHint": "Benutze die integrierte DSK Distanzmessung für Token. Diese berücksichtigt die DSK Regeln für Bewegung und Distanz.",
             "enableItemDropToCanvas": "Items auf die Map legen",
             "obfuscateTokenNames": "Verberge Token Namen",
             "obfuscateTokenNamesHint": "Generische Ersetzung des Namens unbekannter Kreaturen oder NSC",

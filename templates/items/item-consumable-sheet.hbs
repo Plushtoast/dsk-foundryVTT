@@ -1,5 +1,5 @@
 <form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.html}} 
+    {{> systems/dsk/templates/items/item-header.hbs}} 
     <div class="row-section ">
         <div class="col ten">
             <img src="{{item.img}}" data-edit="img" />
@@ -42,7 +42,7 @@
     </nav>
 
     <section class="content">
-         {{> systems/dsk/templates/items/item-description.html}}
+         {{> systems/dsk/templates/items/item-description.hbs}}
 
         <div class="tab details" data-tab="details">
             {{formGroup systemFields.category value=document.system.category localize=true}}
@@ -67,6 +67,6 @@
             {{formGroup systemFields.ingredients value=document.system.ingredients localize=true elementType="textarea" classes="full-height"}}
         </div>
 
-        {{> systems/dsk/templates/items/item-effects.html}} 
+        {{> systems/dsk/templates/items/item-effects.hbs}} 
     </section>
 </form>

@@ -1,5 +1,5 @@
 <form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.html}} {{> systems/dsk/templates/items/item-stat.html}}
+    {{> systems/dsk/templates/items/item-header.hbs}} {{> systems/dsk/templates/items/item-stat.hbs}}
 
 
     <nav class="sheet-tabs tabs" data-tab-container="primary">
@@ -11,7 +11,7 @@
 
     <section class="content">
 
-        {{> systems/dsk/templates/items/item-description.html}}
+        {{> systems/dsk/templates/items/item-description.hbs}}
 
         <div class="tab details" data-tab="details">
 
@@ -28,6 +28,6 @@
             {{formGroup systemFields.StF value=document.system.StF localize=true}}
         </div>
 
-        {{> systems/dsk/templates/items/item-effects.html}}
+        {{> systems/dsk/templates/items/item-effects.hbs}}
     </section>
 </form>

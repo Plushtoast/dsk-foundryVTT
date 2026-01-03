@@ -1,5 +1,5 @@
 <form class="skill-test">
-    {{> systems/dsk/templates/dialog/default-dialog.html}} {{#if hasSKModifier}}
+    {{> systems/dsk/templates/dialog/default-dialog.hbs}} {{#if hasSKModifier}}
     <div class="form-group">
         <label>{{localize "dsk.skModifier"}}</label>
         <input type="number" name="skModifier" value="{{SKModifier}}" />

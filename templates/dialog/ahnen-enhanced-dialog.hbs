@@ -2,7 +2,7 @@
     <div class="row-section">
         <div class="col sixty" style="max-width:60%">
 
-            {{> systems/dsk/templates/dialog/enhanced-default-dialog.html}}
+            {{> systems/dsk/templates/dialog/enhanced-default-dialog.hbs}}
 
             {{#if hasSKModifier}}
             <div class="form-group" data-tooltip="dsk.TT.zkModifer">
@@ -64,7 +64,7 @@
         </div>
         <div class="col fourty">
             <div class="targets row-section wrap item">
-                {{> systems/dsk/templates/dialog/parts/targets.html}}
+                {{> systems/dsk/templates/dialog/parts/targets.hbs}}
             </div>
             <div class="specAbsContainer">
                 {{#unless extensions}}

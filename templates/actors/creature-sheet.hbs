@@ -19,11 +19,11 @@
     
         <div class="row-section" style="width: 100%;margin-bottom: 20px">
             <div class="col">
-                {{> systems/dsk/templates/actors/parts/rollhead.html}}
+                {{> systems/dsk/templates/actors/parts/rollhead.hbs}}
     
                 <div class="row-section flexaligncenter">
                     <div class="col eighty ">
-                        {{> systems/dsk/templates/actors/parts/healthbar.html}}
+                        {{> systems/dsk/templates/actors/parts/healthbar.hbs}}
                         {{#if prepare.schips}}
                         <div class="row-section">
                             <div class="col ten lineheight center" data-tooltip="dsk.fatePoints">
@@ -64,27 +64,27 @@
 
         <section class="content ">
             <div class="tab main save-scroll" data-tab="main">
-                {{> systems/dsk/templates/actors/creature/creature-main.html}}
+                {{> systems/dsk/templates/actors/creature/creature-main.hbs}}
             </div>
             <div class="tab skills save-scroll" data-tab="skills">
-                {{> systems/dsk/templates/actors/actor-talents.html}}
+                {{> systems/dsk/templates/actors/actor-talents.hbs}}
             </div>
             <div class="tab combat save-scroll" data-tab="combat">
-                {{> systems/dsk/templates/actors/creature/creature-combat.html}}
+                {{> systems/dsk/templates/actors/creature/creature-combat.hbs}}
             </div>
             {{#if prepare.magic.hasSpells}}
             <div class="tab magic save-scroll" data-tab="magic">
-                {{> systems/dsk/templates/actors/creature/creature-magic.html}}
+                {{> systems/dsk/templates/actors/creature/creature-magic.hbs}}
             </div>
             {{/if}}
             <div class="tab inventory save-scroll" data-tab="inventory">
-                {{> systems/dsk/templates/actors/creature/creature-loot.html}}
+                {{> systems/dsk/templates/actors/creature/creature-loot.hbs}}
             </div>
             <div class="tab status save-scroll" data-tab="status">
-                {{> systems/dsk/templates/actors/parts/status_effects.html}}
+                {{> systems/dsk/templates/actors/parts/status_effects.hbs}}
             </div>
             <div class="tab save-scroll" data-tab="notes">
-                {{> systems/dsk/templates/actors/creature/creature-notes.html}}
+                {{> systems/dsk/templates/actors/creature/creature-notes.hbs}}
             </div>
         </section>
     </section>

@@ -198,6 +198,14 @@ export function setupConfiguration() {
         default: true,
         type: Boolean
     })
+    game.settings.register("dsk", "dskTokenRuler", {
+        name: "dsk.SETTINGS.dskTokenRuler",
+        hint: "dsk.SETTINGS.dskTokenRulerHint",
+        scope: "world",
+        config: true,
+        default: true,
+        type: Boolean
+    })
     game.settings.register("dsk", "hideOpposedDamage", {
         name: "dsk.SETTINGS.hideOpposedDamage",
         hint: "dsk.SETTINGS.hideOpposedDamageHint",

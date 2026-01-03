@@ -97,3 +97,56 @@ export class DSKToken extends Token {
         return ["merchant", "loot"].includes(getProperty(actor.system, "merchant.merchantType"))
     }
 }
+
+export class DSKTokenDocument extends TokenDocument {
+    _inferMovementAction() {
+        if (this.hasStatusEffect("prone")) return "crawl";
+        return super._inferMovementAction();
+    }
+}
+
+export class DSKTokenRuler extends foundry.canvas.placeables.tokens.TokenRuler {
+    static COLOR_WALKING = 0x008000;        // Green
+    static COLOR_RUNNING = 0xFFD700;        // Yellow/Gold
+    static COLOR_CRAWLING = 0x808000;       // Olive
+    static COLOR_CRAWLING_FAST = 0xFF8C00;  // Dark Orange
+    static COLOR_IMPOSSIBLE = 0xFF0000;     // Red
+
+    _getWaypointStyle(waypoint) {
+        if (!game.settings.get('dsk', 'dskTokenRuler')) return super._getWaypointStyle(waypoint);
+
+        const color = this._totalDistanceColor(waypoint);
+        return { width: 8, color, alpha: 1 };
+    }
+
+    _colorByAction(action) {
+        switch (action) {
+            case "crawl":
+                return { normal: DSKTokenRuler.COLOR_CRAWLING, fast: DSKTokenRuler.COLOR_CRAWLING_FAST };
+            default:
+                return { normal: DSKTokenRuler.COLOR_WALKING, fast: DSKTokenRuler.COLOR_RUNNING };
+        }
+    }
+
+    _totalDistanceColor(waypoint) {
+        const token = this.token.document;
+        const actor = token.actor;
+        if (!actor) return DSKTokenRuler.COLOR_WALKING;
+
+        let colors = this._colorByAction(waypoint.action);
+        // DSK uses system.stats.gs.max for speed (GS = Geschwindigkeit)
+        const speed = actor.system?.stats?.gs?.max ?? 0;
+
+        if (waypoint.measurement.cost > speed * 2) {
+            return DSKTokenRuler.COLOR_IMPOSSIBLE;
+        }
+        return waypoint.measurement.cost <= speed ? colors.normal : colors.fast;
+    }
+
+    _getSegmentStyle(waypoint) {
+        if (!game.settings.get('dsk', 'dskTokenRuler')) return super._getSegmentStyle(waypoint);
+
+        const color = this._totalDistanceColor(waypoint);
+        return { width: 8, color, alpha: 1 };
+    }
+}
