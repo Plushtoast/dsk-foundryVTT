@@ -11,23 +11,18 @@
 
         {{> systems/dsk/templates/items/item-description.html}} {{> systems/dsk/templates/items/item-effects.html}}
         <div class="tab details" data-tab="details">
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.ammunitionType"}}</label>
-                <select name="system.ammunitionType" data-dtype="String">
-                    {{selectOptions ammunitiongroups selected=system.ammunitionType localize=true}}
-                </select>
-            </div>
+            {{formGroup systemFields.ammunitionType value=document.system.ammunitionType localize=true}}
+
             {{#if (eq system.ammunitionType 'mag')}}
             <div class="form-group double">
                 <label class="label-text">{{localize "dsk.ammunition.mag"}}</label>
-                <input class="input-text" type="text" name="system.mag.value" value="{{system.mag.value}}" data-dtype="Number" /><span> / </span>
-                <input class="input-text" type="text" name="system.mag.max" value="{{system.mag.max}}" data-dtype="Number" />
+                {{formInput systemFields.mag.fields.value value=document.system.mag.value}}
+                <span> / </span>
+                {{formInput systemFields.mag.fields.max value=document.system.mag.max}}
             </div>
             {{/if}}
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.length"}}</label>
-                <input class="input-text" type="text" name="system.length" value="{{system.length}}" data-dtype="String" />
-            </div>
+
+            {{formGroup systemFields.length value=document.system.length localize=true}}
         </div>
     </section>
 </form>

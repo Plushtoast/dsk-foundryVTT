@@ -3,6 +3,6 @@ import ActorSheetCreature from "./actor_sheet_creature.js"
 
 export default class CreatureMerchantSheetDSK extends MerchantSheetMixin(ActorSheetCreature) {
     static get merchantTemplate() {
-        return "systems/dsk/templates/actors/merchant/creature-merchant-sheet.html";
+        return "systems/dsk/templates/actors/merchant/creature-merchant-sheet.hbs";
     }
 }

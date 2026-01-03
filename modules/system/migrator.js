@@ -111,7 +111,7 @@ class PatchViewer extends Application {
             height: 740,
             title: "Changelog"
         });
-        options.template = 'systems/dsk/templates/system/patchviewer.html'
+        options.template = 'systems/dsk/templates/system/patchviewer.hbs'
         options.resizable = true
         return options;
     }

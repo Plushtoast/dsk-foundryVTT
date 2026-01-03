@@ -507,7 +507,7 @@ export default class ActorDSK extends Actor {
     async fatererollDamage(infoMsg, cardOptions, newTestData, message, data, schipsource) {
       cardOptions.fatePointDamageRerollUsed = true;
       this.resetTargetAndMessage(data, cardOptions);
-      const html = await renderTemplate("systems/dsk/templates/dialog/fateReroll-dialogDamage.html", {
+      const html = await renderTemplate("systems/dsk/templates/dialog/fateReroll-dialogDamage.hbs", {
         testData: newTestData,
         postData: data.postData,
         singleDie: data.postData.characteristics.filter(x => x.char == "damage").length == 1
@@ -568,7 +568,7 @@ export default class ActorDSK extends Actor {
       cardOptions.fatePointDamageRerollUsed = true;
       this.resetTargetAndMessage(data, cardOptions);
   
-      const html = await renderTemplate("systems/dsk/templates/dialog/fateReroll-dialog.html", {
+      const html = await renderTemplate("systems/dsk/templates/dialog/fateReroll-dialog.hbs", {
         testData: newTestData,
         postData: data.postData,
         singleDie: data.postData.characteristics.filter(x => x.char != "damage").length == 1
@@ -643,7 +643,7 @@ export default class ActorDSK extends Actor {
               ${game.i18n.format("dsk.CHATFATE.isTalented", {
         character: "<b>" + this.name + "</b>",
       })}<br>`;
-      const html = await renderTemplate("systems/dsk/templates/dialog/isTalentedReroll-dialog.html", {
+      const html = await renderTemplate("systems/dsk/templates/dialog/isTalentedReroll-dialog.hbs", {
         testData: newTestData,
         postData: data.postData,
       });
@@ -1496,7 +1496,7 @@ export default class ActorDSK extends Actor {
       let situationalModifiers = DSKStatusEffects.getRollModifiers(testData.extra.actor, testData.source);
       let dialogOptions = {
         title,
-        template: "/systems/dsk/templates/dialog/regeneration-dialog.html",
+        template: "/systems/dsk/templates/dialog/regeneration-dialog.hbs",
         data: {
           rollMode: options.rollMode,
           regenerationInterruptOptions: DSK.regenerationInterruptOptions,
@@ -1539,7 +1539,7 @@ export default class ActorDSK extends Actor {
         },
       };
   
-      let cardOptions = this._setupCardOptions("systems/dsk/templates/chat/roll/regeneration-card.html", title, tokenId);
+      let cardOptions = this._setupCardOptions("systems/dsk/templates/chat/roll/regeneration-card.hbs", title, tokenId);
   
       return DiceDSK.setupDialog({
         dialogOptions,
@@ -1571,7 +1571,7 @@ export default class ActorDSK extends Actor {
     
         let dialogOptions = {
           title,
-          template: "/systems/dsk/templates/dialog/characteristic-dialog.html",
+          template: "/systems/dsk/templates/dialog/characteristic-dialog.hbs",
           data: {
             rollMode: options.rollMode,
             modifier: options.modifier || 0,
@@ -1590,7 +1590,7 @@ export default class ActorDSK extends Actor {
           },
         };
     
-        let cardOptions = this._setupCardOptions("systems/dsk/templates/chat/roll/characteristic-card.html", title, tokenId);
+        let cardOptions = this._setupCardOptions("systems/dsk/templates/chat/roll/characteristic-card.hbs", title, tokenId);
     
         return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions });
       }

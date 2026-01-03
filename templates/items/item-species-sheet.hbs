@@ -44,28 +44,22 @@
 
                     <div class="form-group">
                         <label class="label-text">{{localize "dsk.LeP"}}- {{localize "dsk.baseValue"}}</label>
-                        <input class="input-text" type="number" name="system.LeP" value="{{system.LeP}}" data-dtype="Number" />
+                        {{formInput systemFields.LeP value=document.system.LeP}}
                     </div>
 
                     <div class="form-group">
                         <label class="label-text">{{localize "dsk.soulpower"}}- {{localize "dsk.baseValue"}}</label>
-                        <input class="input-text" type="number" name="system.sk" value="{{system.sk}}" data-dtype="Number" />
+                        {{formInput systemFields.sk value=document.system.sk}}
                     </div>
 
                     <div class="form-group">
                         <label class="label-text">{{localize "dsk.toughness"}}- {{localize "dsk.baseValue"}}</label>
-                        <input class="input-text" type="number" name="system.zk" value="{{system.zk}}" data-dtype="Number" />
+                        {{formInput systemFields.zk value=document.system.zk}}
                     </div>
 
-                    <div class="form-group full-height">
-                        <label class="label-text">{{localize "dsk.speed"}}</label>
-                        <input class="input-text" type="text" name="system.gs" value="{{system.gs}}" data-dtype="Number" />
-                    </div>
+                    {{formGroup systemFields.gs value=document.system.gs localize=true classes="full-height"}}
 
-                    <div class="form-group">
-                        <label class="label-text">{{localize "dsk.specialAdvantage"}}</label>
-                        <input class="input-text" type="text" name="system.advantages" value="{{system.advantages}}" data-dtype="String" />
-                    </div>
+                    {{formGroup systemFields.advantages value=document.system.advantages localize=true}}
                    
                 </div>
             </div>

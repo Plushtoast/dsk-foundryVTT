@@ -9,7 +9,7 @@ const { StringField } = foundry.data.fields;
 export default class CultureData extends ItemDataModel.mixin(DescriptionTemplate) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      skills: new StringField({ initial: '' }),
+      skills: new StringField({ initial: '', label: 'dsk.skills' }),
     });
   }
 }

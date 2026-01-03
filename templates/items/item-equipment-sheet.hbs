@@ -27,23 +27,11 @@
         {{/if}} {{> systems/dsk/templates/items/item-description.html}}
 
         <div class="tab details" data-tab="details">
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.equipmentType"}}</label>
-                <select name="system.category" data-dtype="String">
-                    {{selectOptions equipmentTypes selected=system.category localize=true}}
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.wearable"}}</label>
-                <input type="checkbox" name="system.worn.wearable" value="{{system.worn.wearable}}" data-dtype="Boolean" {{checked system.worn.wearable}}/>
-            </div>
+            {{formGroup systemFields.category value=document.system.category localize=true}}
+            {{formGroup systemFields.worn.fields.wearable value=document.system.worn.wearable localize=true}}
 
             {{#if (eq system.category 'bags')}}
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.carrycapacity"}}</label>
-                <input class="input-text" type="text" name="system.capacity" value="{{system.capacity}}" data-dtype="Number" />
-            </div>
+            {{formGroup systemFields.capacity value=document.system.capacity localize=true}}
             {{/if}}
 
         </div>

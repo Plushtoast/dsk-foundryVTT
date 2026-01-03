@@ -12,7 +12,7 @@ export default class CareerWizard extends WizardDSK {
 
     static PARTS = {
         wizard: {
-            template: 'systems/dsk/templates/wizard/add-career-wizard.html',
+            template: 'systems/dsk/templates/wizard/add-career-wizard.hbs',
         },
     };
 

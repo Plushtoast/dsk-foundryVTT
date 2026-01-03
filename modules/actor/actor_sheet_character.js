@@ -13,10 +13,10 @@ export default class ActorSheetCharacter extends ActorSheetDSK {
 
     static PARTS = {
         main: {
-            template: "systems/dsk/templates/actors/actor-sheet.html",
+            template: "systems/dsk/templates/actors/actor-sheet.hbs",
         },
         limited: {
-            template: "systems/dsk/templates/actors/npc-limited.html",
+            template: "systems/dsk/templates/actors/npc-limited.hbs",
         },
     };
 

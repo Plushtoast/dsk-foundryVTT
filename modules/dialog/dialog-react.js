@@ -65,7 +65,7 @@ export class ReactToSkillDialog extends DialogReactDSK {
             name: game.i18n.localize("dsk.doNothing"),
             id: "doNothing"
         })
-        return renderTemplate('systems/dsk/templates/dialog/dialog-act.html', { items, original: item, title: "DIALOG.selectReaction" })
+        return renderTemplate('systems/dsk/templates/dialog/dialog-act.hbs', { items, original: item, title: "DIALOG.selectReaction" })
     }
 
     static callbackResult(text, message) {
@@ -136,7 +136,7 @@ export class ActAttackDialog extends foundry.applications.api.DialogV2 {
                 })
             }
         }
-        return await renderTemplate('systems/dsk/templates/dialog/dialog-reaction-attack.html', { dieClass: "die-mu", items, title: "dsk.DIALOG.selectAction" })
+        return await renderTemplate('systems/dsk/templates/dialog/dialog-reaction-attack.hbs', { dieClass: "die-mu", items, title: "dsk.DIALOG.selectAction" })
     }
 
     callbackResult(text, actor, tokenId) {

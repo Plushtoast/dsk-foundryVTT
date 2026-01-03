@@ -11,7 +11,7 @@ export default class CultureWizard extends WizardDSK {
 
     static PARTS = {
         wizard: {
-            template: 'systems/dsk/templates/wizard/add-culture-wizard.html',
+            template: 'systems/dsk/templates/wizard/add-culture-wizard.hbs',
         },
     };
 

@@ -258,7 +258,7 @@ export class DiceSoNiceCustomization extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions
         mergeObject(options, {
-            template: 'systems/dsk/templates/wizard/dicesonice-configuration.html',
+            template: 'systems/dsk/templates/wizard/dicesonice-configuration.hbs',
             title: game.i18n.localize("dsk.SETTINGS.dicesonicesettings"),
             width: 600
         });

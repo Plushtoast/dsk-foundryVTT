@@ -1,5 +1,6 @@
 import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
+import DSK from '../../system/config.js';
 
 const { StringField, NumberField } = foundry.data.fields;
 
@@ -9,13 +10,21 @@ const { StringField, NumberField } = foundry.data.fields;
 export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      traitType: new StringField({ initial: 'meleeAttack' }),
-      at: new StringField({ initial: '' }),
-      pa: new StringField({ initial: '' }),
-      rw: new StringField({ initial: 'medium' }),
-      tp: new StringField({ initial: '1d6' }),
+      traitType: new StringField({ 
+        initial: 'meleeAttack',
+        choices: DSK.traitCategories,
+        label: 'dsk.category'
+      }),
+      at: new StringField({ initial: '', label: 'dsk.ABBR.AW' }),
+      pa: new StringField({ initial: '', label: 'dsk.ABBR.VW' }),
+      rw: new StringField({ 
+        initial: 'medium',
+        choices: DSK.meleeRanges,
+        label: 'dsk.range'
+      }),
+      tp: new StringField({ initial: '1d6', label: 'dsk.damage' }),
       reloadTimeprogress: new NumberField({ initial: 0 }),
-      lz: new NumberField({ initial: 1 }),
+      lz: new NumberField({ initial: 1, label: 'dsk.reloadTime' }),
     });
   }
 

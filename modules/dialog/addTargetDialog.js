@@ -22,7 +22,7 @@ export class AddTargetDialog extends foundry.applications.api.DialogV2 {
         }
         const dialog = new AddTargetDialog({
             window: { title: game.i18n.localize("dsk.DIALOG.addTarget") },
-            content: await renderTemplate('systems/dsk/templates/dialog/addTarget-dialog.html', { selectables }),
+            content: await renderTemplate('systems/dsk/templates/dialog/addTarget-dialog.hbs', { selectables }),
             buttons: [],
         })
         return dialog
@@ -82,7 +82,7 @@ export class SelectUserDialog extends foundry.applications.api.DialogV2 {
         const users = game.users.filter(x => x.active && !x.isGM)
         return new SelectUserDialog({
             window: { title: game.i18n.localize("dsk.DIALOG.setTargetToUser") },
-            content: await renderTemplate('systems/dsk/templates/dialog/selectForUserDialog.html', { users }),
+            content: await renderTemplate('systems/dsk/templates/dialog/selectForUserDialog.hbs', { users }),
             buttons: [],
         })
     }
@@ -126,7 +126,7 @@ export class UserMultipickDialog extends foundry.applications.api.DialogV2 {
 
         new UserMultipickDialog({
             window: { title: game.i18n.localize("dsk.SHEET.PostItem") },
-            content: await renderTemplate('systems/dsk/templates/dialog/usermultipickdialog.html', { users }),
+            content: await renderTemplate('systems/dsk/templates/dialog/usermultipickdialog.hbs', { users }),
             buttons: [
                 {
                     action: "yes",

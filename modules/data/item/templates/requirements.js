@@ -8,7 +8,7 @@ const { StringField } = foundry.data.fields;
 export default class RequirementsTemplate extends DSKDataModel {
   static defineSchema() {
     return {
-      requirements: new StringField({ initial: '' }),
+      requirements: new StringField({ initial: '', label: 'dsk.requirements' }),
     };
   }
 

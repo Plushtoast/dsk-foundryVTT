@@ -35,10 +35,7 @@
         </div>
 
         <div class="tab details" data-tab="details">
-            <div class="form-group full-height">
-                <label class="label-text">{{localize "TYPES.Item.skill"}}</label>
-                <textarea class="input-text" type="text" name="system.skills" data-dtype="String">{{system.skills}}</textarea>
-            </div>
+            {{formGroup systemFields.skills value=document.system.skills localize=true elementType="textarea" classes="full-height"}}
             
         </div>
     </section>

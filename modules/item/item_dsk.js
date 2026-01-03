@@ -530,7 +530,7 @@ export default class ItemDSK extends Item{
 
         if (chatData.img.includes("/blank.webp")) chatData.img = null
 
-        const html = await renderTemplate("systems/dsk/templates/chat/post-item.html", chatData)
+        const html = await renderTemplate("systems/dsk/templates/chat/post-item.hbs", chatData)
         const chatOptions = DSKUtility.chatDataSetup(html)
         ChatMessage.create(chatOptions)
     }
@@ -538,7 +538,7 @@ export default class ItemDSK extends Item{
 
 class ItemInformation extends ItemDSK {
     static async _postItem(item){
-        const html = await renderTemplate("systems/dsk/templates/chat/informationRequestRoll.html", {item})
+        const html = await renderTemplate("systems/dsk/templates/chat/informationRequestRoll.hbs", {item})
         const chatOptions = DSKUtility.chatDataSetup(html)
         ChatMessage.create(chatOptions)
     }
@@ -626,7 +626,7 @@ class ItemTrait extends ItemDSK {
 
         let dialogOptions = {
             title,
-            template: "/systems/dsk/templates/dialog/combatskill-enhanced-dialog.html",
+            template: "/systems/dsk/templates/dialog/combatskill-enhanced-dialog.hbs",
             data,
             callback: (html, options = {}) => {
                 if (traitType == "meleeAttack") {
@@ -642,7 +642,7 @@ class ItemTrait extends ItemDSK {
             },
         }
 
-        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/combatskill-card.html", title, tokenId)
+        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/combatskill-card.hbs", title, tokenId)
 
         return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions })
     }
@@ -722,7 +722,7 @@ class ItemMeleeweapon extends ItemDSK{
 
         let dialogOptions = {
             title,
-            template: "/systems/dsk/templates/dialog/combatskill-enhanced-dialog.html",
+            template: "/systems/dsk/templates/dialog/combatskill-enhanced-dialog.hbs",
             data,
             callback: (html, options = {}) => {
                 DSKCombatDialog.resolveMeleeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue, mode)
@@ -734,7 +734,7 @@ class ItemMeleeweapon extends ItemDSK{
             },
         }
 
-        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/combatskill-card.html", title, tokenId)
+        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/combatskill-card.hbs", title, tokenId)
 
         return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions })
     }
@@ -865,7 +865,7 @@ class ItemRangeweapon extends ItemDSK{
 
         let dialogOptions = {
             title,
-            template: "/systems/dsk/templates/dialog/combatskill-enhanced-dialog.html",
+            template: "/systems/dsk/templates/dialog/combatskill-enhanced-dialog.hbs",
             data,
             callback: (html, options = {}) => {
                 DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue)
@@ -876,7 +876,7 @@ class ItemRangeweapon extends ItemDSK{
             },
         }
 
-        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/combatskill-card.html", title, tokenId)
+        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/combatskill-card.hbs", title, tokenId)
 
         return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions })
     }
@@ -1049,7 +1049,7 @@ class ItemAhnengabe extends ItemDSK{
 
         let dialogOptions = {
             title,
-            template: `/systems/dsk/templates/dialog/${sheet}-enhanced-dialog.html`,
+            template: `/systems/dsk/templates/dialog/${sheet}-enhanced-dialog.hbs`,
             data,
             callback: async(html, options = {}) => {
                 cardOptions.rollMode = html.find('[name="rollMode"]').val()
@@ -1059,7 +1059,7 @@ class ItemAhnengabe extends ItemDSK{
             },
         }
 
-        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/spell-card.html", title, tokenId)
+        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/spell-card.hbs", title, tokenId)
 
         return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions })
     }
@@ -1121,7 +1121,7 @@ class ItemPoison extends ItemDSK{
 
         let dialogOptions = {
             title,
-            template: "/systems/dsk/templates/dialog/poison-dialog.html",
+            template: "/systems/dsk/templates/dialog/poison-dialog.hbs",
             data,
             callback: (html, options = {}) => {
                 cardOptions.rollMode = html.find('[name="rollMode"]').val()
@@ -1140,7 +1140,7 @@ class ItemPoison extends ItemDSK{
             },
         }
 
-        let cardOptions = item._setupCardOptions(`systems/dsk/templates/chat/roll/${item.type}-card.html`, title, tokenId)
+        let cardOptions = item._setupCardOptions(`systems/dsk/templates/chat/roll/${item.type}-card.hbs`, title, tokenId)
 
         return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions })
     }
@@ -1183,7 +1183,7 @@ class ItemSkill extends ItemDSK{
 
         let dialogOptions = {
             title,
-            template: "/systems/dsk/templates/dialog/skill-dialog.html",
+            template: "/systems/dsk/templates/dialog/skill-dialog.hbs",
             data,
             callback: (html, options = {}) => {
                 cardOptions.rollMode = html.find('[name="rollMode"]').val()
@@ -1203,7 +1203,7 @@ class ItemSkill extends ItemDSK{
             },
         }
 
-        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/skill-card.html", title, tokenId)
+        let cardOptions = actor._setupCardOptions("systems/dsk/templates/chat/roll/skill-card.hbs", title, tokenId)
 
         return DiceDSK.setupDialog({ dialogOptions, testData, cardOptions })
     }

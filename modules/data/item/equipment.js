@@ -2,6 +2,7 @@ import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
 import EquipmentTemplate from './templates/equipment.js';
 import WornTemplate from './templates/worn.js';
+import DSK from '../../system/config.js';
 
 const { StringField, NumberField } = foundry.data.fields;
 
@@ -15,8 +16,12 @@ export default class EquipmentData extends ItemDataModel.mixin(
 ) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      category: new StringField({ initial: 'misc' }),
-      capacity: new NumberField({ initial: 0 }),
+      category: new StringField({ 
+        initial: 'misc',
+        choices: DSK.equipmentTypes,
+        label: 'dsk.equipmentType'
+      }),
+      capacity: new NumberField({ initial: 0, label: 'dsk.carrycapacity' }),
     });
   }
 

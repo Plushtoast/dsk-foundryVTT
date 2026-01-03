@@ -9,8 +9,8 @@ export default class DescriptionTemplate extends DSKDataModel {
   static defineSchema() {
     return {
       description: new SchemaField({
-        value: new HTMLField({ initial: '' }),
-        gminfo: new HTMLField({ initial: '' }),
+        value: new HTMLField({ initial: '', label: 'dsk.description' }),
+        gminfo: new HTMLField({ initial: '', label: 'dsk.gminfo' }),
       }),
     };
   }

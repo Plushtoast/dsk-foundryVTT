@@ -1,0 +1,48 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}} {{> systems/dsk/templates/items/item-equipment.html}}
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+        <a class="item" data-tab="effects">{{localize "dsk.statuseffects"}}</a>
+    </nav>
+
+
+    <section class="content">
+
+        {{> systems/dsk/templates/items/item-description.html}}
+
+        <div class="tab details" data-tab="details">
+            {{formGroup systemFields.tp value=document.system.tp localize=true}}
+
+            <div class="form-group">
+                <label class="label-text">{{localize "TYPES.Item.combatskill"}}</label>
+                <select name="system.combatskill" data-dtype="String">
+                    {{selectOptions (selfObj combatskills) selected=system.combatskill}}
+                </select>
+            </div>
+
+            <div class="form-group doubleInput">
+                <label class="label-text">{{localize "dsk.ABBR.AW"}}</label>
+                {{formInput systemFields.aw value=document.system.aw}}
+                {{formInput systemFields.awoffhand value=document.system.awoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
+            </div>
+
+            <div class="form-group doubleInput">
+                <label class="label-text">{{localize "dsk.ABBR.VW"}}</label>
+                {{formInput systemFields.vw value=document.system.vw}}
+                {{formInput systemFields.vwoffhand value=document.system.vwoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
+            </div>
+
+            {{formGroup systemFields.rw value=document.system.rw localize=true}}
+
+            {{#if isShield}}
+            {{formGroup systemFields.shieldsize value=document.system.shieldsize localize=true}}
+            {{/if}}
+
+            {{formGroup systemFields.length value=document.system.length localize=true}}
+        </div>
+
+        {{> systems/dsk/templates/items/item-effects.html}} 
+    </section>
+</form>

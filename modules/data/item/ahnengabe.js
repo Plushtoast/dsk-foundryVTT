@@ -1,5 +1,6 @@
 import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
+import DSK from '../../system/config.js';
 
 const { StringField, NumberField } = foundry.data.fields;
 
@@ -9,18 +10,34 @@ const { StringField, NumberField } = foundry.data.fields;
 export default class AhnengabeData extends ItemDataModel.mixin(DescriptionTemplate) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      characteristic1: new StringField({ initial: 'ff' }),
-      characteristic2: new StringField({ initial: 'ff' }),
-      effect: new StringField({ initial: '' }),
-      AeP: new StringField({ initial: '' }),
-      range: new StringField({ initial: '' }),
-      duration: new StringField({ initial: '' }),
-      targetCategory: new StringField({ initial: '' }),
-      distribution: new StringField({ initial: '' }),
-      effectFormula: new StringField({ initial: '' }),
-      StF: new StringField({ initial: 'A' }),
-      resist: new StringField({ initial: '-' }),
-      level: new NumberField({ initial: 0, integer: true, min: 0 }),
+      characteristic1: new StringField({ 
+        initial: 'ff',
+        choices: DSK.characteristics,
+        label: 'dsk.Characteristic'
+      }),
+      characteristic2: new StringField({ 
+        initial: 'ff',
+        choices: DSK.characteristics,
+        label: 'dsk.Characteristic'
+      }),
+      effect: new StringField({ initial: '', label: 'dsk.effect' }),
+      AeP: new StringField({ initial: '', label: 'dsk.AeP' }),
+      range: new StringField({ initial: '', label: 'dsk.range' }),
+      duration: new StringField({ initial: '', label: 'dsk.duration' }),
+      targetCategory: new StringField({ initial: '', label: 'dsk.targetCategory' }),
+      distribution: new StringField({ initial: '', label: 'dsk.distribution' }),
+      effectFormula: new StringField({ initial: '', label: 'dsk.effectFormula' }),
+      StF: new StringField({ 
+        initial: 'A',
+        choices: DSK.StFs,
+        label: 'dsk.StF'
+      }),
+      resist: new StringField({ 
+        initial: '-',
+        choices: DSK.magicResistanceModifiers,
+        label: 'dsk.resistanceModifier'
+      }),
+      level: new NumberField({ initial: 0, integer: true, min: 0, label: 'dsk.level' }),
     });
   }
 

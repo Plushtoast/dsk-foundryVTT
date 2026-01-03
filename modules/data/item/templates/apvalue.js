@@ -8,7 +8,7 @@ const { StringField, NumberField } = foundry.data.fields;
 export default class APValueTemplate extends DSKDataModel {
   static defineSchema() {
     return {
-      ap: new StringField({ initial: '0' }),
+      ap: new StringField({ initial: '0', label: 'dsk.APValue' }),
     };
   }
 

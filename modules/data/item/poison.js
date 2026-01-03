@@ -1,5 +1,6 @@
 import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
+import DSK from '../../system/config.js';
 
 const { StringField, NumberField } = foundry.data.fields;
 
@@ -9,16 +10,20 @@ const { StringField, NumberField } = foundry.data.fields;
 export default class PoisonData extends ItemDataModel.mixin(DescriptionTemplate) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      level: new NumberField({ initial: 1 }),
-      category: new StringField({ initial: '' }),
-      resist: new StringField({ initial: '-' }),
-      effect: new StringField({ initial: '' }),
-      start: new StringField({ initial: '' }),
-      duration: new StringField({ initial: '' }),
-      search: new StringField({ initial: '-' }),
-      process: new StringField({ initial: '-' }),
-      price: new NumberField({ initial: 0 }),
-      quantity: new NumberField({ initial: 1 }),
+      level: new NumberField({ initial: 1, label: 'dsk.level' }),
+      category: new StringField({ initial: '', label: 'dsk.category' }),
+      resist: new StringField({ 
+        initial: '-',
+        choices: DSK.magicResistanceModifiers,
+        label: 'dsk.resistanceModifier'
+      }),
+      effect: new StringField({ initial: '', label: 'dsk.effect' }),
+      start: new StringField({ initial: '', label: 'dsk.start' }),
+      duration: new StringField({ initial: '', label: 'dsk.duration' }),
+      search: new StringField({ initial: '-', label: 'dsk.search' }),
+      process: new StringField({ initial: '-', label: 'dsk.process' }),
+      price: new NumberField({ initial: 0, label: 'dsk.price' }),
+      quantity: new NumberField({ initial: 1, label: 'dsk.quantity' }),
     });
   }
 

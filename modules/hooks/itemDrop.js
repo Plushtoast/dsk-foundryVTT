@@ -77,7 +77,7 @@ const handleItemDrop = async(canvas, data) => {
 
     if (!DSK.equipmentCategories.includes(item.type)) return
 
-    const content = await renderTemplate("systems/dsk/templates/dialog/dropToGround.html", { name: item.name, count: item.system.quantity })
+    const content = await renderTemplate("systems/dsk/templates/dialog/dropToGround.hbs", { name: item.name, count: item.system.quantity })
 
     const dialog = new DropToGroundDialog({
         window: { title: data.name },

@@ -158,7 +158,7 @@ export default class OpposedDSK{
 
     static async renderOpposedResult(formattedOpposeResult, options = {}) {
         formattedOpposeResult.hideData = await game.settings.get("dsk", "hideOpposedDamage");
-        let html = await renderTemplate("systems/dsk/templates/chat/roll/opposed-result.html", formattedOpposeResult)
+        let html = await renderTemplate("systems/dsk/templates/chat/roll/opposed-result.hbs", formattedOpposeResult)
         let chatOptions = {
             user: game.user.id,
             content: html,

@@ -26,7 +26,7 @@ export default class TokenHotbar2 extends DefaultAppv2 {
 
     static PARTS = {
         hotbar: {
-            template: 'systems/dsk/templates/status/tokenHotbar.html',
+            template: 'systems/dsk/templates/status/tokenHotbar.hbs',
         },
     };
 
@@ -417,7 +417,7 @@ class AddEffectDialog extends foundry.applications.api.DialogV2 {
 
         const dialog = new AddEffectDialog({
             window: { title: game.i18n.localize("dsk.CONDITION.add") },
-            content: await renderTemplate('systems/dsk/templates/dialog/addstatusdialog.html', { effects }),
+            content: await renderTemplate('systems/dsk/templates/dialog/addstatusdialog.hbs', { effects }),
             buttons: [],
             position: {
                 height: Math.ceil(effects.length / 3) * 36 + 170

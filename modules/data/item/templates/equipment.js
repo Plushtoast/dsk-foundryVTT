@@ -8,15 +8,15 @@ const { SchemaField, StringField, NumberField, BooleanField } = foundry.data.fie
 export default class EquipmentTemplate extends DSKDataModel {
   static defineSchema() {
     return {
-      price: new NumberField({ initial: 0 }),
-      weight: new NumberField({ initial: 0 }),
-      quantity: new NumberField({ initial: 1, integer: true, min: 0 }),
+      price: new NumberField({ initial: 0, label: 'dsk.price' }),
+      weight: new NumberField({ initial: 0, label: 'dsk.weight' }),
+      quantity: new NumberField({ initial: 1, integer: true, min: 0, label: 'dsk.quantity' }),
       effect: new SchemaField({
-        value: new StringField({ initial: '' }),
-        attributes: new StringField({ initial: '' }),
+        value: new StringField({ initial: '', label: 'dsk.effect' }),
+        attributes: new StringField({ initial: '', label: 'dsk.attributes' }),
       }),
       parent_id: new StringField({ initial: '' }),
-      tradeLocked: new BooleanField({ initial: false }),
+      tradeLocked: new BooleanField({ initial: false, label: 'dsk.tradeLocked' }),
     };
   }
 

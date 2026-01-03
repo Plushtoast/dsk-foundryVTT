@@ -2,6 +2,7 @@ import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
 import SkillTemplate from './templates/skill.js';
 import EncumbranceTemplate from './templates/encumbrance.js';
+import DSK from '../../system/config.js';
 
 const { StringField } = foundry.data.fields;
 
@@ -15,7 +16,11 @@ export default class CombatskillData extends ItemDataModel.mixin(
 ) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      weapontype: new StringField({ initial: 'melee' }),
+      weapontype: new StringField({ 
+        initial: 'melee',
+        choices: DSK.weapontypes,
+        label: 'dsk.weapontype'
+      }),
     });
   }
 

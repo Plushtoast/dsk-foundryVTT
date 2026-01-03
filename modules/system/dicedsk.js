@@ -748,7 +748,7 @@ export default class DiceDSK{
                     }
                 }
 
-                let template = await renderTemplate("systems/dsk/templates/dialog/manualroll-dialog.html", {
+                let template = await renderTemplate("systems/dsk/templates/dialog/manualroll-dialog.hbs", {
                     dice: dice,
                     description,
                 });

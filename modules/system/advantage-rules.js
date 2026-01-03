@@ -62,7 +62,7 @@ export default class AdvantageRulesDSK extends ItemRulesDSK {
             let template
             let callback
             if (DSK.vantagesNeedingAdaption[item.name].items == "text") {
-                template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-string-dialog.html', { original: item })
+                template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-string-dialog.hbs', { original: item })
                 callback = function(event, button, dialog) {
                     let dlg = $(button.form);
                     let adoption = { name: dlg.find('[name="entryselection"]').val() }
@@ -70,7 +70,7 @@ export default class AdvantageRulesDSK extends ItemRulesDSK {
                 }
             } else {
                 let items = actor.items.filter(x => DSK.vantagesNeedingAdaption[item.name].items.includes(x.type))
-                template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-dialog.html', { items: items, original: item })
+                template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-dialog.hbs', { items: items, original: item })
                 callback = function(event, button, dialog) {
                     let dlg = $(button.form);
                     let adoption = items.find(x => x.name == dlg.find('[name="entryselection"]').val())

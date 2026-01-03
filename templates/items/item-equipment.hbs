@@ -14,7 +14,7 @@
                 <label class="label-text table-title">{{localize "dsk.quantity"}}</label>
             </div>
             <div class="col fifteen">
-                <input class="input-text" type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
+                {{formInput systemFields.quantity value=document.system.quantity}}
             </div>
         </div>
         <div class="row-section">
@@ -22,13 +22,13 @@
                 <label data-tooltip="{{dskMoneyValue}}" class="label-text table-title">{{localize "dsk.price"}}</label>
             </div>
             <div class="col fourty">
-                <input data-tooltip="{{dskMoneyValue}}" class="input-text" type="number" name="system.price" value="{{system.price}}" />
+                {{formInput systemFields.price value=document.system.price}}
             </div>
             <div class="col four">
                 <label data-tooltip="dsk.UNITS.weight" class="label-text table-title">{{localize "dsk.weight"}}</label>
             </div>
             <div class="col fifteen">
-                <input data-tooltip="dsk.UNITS.weight" class="input-text" type="number" name="system.weight" value="{{system.weight}}" />
+                {{formInput systemFields.weight value=document.system.weight}}
             </div>
         </div>
     </div>

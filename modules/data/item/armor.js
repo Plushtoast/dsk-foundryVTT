@@ -15,8 +15,8 @@ export default class ArmorData extends ItemDataModel.mixin(
 ) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      rs: new NumberField({ initial: 0 }),
-      encumbrance: new NumberField({ initial: 0 }),
+      rs: new NumberField({ initial: 0, label: 'dsk.protection' }),
+      encumbrance: new NumberField({ initial: 0, label: 'dsk.CONDITION.encumbered' }),
     });
   }
 

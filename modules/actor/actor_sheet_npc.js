@@ -7,10 +7,10 @@ export default class ActorSheetNPC extends ActorSheetCharacter {
 
     static PARTS = {
         main: {
-            template: "systems/dsk/templates/actors/npc-sheet.html",
+            template: "systems/dsk/templates/actors/npc-sheet.hbs",
         },
         limited: {
-            template: "systems/dsk/templates/actors/npc-limited.html",
+            template: "systems/dsk/templates/actors/npc-limited.hbs",
         },
     };
 

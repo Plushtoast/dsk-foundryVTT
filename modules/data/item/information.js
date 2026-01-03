@@ -8,14 +8,14 @@ const { StringField, NumberField } = foundry.data.fields;
 export default class InformationData extends ItemDataModel {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      qs1: new StringField({ initial: '' }),
-      qs2: new StringField({ initial: '' }),
-      qs3: new StringField({ initial: '' }),
-      qs4: new StringField({ initial: '' }),
-      qs5: new StringField({ initial: '' }),
-      qs6: new StringField({ initial: '' }),
-      skill: new StringField({ initial: '' }),
-      modifier: new NumberField({ initial: 0 }),
+      qs1: new StringField({ initial: '', label: 'dsk.CHARAbbrev.QS' }),
+      qs2: new StringField({ initial: '', label: 'dsk.CHARAbbrev.QS' }),
+      qs3: new StringField({ initial: '', label: 'dsk.CHARAbbrev.QS' }),
+      qs4: new StringField({ initial: '', label: 'dsk.CHARAbbrev.QS' }),
+      qs5: new StringField({ initial: '', label: 'dsk.CHARAbbrev.QS' }),
+      qs6: new StringField({ initial: '', label: 'dsk.CHARAbbrev.QS' }),
+      skill: new StringField({ initial: '', label: 'TYPES.Item.skill' }),
+      modifier: new NumberField({ initial: 0, label: 'dsk.Modifier' }),
     });
   }
 }

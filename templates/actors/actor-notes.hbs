@@ -9,21 +9,21 @@
             <div class="row-section wrap">
                 <div class="col row-section">
                     <div class="headerInput col four">
-                        <input class="input gender" name="system.details.gender" type="text" value="{{actor.system.details.gender}}" placeholder="{{localize 'dsk.Gender'}}" />
+                        {{formInput systemFields.details.fields.gender value=document.system.details.gender placeholder=(localize 'dsk.Gender') classes="input gender"}}
                         <span class="label gender">{{localize "dsk.Gender"}}</span>
                     </div>
 
                     <div class="headerInput col four">
-                        <input class="input-details" name="system.details.culture" type="text" value="{{actor.system.details.culture}}" placeholder="{{localize 'TYPES.Item.culture'}}" />
+                        {{formInput systemFields.details.fields.culture value=document.system.details.culture placeholder=(localize 'TYPES.Item.culture') classes="input-details"}}
                         <span class="label-details">{{localize "TYPES.Item.culture"}}</span>
                     </div>
                     <div class="headerInput col four">
-                        <input class="input-details" name="system.details.pack" type="text" value="{{actor.system.details.pack}}" placeholder="{{localize 'dsk.pack'}}" />
+                        {{formInput systemFields.details.fields.pack value=document.system.details.pack placeholder=(localize 'dsk.pack') classes="input-details"}}
                         <span class="label-details">{{localize "dsk.pack"}}</span>
                     </div>
 
                     <div class="headerInput col four">
-                        <input class="input-details" name="system.details.age" type="text" value="{{actor.system.details.age}}" placeholder="{{localize 'dsk.Age'}}" />
+                        {{formInput systemFields.details.fields.age value=document.system.details.age placeholder=(localize 'dsk.Age') classes="input-details"}}
                         <span class="label-details">{{localize "dsk.Age"}}<span>
                     </div>
                 </div>

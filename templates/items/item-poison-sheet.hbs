@@ -1,0 +1,32 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}} {{> systems/dsk/templates/items/item-equipment.html}}
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+        <a class="item" data-tab="effects">{{localize "dsk.statuseffects"}}</a>
+    </nav>
+
+
+    <section class="content">
+
+        {{> systems/dsk/templates/items/item-description.html}}
+
+        <div class="tab details" data-tab="details">
+            {{formGroup systemFields.level value=document.system.level localize=true}}
+            {{formGroup systemFields.category value=document.system.category localize=true}}
+            {{formGroup systemFields.resist value=document.system.resist localize=true}}
+            {{formGroup systemFields.effect value=document.system.effect localize=true}}
+            {{formGroup systemFields.start value=document.system.start localize=true}}
+            {{formGroup systemFields.duration value=document.system.duration localize=true}}
+            <div class="form-group doubleInput">
+                <label class="label-text">{{localize "dsk.search"}} / {{localize "dsk.process"}}</label>
+                {{formInput systemFields.search value=document.system.search}}
+                {{formInput systemFields.process value=document.system.process}}
+            </div>
+
+            
+        </div>
+        {{> systems/dsk/templates/items/item-effects.html}}
+    </section>
+</form>

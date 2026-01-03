@@ -1,0 +1,42 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}} {{> systems/dsk/templates/items/item-stat.html}}
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+        <a class="item" data-tab="effects">{{localize "dsk.statuseffects"}}</a>
+    </nav>
+
+    <section class="content">
+
+        {{> systems/dsk/templates/items/item-description.html}}
+
+        <div class="tab details" data-tab="details">
+
+            {{formGroup systemFields.traitType value=document.system.traitType localize=true}}
+
+            {{#if (eq system.traitType "rangeAttack")}}
+            {{formGroup systemFields.at value=document.system.at localize=true}}
+            {{formGroup systemFields.tp value=document.system.tp localize=true}}
+            {{formGroup systemFields.rw value=document.system.rw localize=true}}
+            {{formGroup systemFields.lz value=document.system.lz localize=true}}
+
+            {{/if}} {{#if (eq system.traitType "meleeAttack")}}
+            {{formGroup systemFields.at value=document.system.at localize=true}}
+            {{formGroup systemFields.pa value=document.system.pa localize=true}}
+            {{formGroup systemFields.tp value=document.system.tp localize=true}}
+            {{formGroup systemFields.rw value=document.system.rw localize=true}}
+          
+            {{/if}}{{#if (eq system.traitType "armor")}}
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.protection"}}</label>
+                {{formInput systemFields.at value=document.system.at}}
+            </div>
+
+            {{/if}} 
+
+        </div>
+
+        {{> systems/dsk/templates/items/item-effects.html}}
+    </section>
+</form>

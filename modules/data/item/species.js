@@ -9,11 +9,11 @@ const { StringField, NumberField } = foundry.data.fields;
 export default class SpeciesData extends ItemDataModel.mixin(DescriptionTemplate) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      LeP: new NumberField({ initial: 0 }),
-      sk: new NumberField({ initial: 0 }),
-      zk: new NumberField({ initial: 0 }),
-      gs: new NumberField({ initial: 0 }),
-      advantages: new StringField({ initial: '' }),
+      LeP: new NumberField({ initial: 0, label: 'dsk.LeP' }),
+      sk: new NumberField({ initial: 0, label: 'dsk.soulpower' }),
+      zk: new NumberField({ initial: 0, label: 'dsk.toughness' }),
+      gs: new NumberField({ initial: 0, label: 'dsk.speed' }),
+      advantages: new StringField({ initial: '', label: 'dsk.specialAdvantage' }),
     });
   }
 

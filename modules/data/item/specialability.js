@@ -3,6 +3,7 @@ import DescriptionTemplate from './templates/description.js';
 import APValueTemplate from './templates/apvalue.js';
 import MaxTemplate from './templates/max.js';
 import RequirementsTemplate from './templates/requirements.js';
+import DSK from '../../system/config.js';
 
 const { SchemaField, StringField, NumberField } = foundry.data.fields;
 
@@ -17,12 +18,16 @@ export default class SpecialabilityData extends ItemDataModel.mixin(
 ) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      rule: new StringField({ initial: '' }),
-      category: new StringField({ initial: 'general' }),
-      subcategory: new NumberField({ initial: 0 }),
-      combatskills: new StringField({ initial: '' }),
+      rule: new StringField({ initial: '', label: 'dsk.rule' }),
+      category: new StringField({ 
+        initial: 'general',
+        choices: DSK.specialAbilityCategories,
+        label: 'dsk.category'
+      }),
+      subcategory: new NumberField({ initial: 0, label: 'dsk.subcategory' }),
+      combatskills: new StringField({ initial: '', label: 'dsk.combatskills' }),
       effect: new SchemaField({
-        value: new StringField({ initial: '' }),
+        value: new StringField({ initial: '', label: 'dsk.effect' }),
       }),
     });
   }

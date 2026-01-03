@@ -8,8 +8,8 @@ const { NumberField } = foundry.data.fields;
 export default class MaxTemplate extends DSKDataModel {
   static defineSchema() {
     return {
-      level: new NumberField({ initial: 0, integer: true, min: 0 }),
-      max: new NumberField({ initial: 0, integer: true, min: 0 }),
+      level: new NumberField({ initial: 0, integer: true, min: 0, label: 'dsk.stepValue' }),
+      max: new NumberField({ initial: 0, integer: true, min: 0, label: 'dsk.maxlevel' }),
     };
   }
 

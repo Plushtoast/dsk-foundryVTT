@@ -84,7 +84,7 @@ export default class DSKChatListeners {
     }
 
     static async showTables() {
-        const msg = await renderTemplate('systems/dsk/templates/tables/systemtables.html', { tables: DSK.systemTables })
+        const msg = await renderTemplate('systems/dsk/templates/tables/systemtables.hbs', { tables: DSK.systemTables })
         ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
     }
 }

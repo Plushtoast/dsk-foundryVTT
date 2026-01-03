@@ -9,22 +9,22 @@ export default class DetailsTemplate extends DSKDataModel {
   static defineSchema() {
     return {
       details: new SchemaField({
-        profession: new StringField({ initial: '' }),
-        culture: new StringField({ initial: '' }),
-        gender: new StringField({ initial: '' }),
-        pack: new StringField({ initial: '' }),
-        age: new StringField({ initial: '' }),
+        profession: new StringField({ initial: '', label: 'TYPES.Item.profession' }),
+        culture: new StringField({ initial: '', label: 'TYPES.Item.culture' }),
+        gender: new StringField({ initial: '', label: 'dsk.Gender' }),
+        pack: new StringField({ initial: '', label: 'dsk.pack' }),
+        age: new StringField({ initial: '', label: 'dsk.Age' }),
         experience: new SchemaField({
-          total: new NumberField({ initial: 0 }),
-          spent: new NumberField({ initial: 0 }),
+          total: new NumberField({ initial: 0, label: 'dsk.totalAP' }),
+          spent: new NumberField({ initial: 0, label: 'dsk.spentAP' }),
         }),
       }),
-      guidevalue: new StringField({ initial: '-' }),
+      guidevalue: new StringField({ initial: '-', label: 'dsk.guidevalue' }),
       notes: new SchemaField({
-        owner: new HTMLField({ initial: '' }),
-        gm: new HTMLField({ initial: '' }),
-        description: new HTMLField({ initial: '' }),
-        biography: new HTMLField({ initial: '' }),
+        owner: new HTMLField({ initial: '', label: 'dsk.ownerNotes' }),
+        gm: new HTMLField({ initial: '', label: 'dsk.gmnotes' }),
+        description: new HTMLField({ initial: '', label: 'dsk.notes' }),
+        biography: new HTMLField({ initial: '', label: 'dsk.biography' }),
       }),
     };
   }

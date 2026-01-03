@@ -73,7 +73,7 @@ export default class SpecialabilityRulesDSK extends ItemRulesDSK {
             let template
             let callback
             if (rule.items == "text") {
-                template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-string-dialog.html', { original: item })
+                template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-string-dialog.hbs', { original: item })
                 callback = function(dlg) {
                     let adoption = { name: dlg.find('[name="entryselection"]').val() }
                     SpecialabilityRulesDSK._specialabilityReturnFunction(actor, item, typeClass, adoption)
@@ -81,7 +81,7 @@ export default class SpecialabilityRulesDSK extends ItemRulesDSK {
             } else {
                 if (rule.items == "array") {
                     let items = rule.elems.map(x => { return { name: x } })
-                    template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-dialog.html', { items: items, original: item, area: rule.area })
+                    template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-dialog.hbs', { items: items, original: item, area: rule.area })
                     callback = function(event, button, dialog) {
                         let dlg = $(button.form);
                         let adoption = items.find(x => x.name == dlg.find('[name="entryselection"]').val())
@@ -89,7 +89,7 @@ export default class SpecialabilityRulesDSK extends ItemRulesDSK {
                     }
                 } else {
                     let items = actor.items.filter(x => rule.items.includes(x.type)).sort((a, b) => a.name.localeCompare(b.name))
-                    template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-dialog.html', { items: items, original: item, area: rule.area })
+                    template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-dialog.hbs', { items: items, original: item, area: rule.area })
                     callback = function(event, button, dialog) {
                         let dlg = $(button.form);
                         let adoption = items.find(x => x.name == dlg.find('[name="entryselection"]').val())

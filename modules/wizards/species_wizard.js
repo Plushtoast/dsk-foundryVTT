@@ -11,7 +11,7 @@ export default class SpeciesWizard extends WizardDSK {
 
     static PARTS = {
         wizard: {
-            template: 'systems/dsk/templates/wizard/add-species-wizard.html',
+            template: 'systems/dsk/templates/wizard/add-species-wizard.hbs',
         },
     };
 

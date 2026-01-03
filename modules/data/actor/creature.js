@@ -14,13 +14,13 @@ export default class CreatureData extends ActorDataModel.mixin(
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
       notes: new SchemaField({
-        description: new HTMLField({ initial: '' }),
-        fight: new HTMLField({ initial: '' }),
-        specialRules: new HTMLField({ initial: '' }),
-        owner: new HTMLField({ initial: '' }),
+        description: new HTMLField({ initial: '', label: 'dsk.description' }),
+        fight: new HTMLField({ initial: '', label: 'dsk.fight' }),
+        specialRules: new HTMLField({ initial: '', label: 'dsk.specialRules' }),
+        owner: new HTMLField({ initial: '', label: 'dsk.ownerNotes' }),
       }),
-      actionCount: new NumberField({ initial: 1 }),
-      count: new StringField({ initial: '1' }),
+      actionCount: new NumberField({ initial: 1, label: 'dsk.actionCount' }),
+      count: new StringField({ initial: '1', label: 'dsk.count' }),
     });
   }
 

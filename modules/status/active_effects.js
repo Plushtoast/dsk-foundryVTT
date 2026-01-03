@@ -366,7 +366,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
 
     static async createResistRollMessage(resistRolls, id, mode) {
         for (const resist of resistRolls) {
-            const template = await renderTemplate("systems/dsk/templates/chat/roll/resist-roll.html", {
+            const template = await renderTemplate("systems/dsk/templates/chat/roll/resist-roll.hbs", {
                 resist,
                 id,
                 mode

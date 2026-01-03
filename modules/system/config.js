@@ -637,6 +637,16 @@ DSK.skillGroups = {
     "trade": "dsk.SKILL.trade"
 };
 
+DSK.consumableCategories = {
+    0: "dsk.consumable.category.0"
+}
+
+DSK.qsOptions = {
+    0: "dsk.consumable.qs.0",
+    1: "dsk.consumable.qs.1",
+    2: "dsk.consumable.qs.2"
+}
+
 CONFIG.time.roundTime = 2
 CONFIG.time.turnTime = 0
 

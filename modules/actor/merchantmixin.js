@@ -43,18 +43,18 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     };
 
     static get merchantTemplate() {
-        return "systems/dsk/templates/actors/merchant/merchant-sheet.html";
+        return "systems/dsk/templates/actors/merchant/merchant-sheet.hbs";
     }
 
     get template() {
         if (this.merchantSheetActivated()) {
             switch (getProperty(this.actor.system, "merchant.merchantType")) {
                 case "merchant":
-                    return "systems/dsk/templates/actors/merchant/merchant-limited.html";
+                    return "systems/dsk/templates/actors/merchant/merchant-limited.hbs";
                 case "loot":
-                    return "systems/dsk/templates/actors/merchant/merchant-limited-loot.html";
+                    return "systems/dsk/templates/actors/merchant/merchant-limited-loot.hbs";
                 case "epic":
-                    return "systems/dsk/templates/actors/merchant/merchant-epic.html";
+                    return "systems/dsk/templates/actors/merchant/merchant-epic.hbs";
                 default:
                     return super.template
             }
@@ -229,7 +229,7 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     }
 
     async randomGoods(ev) {
-        const html = await renderTemplate('systems/dsk/templates/dialog/randomGoods-dialog.html', { categories: DSK.equipmentCategories })
+        const html = await renderTemplate('systems/dsk/templates/dialog/randomGoods-dialog.hbs', { categories: DSK.equipmentCategories })
         foundry.applications.api.DialogV2.wait({
             window: { title: game.i18n.localize("dsk.MERCHANT.randomGoods") },
             content: html,
@@ -587,7 +587,7 @@ class SelectTradefriendDialog extends foundry.applications.api.DialogV2 {
 
         const dialog = new SelectTradefriendDialog({
             window: { title: game.i18n.localize("dsk.DIALOG.setTargetToUser") },
-            content: await renderTemplate('systems/dsk/templates/dialog/selectTradeFriend.html', { users }),
+            content: await renderTemplate('systems/dsk/templates/dialog/selectTradeFriend.hbs', { users }),
             buttons: [],
         })
         dialog.actor = actor

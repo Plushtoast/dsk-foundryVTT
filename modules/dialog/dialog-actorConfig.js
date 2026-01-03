@@ -9,7 +9,7 @@ export default class DialogActorConfig extends foundry.applications.api.DialogV2
     }
 
     static async buildDialog(actor) {
-        const template = await renderTemplate("systems/dsk/templates/actors/parts/actorConfig.html", { actor })
+        const template = await renderTemplate("systems/dsk/templates/actors/parts/actorConfig.hbs", { actor })
         new DialogActorConfig(actor, {
             window: { title: game.i18n.localize("dsk.SHEET.actorConfig") },
             content: template,

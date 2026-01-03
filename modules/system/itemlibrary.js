@@ -133,7 +133,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
 
     static PARTS = {
         library: {
-            template: 'systems/dsk/templates/system/itemlibrary.html',
+            template: 'systems/dsk/templates/system/itemlibrary.hbs',
         },
     };
 
@@ -496,7 +496,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
 
     renderResult(html, filteredItems, { index, itemType }, isPaged) {
         let resultField = html.find('.searchResult .item-list')
-        renderTemplate('systems/dsk/templates/system/libraryItem.html', { items: filteredItems }).then(innerhtml => {
+        renderTemplate('systems/dsk/templates/system/libraryItem.hbs', { items: filteredItems }).then(innerhtml => {
             if (!isPaged) resultField.empty()
 
             innerhtml = $(innerhtml)
@@ -668,7 +668,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
 
         if (fields) {
             let bindex = this.createDetailIndex(category, subcategory)
-            const template = await renderTemplate("systems/dsk/templates/system/detailFilter.html", { fields, subcategory })
+            const template = await renderTemplate("systems/dsk/templates/system/detailFilter.hbs", { fields, subcategory })
             await bindex
             return template
         } else {

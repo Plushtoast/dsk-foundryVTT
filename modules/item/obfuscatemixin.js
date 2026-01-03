@@ -58,7 +58,7 @@ export const ItemSheetObfuscation = (superclass) => class extends superclass {
             if(tabs.length){
                 this.activateTab(tabs.attr("data-tab"))
             }else {
-                const templ = await renderTemplate('systems/dsk/templates/items/obfuscatedItem.html', {item: this.item})
+                const templ = await renderTemplate('systems/dsk/templates/items/obfuscatedItem.hbs', {item: this.item})
                 $(this._element).find('.content').html(templ)
             }
         }

@@ -73,7 +73,7 @@ Hooks.once("init", () => {
     CONFIG.Combatant.dataModels = CombatantDataModels;
     CONFIG.Combatant.documentClass = DSKCombatant
     CONFIG.ActiveEffect.documentClass = DSKActiveEffect
-    CONFIG.ChatMessage.template = "systems/dsk/templates/chat/chat-message.html"
+    CONFIG.ChatMessage.template = "systems/dsk/templates/chat/chat-message.hbs"
     CONFIG.ActiveEffect.legacyTransferral = false
     CONFIG.Token.objectClass = DSKToken
 

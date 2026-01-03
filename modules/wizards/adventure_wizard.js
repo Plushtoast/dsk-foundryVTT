@@ -65,7 +65,7 @@ export default class BookWizard extends DefaultAppv2 {
 
     static PARTS = {
         wizard: {
-            template: 'systems/dsk/templates/wizard/adventure/adventure_wizard.html',
+            template: 'systems/dsk/templates/wizard/adventure/adventure_wizard.hbs',
         },
     };
 
@@ -635,24 +635,24 @@ export default class BookWizard extends DefaultAppv2 {
                     let modules = this.bookData.modules
                     for (let k of modules) k.enabled = this.moduleEnabled(k.id)
 
-                    return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_preparation.html', { modules, info })
+                    return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_preparation.hbs', { modules, info })
                 } else if (this.selectedChapter == "foundryUsage") {
-                    return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_foundry.html')
+                    return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_foundry.hbs')
                 }
 
                 let chapter = this.bookData.chapters.find(x => x.name == this.selectedType).content.find(x => x.id == this.selectedChapter)
                 const subChapters = this.getSubChapters()
                 if (chapter.scenes || chapter.actors || subChapters.length == 0) {
-                    return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_chapter.html', { chapter, subChapters: this.getSubChapters(), actors: await this.prefillActors(chapter) })
+                    return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_chapter.hbs', { chapter, subChapters: this.getSubChapters(), actors: await this.prefillActors(chapter) })
                 } else {
                     this.selectedSubChapter = subChapters[0].id
                     return await this.loadJournalById(subChapters[0].id)
                 }
 
             }
-            return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_cover.html', { book: this.book, bookData: this.bookData })
+            return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_cover.hbs', { book: this.book, bookData: this.bookData })
         } else {
-            return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_intro.html', {
+            return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_intro.hbs', {
                 rshs: this.filterBooks(this.rshs),
                 rules: this.filterBooks(this.books),
                 adventures: this.filterBooks(this.adventures),
@@ -703,7 +703,7 @@ export default class BookWizard extends DefaultAppv2 {
                     chapter.subChapters = this.getSubChapters()
                 }
             }
-            return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_toc.html', {
+            return await renderTemplate('systems/dsk/templates/wizard/adventure/adventure_toc.hbs', {
                 chapters,
                 searchString: this.searchString,
                 book: this.book,

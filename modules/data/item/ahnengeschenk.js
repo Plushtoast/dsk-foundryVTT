@@ -9,9 +9,9 @@ const { StringField } = foundry.data.fields;
 export default class AhnengeschenkData extends ItemDataModel.mixin(DescriptionTemplate) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      range: new StringField({ initial: '' }),
-      duration: new StringField({ initial: '' }),
-      distribution: new StringField({ initial: '' }),
+      range: new StringField({ initial: '', label: 'dsk.range' }),
+      duration: new StringField({ initial: '', label: 'dsk.duration' }),
+      distribution: new StringField({ initial: '', label: 'dsk.distribution' }),
     });
   }
 

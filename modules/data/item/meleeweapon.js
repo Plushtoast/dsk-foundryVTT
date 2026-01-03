@@ -2,6 +2,7 @@ import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
 import EquipmentTemplate from './templates/equipment.js';
 import WornTemplate from './templates/worn.js';
+import DSK from '../../system/config.js';
 
 const { StringField, NumberField } = foundry.data.fields;
 
@@ -15,15 +16,23 @@ export default class MeleeweaponData extends ItemDataModel.mixin(
 ) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      tp: new StringField({ initial: '1d6' }),
-      aw: new NumberField({ initial: 0 }),
-      awoffhand: new NumberField({ initial: 0 }),
-      vwoffhand: new NumberField({ initial: 0 }),
-      vw: new NumberField({ initial: 0 }),
-      rw: new StringField({ initial: 'medium' }),
-      shieldsize: new StringField({ initial: 'medium' }),
-      length: new StringField({ initial: '' }),
-      combatskill: new StringField({ initial: 'Einhandwaffen' }),
+      tp: new StringField({ initial: '1d6', label: 'dsk.damage' }),
+      aw: new NumberField({ initial: 0, label: 'dsk.ABBR.AW' }),
+      awoffhand: new NumberField({ initial: 0, label: 'dsk.ITEMSHEET.offHandMod' }),
+      vwoffhand: new NumberField({ initial: 0, label: 'dsk.ITEMSHEET.offHandMod' }),
+      vw: new NumberField({ initial: 0, label: 'dsk.ABBR.VW' }),
+      rw: new StringField({ 
+        initial: 'medium',
+        choices: DSK.meleeRanges,
+        label: 'dsk.range'
+      }),
+      shieldsize: new StringField({ 
+        initial: 'medium',
+        choices: DSK.shieldSizes,
+        label: 'dsk.shieldSize'
+      }),
+      length: new StringField({ initial: '', label: 'dsk.length' }),
+      combatskill: new StringField({ initial: 'Einhandwaffen', label: 'TYPES.Item.combatskill' }),
     });
   }
 

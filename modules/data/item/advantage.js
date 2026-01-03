@@ -17,9 +17,9 @@ export default class AdvantageData extends ItemDataModel.mixin(
 ) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      rule: new StringField({ initial: '' }),
+      rule: new StringField({ initial: '', label: 'dsk.rule' }),
       effect: new SchemaField({
-        value: new StringField({ initial: '' }),
+        value: new StringField({ initial: '', label: 'dsk.effect' }),
       }),
     });
   }

@@ -14,27 +14,15 @@
 
         <div class="tab details" data-tab="details">
 
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.damage"}}</label>
-                <input class="input-text" type="text" name="system.tp" value="{{system.tp}}" data-dtype="String" />
-            </div>
-
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.reloadTime"}}</label>
-                <input class="input-text" type="text" name="system.lz" value="{{system.lz}}" data-dtype="String" />
-            </div>
+            {{formGroup systemFields.tp value=document.system.tp localize=true}}
+            {{formGroup systemFields.lz value=document.system.lz localize=true}}
 
             <div class="form-group">
                 <label class="label-text">{{localize "dsk.range"}}</label>
                 <input class="input-text weaponreach" type="text" name="system.rw" value="{{system.rw}}" data-dtype="String" />
             </div>
 
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.ammunitionType"}}</label>
-                <select name="system.ammunitionType" data-dtype="String">
-                    {{selectOptions ammunitiongroups selected=system.ammunitionType localize=true}}
-                </select>
-            </div>
+            {{formGroup systemFields.ammunitionType value=document.system.ammunitionType localize=true}}
 
             <div class="form-group">
                 <label class="label-text">{{localize "TYPES.Item.combatskill"}}</label>
@@ -42,10 +30,8 @@
                     {{selectOptions (selfObj combatskills) selected=system.combatskill}}
                 </select>
             </div>
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.length"}}</label>
-                <input class="input-text" type="text" name="system.length" value="{{system.length}}" data-dtype="String" />
-            </div>
+
+            {{formGroup systemFields.length value=document.system.length localize=true}}
         </div>
 
         {{> systems/dsk/templates/items/item-effects.html}} 

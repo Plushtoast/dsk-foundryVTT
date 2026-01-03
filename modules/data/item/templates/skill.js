@@ -1,4 +1,5 @@
 import { DSKDataModel } from '../../abstract.js';
+import DSK from '../../../system/config.js';
 
 const { StringField, NumberField } = foundry.data.fields;
 
@@ -8,10 +9,27 @@ const { StringField, NumberField } = foundry.data.fields;
 export default class SkillTemplate extends DSKDataModel {
   static defineSchema() {
     return {
-      characteristic1: new StringField({ initial: 'ff' }),
-      characteristic2: new StringField({ initial: 'ff' }),
-      StF: new StringField({ initial: 'A' }),
-      level: new NumberField({ initial: 0, integer: true, min: 0 }),
+      characteristic1: new StringField({ 
+        initial: 'ff',
+        choices: DSK.characteristics,
+        label: 'dsk.Characteristic'
+      }),
+      characteristic2: new StringField({ 
+        initial: 'ff',
+        choices: DSK.characteristics,
+        label: 'dsk.Characteristic'
+      }),
+      StF: new StringField({ 
+        initial: 'A',
+        choices: DSK.StFs,
+        label: 'dsk.StF'
+      }),
+      level: new NumberField({ 
+        initial: 0, 
+        integer: true, 
+        min: 0,
+        label: 'dsk.level'
+      }),
     };
   }
 

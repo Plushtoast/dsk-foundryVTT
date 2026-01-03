@@ -19,7 +19,7 @@ export default class DSKTables {
         const result = DSKUtility.replaceDies(DSKUtility.replaceConditions(tableResult.results[0].description))
         const title = `${game.i18n.localize("dsk.TABLENAMES." + dataset.table)}`
 
-        const content = await renderTemplate(`systems/dsk/templates/tables/tableCard.html`, { result, title, hasEffect })
+        const content = await renderTemplate(`systems/dsk/templates/tables/tableCard.hbs`, { result, title, hasEffect })
 
         const effects = await this.buildEffects(tableResult, hasEffect)
 

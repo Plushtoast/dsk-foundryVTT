@@ -803,7 +803,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
         let item = this.actor.items.get(itemId)
         let message = game.i18n.format("dsk.DIALOG.DeleteItemDetail", { item: item.name })
-        renderTemplate('systems/dsk/templates/dialog/delete-item-dialog.html', { message }).then(html => {
+        renderTemplate('systems/dsk/templates/dialog/delete-item-dialog.hbs', { message }).then(html => {
             foundry.applications.api.DialogV2.wait({
                 window: { title: game.i18n.localize("dsk.DIALOG.deleteConfirmation") },
                 content: html,

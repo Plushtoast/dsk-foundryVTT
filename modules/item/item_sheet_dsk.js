@@ -118,7 +118,7 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
     }
 
     get dsaItemTemplate() {
-        return `systems/dsk/templates/items/item-${this.item.type}-sheet.html`;
+        return `systems/dsk/templates/items/item-${this.item.type}-sheet.hbs`;
     }
 
     _configureRenderParts(options) {
@@ -393,7 +393,7 @@ class ItemSheetEquipment extends ItemSheetObfuscation(ItemSheetDSK){
     }
 
     async breakOverflow(data, parent) {
-        let elm = $(await renderTemplate('systems/dsk/templates/items/baghover.html', data))
+        let elm = $(await renderTemplate('systems/dsk/templates/items/baghover.hbs', data))
 
         let top = parent.offset().top + 52;
         let left = parent.offset().left - 75;

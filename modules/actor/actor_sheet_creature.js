@@ -8,10 +8,10 @@ export default class ActorSheetCreature extends ActorSheetDSK {
 
     static PARTS = {
         main: {
-            template: "systems/dsk/templates/actors/creature-sheet.html",
+            template: "systems/dsk/templates/actors/creature-sheet.hbs",
         },
         limited: {
-            template: "systems/dsk/templates/actors/creature-limited.html",
+            template: "systems/dsk/templates/actors/creature-limited.hbs",
         },
     };
 

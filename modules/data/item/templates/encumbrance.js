@@ -1,4 +1,5 @@
 import { DSKDataModel } from '../../abstract.js';
+import DSK from '../../../system/config.js';
 
 const { StringField } = foundry.data.fields;
 
@@ -10,11 +11,8 @@ export default class EncumbranceTemplate extends DSKDataModel {
     return {
       encumbers: new StringField({ 
         initial: 'no',
-        choices: {
-          'no': 'No',
-          'yes': 'Yes', 
-          'maybe': 'Maybe'
-        }
+        choices: DSK.skillBurdens,
+        label: 'dsk.CONDITION.encumbered'
       }),
     };
   }

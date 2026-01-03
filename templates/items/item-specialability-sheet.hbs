@@ -1,0 +1,51 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}} {{> systems/dsk/templates/items/item-stat.html}}
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+        <a class="item" data-tab="effects">{{localize "dsk.statuseffects"}}</a>
+    </nav>
+
+
+    <section class="content">
+
+        {{> systems/dsk/templates/items/item-description.html}}
+
+        <div class="tab details" data-tab="details">
+
+            {{formGroup systemFields.ap value=document.system.ap localize=true}}
+            {{formGroup systemFields.requirements value=document.system.requirements localize=true}}
+            {{formGroup systemFields.category value=document.system.category localize=true}}
+
+            <div class="form-group full-height">
+                <label class="label-text">{{localize "dsk.rule"}}</label> {{editor enrichedRule target="system.rule" button=true owner=owner editable=editable engine="prosemirror"}}
+            </div>
+
+            {{formGroup systemFields.max value=document.system.max localize=true}}
+
+            {{#if (eq system.category 'Combat')}}
+            {{formGroup systemFields.combatskills value=document.system.combatskills localize=true}}
+
+            <div class="form-group">
+                <label class="label-text">{{localize "dsk.COMBATSKILLCATEGORY.subcategory"}}</label>
+                <select name="system.subcategory" data-dtype="String">
+                    {{selectOptions subCategories selected=system.subcategory localize=true}}
+                </select>
+            </div>
+
+            {{formGroup systemFields.effect.fields.value value=document.system.effect.value localize=true}}
+            {{/if}}
+
+            {{#if isOwned}}
+            <div class="form-group">
+                <label class="label-text">{{#if canAdvance}}<a class="refund-step"><i class="fas fa-minus"></i></a> {{/if}}{{localize "dsk.stepValue"}}{{#if canAdvance}} <a class="advance-step"><i class="fas fa-plus"></i></a>{{/if}}</label>
+                {{formInput systemFields.level value=document.system.level}}
+            </div>
+            {{/if}}
+
+        </div>
+
+        {{> systems/dsk/templates/items/item-effects.html}}
+    </section>
+</form>

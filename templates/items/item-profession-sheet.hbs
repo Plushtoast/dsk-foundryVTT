@@ -1,0 +1,72 @@
+<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
+    {{> systems/dsk/templates/items/item-header.html}}
+
+    <div class="row-section ">
+
+        <div class="col item-main noequipment" style="margin-bottom: 10px;">
+            <div class="row-section">
+                <div class="col fourty">
+                    <label class="label-text table-title">{{localize "dsk.category"}}</label>
+                </div>
+                <div class="col sixty">
+                    <label>{{itemCategory item.type}}</label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <nav class="sheet-tabs tabs" data-tab-container="primary">
+        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
+        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
+    </nav>
+
+
+    <section class="content career">
+
+        <div class="tab description active" data-tab="description">
+            <div class="row-section">
+                <div class="col two">
+                    {{editor enrichedDescription target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}}
+                </div>
+                <div class="col two">
+                    <img src="{{item.img}}" class="fullImg" data-edit="img" /> 
+                    <div class="dskbox2">
+                        <div class="row-section flexaligncenter center">
+                            <div class="col">
+                                <b>{{localize 'TYPES.Item.equipment'}}</b>
+                            </div>
+                        </div>
+                        {{editor enrichedClothing target="system.description.gear" button=true owner=owner editable=editable engine="prosemirror"}}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="tab details" data-tab="details">
+
+
+            {{formGroup systemFields.requirements.fields.advantage value=document.system.requirements.advantage localize=true elementType="textarea" classes="full-height"}}
+
+            {{formGroup systemFields.requirements.fields.specialability value=document.system.requirements.specialability localize=true elementType="textarea" classes="full-height"}}
+        
+
+            {{formGroup systemFields.skills.fields.body value=document.system.skills.body localize=true elementType="textarea" classes="full-height"}}
+            {{formGroup systemFields.skills.fields.social value=document.system.skills.social localize=true elementType="textarea" classes="full-height"}}
+            {{formGroup systemFields.skills.fields.mental value=document.system.skills.mental localize=true elementType="textarea" classes="full-height"}}
+            {{formGroup systemFields.skills.fields.trade value=document.system.skills.trade localize=true elementType="textarea" classes="full-height"}}
+            {{formGroup systemFields.skills.fields.combat value=document.system.skills.combat localize=true elementType="textarea" classes="full-height"}}
+                    
+
+            {{formGroup systemFields.isAncestor value=document.system.isAncestor localize=true}}
+           
+            {{#if system.isAncestor}}
+            {{formGroup systemFields.ahnengabe value=document.system.ahnengabe localize=true elementType="textarea" classes="full-height"}}
+            {{formGroup systemFields.ahnengeschenk value=document.system.ahnengeschenk localize=true elementType="textarea" classes="full-height"}}
+            {{/if}} 
+
+
+        </div>
+    </section>
+</form>

@@ -9,9 +9,9 @@ export default class WornTemplate extends DSKDataModel {
   static defineSchema() {
     return {
       worn: new SchemaField({
-        value: new BooleanField({ initial: false }),
-        wearable: new BooleanField({ initial: true }),
-        wrongGrip: new BooleanField({ initial: false }),
+        value: new BooleanField({ initial: false, label: 'dsk.worn' }),
+        wearable: new BooleanField({ initial: true, label: 'dsk.wearable' }),
+        wrongGrip: new BooleanField({ initial: false, label: 'dsk.wrongGrip' }),
       }),
     };
   }
