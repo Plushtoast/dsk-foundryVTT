@@ -4,7 +4,7 @@ import SkillTemplate from './templates/skill.js';
 import EncumbranceTemplate from './templates/encumbrance.js';
 import DSK from '../../system/config.js';
 
-const { StringField } = foundry.data.fields;
+const { StringField, NumberField } = foundry.data.fields;
 
 /**
  * DataModel for CombatSkill items
@@ -20,6 +20,11 @@ export default class CombatskillData extends ItemDataModel.mixin(
         initial: 'melee',
         choices: DSK.weapontypes,
         label: 'dsk.weapontype'
+      }),
+      subcategory: new NumberField({ 
+        initial: 0,
+        choices: DSK.combatSkillSubCategories,
+        label: 'dsk.subcategory'
       }),
     });
   }

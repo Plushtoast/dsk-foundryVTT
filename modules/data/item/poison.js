@@ -1,5 +1,6 @@
 import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
+import ObfuscableTemplate from './templates/obfuscable.js';
 import DSK from '../../system/config.js';
 
 const { StringField, NumberField } = foundry.data.fields;
@@ -7,7 +8,10 @@ const { StringField, NumberField } = foundry.data.fields;
 /**
  * DataModel for Poison items
  */
-export default class PoisonData extends ItemDataModel.mixin(DescriptionTemplate) {
+export default class PoisonData extends ItemDataModel.mixin(
+  DescriptionTemplate,
+  ObfuscableTemplate
+) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
       level: new NumberField({ initial: 1, label: 'dsk.level' }),

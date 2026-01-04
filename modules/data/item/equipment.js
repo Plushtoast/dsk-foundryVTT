@@ -1,6 +1,7 @@
 import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
 import EquipmentTemplate from './templates/equipment.js';
+import ObfuscableTemplate from './templates/obfuscable.js';
 import WornTemplate from './templates/worn.js';
 import DSK from '../../system/config.js';
 
@@ -12,6 +13,7 @@ const { StringField, NumberField } = foundry.data.fields;
 export default class EquipmentData extends ItemDataModel.mixin(
   DescriptionTemplate,
   EquipmentTemplate,
+  ObfuscableTemplate,
   WornTemplate
 ) {
   static defineSchema() {
