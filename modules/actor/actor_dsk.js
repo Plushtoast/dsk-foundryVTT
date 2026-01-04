@@ -45,132 +45,13 @@ export default class ActorDSK extends Actor {
     }
 
     prepareDerivedData() {
+        // Let the data model handle most derived data calculations
+        // The data model's prepareDerivedData is called automatically via super
         const data = this.system;
         try {
-            data.canAdvance = this.isOwner && this.type == "character"
-            
-            for (let ch of Object.values(data.characteristics)) {
-                ch.value = ch.initial + ch.advances + (ch.modifier || 0) + ch.gearmodifier;
-            }
-
-            data.totalWeight = 0;
-      
-            const wornArmor = []
-
-            let containers = new Map();
-            const bags = this.items.filter(x => x.type == "equipment" && x.system.category == "bags")
-            for (let container of bags) {
-              containers.set(container.id, []);
-            }
-
-            for(const i of this.items){
-              if(ActorDSK._baseCarryItems.has(i.type)){
-                let parent_id = getProperty(i, "system.parent_id");
-                if (parent_id && parent_id != i._id) {
-                  if (containers.has(parent_id)) {
-                    containers.get(parent_id).push(i);
-                    continue;
-                  }
-                }
-                if(i.type == "armor"){
-                  i.system.preparedWeight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
-                  data.totalWeight += parseFloat(
-                    (
-                      i.system.weight * (i.system.worn.value ? Math.max(0, i.system.quantity - 1) : i.system.quantity)
-                    ).toFixed(3)
-                  );
-                  if(i.system.worn.value) wornArmor.push(i)
-                } else {
-                  i.system.preparedWeight = parseFloat((i.system.weight * i.system.quantity).toFixed(3));
-                  data.totalWeight += Number(i.system.preparedWeight);
-                }
-              } else { 
-                switch(i.type){
-                  case "ahnengabe":
-                  case "ahnengeschenk":
-                    data.isMage = true
-                    break
-                  case "specialability":
-                    if(ActorDSK._mageSpecs.has(i.system.category)) data.isMage = true
-                    break              
-                }
-              }
-            }
-
-            for(let bag of bags){
-              let parent_id = getProperty(bag, "system.parent_id")
-              if(!parent_id || !containers.has(parent_id))
-                data.totalWeight += this._calcBagweight(bag, containers, true)
-            }
-
-            data.carrycapacity = data.characteristics.kk.value * 2 + data.carryModifier
-
-            if (data.canAdvance) {
-                data.details.experience.current = data.details.experience.total - data.details.experience.spent;
-            }
-
-            if (this.type == "character" || this.type == "npc") {
-                data.stats.LeP.current = data.stats.LeP.initial + data.characteristics.ko.value * 2;
-                data.stats.AeP.current = (!data.guidevalue || data.guidevalue == "-") ? 0 : ActorDSK._attrFromCharacteristic(data.guidevalue, data)
-                data.stats.sk.value =
-                    (data.stats.sk.initial || 0) +
-                    Math.round((data.characteristics.mu.value + data.characteristics.kl.value + data.characteristics.in.value) / 3) - 10;
-                data.stats.zk.value =
-                    (data.stats.zk.initial || 0) +
-                    Math.round((data.characteristics.ko.value + data.characteristics.ko.value + data.characteristics.kk.value) / 3) - 10;
-                data.stats.ini.value =
-                    Math.round((data.characteristics.mu.value + data.characteristics.ge.value) / 2) +
-                    (data.stats.ini.modifier || 0);
-
-                data.stats.LeP.min = -1 * data.characteristics.ko.value
-            }
-
-            if (this.type == "creature") {
-                data.stats.LeP.current = data.stats.LeP.initial;
-                data.stats.AeP.current = data.stats.AeP.initial;
-                data.stats.ini.value = data.stats.ini.current + (data.stats.ini.modifier || 0);
-            }
-
-            data.stats.schips.max =
-                Number(data.stats.schips.current) + Number(data.stats.schips.modifier) + data.stats.schips.gearmodifier
-
-            data.stats.regeneration.LePmax =
-                data.stats.regeneration.LePTemp + data.stats.regeneration.LePMod + data.stats.regeneration.LePgearmodifier;
-            data.stats.regeneration.AePmax =
-                data.stats.regeneration.AePTemp + data.stats.regeneration.AePMod + data.stats.regeneration.AePgearmodifier;
-
-            data.stats.LeP.max = Math.round(
-                (data.stats.LeP.current + data.stats.LeP.modifier + data.stats.LeP.advances) * data.stats.LeP.multiplier +
-                data.stats.LeP.gearmodifier
-            );
-            data.stats.AeP.max =
-                data.stats.AeP.current +
-                data.stats.AeP.modifier +
-                data.stats.AeP.advances +
-                data.stats.AeP.gearmodifier;
-
-            data.stats.gs.max = Math.max(0, data.stats.gs.initial + (data.stats.gs.modifier || 0) + data.stats.gs.gearmodifier);
-            
-            data.stats.sk.max =
-                data.stats.sk.value + data.stats.sk.modifier + data.stats.sk.gearmodifier;
-            data.stats.zk.max =
-                data.stats.zk.value + data.stats.zk.modifier + data.stats.zk.gearmodifier;
-
-            let encumbrance = 0
-            data.stats.ini.value += data.stats.ini.gearmodifier - Math.min(4, encumbrance);
-            const baseInit = Number((0.01 * data.stats.ini.value).toFixed(2));
-            data.stats.ini.value *= data.stats.ini.multiplier || 1;
-            data.stats.ini.value = Math.round(data.stats.ini.value) + baseInit;            
-
-            for(let key of Object.keys(data.status)){
-              data.status[key] = Math.clamp(data.status[key], 0, 8)
-            }
-
-            data.armorEncumbrance = this.getArmorEncumbrance(this, wornArmor);
-
-            this.effectivePain(data)
-
-            data.maxDefense = this.maxDefenseValue()
+            // Actor-specific calculations that need actor methods
+            this.effectivePain(data);
+            data.maxDefense = this.maxDefenseValue();
         } catch (error) {
             console.error("Something went wrong with preparing actor data: " + error + error.stack);
             ui.notifications.error(game.i18n.format("dsk.DSKError.PreparationError", { name: this.name }) + error + error.stack);
@@ -224,32 +105,6 @@ export default class ActorDSK extends Actor {
           await ActorDSK.postUpdateConditions(doc)
       }
       return super._onUpdateOperation(documents, operation, user);
-    }
-
-    _calcBagweight(elem, containers, topLevel = true) {
-      let totalWeight = 0;
-      if (containers.has(elem._id)) {
-        let bagweight = 0;
-        if (!elem.system.worn.value && topLevel) totalWeight -= elem.system.preparedWeight;
-  
-        for (let child of containers.get(elem._id)) {
-          child.system.preparedWeight = Number(parseFloat((child.system.weight * child.system.quantity).toFixed(3)));
-          
-          if (containers.has(child._id)) {
-            bagweight += this._calcBagweight(child, containers, false);
-          } else {
-            bagweight += child.system.preparedWeight;
-          }
-        }
-        if(!topLevel){
-          totalWeight += bagweight + elem.system.preparedWeight
-        } else if(elem.system.worn.value){
-          totalWeight += bagweight;
-        }
-  
-        elem.system.bagweight = `${bagweight.toFixed(3)}/${elem.system.capacity || 0}`;
-      }
-      return totalWeight;
     }
 
     effectivePain(data){
@@ -738,95 +593,6 @@ export default class ActorDSK extends Actor {
         wornArmor,
         armor: protection + animalArmor + (actor.system.totalArmor || 0),
       };
-    }
-
-    prepareBaseData() {
-        const system = this.system;
-
-        mergeObject(system, {
-            skillModifiers: {
-                FP: [],
-                step: [],
-                QL: [],
-                TPM: [],
-                FW: [],
-                botch: 20,
-                crit: 1,
-                global: [],
-                conditional: {
-                  AePCost: []
-                },
-                feature: {
-                  FP: [],
-                  step: [],
-                  QL: [],
-                  TPM: [],
-                  FW: [],
-                  AePCost: [],
-                },
-                ...["ahnengabe", "skill"].reduce((prev, x) => {
-                  prev[x] = {
-                    FP: [],
-                    step: [],
-                    QL: [],
-                    TPM: [],
-                    FW: [],
-                  };
-                  return prev;
-                }, {}),
-              },
-            repeatingEffects: {
-                startOfRound: {
-                    LeP: [],
-                    AeP: []
-                },
-            },
-            aepModifier: 0,
-            creatureBonus: [],
-            stats: {
-                initiative: {
-                    multiplier: 1,
-                },
-                LeP: {
-                    multiplier: 1,
-                },
-                regeneration: {
-                    LePgearmodifier: 0,
-                    AePgearmodifier: 0,
-                },
-            },
-            status: {
-                encumbered: 0,
-                stunned: 0,
-                feared: 0,
-                inpain: 0,
-                selfconfidence: 0
-            },
-            spellStats: {
-                damage: "0",
-            },
-            meleeStats: {
-                parry: 0,
-                attack: 0,
-                damage: "0",
-                defenseMalus: 0,
-                botch: 20,
-                crit: 1,
-            },
-            rangeStats: {
-                attack: 0,
-                damage: "0",
-                defenseMalus: 0,
-                botch: 20,
-                crit: 1,
-            },
-            totalArmor: 0,
-            carryModifier: 0,
-
-        })
-        for (const k of Object.values(system.stats)) k.gearmodifier = 0;
-
-        for (let ch of Object.values(system.characteristics)) ch.gearmodifier = 0
     }
 
     prepareSheet(sheetInfo) {
