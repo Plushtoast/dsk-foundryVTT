@@ -27,14 +27,16 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     static TABS = {
         sheet: {
             tabs: [
-                { id: 'skills', label: 'dsk.skills' },
-                { id: 'combat', label: 'dsk.Combat' },
-                { id: 'main', label: 'dsk.attributes' },
+                { id: 'skills', label: 'skills' },
+                { id: 'combat', label: 'Combat' },
+                { id: 'magic', label: 'SPECIALABILITYCATEGORIES.ahnen' },
+                { id: 'main', label: 'attributes' },
                 { id: 'inventory', label: 'TYPES.Item.equipment' },
-                { id: 'status', label: 'dsk.status' },
-                { id: 'notes', label: 'dsk.Notes' },
+                { id: 'status', label: 'status' },
+                { id: 'notes', label: 'Notes' },
             ],
             initial: 'skills',
+            labelPrefix: 'dsk',
         },
     };
 
@@ -131,6 +133,13 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
     get title() {
         return this.actor.name;
+    }
+
+    _prepareTabs(group) {
+        const tabs = super._prepareTabs(group);
+        const prepare = this.actor.prepareSheet({});
+        if (!prepare.magic?.hasSpells) delete tabs.magic;
+        return tabs;
     }
 
     async render(options = {}, _options = {}) {
@@ -523,7 +532,6 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
             enrichedGmdescription: await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.gm"), { secrets: this.actor.isOwner }),
             enrichedNotes: await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.description"), { secrets: this.actor.isOwner }),
             enrichedBiography: await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.biography"), { secrets: this.actor.isOwner }),
-            tabs: this._getTabs(),
         };
     }
 

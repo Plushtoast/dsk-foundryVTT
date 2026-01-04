@@ -2,14 +2,12 @@
     {{> systems/dsk/templates/items/item-header.hbs}}
     {{> systems/dsk/templates/items/item-stat.hbs}}
 
-    <nav class="sheet-tabs tabs" data-tab-container="primary">
-        <a class="item" data-tab="details">{{localize "dsk.details"}}</a> 
-    </nav>
+    {{> systems/dsk/templates/system/dsktabs.hbs}}
 
 
     <section class="content">
 
-        <div class="tab details" data-tab="details">
+        <div class="tab details scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
             <div class="form-group">
                 <label class="label-text">{{localize "TYPES.Item.skill"}}</label>
                 <select name="system.skill" data-dtype="String">

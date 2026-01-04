@@ -2,25 +2,25 @@
     <div class="row-section">
 
         <div class="col">
-            <nav class="sheet-tabs tabs" data-tab-container="primary">
-                <a class="item flexcol active" data-tab="equipment">
+            <nav class="sheet-tabs tabs" data-group="sheet">
+                <a class="item flexcol active" data-action="tab" data-group="sheet" data-tab="equipment">
                     <div><img src="systems/dsk/icons/categories/equipment.webp" class="centerMargin" height="20" /></div>
                     <span>{{localize "TYPES.Item.equipment"}}</span>
                 </a>
-                <a class="item flexcol" data-tab="character">
+                <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="character">
                     <div><img src="systems/dsk/icons/categories/advantage.webp" class="centerMargin" height="20" /></div>
                     <span>{{localize "TYPES.Actor.character"}}</span>
                 </a>
-                <a class="item flexcol" data-tab="journal">
+                <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="journal">
                     <div><img src="systems/dsk/icons/categories/DSK-Auge.webp" class="centerMargin" height="20" /></div>
                     <span>{{localize "Journal"}}</span>
                 </a>
-                <a class="item flexcol" data-tab="spell">
+                <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="spell">
                     <div><img src="systems/dsk/icons/categories/ahnengabe.webp" class="centerMargin" height="20" /></div>
                     <span>{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</span>
                 </a>
                 {{#if isGM}}
-                <a class="item flexcol" data-tab="zoo">
+                <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="zoo">
                     <div><img src="systems/dsk/icons/categories/profession.webp" class="centerMargin" height="20" /></div>
                     <span>{{localize "dsk.zoo"}}</span>
                 </a>{{/if}}
@@ -36,7 +36,7 @@
                     </div>
                     <div class="col seventy contentShow">
                         {{#each categories as |cat i|}}
-                        <div class="tab {{@key}}" data-tab="{{@key}}">
+                        <div class="tab {{@key}}" data-tab="{{@key}}" data-group="sheet">
                             <div class="row-section">
                                 <div class="col">
                                     <div>

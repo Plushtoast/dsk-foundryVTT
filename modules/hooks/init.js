@@ -40,6 +40,7 @@ export function initHooks() {
 
     Hooks.once("init", () => {
         foundry.applications.handlebars.loadTemplates([
+            "systems/dsk/templates/system/dsktabs.hbs",
             "systems/dsk/templates/items/item-equipment.hbs",
             "systems/dsk/templates/items/item-header.hbs",
             "systems/dsk/templates/items/item-description.hbs",

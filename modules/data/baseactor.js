@@ -227,8 +227,15 @@ export class ActorDataModel extends DSKDataModel {
     return totalWeight;
   }
 
+  /**
+   * Whether this actor can advance (spend AP)
+   * Override in subclasses that should not be able to advance
+   */
+  get canAdvance() {
+    return this.parent.isOwner && this.parent.type === "character";
+  }
+
   _identifyCharacterType() {
-    this.canAdvance = this.parent.isOwner && this.parent.type === "character";
     this.parent.canAdvance = this.canAdvance;
 
     if (this.canAdvance) {

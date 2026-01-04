@@ -16,13 +16,10 @@
         </div>
     </div>
 
-    <nav class="sheet-tabs tabs" data-tab-container="primary">
-        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
-        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
-    </nav>
+    {{> systems/dsk/templates/system/dsktabs.hbs}}
 
     <section class="content career">
-        <div class="tab description" data-tab="description">
+        <div class="tab description scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
             <div>
                 {{#if hasLocalization}}
                 <img src="{{item.img}}" style="max-width:50%; max-height: 100%;float:right;" data-edit="img" /> {{{localize (concat "dsk.Racedescr." item.name)}}} {{else}}
@@ -38,7 +35,7 @@
             </div>
         </div>
 
-        <div class="tab details" data-tab="details">
+        <div class="tab details scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
             <div class="row-section">
                 <div class="col">
 

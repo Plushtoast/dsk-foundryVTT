@@ -19,7 +19,6 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate) 
       pa: new StringField({ initial: '', label: 'dsk.ABBR.VW' }),
       rw: new StringField({ 
         initial: 'medium',
-        choices: DSK.meleeRanges,
         label: 'dsk.range'
       }),
       tp: new StringField({ initial: '1d6', label: 'dsk.damage' }),

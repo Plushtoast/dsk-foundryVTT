@@ -536,7 +536,8 @@ DSK.equipmentTypes = {
     "luxus": "dsk.Equipment.luxus",
     "blessed": "dsk.Equipment.blessed",
     "food": "dsk.Equipment.food",
-    "animals": "dsk.Equipment.animals"
+    "animals": "dsk.Equipment.animals",
+    "alcohol": "dsk.Equipment.alcohol"
 };
 
 DSK.systemTables = [

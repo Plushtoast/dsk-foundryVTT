@@ -57,6 +57,7 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
                 { id: 'effects', label: 'statuseffects' },
             ],
             initial: 'description',
+            labelPrefix: 'dsk',
         },
     };
 
@@ -233,6 +234,7 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
             ...context,
             item: this.item,
             system: this.item.system,
+            systemFields: this.document.system.schema?.fields,
             isOwned: !!this.item.actor,
             editable: this.isEditable,
             isGM: game.user.isGM,
@@ -245,7 +247,6 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
                 { secrets: this.item.isOwner }
             ),
             conditions: DSKStatusEffects.prepareActiveEffects(this.item),
-            tabs: this._getTabs(),
         };
     }
 
@@ -368,6 +369,20 @@ class ItemSheetAmmunition extends ItemSheetObfuscation(ItemSheetDSK){
 }
 
 class ItemSheetEquipment extends ItemSheetObfuscation(ItemSheetDSK){
+    _prepareTabs(group) {
+        const tabs = super._prepareTabs(group);
+        if (this.isBagWithContents()) {
+            tabs.containerContent = {
+                id: 'containerContent',
+                group: 'sheet',
+                icon: '',
+                label: 'dsk.Equipment.bags',
+                cssClass: ''
+            };
+        }
+        return tabs;
+    }
+
     async _prepareContext(options) {
         const data = await super._prepareContext(options);
         mergeObject(data, {

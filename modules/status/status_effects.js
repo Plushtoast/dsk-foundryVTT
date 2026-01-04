@@ -174,7 +174,7 @@ export default class DSKStatusEffects{
         return false
     }
 
-    static prepareActiveEffects(target, data) {
+    static prepareActiveEffects(target, data = {}) {
         let systemConditions = duplicate(CONFIG.statusEffects) //.filter(x => x.flags.dsk.editable)
         let appliedSystemConditions = []
         data.conditions = []
@@ -182,7 +182,7 @@ export default class DSKStatusEffects{
         
         let appliedConditions
         if(target.documentName == "Item") {
-            appliedConditions = target.effects
+            appliedConditions = target.effects ? Array.from(target.effects) : []
         } else {
             appliedConditions = Array.from(target.allApplicableEffects())
 
@@ -193,7 +193,7 @@ export default class DSKStatusEffects{
         for (let cnd of appliedConditions) {
             let condition = cnd.toObject()
             condition.boolean = cnd.getFlag("dsk", "value") == null
-            const statusesId = [...cnd.statuses][0]
+            const statusesId = cnd.statuses ? [...cnd.statuses][0] : null
             if (statusesId) {
                 condition.value = cnd.getFlag("dsk", "value")
                 condition.editable = cnd.getFlag("dsk", "editable")
@@ -225,6 +225,7 @@ export default class DSKStatusEffects{
           }
         }
         data.cumulativeConditions = cumulativeConditions
+        return data
     }
 
     static calculateRollModifier(effectId, actor, item, options = {}) {

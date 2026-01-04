@@ -25,6 +25,7 @@ import MacroDSK from "./system/macroControl.js"
 import "./system/pause.js"
 import { DSKToken } from "./hooks/token.js"
 import { CombatantDataModels, DSK_ACTOR_MODELS, DSK_ITEM_MODELS, registerDataModels } from "./data/model.js"
+import TestSuite from "./system/testsuite.js"
 
 Hooks.once("init", () => {
     console.log("Initializing DSK system")
@@ -62,6 +63,7 @@ Hooks.once("init", () => {
             Actor: DSK_ACTOR_MODELS,
             Item: DSK_ITEM_MODELS
         },
+        TestSuite,
     }
 
     CONFIG.Actor.documentClass = ActorDSK

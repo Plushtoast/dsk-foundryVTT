@@ -38,6 +38,23 @@ export default class MeleeweaponData extends ItemDataModel.mixin(
     });
   }
 
+  /**
+   * Migrate old shield size values to new ones
+   * @param {Object} source - The source data
+   */
+  static _migrateData(source) {
+    super._migrateData(source);
+
+    // Migrate old shieldsize values: small -> short, large -> long
+    if (source.shieldsize) {
+      if (source.shieldsize === 'small') {
+        source.shieldsize = 'short';
+      } else if (source.shieldsize === 'large') {
+        source.shieldsize = 'long';
+      }
+    }
+  }
+
   static chatData(data, name) {
     return [
       { key: 'dsk.combatskill', val: data.combatskill },

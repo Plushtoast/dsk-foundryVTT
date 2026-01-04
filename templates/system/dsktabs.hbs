@@ -1,0 +1,7 @@
+<nav class="sheet-tabs tabs" aria-roledescription="Form Tab Navigation">
+    {{#each tabs}}
+    <a class="item {{cssClass}}" data-action="tab" data-group="{{group}}" data-tab="{{id}}">
+        {{#if icon}}<i class="{{icon}}"></i> {{/if}}{{localize label}}
+    </a>
+    {{/each}}
+</nav>

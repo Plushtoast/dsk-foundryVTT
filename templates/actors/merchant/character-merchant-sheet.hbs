@@ -3,43 +3,43 @@
     {{> systems/dsk/templates/actors/parts/normalhead.hbs}}
     <!-- TABS -->
     <section id="tab-sections">
-        <nav id="dsk-primarytabs" class="sheet-tabs tabs">
+        <nav id="dsk-primarytabs" class="sheet-tabs tabs" data-group="sheet">
             {{#if (ne merchantType 'loot')}}
-            <a class="item" data-tab="skills">{{localize "TYPES.Item.skill"}}</a>
-            <a class="item" data-tab="combat">{{localize "dsk.SPECIALABILITYCATEGORIES.combat"}}</a> 
+            <a class="item" data-action="tab" data-group="sheet" data-tab="skills">{{localize "TYPES.Item.skill"}}</a>
+            <a class="item" data-action="tab" data-group="sheet" data-tab="combat">{{localize "dsk.SPECIALABILITYCATEGORIES.combat"}}</a> 
             {{#if prepare.magic.hasSpells}}
-            <a class="item" data-tab="magic">{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</a> 
+            <a class="item" data-action="tab" data-group="sheet" data-tab="magic">{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</a> 
             {{/if}}
-            <a class="item" data-tab="main">{{localize "dsk.attributes"}}</a>
+            <a class="item" data-action="tab" data-group="sheet" data-tab="main">{{localize "dsk.attributes"}}</a>
             {{/if}}
-            <a class="item active" data-tab="inventory">{{invName}}</a> 
+            <a class="item active" data-action="tab" data-group="sheet" data-tab="inventory">{{invName}}</a> 
             {{#if (ne merchantType 'loot')}}
-            <a class="item" data-tab="status">{{localize "dsk.status"}}</a>
-            <a class="item" data-tab="notes">{{localize "dsk.notes"}}</a> {{/if}}
+            <a class="item" data-action="tab" data-group="sheet" data-tab="status">{{localize "dsk.status"}}</a>
+            <a class="item" data-action="tab" data-group="sheet" data-tab="notes">{{localize "dsk.notes"}}</a> {{/if}}
         </nav>
 
         <section class="content">
-            <div class="tab skills save-scroll" data-tab="skills">
+            <div class="tab skills save-scroll" data-tab="skills" data-group="sheet">
                 {{> systems/dsk/templates/actors/actor-talents.hbs}}
             </div>
-            <div class="tab combat save-scroll" data-tab="combat">
+            <div class="tab combat save-scroll" data-tab="combat" data-group="sheet">
                 {{> systems/dsk/templates/actors/actor-combat.hbs}}
             </div>
-            <div class="tab inventory save-scroll" data-tab="inventory">
+            <div class="tab inventory save-scroll" data-tab="inventory" data-group="sheet">
                 {{> systems/dsk/templates/actors/merchant/merchant-commerce.hbs}}
             </div>
-            <div class="tab status save-scroll" data-tab="status">
+            <div class="tab status save-scroll" data-tab="status" data-group="sheet">
                 {{> systems/dsk/templates/actors/parts/status_effects.hbs}}
             </div>
             <div class="tab save-scroll" data-tab="notes">
                 {{> systems/dsk/templates/actors/actor-notes.hbs}}
             </div>
             {{#if prepare.magic.hasSpells}}
-            <div class="tab magic save-scroll" data-tab="magic">
+            <div class="tab magic save-scroll" data-tab="magic" data-group="sheet">
                 {{> systems/dsk/templates/actors/character/actor-magic.hbs}}
             </div>
             {{/if}}
-            <div class="tab main save-scroll" data-tab="main">
+            <div class="tab main save-scroll" data-tab="main" data-group="sheet">
                 {{> systems/dsk/templates/actors/actor-main.hbs}}
             </div>
         </section>

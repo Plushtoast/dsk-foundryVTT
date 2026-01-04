@@ -16,13 +16,10 @@
         </div>
     </div>
 
-    <nav class="sheet-tabs tabs" data-tab-container="primary">
-        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
-        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
-    </nav>
+    {{> systems/dsk/templates/system/dsktabs.hbs}}
 
     <section class="content">
-        <div class="tab description active" data-tab="description">
+        <div class="tab description scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
             <div class="row-section">
                 <div class="col sixty">
                     {{editor enrichedDescription target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}}
@@ -34,7 +31,7 @@
             </div>
         </div>
 
-        <div class="tab details" data-tab="details">
+        <div class="tab details scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
             {{formGroup systemFields.skills value=document.system.skills localize=true elementType="textarea" classes="full-height"}}
             
         </div>

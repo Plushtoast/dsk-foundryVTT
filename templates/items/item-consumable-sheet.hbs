@@ -35,16 +35,12 @@
             </div>
         </div>
     </div>
-    <nav class="sheet-tabs tabs" data-tab-container="primary">
-        <a class="item active" data-tab="description">{{localize "dsk.description"}}</a>
-        <a class="item" data-tab="details">{{localize "dsk.details"}}</a>
-        <a class="item" data-tab="effects">{{localize "dsk.statuseffects"}}</a>
-    </nav>
+    {{> systems/dsk/templates/system/dsktabs.hbs}}
 
     <section class="content">
          {{> systems/dsk/templates/items/item-description.hbs}}
 
-        <div class="tab details" data-tab="details">
+        <div class="tab details scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
             {{formGroup systemFields.category value=document.system.category localize=true}}
             {{formGroup systemFields.qs value=document.system.qs localize=true}}
             <div class="form-group">
