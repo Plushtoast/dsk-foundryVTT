@@ -8,9 +8,11 @@ export default class ActorSheetNPC extends ActorSheetCharacter {
     static PARTS = {
         main: {
             template: "systems/dsk/templates/actors/npc-sheet.hbs",
+            scrollable: [''],
         },
         limited: {
             template: "systems/dsk/templates/actors/npc-limited.hbs",
+            scrollable: [''],
         },
     };
 

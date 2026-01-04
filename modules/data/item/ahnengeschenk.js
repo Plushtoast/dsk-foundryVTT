@@ -22,4 +22,15 @@ export default class AhnengeschenkData extends ItemDataModel.mixin(DescriptionTe
       { key: 'dsk.distribution', val: data.distribution },
     ];
   }
+
+  /**
+   * Prepare the item for display in an embedded sheet (actor sheet)
+   * @returns {Object} The prepared item data
+   */
+  prepareEmbeddedItemSheet() {
+    const item = super.prepareEmbeddedItemSheet();
+    this.constructor._prepareItemStructure(item);
+    this._setOnUseEffect(item);
+    return item;
+  }
 }

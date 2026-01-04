@@ -14,9 +14,11 @@ export default class ActorSheetCharacter extends ActorSheetDSK {
     static PARTS = {
         main: {
             template: "systems/dsk/templates/actors/actor-sheet.hbs",
+            scrollable: [''],
         },
         limited: {
             template: "systems/dsk/templates/actors/npc-limited.hbs",
+            scrollable: [''],
         },
     };
 

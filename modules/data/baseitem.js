@@ -25,6 +25,51 @@ export class ItemDataModel extends DSKDataModel {
   }
 
   /**
+   * Get a copy of the item with overrides applied
+   * @returns {Object} The item with overrides applied
+   */
+  itemWithOverrides() {
+    const object = this.parent.toObject();
+    const overrides = foundry.utils.flattenObject(this.parent.overrides || {});
+    foundry.utils.mergeObject(object, overrides);
+    return object;
+  }
+
+  /**
+   * Prepare the item for display in an embedded sheet (actor sheet)
+   * @returns {Object} The prepared item data
+   */
+  prepareEmbeddedItemSheet() {
+    return this.itemWithOverrides();
+  }
+
+  /**
+   * Prepare item structure information
+   * @param {Object} item - The item to prepare
+   * @returns {Object} The prepared item
+   */
+  static _prepareItemStructure(item) {
+    // Handle enchantment classes
+    const enchants = foundry.utils.getProperty(item, 'flags.dsk.enchantments');
+    if (enchants && enchants.length > 0) {
+      item.enchantClass = 'rar';
+    } else if (item.effects?.length > 0) {
+      item.enchantClass = 'common';
+    }
+    return item;
+  }
+
+  /**
+   * Set onUseEffect flag for display
+   * @param {Object} item - The item to check
+   */
+  _setOnUseEffect(item) {
+    if (foundry.utils.getProperty(item, 'flags.dsk.onUseEffect')) {
+      item.onUseEffect = true;
+    }
+  }
+
+  /**
    * Helper function to format a chat line
    * @param {Object} options - Line data options
    * @param {string} options.key - The key to be localized

@@ -44,6 +44,20 @@ export default class RangeweaponData extends ItemDataModel.mixin(
   }
 
   /**
+   * Prepare the item for display in an embedded sheet (actor sheet)
+   * @returns {Object} The prepared item data
+   */
+  prepareEmbeddedItemSheet() {
+    const item = super.prepareEmbeddedItemSheet();
+    item.toggleValue = item.system.worn.value || false;
+    item.toggle = true;
+    this.constructor._prepareItemStructure(item);
+    item.system.preparedWeight = this.parent.system.preparedWeight;
+    this._setOnUseEffect(item);
+    return item;
+  }
+
+  /**
    * Check if weapon is loaded
    */
   get isLoaded() {

@@ -32,4 +32,15 @@ export default class SkillData extends ItemDataModel.mixin(
       { key: 'dsk.StF', val: data.StF },
     ];
   }
+
+  /**
+   * Prepare the item for display in an embedded sheet (actor sheet)
+   * @returns {Object} The prepared item data
+   */
+  prepareEmbeddedItemSheet() {
+    const item = super.prepareEmbeddedItemSheet();
+    this.constructor._prepareItemStructure(item);
+    this._setOnUseEffect(item);
+    return item;
+  }
 }

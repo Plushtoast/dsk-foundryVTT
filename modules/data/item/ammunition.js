@@ -38,4 +38,21 @@ export default class AmmunitionData extends ItemDataModel.mixin(
       { key: 'dsk.ammunitionType', val: data.ammunitionType },
     ];
   }
+
+  /**
+   * Prepare the item for display in an embedded sheet (actor sheet)
+   * @returns {Object} The prepared item data
+   */
+  prepareEmbeddedItemSheet() {
+    const item = super.prepareEmbeddedItemSheet();
+    this.constructor._prepareItemStructure(item);
+    item.system.preparedWeight = this.parent.system.preparedWeight;
+    
+    // Handle magazine display
+    if (item.system.ammunitionType === 'mag') {
+      item.structureMax = item.system.mag.max;
+      item.structureCurrent = item.system.mag.value;
+    }
+    return item;
+  }
 }

@@ -9,9 +9,11 @@ export default class ActorSheetCreature extends ActorSheetDSK {
     static PARTS = {
         main: {
             template: "systems/dsk/templates/actors/creature-sheet.hbs",
+            scrollable: [''],
         },
         limited: {
             template: "systems/dsk/templates/actors/creature-limited.hbs",
+            scrollable: [''],
         },
     };
 

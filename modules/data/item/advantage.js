@@ -30,4 +30,15 @@ export default class AdvantageData extends ItemDataModel.mixin(
       { key: 'dsk.ap', val: data.ap },
     ];
   }
+
+  /**
+   * Prepare the item for display in an embedded sheet (actor sheet)
+   * @returns {Object} The prepared item data
+   */
+  prepareEmbeddedItemSheet() {
+    const item = super.prepareEmbeddedItemSheet();
+    this.constructor._prepareItemStructure(item);
+    this._setOnUseEffect(item);
+    return item;
+  }
 }

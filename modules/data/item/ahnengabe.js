@@ -51,4 +51,15 @@ export default class AhnengabeData extends ItemDataModel.mixin(DescriptionTempla
       { key: 'dsk.duration', val: data.duration },
     ];
   }
+
+  /**
+   * Prepare the item for display in an embedded sheet (actor sheet)
+   * @returns {Object} The prepared item data
+   */
+  prepareEmbeddedItemSheet() {
+    const item = super.prepareEmbeddedItemSheet();
+    this.constructor._prepareItemStructure(item);
+    this._setOnUseEffect(item);
+    return item;
+  }
 }

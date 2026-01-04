@@ -37,4 +37,19 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate) 
       { key: 'dsk.rw', val: data.rw, localizeVal: true },
     ];
   }
+
+  /**
+   * Prepare the item for display in an embedded sheet (actor sheet)
+   * @returns {Object} The prepared item data
+   */
+  prepareEmbeddedItemSheet() {
+    const item = super.prepareEmbeddedItemSheet();
+    this.constructor._prepareItemStructure(item);
+    this._setOnUseEffect(item);
+    
+    item.attack = Number(item.system.at);
+    if (item.system.pa != 0) item.parry = Number(item.system.pa);
+    
+    return item;
+  }
 }
