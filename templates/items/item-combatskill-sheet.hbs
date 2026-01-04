@@ -6,11 +6,13 @@
 
     <section class="content">
 
-        <div class="tab description scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
-            {{#if hasLocalization}} {{{localize (concat "dsk.Combatskilldescr." item.name)}}} {{else}} {{editor enrichedDescription target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}} {{/if}}
+        <div class="tab description standard-form scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
+            {{#if hasLocalization}} {{{localize (concat "dsk.Combatskilldescr." item.name)}}} {{else}}
+            {{formInput systemFields.description.fields.value value=document.system.description.value toggled=true enriched=enrichedDescription}}
+            {{/if}}
         </div>
 
-        <div class="tab details scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
+        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
 
             {{formGroup systemFields.characteristic1 value=document.system.characteristic1 localize=true}}
             {{formGroup systemFields.characteristic2 value=document.system.characteristic2 localize=true}}

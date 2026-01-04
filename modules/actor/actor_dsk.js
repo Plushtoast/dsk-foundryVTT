@@ -657,7 +657,8 @@ export default class ActorDSK extends Actor {
     
         let currentAmmo;
         if (skill) {
-         item.attack = Number(skill.attack) + Number(actor.system.rangeStats.attack);
+          const skillAttack = skill.attack ?? skill.PW ?? 0;
+          item.attack = Number(skillAttack) + Number(actor.system.rangeStats?.attack || 0);
 
    
           if (item.system.ammunitionType != "-") {
@@ -703,8 +704,12 @@ export default class ActorDSK extends Actor {
     static _prepareMeleeWeapon(item, combatskills, actorData, wornWeapons = null) {
         let skill = combatskills.find((i) => i.name == item.system.combatskill);
         if (skill) {
-          item.attack = Number(skill.attack) + Number(item.system.aw);
-          item.parry = Math.max(0, skill.parry + Number(item.system.vw) + Number(actorData.system.meleeStats.parry) +
+          // Ensure attack and parry are defined (they should be set by _calculateCombatSkillValues)
+          const skillAttack = skill.attack ?? skill.PW ?? 0;
+          const skillParry = skill.parry ?? Math.round((skill.PW || 0) * 0.25);
+          
+          item.attack = Number(skillAttack) + Number(item.system.aw);
+          item.parry = Math.max(0, skillParry + Number(item.system.vw) + Number(actorData.system.meleeStats?.parry || 0) +
             (item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Shields") ? Number(item.system.vw) : 0));
     
           item.yieldedTwoHand = RuleChaos.isYieldedTwohanded(item)
@@ -814,7 +819,9 @@ export default class ActorDSK extends Actor {
     }
 
     static _attrFromCharacteristic(char, actorData) {
-        return actorData.characteristics[char].value
+        const characteristic = actorData.characteristics[char];
+        if (!characteristic) return 8;
+        return (characteristic.initial || 8) + (characteristic.modifier || 0) + (characteristic.advances || 0) + (characteristic.gearmodifier || 0);
     }
 
     static _calculatePW(item, actorData) {
@@ -1088,7 +1095,7 @@ export default class ActorDSK extends Actor {
         guidevalues["-"] = "-";
 
         return {
-            totalWeight: parseFloat(this.system.totalWeight.toFixed(3)),
+            totalWeight: parseFloat((this.system.totalWeight || 0).toFixed(3)),
             armorSum: totalArmor,
             encumbrance: this.system.condition?.encumbered || 0,
             carrycapacity: this.system.carrycapacity,

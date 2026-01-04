@@ -19,13 +19,13 @@
     {{> systems/dsk/templates/system/dsktabs.hbs}}
 
     <section class="content career">
-        <div class="tab description scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
+        <div class="tab description standard-form scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
             <div>
                 {{#if hasLocalization}}
                 <img src="{{item.img}}" style="max-width:50%; max-height: 100%;float:right;" data-edit="img" /> {{{localize (concat "dsk.Racedescr." item.name)}}} {{else}}
                 <div class="row-section">
                     <div class="col two">
-                        {{editor enrichedDescription target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}}
+                        {{formInput systemFields.description.fields.value value=document.system.description.value toggled=true enriched=enrichedDescription}}
                     </div>
                     <div class="col two">
                         <img src="{{item.img}}" style="max-width:100%; max-height: 100%;" data-edit="img" />
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="tab details scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
+        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
             <div class="row-section">
                 <div class="col">
 

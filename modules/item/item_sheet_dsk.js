@@ -52,12 +52,11 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
     static TABS = {
         sheet: {
             tabs: [
-                { id: 'description', label: 'description' },
-                { id: 'details', label: 'details' },
-                { id: 'effects', label: 'statuseffects' },
+                { id: 'description', label: 'dsk.description' },
+                { id: 'details', label: 'dsk.details' },
+                { id: 'effects', label: 'dsk.statuseffects' },
             ],
             initial: 'description',
-            labelPrefix: 'dsk',
         },
     };
 
@@ -246,7 +245,7 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
                 getProperty(this.item.system, "description.gminfo"), 
                 { secrets: this.item.isOwner }
             ),
-            conditions: DSKStatusEffects.prepareActiveEffects(this.item),
+            ...DSKStatusEffects.prepareActiveEffects(this.item),
         };
     }
 

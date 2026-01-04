@@ -28,7 +28,7 @@
             <div class="col two row-section lineheight">
                 <input type="checkbox" id="advantage_{{i}}_{{j}}" class="optional" data-cost="{{item.apCost}}" name="{{item.replaceName}}" data-step="{{item.step}}" value="{{item.uuid}}" {{#if item.disabled}}disabled{{/if}}>
                 <label for="advantage_{{i}}_{{j}}">{{item.replaceName}} {{roman item.step item.system.max}} ({{item.apCost}} AP)</label>
-                <a class="show-item" data-id="{{item.uuid}}" data-tooltip="{{item.tooltip}}"><i class="fas fa-info"></i></a>
+                <a class="show-item" data-action="showItem" data-id="{{item.uuid}}" data-tooltip="{{item.tooltip}}"><i class="fas fa-info"></i></a>
             </div>
             {{/each}}
         </div>        
@@ -56,11 +56,11 @@
 
 </section>
 <div class="dialog-buttons">
-    <button class="dialog-button ok default" data-button="ok">
+    <button class="dialog-button ok default" data-action="ok">
     <i class="fas fa-check"></i>
     {{localize 'dsk.ok'}}
   </button>
-    <button class="dialog-button cancel default" data-button="cancel">
+    <button class="dialog-button cancel default" data-action="cancel">
     <i class="fas fa-close"></i>
     {{localize 'dsk.cancel'}}
   </button>

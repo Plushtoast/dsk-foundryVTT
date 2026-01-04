@@ -47,7 +47,7 @@
     </div>
     <div class="row-section">
         <div class="col notes-box">
-            {{editor enrichedBiography target="system.notes.biography" button=true owner=owner editable=editable engine="prosemirror"}}
+            {{formInput systemFields.notes.fields.biography value=document.system.notes.biography toggled=true enriched=enrichedBiography}}
         </div>
     </div>
 </div>
@@ -62,7 +62,7 @@
     </div>
     <div class="row-section">
         <div class="col notes-box">
-            {{editor enrichedNotes target="system.notes.description" button=true owner=owner editable=editable engine="prosemirror"}}
+            {{formInput systemFields.notes.fields.description value=document.system.notes.description toggled=true enriched=enrichedNotes}}
         </div>
     </div>
 </div>
@@ -78,7 +78,7 @@
     </div>
     <div class="row-section">
         <div class="col notes-box">
-            {{editor enrichedOwnerdescription target="system.notes.owner" button=true owner=owner editable=editable engine="prosemirror"}}
+            {{formInput systemFields.notes.fields.owner value=document.system.notes.owner toggled=true enriched=enrichedOwnerdescription}}
         </div>
     </div>
 </div>
@@ -94,7 +94,7 @@
     </div>
     <div class="row-section">
         <div class="col notes-box">
-            {{editor enrichedGmdescription target="system.notes.gm" button=true owner=owner editable=editable engine="prosemirror"}}
+            {{formInput systemFields.notes.fields.gm value=document.system.notes.gm toggled=true enriched=enrichedGmdescription}}
         </div>
     </div>
 </div>

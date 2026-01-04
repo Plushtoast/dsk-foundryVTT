@@ -6,7 +6,7 @@
     <section class="content">
 
         {{> systems/dsk/templates/items/item-description.hbs}} {{> systems/dsk/templates/items/item-effects.hbs}}
-        <div class="tab details scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
+        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
             {{formGroup systemFields.ammunitionType value=document.system.ammunitionType localize=true}}
 
             {{#if (eq system.ammunitionType 'mag')}}

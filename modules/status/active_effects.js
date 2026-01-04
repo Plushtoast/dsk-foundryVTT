@@ -70,13 +70,12 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
     static TABS = {
         sheet: {
             tabs: [
-                { id: 'details', icon: 'fa-solid fa-book' },
-                { id: 'duration', icon: 'fa-solid fa-clock' },
-                { id: 'changes', icon: 'fa-solid fa-cogs' },
+                { id: 'details', icon: 'fa-solid fa-book', label: 'dsk.details' },
+                { id: 'duration', icon: 'fa-solid fa-clock', label: 'dsk.duration' },
+                { id: 'changes', icon: 'fa-solid fa-cogs', label: 'dsk.changes' },
                 { id: 'advanced', icon: 'fa-solid fa-shield-alt', label: 'dsk.advanced' },
             ],
             initial: 'details',
-            labelPrefix: 'EFFECT.TABS',
         },
     };
 

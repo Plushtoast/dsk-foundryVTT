@@ -21,7 +21,7 @@
         </div>
         {{/if}} {{> systems/dsk/templates/items/item-description.hbs}}
 
-        <div class="tab details scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
+        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
             {{formGroup systemFields.category value=document.system.category localize=true}}
             {{formGroup systemFields.worn.fields.wearable value=document.system.worn.wearable localize=true}}
 

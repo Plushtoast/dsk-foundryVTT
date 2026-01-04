@@ -19,11 +19,10 @@
     {{> systems/dsk/templates/system/dsktabs.hbs}}
 
     <section class="content">
-        <div class="tab description scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
+        <div class="tab description standard-form scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
             <div class="row-section">
                 <div class="col sixty">
-                    {{editor enrichedDescription target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}}
-
+                    {{formInput systemFields.description.fields.value value=document.system.description.value toggled=true enriched=enrichedDescription}}
                 </div>
                 <div class="col fourty">
                     <img src="{{item.img}}" style="max-width:100%; max-height: 100%;float: left;" data-edit="img" />
@@ -31,7 +30,7 @@
             </div>
         </div>
 
-        <div class="tab details scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
+        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
             {{formGroup systemFields.skills value=document.system.skills localize=true elementType="textarea" classes="full-height"}}
             
         </div>

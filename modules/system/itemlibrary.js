@@ -187,14 +187,13 @@ export default class DSKItemLibrary extends DefaultAppv2 {
   static TABS = {
     sheet: {
       tabs: [
-        { id: 'equipment', label: 'Equipment' },
-        { id: 'character', label: 'Character' },
-        { id: 'spell', label: 'Spell' },
+        { id: 'equipment', label: 'TYPES.Item.equipment' },
+        { id: 'character', label: 'TYPES.Actor.character' },
+        { id: 'spell', label: 'dsk.SPECIALABILITYCATEGORIES.ahnen' },
         { id: 'journal', label: 'Journal' },
-        { id: 'zoo', label: 'Zoo' },
+        { id: 'zoo', label: 'dsk.zoo' },
       ],
       initial: 'equipment',
-      labelPrefix: 'dsk.TABS.',
     },
   };
 

@@ -1,8 +1,8 @@
-<div class="tab description scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
+<div class="tab description standard-form scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
     <div>
         <div class="row-section">
-            <div class="col {{#unless system.description.value}}item-box{{/unless}}">
-                {{editor enrichedDescription target="system.description.value" button=true owner=owner editable=editable engine="prosemirror"}} 
+            <div class="col {{#unless document.system.description.value}}item-box{{/unless}}">
+                {{formInput systemFields.description.fields.value value=document.system.description.value toggled=true enriched=enrichedDescription}}
             </div>
         </div>
     </div>
@@ -10,8 +10,8 @@
     <div class="row-section" style="margin-top:20px">
         <div class="col maskfield">
             <div class="row-section" data-tooltip="dsk.TT.onlyGM">
-                <div class="col {{#unless system.description.gminfo}}item-box{{/unless}}">
-                    {{editor enrichedGmdescription target="system.description.gminfo" button=true owner=owner editable=editable engine="prosemirror"}} 
+                <div class="col {{#unless document.system.description.gminfo}}item-box{{/unless}}">
+                    {{formInput systemFields.description.fields.gminfo value=document.system.description.gminfo toggled=true enriched=enrichedGmdescription}}
                 </div>
             </div>
         </div>

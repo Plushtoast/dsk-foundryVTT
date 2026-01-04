@@ -27,16 +27,15 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     static TABS = {
         sheet: {
             tabs: [
-                { id: 'skills', label: 'skills' },
-                { id: 'combat', label: 'Combat' },
-                { id: 'magic', label: 'SPECIALABILITYCATEGORIES.ahnen' },
-                { id: 'main', label: 'attributes' },
+                { id: 'skills', label: 'dsk.skills' },
+                { id: 'combat', label: 'dsk.Combat' },
+                { id: 'magic', label: 'dsk.SPECIALABILITYCATEGORIES.ahnen' },
+                { id: 'main', label: 'dsk.attributes' },
                 { id: 'inventory', label: 'TYPES.Item.equipment' },
-                { id: 'status', label: 'status' },
-                { id: 'notes', label: 'Notes' },
+                { id: 'status', label: 'dsk.status' },
+                { id: 'notes', label: 'dsk.Notes' },
             ],
             initial: 'skills',
-            labelPrefix: 'dsk',
         },
     };
 
@@ -523,11 +522,12 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
             ...context,
             actor: this.actor,
             system: this.actor.system,
+            systemFields: this.document.system.schema?.fields,
             prepare: this.actor.prepareSheet({ details: this.openDetails }),
             sizeCategories: DSK.sizeCategories,
             isGM: game.user.isGM,
             initDies: { "": "-", "1d6": "1d6", "2d6": "2d6", "3d6": "3d6", "4d6": "4d6" },
-            conditions: DSKStatusEffects.prepareActiveEffects(this.actor),
+            ...DSKStatusEffects.prepareActiveEffects(this.actor),
             enrichedOwnerdescription: await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.owner"), { secrets: this.actor.isOwner }),
             enrichedGmdescription: await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.gm"), { secrets: this.actor.isOwner }),
             enrichedNotes: await TextEditor.enrichHTML(getProperty(this.actor.system, "notes.description"), { secrets: this.actor.isOwner }),
