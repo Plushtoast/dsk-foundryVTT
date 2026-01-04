@@ -134,11 +134,12 @@ export default class ActorDSK extends Actor {
 
     static _calculateCombatSkillValues(i, actorData) {
         i = ActorDSK._calculatePW(i, actorData)
-        i.system.attack = i.PW
+        // Store calculated values on item, not in system (DataModel is read-only)
+        i.attack = i.PW
         if (i.system.weapontype == "melee") {
-            i.system.parry = Math.round(i.PW * 0.25);
+            i.parry = Math.round(i.PW * 0.25);
         } else {
-            i.system.parry = 0;
+            i.parry = 0;
         }
         i.cost = game.i18n.format("dsk.advancementCost", {
             cost: DSKUtility._calculateAdvCost(i.system.level, i.system.StF),
@@ -656,7 +657,7 @@ export default class ActorDSK extends Actor {
     
         let currentAmmo;
         if (skill) {
-         item.attack = Number(skill.system.attack) + Number(actor.system.rangeStats.attack);
+         item.attack = Number(skill.attack) + Number(actor.system.rangeStats.attack);
 
    
           if (item.system.ammunitionType != "-") {
@@ -702,8 +703,8 @@ export default class ActorDSK extends Actor {
     static _prepareMeleeWeapon(item, combatskills, actorData, wornWeapons = null) {
         let skill = combatskills.find((i) => i.name == item.system.combatskill);
         if (skill) {
-          item.attack = Number(skill.system.attack) + Number(item.system.aw);
-          item.parry = Math.max(0, skill.system.parry + Number(item.system.vw) + Number(actorData.system.meleeStats.parry) +
+          item.attack = Number(skill.attack) + Number(item.system.aw);
+          item.parry = Math.max(0, skill.parry + Number(item.system.vw) + Number(actorData.system.meleeStats.parry) +
             (item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Shields") ? Number(item.system.vw) : 0));
     
           item.yieldedTwoHand = RuleChaos.isYieldedTwohanded(item)

@@ -694,7 +694,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
         this.#gearSearch ??= new SearchFilter({
             inputSelector: ".gearSearch",
-            contentSelector: "[data-application-part=inventory]",
+            contentSelector: ".tab.inventory",
             callback: this._filterGear.bind(this)
         });
         this.#gearSearch.bind(this.element);

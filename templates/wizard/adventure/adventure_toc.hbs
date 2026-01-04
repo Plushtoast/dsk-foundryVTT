@@ -2,7 +2,7 @@
     <div style="flex:none">
         {{#if book.id}}
         <h2 class="center" style="margin-top:0px;">
-            <a class="loadBook">{{book.id}}</a>
+            <a data-action="loadBook">{{book.id}}</a>
         </h2>
         <div class="row-section lineheight" style="margin-bottom:10px">
             <div class="col ten center">
@@ -12,7 +12,7 @@
                 <input type="search" class="filterJournals" placeholder="{{localize 'dsk.Book.search'}}" value="{{searchString}}"/>
             </div>
             <div class="col ten libButton center">
-                <a class="fulltextsearch {{fulltextsearch}}" data-tooltip="dsk.Book.fulltextsearch"><i class="fas fa-toggle-off"></i></a>
+                <a data-action="fulltextsearchToggle" class="fulltextsearch {{fulltextsearch}}" data-tooltip="dsk.Book.fulltextsearch"><i class="fas fa-toggle-off"></i></a>
             </div>
         </div>
         {{/if}}
@@ -27,12 +27,12 @@
                 <ul class="tocList" data-type="{{category.name}}">
                     {{#each category.content as |item i|}}
                     <li class="page flexcol {{ifThen item.selected 'active' ''}}">
-                        <button type="button" data-id="{{item.id}}" class="{{item.cssClass}} getChapter">{{item.name}}</button>
+                        <button type="button" data-id="{{item.id}}" data-action="getChapter" class="{{item.cssClass}} getChapter">{{item.name}}</button>
                         {{#if item.subChapters}}
                         <ul>
                             {{#each item.subChapters as |item i|}}
                             <li class="page flexcol">
-                                <button type="button" data-jid="{{item.id}}" class="subChapter {{item.cssClass}}"><i class="fas fa-caret-right"></i> {{item.name}}</button>
+                                <button type="button" data-jid="{{item.id}}" data-action="subChapter" class="subChapter {{item.cssClass}}"><i class="fas fa-caret-right"></i> {{item.name}}</button>
                                 
                                 {{#if item.selected}}
                                 {{{../../../pageTocs}}}
@@ -47,13 +47,5 @@
                 {{/each}}
             </div>
         </div>
-    </div>
-    <div class="action-buttons flexrow" style="flex:none">
-        <button class="movePage" type="button" data-action="previous" data-tooltip="Previous Page">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
-        <button class="movePage" type="button" data-action="next" data-tooltip="Next Page">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
     </div>
 </div>

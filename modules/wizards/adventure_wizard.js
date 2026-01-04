@@ -6,10 +6,13 @@ import DSKUtility from "../system/dsk_utility.js"
 import { slist } from "../system/view_helper.js"
 import DSK from "../system/config.js"
 import { DefaultAppv2 } from "../actor/baseapp.js";
+import { DragMixin } from "../actor/mixins/drag_mixin.js";
+import FlexSearch from "../../libs/flexsearch.bundle.module.min.js"
 const { mergeObject, duplicate } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
+const { TextEditor } = foundry.applications.ux;
 
-export default class BookWizard extends DefaultAppv2 {
+export default class BookWizard extends DragMixin(DefaultAppv2) {
     static wizard
 
     static DEFAULT_OPTIONS = {
@@ -109,7 +112,7 @@ export default class BookWizard extends DefaultAppv2 {
     }
 
     static _movePage(ev, target) {
-        this.movePage(ev)
+        this.movePage(target)
     }
 
     static _loadBook(ev, target) {
@@ -136,9 +139,7 @@ export default class BookWizard extends DefaultAppv2 {
         }
 
         const html = $(this.element)
-        this._saveScrollPositions(html)
-        html.find('.toc').html(await this.getToc())
-        this._restoreScrollPositions(html)
+        html.find('.tocList').html(await this.getToc())
 
         if (this.searchString) this.filterToc(this.searchString)
     }
@@ -266,8 +267,8 @@ export default class BookWizard extends DefaultAppv2 {
         return { journals, targetindex }
     }
 
-    async movePage(ev) {
-        const dir = ev.currentTarget.dataset.action
+    async movePage(target) {
+        const dir = target.dataset.direction
         let { journals, targetindex } = await this.getPagy(this.selectedChapter, this.selectedSubChapter)
         let flattenedChapters = []
 
@@ -347,6 +348,7 @@ export default class BookWizard extends DefaultAppv2 {
 
     async filterToc(val) {
         this.searchString = val
+        const html = $(this.element)
         if (val != undefined) {
             val = val.toLowerCase().trim()
 
@@ -354,37 +356,39 @@ export default class BookWizard extends DefaultAppv2 {
                 let result = []
                 if (this.fulltextsearch) {
                     if (!this.journalIndex) {
-                        this.journalIndex = new FlexSearch({
-                            encode: "simple",
-                            tokenize: "reverse",
+                        this.journalIndex = new FlexSearch.Document({
+                            tokenize: "full",
                             cache: true,
-                            doc: {
+                            document: {
                                 id: "id",
-                                field: [
-                                    "name",
-                                    "data"
-                                ]
+                                store: true,
+                                index: ['name', 'data']
                             }
                         });
-                        await this.journalIndex.add(this.journals.map(x => new JournalSearch(x)))
+                        for (const journal of this.journals) {
+                            await this.journalIndex.add(new JournalSearch(journal).toObject());
+                        }
                     }
-                    result = await this.journalIndex.search(val)
+                    const query = {
+                        index: ['name', 'data']
+                    }
+                    result = (await this.journalIndex.searchAsync(val, query)).map(x => x.result).flat().map(x => this.journalIndex.get(x))
                 } else {
                     result = this.journals.filter(x => {
                         return x.name.toLowerCase().trim().indexOf(val) != -1
                     })
                 }
-                result = result.map(x => `<li class="fas fa-caret-right"><a data-jid="${x.id}" class="subChapter">${x.name}</a></li>`)
+                result = result.map(x => `<li><button type="button" data-jid="${x.id}" data-action="subChapter" class="subChapter"><i class="fas fa-caret-right"></i>${x.name}</button></li>`)
 
-                $($(this.element)).find('.tocContent').html(`<ul>${result.join("\n")}</ul>`)
+                html.find('.tocContent').html(`<ul>${result.join("\n")}</ul>`)
             } else {
                 const content = await this.getToc()
-                $($(this.element)).find('.toc').html(content).find(".filterJournals").trigger("focus")
+                html.find('.toc').html(content).find(".filterJournals").trigger("focus")
             }
         }
 
         const journal = await this.getChapter()
-        const chapter = $($(this.element)).find('.chapter')
+        const chapter = html.find('.chapter')
         chapter.html(journal)
         this.markFindings(chapter)
     }
@@ -720,16 +724,14 @@ export default class BookWizard extends DefaultAppv2 {
         const template = await this.getChapter()
         const toc = await this.getToc()
 
-        this._saveScrollPositions(html)
-        html.find('.toc').html(toc)
+        html.find('.tocList').html(toc)
         const chapter = html.find('.chapter')
         chapter.html(template)
         this.markFindings(chapter)
-        this._restoreScrollPositions(html)
     }
 
-    async getData(options) {
-        const data = await super.getData(options);
+    async _prepareContext(_options) {
+        const data = await super._prepareContext(_options);
         const currentChapter = await this.getChapter()
         const toc = await this.getToc()
         const index = game.settings.get("dsk", "journalFontSizeIndex")
@@ -819,6 +821,15 @@ class JournalSearch {
             id: item.id,
         }
     }
+
+    toObject() {
+        return {
+            name: this.name,
+            data: this.data,
+            id: this.id,
+        }
+    }
+
     get name() {
         return this.document.name
     }

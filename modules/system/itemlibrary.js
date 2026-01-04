@@ -194,6 +194,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
         { id: 'zoo', label: 'Zoo' },
       ],
       initial: 'equipment',
+      labelPrefix: 'dsk.TABS.',
     },
   };
 
@@ -211,8 +212,17 @@ export default class DSKItemLibrary extends DefaultAppv2 {
     this.indexLoader = new ItemLibraryIndexLoader();
     this.advancedFiltering = false
     
-    this.loadSystemSpecificConfig().then(() => {
-      this.prepareDataModels()
+    // Initialize indexes synchronously to avoid race conditions with _onRender
+    this.indexes = {}
+    this.detailFilter = {}
+    this.detailStoreBySubcategory = {}
+    this.candidateUuidsBySubcategory = {}
+    this.detailEnrichmentInFlight = {}
+    this.models = {}
+    this._modelsInitialized = false
+
+    // Store the init promise so _onRender can await it
+    this._initPromise = this.loadSystemSpecificConfig().then(() => {
       this.prepareIndexes()
     })
   }
@@ -220,7 +230,12 @@ export default class DSKItemLibrary extends DefaultAppv2 {
   async loadSystemSpecificConfig() {
     this.systemConfiguration = DSKSystemConfiguration
     this.systemConfiguration.initialize()
-    this.fullTextSearch = game.settings.get("dsk", "indexDescription") && this.systemConfiguration.hasDescription
+    // Settings may not be registered yet during init hook - use try/catch with default
+    try {
+      this.fullTextSearch = game.settings.get("dsk", "indexDescription") && this.systemConfiguration.hasDescription
+    } catch {
+      this.fullTextSearch = false
+    }
   }
 
   prepareIndexes() {
@@ -268,6 +283,12 @@ export default class DSKItemLibrary extends DefaultAppv2 {
   }
 
   async _prepareContext(options) {
+    // Prepare data models on first context preparation (when i18n is ready)
+    if (!this._modelsInitialized) {
+      this.prepareDataModels()
+      this._modelsInitialized = true
+    }
+    
     const data = {}
     data.categories = this.translateFilters()
     data.isGM = game.user.isGM
@@ -859,6 +880,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
     this.element.addEventListener("dragstart", this.itemDragStart.bind(this));
     html.find('.scrollable, .window-content').on('scroll.infinit', ev => foundry.utils.debounce(this._infiniteScroll(ev, source), 100));
     this.element.addEventListener("dragover", ev => this._onDragOver(ev));
+    
     html.on('change', '.detailFilters input, .detailFilters select', () => {
       const category = $(this.element).find('.tab.active')[0].dataset.tab;
 
@@ -873,12 +895,18 @@ export default class DSKItemLibrary extends DefaultAppv2 {
       this._debouncedFilterItems(category);
     });
 
+    // Wait for initialization before building index
+    await this._initPromise;
     this.buildItemIndex()
   }
 
   async _openItem(ev) {
     const uuid = $(ev.currentTarget).data("uuid")
     const item = await fromUuid(uuid)
+    if (!item) {
+      ui.notifications.warn(game.i18n.localize("dsk.DSKError.notFound"))
+      return
+    }
     item.sheet.render(true)
   }
 
@@ -1052,6 +1080,16 @@ export default class DSKItemLibrary extends DefaultAppv2 {
     }
   }
 
+  static _toggleWorldIndex(ev, target) {
+    game.settings.set("dsk", "indexWorldItems", !game.settings.get("dsk", "indexWorldItems"))
+    $(target).toggleClass("on")
+  }
+
+  static _fulltextsearch(ev, target) {
+    game.settings.set("dsk", "indexDescription", !game.settings.get("dsk", "indexDescription"))
+    $(target).toggleClass("on")
+  }
+
   static async _filterChange(ev, target) {
     const tab = $(this.element).find('.tab.active')
     const category = tab.attr("data-tab")
@@ -1086,16 +1124,6 @@ export default class DSKItemLibrary extends DefaultAppv2 {
     const tab = $(target).attr("data-btn")
     $(target).find('i').toggleClass("fa-caret-left fa-caret-right")
     $(this.element).find(`.${tab} .detailBox`).toggleClass("dskhidden")
-  }
-
-  static _toggleWorldIndex(ev, target) {
-    game.settings.set("dsk", "indexWorldItems", !game.settings.get("dsk", "indexWorldItems"))
-    $(target).toggleClass("on")
-  }
-
-  static _fulltextsearch(ev, target) {
-    game.settings.set("dsk", "indexDescription", !game.settings.get("dsk", "indexDescription"))
-    $(target).toggleClass("on")
   }
 
   static _tabClick(ev, target) {

@@ -237,6 +237,13 @@ export function setupConfiguration() {
         default: true,
         type: Boolean
     });
+    game.settings.register("dsk", "filterDuplicateItems", {
+        name: "dsk.SETTINGS.filterDuplicateItems",
+        scope: "client",
+        config: false,
+        default: false,
+        type: Boolean
+    });
     game.settings.register("dsk", "tokenizerSetup", {
         name: "tokenizerSetup",
         scope: "world",

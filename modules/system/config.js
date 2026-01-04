@@ -415,7 +415,8 @@ DSK.regenerationInterruptOptions = {
     "-2": "dsk.regenerationInterruptOptions.big"
 }
 
-DSK.equipmentCategories = ["meleeweapon", "rangeweapon", "equipment", "ammunition", "armor", "poison"]
+DSK.equipmentCategories = new Set(["meleeweapon", "rangeweapon", "equipment", "ammunition", "armor", "poison"])
+DSK.magicCategories = new Set(["ahnengabe", "ahnengeschenk"])
 
 DSK.rangeSizeModifier = {
     "tiny": -8,
