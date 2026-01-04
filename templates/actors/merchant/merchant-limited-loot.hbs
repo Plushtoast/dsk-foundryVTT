@@ -67,7 +67,7 @@
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <a class="item-external-edit">{{item.name}}</a>
+                                                <a data-action="externalEdit" class="item-external-edit">{{item.name}}</a>
                                             </div>
                                             <div class="col four center">
                                                 {{item.calculatedPrice}}
@@ -76,7 +76,7 @@
                                                 {{item.system.quantity}}
                                             </div>
                                             <div class="col eight center">
-                                                <a class="sell-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.exchange"><i class="fas fa-exchange-alt"></i></a>
+                                                <a data-action="sellItem" class="sell-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.exchange"><i class="fas fa-exchange-alt"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -114,7 +114,7 @@
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <a class="item-edit">{{item.name}}</a>
+                                                <a data-action="itemEdit" class="item-edit">{{item.name}}</a>
                                             </div>
                                             <div class="col four center">
                                                 {{item.calculatedPrice}}
@@ -123,7 +123,7 @@
                                                 {{item.system.quantity}}
                                             </div>
                                             <div class="col eight center">
-                                                <a class="buy-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.exchange"><i class="fas fa-exchange-alt"></i></a>
+                                                <a data-action="buyItem" class="buy-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.exchange"><i class="fas fa-exchange-alt"></i></a>
                                             </div>
                                         </div>
                                     </div>

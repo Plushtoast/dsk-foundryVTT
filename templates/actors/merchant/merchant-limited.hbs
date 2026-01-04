@@ -109,7 +109,7 @@
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <a class="item-external-edit">{{item.name}}</a>
+                                                <a data-action="externalEdit" class="item-external-edit">{{item.name}}</a>
                                             </div>
                                             <div class="col four center">
                                                 {{item.calculatedPrice}}
@@ -118,7 +118,7 @@
                                                 {{item.system.quantity}}
                                             </div>
                                             <div class="col eight center">
-                                                <a class="sell-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.sell"><i class="fas fa-piggy-bank"></i></a>
+                                                <a data-action="sellItem" class="sell-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.sell"><i class="fas fa-piggy-bank"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <a class="item-edit">{{item.name}}</a>
+                                                <a data-action="itemEdit" class="item-edit">{{item.name}}</a>
                                             </div>
                                             <div class="col four center">
                                                 {{item.calculatedPrice}}
@@ -165,7 +165,7 @@
                                                 {{item.system.quantity}}
                                             </div>
                                             <div class="col eight center">
-                                                <a class="buy-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.buy"><i class="fas fa-shopping-cart"></i></a>
+                                                <a data-action="buyItem" class="buy-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.buy"><i class="fas fa-shopping-cart"></i></a>
                                             </div>
                                         </div>
                                     </div>

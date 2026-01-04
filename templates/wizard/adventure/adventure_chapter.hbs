@@ -22,13 +22,13 @@
         {{item}}
     </div>
     <div class="col ten center">
-        <a class="activateScene" data-id="{{item}}" data-mode="activate"><i class="fas fa-bullseye"></i></a>
+        <a data-action="activateScene" class="activateScene" data-id="{{item}}" data-mode="activate"><i class="fas fa-bullseye"></i></a>
     </div>
     <div class="col ten center">
-        <a class="activateScene" data-id="{{item}}" data-mode="view"><i class="fas fa-eye"></i></a>
+        <a data-action="activateScene" class="activateScene" data-id="{{item}}" data-mode="view"><i class="fas fa-eye"></i></a>
     </div>
     <div class="col ten center">
-        <a class="activateScene" data-id="{{item}}" data-mode="toggle"><i class="fas fa-compass"></i></a>
+        <a data-action="activateScene" class="activateScene" data-id="{{item}}" data-mode="toggle"><i class="fas fa-compass"></i></a>
     </div>
 </div>
 {{/each}} {{/if}} {{#if actors}}
@@ -66,7 +66,7 @@
     <h2>{{localize 'dsk.Book.toc'}}</h2>
     <ul>
         {{#each subChapters as |item i|}}
-        <li class="fas fa-caret-right"><a class="subChapter" data-jid="{{item.id}}">{{item.name}}</a></li>
+        <li class="fas fa-caret-right"><a data-action="subChapter" class="subChapter" data-jid="{{item.id}}">{{item.name}}</a></li>
         {{/each}}
     </ul>
 </div>

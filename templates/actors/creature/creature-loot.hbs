@@ -21,7 +21,7 @@
             <i class="fa fa-anchor" data-tooltip="dsk.weight"></i>
         </div>
         <div class="col ten center">
-            <a class="item-create very-small" data-tooltip="dsk.SHEET.addItem" item-section="{{sid}}" data-type="{{section.dataType}}"><i class="fas fa-plus"></i></a>
+            <a data-action="itemCreate" class="item-create very-small" data-tooltip="dsk.SHEET.addItem" item-section="{{sid}}" data-type="{{section.dataType}}"><i class="fas fa-plus"></i></a>
         </div>
     </div>
     <div class="row-section wrap rowtable inventory">
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <a class="item-edit {{#if item.consumable}}consume-item{{/if}}">{{item.name}}</a>
+                    <a data-action="itemEdit" class="item-edit {{#if item.consumable}}consume-item{{/if}}">{{item.name}}</a>
                 </div>
                 {{#if (eq item.system.category 'bags')}}
                 <div class="col five center">
@@ -42,22 +42,22 @@
                 {{/if}}
                 <div class="col eight center" {{#if (eq item.system.category 'bags')}} data-tooltip="dsk.SHEET.weightOnActor" {{/if}}>
                     {{#if item.toggle}} {{#if item.toggleValue}}
-                    <a class="item-toggle"><i class="far fa-check-circle"></i></a> {{else}}
-                    <a class="item-toggle"><i class="far fa-circle"></i></a> {{/if}} {{/if}}
+                    <a data-action="itemToggle" class="item-toggle"><i class="far fa-check-circle"></i></a> {{else}}
+                    <a data-action="itemToggle" class="item-toggle"><i class="far fa-circle"></i></a> {{/if}} {{/if}}
                 </div>
 
                 <div class="col eight center">
-                    <a class="quantity-click">{{item.system.quantity}}</a>
+                    <a data-action="quantityClick" class="quantity-click">{{item.system.quantity}}</a>
                 </div>
                 <div class="col eight center">
                     {{item.system.preparedWeight}}
                 </div>
                 <div class="col ten very-small center">
-                    {{#if item.OnUseEffect}}<a data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}
-                    <a class="item-post" data-tooltip="dsk.SHEET.PostItem"><i class="fas fa-comment"></i></a>
-                    <a class="item-control item-edit" data-tooltip="dsk.SHEET.EditItem"><i class="fas fa-edit"></i></a>
-                    <a class="item-dropdown" data-tooltip="dsk.SHEET.Dropdown"><i class="fas fa-chevron-down"></i></a>
-                    <a class="item-control item-delete" data-tooltip="dsk.SHEET.DeleteItem"><i class="fas fa-trash"></i></a>
+                    {{#if item.OnUseEffect}}<a data-action="onUseItem" data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}
+                    <a data-action="itemPost" class="item-post" data-tooltip="dsk.SHEET.PostItem"><i class="fas fa-comment"></i></a>
+                    <a data-action="itemEdit" class="item-control item-edit" data-tooltip="dsk.SHEET.EditItem"><i class="fas fa-edit"></i></a>
+                    <a data-action="itemDropdown" class="item-dropdown" data-tooltip="dsk.SHEET.Dropdown"><i class="fas fa-chevron-down"></i></a>
+                    <a data-action="deleteItem" class="item-control item-delete" data-tooltip="dsk.SHEET.DeleteItem"><i class="fas fa-trash"></i></a>
                 </div>
             </div>
             <div class="row-section lineheight expandDetails {{item.detailed}}">

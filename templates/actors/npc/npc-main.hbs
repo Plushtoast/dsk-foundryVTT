@@ -11,7 +11,7 @@
             <div class="row-section wrap cards">
                 {{#each prepare.advantages as |item i|}}
                 <div class="item" data-item-id="{{item._id}}">
-                    <a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+                    <a data-action="itemEdit" class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
                 </div>
                 {{/each}}
             </div>
@@ -26,7 +26,7 @@
             <div class="row-section wrap cards">
                 {{#each prepare.disadvantages as |item i|}}
                 <div class="item" data-item-id="{{item._id}}">
-                    <a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+                    <a data-action="itemEdit" class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
                 </div>
                 {{/each}}
             </div>
@@ -41,7 +41,7 @@
             <div class="row-section wrap cards">
                 {{#each prepare.specAbs.general as |item i|}}
                 <div class="item" data-item-id="{{item._id}}">
-                    {{#if item.OnUseEffect}}<a data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+                    {{#if item.OnUseEffect}}<a data-action="onUseItem" data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a data-action="itemEdit" class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
                 </div>
                 {{/each}}
             </div>
@@ -56,7 +56,7 @@
             <div class="row-section wrap cards">
                 {{#each prepare.specAbs.language as |item i|}}
                 <div class="item" data-item-id="{{item._id}}">
-                    {{#if item.OnUseEffect}}<a data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+                    {{#if item.OnUseEffect}}<a data-action="onUseItem" data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a data-action="itemEdit" class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
                 </div>
                 {{/each}}
             </div>
@@ -85,10 +85,10 @@
             </div>
             <div class="derivedAttrs row-section">
                 <div class="col two lineheight">
-                    {{localize "dsk.LeP"}} {{#if prepare.canAdvance}}<a data-attr="LeP" class="advance refund-points"><i data-tooltip="{{actor.system.stats.LeP.refund}}" class="fas fa-minus"></i></a>
-                    <a data-attr="LeP" class="advance advance-points"><i data-tooltip="{{actor.system.stats.LeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                    {{localize "dsk.LeP"}} {{#if prepare.canAdvance}}<a data-attr="LeP" data-action="advanceWrapper" class="advance refund-points"><i data-tooltip="{{actor.system.stats.LeP.refund}}" class="fas fa-minus"></i></a>
+                    <a data-attr="LeP" data-action="advanceWrapper" class="advance advance-points"><i data-tooltip="{{actor.system.stats.LeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
                     <span class="buttons">
-                        <a data-char="regenerate" class="ch-regenerate item" data-mod="regenerate" data-tooltip="dsk.regenerate">&nbsp;<i class="fas fa-moon"></i></a>
+                        <a data-char="regenerate" data-action="chRegenerate" class="ch-regenerate item" data-mod="regenerate" data-tooltip="dsk.regenerate">&nbsp;<i class="fas fa-moon"></i></a>
                     </span>
                 </div>
                 <div class="col eight lineheight center">
@@ -126,8 +126,8 @@
             {{#if prepare.magic.hasSpells}}
             <div class="derivedAttrs row-section">
                 <div class="col two lineheight">
-                    {{localize "dsk.AeP"}} {{#if prepare.canAdvance}}<a data-attr="AeP" class="advance refund-points"><i data-tooltip="{{actor.system.stats.AeP.refund}}" class="fas fa-minus"></i></a>
-                    <a data-attr="AeP" class="advance advance-points"><i data-tooltip="{{actor.system.stats.AeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                    {{localize "dsk.AeP"}} {{#if prepare.canAdvance}}<a data-attr="AeP" data-action="advanceWrapper" class="advance refund-points"><i data-tooltip="{{actor.system.stats.AeP.refund}}" class="fas fa-minus"></i></a>
+                    <a data-attr="AeP" data-action="advanceWrapper" class="advance advance-points"><i data-tooltip="{{actor.system.stats.AeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
                 </div>
                 <div class="col eight lineheight center">
                     {{actor.system.stats.AeP.current}}

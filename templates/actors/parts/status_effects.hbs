@@ -8,7 +8,7 @@
         </div>
         <div class="col ten center">
             <div class="statusEffectMenu">
-                <a class="status-create lineheight very-small" data-tooltip="dsk.CONDITION.add"><i class="fas fa-plus"></i></a>
+                <a data-action="statusCreate" class="status-create lineheight very-small" data-tooltip="dsk.CONDITION.add"><i class="fas fa-plus"></i></a>
                 <ul>
                     <li class="search">
                         <input type="search" data-dtype="String" class="conditionSearch" placeholder="{{localize 'dsk.search'}}" />
@@ -78,7 +78,7 @@
                 <a data-action="conditionShow" class="condition-show" data-id="{{item._id}}">{{localize item.name}}</a>
             </div>
             <div class="col ten center">
-                {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
+                {{#if item.editable}}{{#unless item.boolean}}<a data-action="conditionValue" class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
             </div>
             <div class="col ten center" data-tooltip="dsk.value">
                 <span>{{item.value}}</span>
@@ -234,7 +234,7 @@
                 <a data-action="conditionShow" class="condition-show" data-locked="true" data-id="{{item._id}}">{{localize item.name}}</a>
             </div>
             <div class="col ten center">
-                {{#if item.editable}}{{#unless item.boolean}}<a class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
+                {{#if item.editable}}{{#unless item.boolean}}<a data-action="conditionValue" class="condition-value">{{item.manual}}</a>{{/unless}}{{/if}}
             </div>
             <div class="col ten center" data-tooltip="dsk.value">
                 <span>{{item.value}}</span>
@@ -268,7 +268,7 @@
                 
             </div>
             <div class="col ten">
-                <a class="disableRegeneration" data-type="wounds">{{#if actor.system.repeatingEffects.disabled.LeP}}<i class="far fa-circle"></i>{{else}}<i class="far fa-check-circle"></i>{{/if}}</a>
+                <a data-action="disableRegeneration" class="disableRegeneration" data-type="wounds">{{#if actor.system.repeatingEffects.disabled.LeP}}<i class="far fa-circle"></i>{{else}}<i class="far fa-check-circle"></i>{{/if}}</a>
             </div>
         </div>
         {{/if}}
@@ -279,7 +279,7 @@
                 {{localize 'dsk.regenerate'}} {{localize 'dsk.CHARAbbrev.CR'}} ({{localize 'dsk.AeP'}})
             </div>
             <div class="col ten">
-                <a class="disableRegeneration" data-type="astralenergy">{{#if actor.system.repeatingEffects.disabled.AeP}}<i class="far fa-circle"></i>{{else}}<i class="far fa-check-circle"></i>{{/if}}</a>
+                <a data-action="disableRegeneration" class="disableRegeneration" data-type="astralenergy">{{#if actor.system.repeatingEffects.disabled.AeP}}<i class="far fa-circle"></i>{{else}}<i class="far fa-check-circle"></i>{{/if}}</a>
             </div>
         </div>
         {{/if}}
