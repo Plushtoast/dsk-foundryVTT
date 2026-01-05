@@ -11,7 +11,7 @@
     {{formGroup systemFields.at value=document.system.at localize=true}}
     {{formGroup systemFields.pa value=document.system.pa localize=true}}
     {{formGroup systemFields.tp value=document.system.tp localize=true}}
-    {{formGroup systemFields.rw value=document.system.rw localize=true}}
+    {{formGroup systemFields.rw value=document.system.rw localize=true choices=ranges}}
   
     {{/if}}{{#if (eq system.traitType "armor")}}
     <div class="form-group">

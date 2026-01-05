@@ -28,6 +28,7 @@ export default class PoisonData extends ItemDataModel.mixin(
       process: new StringField({ initial: '-', label: 'dsk.process' }),
       price: new NumberField({ initial: 0, label: 'dsk.price' }),
       quantity: new NumberField({ initial: 1, label: 'dsk.quantity' }),
+      weight: new NumberField({ initial: 0, label: 'dsk.weight' }),
     });
   }
 

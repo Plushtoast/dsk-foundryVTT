@@ -405,10 +405,30 @@ class ItemSheetTrait extends ItemSheetDSK {
 }
 
 class ItemSheetInformation extends NoEffectsSheet {
-    _prepareTabs(group) {
-        const tabs = super._prepareTabs(group);
-        delete tabs.description;  // Information has no description tab
-        return tabs;
+    static TABS = {
+        sheet: {
+            tabs: [
+                { id: 'details', label: 'dsk.details' },
+            ],
+            initial: 'details',
+        },
+    };
+
+    static PARTS = {
+        header: {
+            template: 'systems/dsk/templates/items/item-header.hbs',
+        },
+        stat: {
+            template: 'systems/dsk/templates/items/item-stat.hbs',
+        },
+        tabs: {
+            template: 'systems/dsk/templates/system/dsktabs.hbs',
+            id: "tabs",
+        },
+        details: {
+            template: 'systems/dsk/templates/items/item-information-sheet.hbs',
+            scrollable: [''],
+        },
     }
 
     async _prepareContext(options) {

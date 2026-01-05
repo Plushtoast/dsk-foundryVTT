@@ -27,6 +27,10 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate) 
     });
   }
 
+  async getSheetData(data) {
+    data.ranges = DSK.meleeRanges;
+  }
+
   static chatData(data, name) {
     return [
       { key: 'dsk.traitType', val: data.traitType, localizeVal: true },
