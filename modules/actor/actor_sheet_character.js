@@ -11,21 +11,7 @@ export default class ActorSheetCharacter extends ActorSheetDSK {
         classes: ['dsk', 'actor', 'character-sheet'],
     };
 
-    static PARTS = {
-        main: {
-            template: "systems/dsk/templates/actors/actor-sheet.hbs",
-            scrollable: [''],
-        },
-        limited: {
-            template: "systems/dsk/templates/actors/npc-limited.hbs",
-            scrollable: [''],
-        },
-    };
-
-    get template() {
-        if (this.showLimited()) return ActorSheetCharacter.PARTS.limited.template;
-        return ActorSheetCharacter.PARTS.main.template;
-    }
+    // Uses parent PARTS definition - header, tabs, and content areas
 
     async _manageDragItems(item, typeClass) {
         switch (typeClass) {

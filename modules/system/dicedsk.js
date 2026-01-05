@@ -443,9 +443,9 @@ export default class DiceDSK{
     }
 
     static parseEffect(source) {
-        const effectString = source.system.effect ? source.system.effect : undefined
+        const effectString = source.system?.effect
         const result = []
-        if (effectString) {
+        if (effectString && typeof effectString === 'string') {
             const regex = /^[a-z]+\|[öäüÖÄÜa-zA-z ]+$/
 
             for (let k of effectString.split(";")) {
@@ -754,25 +754,26 @@ export default class DiceDSK{
                 });
                 [result, form] = await new Promise((resolve, reject) => {
                     new DSKDialog({
-                        title: game.i18n.localize(options.cheat ? "dsk.DIALOG.cheat" : "dsk.SETTINGS.allowPhysicalDice"),
+                        window: { title: game.i18n.localize(options.cheat ? "dsk.DIALOG.cheat" : "dsk.SETTINGS.allowPhysicalDice") },
                         content: template,
-                        default: "ok",
-                        buttons: {
-                            ok: {
-                                icon: '<i class="fa fa-check"></i>',
+                        buttons: [
+                            {
+                                action: "ok",
+                                icon: "fa fa-check",
                                 label: game.i18n.localize("dsk.yes"),
-                                callback: (dlg) => {
-                                    resolve([true, dlg])
+                                callback: (event, button, dlg) => {
+                                    resolve([true, $(button.form)])
                                 },
                             },
-                            cancel: {
-                                icon: '<i class="fas fa-times"></i>',
+                            {
+                                action: "cancel",
+                                icon: "fas fa-times",
                                 label: game.i18n.localize("dsk.cancel"),
                                 callback: () => {
                                     resolve([false, 0])
                                 },
                             },
-                        },
+                        ],
                     }).render(true)
                 })
 

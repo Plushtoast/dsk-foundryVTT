@@ -1,0 +1,18 @@
+<div class="tab description standard-form scrollable {{tab.cssClass}}" data-tab="description" data-group="{{tab.group}}">
+    <div class="row-section">
+        <div class="col two">
+            {{formInput systemFields.description.fields.value value=document.system.description.value toggled=true enriched=enrichedDescription}}
+        </div>
+        <div class="col two">
+            <img src="{{item.img}}" class="fullImg" data-edit="img" /> 
+            <div class="dskbox2">
+                <div class="row-section flexaligncenter center">
+                    <div class="col">
+                        <b>{{localize 'TYPES.Item.equipment'}}</b>
+                    </div>
+                </div>
+                {{formInput systemFields.description.fields.gear value=document.system.description.gear toggled=true enriched=enrichedClothing}}
+            </div>
+        </div>
+    </div>
+</div>

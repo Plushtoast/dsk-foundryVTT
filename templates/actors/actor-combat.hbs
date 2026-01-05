@@ -1,3 +1,4 @@
+<div class="tab scrollable combat {{tab.cssClass}}" data-tab="combat" data-group="{{tab.group}}">
 <div class="groupbox">
     <div class="row-section table-title lineheight">
         <div class="col fourty">
@@ -267,8 +268,8 @@
             <div class="row-section item skills lineheight" data-item-id="{{item._id}}">
                 <div class="col fourty">
                     <a data-action="itemEdit" class="item-edit">{{item.name}}</a> {{#if item.canAdvance}}
-                    <a data-action="advanceWrapper" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
-                    <a data-action="advanceWrapper" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                    <a data-action="advanceWrapper" data-fct="_refundItemAdvance" data-attr="{{item._id}}" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
+                    <a data-action="advanceWrapper" data-fct="_advanceItem" data-attr="{{item._id}}" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
                 </div>
                 <div class="col five">
                     <span class="d20 diet-{{item.system.characteristic1}}">{{attrLoc item.system.characteristic1 "abbr"}}</span>
@@ -289,4 +290,5 @@
         </div>
         {{/each}}
     </div>
+</div>
 </div>

@@ -60,6 +60,31 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
         },
     };
 
+    static PARTS = {
+        header: {
+            template: 'systems/dsk/templates/items/item-header.hbs',
+        },
+        stat: {
+            template: 'systems/dsk/templates/items/item-stat.hbs',
+        },
+        tabs: {
+            template: 'systems/dsk/templates/system/dsktabs.hbs',
+            id: "tabs",
+        },
+        description: {
+            template: 'systems/dsk/templates/items/item-description.hbs',
+            scrollable: [''],
+        },
+        details: {
+            template: 'systems/dsk/templates/items/item-equipment-sheet.hbs',
+            scrollable: [''],
+        },
+        effects: {
+            template: 'systems/dsk/templates/items/item-effects.hbs',
+            scrollable: [''],
+        },
+    }
+
     static DEFAULT_OPTIONS = {
         position: {
             width: 450,
@@ -123,8 +148,17 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
 
     _configureRenderParts(options) {
         const parts = super._configureRenderParts(options);
-        if (!parts.details) parts.details = { template: this.dsaItemTemplate, scrollable: [''] };
+        // Override the details template with the item-specific template
+        if (parts.details) {
+            parts.details.template = this.dsaItemTemplate;
+        }
         return parts;
+    }
+
+    async _preparePartContext(partId, context) {
+        const partContext = await super._preparePartContext(partId, context);
+        if (partId in partContext.tabs) partContext.tab = partContext.tabs[partId];
+        return partContext;
     }
 
     setupEffect(ev) {
@@ -260,8 +294,103 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
     }
 }
 
-class ItemSheetEffectwrapper extends ItemSheetDSK {
+// Base class for equipment-based items (with price, weight, quantity)
+class EffectsEquipmentSheet extends ItemSheetDSK {
+    static PARTS = {
+        header: {
+            template: 'systems/dsk/templates/items/item-header.hbs',
+        },
+        stat: {
+            template: 'systems/dsk/templates/items/item-equipment.hbs',
+        },
+        tabs: {
+            template: 'systems/dsk/templates/system/dsktabs.hbs',
+            id: "tabs",
+        },
+        description: {
+            template: 'systems/dsk/templates/items/item-description.hbs',
+            scrollable: [''],
+        },
+        details: {
+            template: 'systems/dsk/templates/items/item-equipment-sheet.hbs',
+            scrollable: [''],
+        },
+        effects: {
+            template: 'systems/dsk/templates/items/item-effects.hbs',
+            scrollable: [''],
+        },
+    }
+}
 
+// Base class for stat-based items without effects (like skill, ahnengeschenk)
+class NoEffectsSheet extends ItemSheetDSK {
+    _prepareTabs(group) {
+        const tabs = super._prepareTabs(group);
+        delete tabs.effects;
+        return tabs;
+    }
+}
+
+// Base class for localizable skills (skill, combatskill)
+class LocalizerSheet extends ItemSheetDSK {
+    static PARTS = {
+        header: {
+            template: 'systems/dsk/templates/items/item-header.hbs',
+        },
+        stat: {
+            template: 'systems/dsk/templates/items/item-stat.hbs',
+        },
+        tabs: {
+            template: 'systems/dsk/templates/system/dsktabs.hbs',
+            id: "tabs",
+        },
+        description: {
+            template: 'systems/dsk/templates/items/item-localizerdescription.hbs',
+            scrollable: [''],
+        },
+        details: {
+            template: 'systems/dsk/templates/items/item-skill-sheet.hbs',
+            scrollable: [''],
+        },
+    }
+
+    _prepareTabs(group) {
+        const tabs = super._prepareTabs(group);
+        delete tabs.effects;
+        return tabs;
+    }
+}
+
+// Base class for career items (species, culture, profession)
+class CareerSheet extends NoEffectsSheet {
+    static PARTS = {
+        header: {
+            template: 'systems/dsk/templates/items/item-header.hbs',
+        },
+        stat: {
+            template: 'systems/dsk/templates/items/item-career-stat.hbs',
+        },
+        tabs: {
+            template: 'systems/dsk/templates/system/dsktabs.hbs',
+            id: "tabs",
+        },
+        description: {
+            template: 'systems/dsk/templates/items/item-description.hbs',
+            scrollable: [''],
+        },
+        details: {
+            template: 'systems/dsk/templates/items/item-species-sheet.hbs',
+            scrollable: [''],
+        },
+    }
+}
+
+class ItemSheetEffectwrapper extends ItemSheetDSK {
+    _prepareTabs(group) {
+        const tabs = super._prepareTabs(group);
+        delete tabs.details;
+        return tabs;
+    }
 }
 
 class ItemSheetTrait extends ItemSheetDSK {
@@ -275,7 +404,13 @@ class ItemSheetTrait extends ItemSheetDSK {
     }
 }
 
-class ItemSheetInformation extends ItemSheetDSK {
+class ItemSheetInformation extends NoEffectsSheet {
+    _prepareTabs(group) {
+        const tabs = super._prepareTabs(group);
+        delete tabs.description;  // Information has no description tab
+        return tabs;
+    }
+
     async _prepareContext(options) {
         const data = await super._prepareContext(options)
         mergeObject(data, {
@@ -285,7 +420,32 @@ class ItemSheetInformation extends ItemSheetDSK {
     }
 }
 
-class ItemSheetConsumable extends ItemSheetObfuscation(ItemSheetDSK) {
+class ItemSheetConsumable extends ItemSheetObfuscation(EffectsEquipmentSheet) {
+    static PARTS = {
+        header: {
+            template: 'systems/dsk/templates/items/item-header.hbs',
+        },
+        stat: {
+            template: 'systems/dsk/templates/items/item-consumable-equipment.hbs',
+        },
+        tabs: {
+            template: 'systems/dsk/templates/system/dsktabs.hbs',
+            id: "tabs",
+        },
+        description: {
+            template: 'systems/dsk/templates/items/item-description.hbs',
+            scrollable: [''],
+        },
+        details: {
+            template: 'systems/dsk/templates/items/item-consumable-sheet.hbs',
+            scrollable: [''],
+        },
+        effects: {
+            template: 'systems/dsk/templates/items/item-effects.hbs',
+            scrollable: [''],
+        },
+    }
+
     async _prepareContext(options) {
         const data = await super._prepareContext(options)
         mergeObject(data, {
@@ -299,7 +459,7 @@ class ItemSheetConsumable extends ItemSheetObfuscation(ItemSheetDSK) {
     }
 }
 
-class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
+class ItemSheetMeleeweapon extends ItemSheetObfuscation(EffectsEquipmentSheet){
     async _prepareContext(options) {
         const data = await super._prepareContext(options);
         let twoHanded = false
@@ -341,7 +501,7 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(ItemSheetDSK){
     }
 }
 
-class ItemSheetRangeweapon extends ItemSheetObfuscation(ItemSheetDSK){
+class ItemSheetRangeweapon extends ItemSheetObfuscation(EffectsEquipmentSheet){
     async _prepareContext(options) {
         const data = await super._prepareContext(options)
         mergeObject(data, {
@@ -353,11 +513,11 @@ class ItemSheetRangeweapon extends ItemSheetObfuscation(ItemSheetDSK){
     }
 }
 
-class ItemSheetArmor extends ItemSheetObfuscation(ItemSheetDSK){
+class ItemSheetArmor extends ItemSheetObfuscation(EffectsEquipmentSheet){
 
 }
 
-class ItemSheetAmmunition extends ItemSheetObfuscation(ItemSheetDSK){
+class ItemSheetAmmunition extends ItemSheetObfuscation(EffectsEquipmentSheet){
     async _prepareContext(options) {
         const data = await super._prepareContext(options)
         mergeObject(data, {
@@ -367,7 +527,7 @@ class ItemSheetAmmunition extends ItemSheetObfuscation(ItemSheetDSK){
     }
 }
 
-class ItemSheetEquipment extends ItemSheetObfuscation(ItemSheetDSK){
+class ItemSheetEquipment extends ItemSheetObfuscation(EffectsEquipmentSheet){
     _prepareTabs(group) {
         const tabs = super._prepareTabs(group);
         if (this.isBagWithContents()) {
@@ -486,13 +646,25 @@ class ItemSheetEquipment extends ItemSheetObfuscation(ItemSheetDSK){
     }
 }
 
-class ItemSheetSpecies extends ItemSheetDSK{
+class ItemSheetSpecies extends CareerSheet {
     static DEFAULT_OPTIONS = {
         position: {
             width: 530,
             height: 570,
         },
     };
+
+    static PARTS = {
+        ...CareerSheet.PARTS,
+        description: {
+            template: 'systems/dsk/templates/items/item-species-description.hbs',
+            scrollable: [''],
+        },
+        details: {
+            template: 'systems/dsk/templates/items/item-species-sheet.hbs',
+            scrollable: [''],
+        },
+    }
 
     async _prepareContext(options) {
         const data = await super._prepareContext(options);
@@ -503,22 +675,46 @@ class ItemSheetSpecies extends ItemSheetDSK{
     }
 }
 
-class ItemSheetCulture extends ItemSheetDSK{
+class ItemSheetCulture extends CareerSheet {
     static DEFAULT_OPTIONS = {
         position: {
             width: 700,
             height: 700,
         },
     };
+
+    static PARTS = {
+        ...CareerSheet.PARTS,
+        description: {
+            template: 'systems/dsk/templates/items/item-culture-description.hbs',
+            scrollable: [''],
+        },
+        details: {
+            template: 'systems/dsk/templates/items/item-culture-sheet.hbs',
+            scrollable: [''],
+        },
+    }
 }
 
-class ItemSheetProfession extends ItemSheetDSK{
+class ItemSheetProfession extends CareerSheet {
     static DEFAULT_OPTIONS = {
         position: {
             width: 700,
             height: 700,
         },
     };
+
+    static PARTS = {
+        ...CareerSheet.PARTS,
+        description: {
+            template: 'systems/dsk/templates/items/item-profession-description.hbs',
+            scrollable: [''],
+        },
+        details: {
+            template: 'systems/dsk/templates/items/item-profession-sheet.hbs',
+            scrollable: [''],
+        },
+    }
 
     async _prepareContext(options) {
         const data = await super._prepareContext(options);
@@ -619,7 +815,7 @@ class ItemSheetSpecialability extends ItemSheetDSK{
     }
 }
 
-class ItemSheetAhnengeschenk extends ItemSheetDSK{
+class ItemSheetAhnengeschenk extends NoEffectsSheet {
     get hasRollEffect() {
         return this.item.isOwned;
     }
@@ -653,7 +849,7 @@ class ItemSheetAhnengabe extends ItemSheetDSK{
     }
 }
 
-class ItemSheetPoison extends ItemSheetObfuscation(ItemSheetDSK){
+class ItemSheetPoison extends ItemSheetObfuscation(EffectsEquipmentSheet){
     get hasRollEffect() {
         return true;
     }
@@ -667,7 +863,7 @@ class ItemSheetPoison extends ItemSheetObfuscation(ItemSheetDSK){
     }
 }
 
-class ItemSheetSkill extends ItemSheetDSK{
+class ItemSheetSkill extends LocalizerSheet {
     async _prepareContext(options) {
         const data = await super._prepareContext(options)
         mergeObject(data, {
@@ -675,18 +871,42 @@ class ItemSheetSkill extends ItemSheetDSK{
             skillGroups: DSK.skillGroups,
             skillBurdens: DSK.skillBurdens,
             hasLocalization: game.i18n.has(`dsk.SKILLdescr.${this.item.name}`),
+            localizerPrefix: 'dsk.SKILLdescr.',
             StFs: DSK.StFs   
         })
         return data
     }
 }
 
-class ItemSheetCombatskill extends ItemSheetSkill{
+class ItemSheetCombatskill extends LocalizerSheet {
+    static PARTS = {
+        ...LocalizerSheet.PARTS,
+        details: {
+            template: 'systems/dsk/templates/items/item-combatskill-sheet.hbs',
+            scrollable: [''],
+        },
+        effects: {
+            template: 'systems/dsk/templates/items/item-effects.hbs',
+            scrollable: [''],
+        },
+    }
+
+    _prepareTabs(group) {
+        // Combatskill has effects tab, so don't delete it
+        const tabs = ItemSheetDSK.prototype._prepareTabs.call(this, group);
+        return tabs;
+    }
+
     async _prepareContext(options) {
         const data = await super._prepareContext(options)
         mergeObject(data, {
+            characteristics: DSK.characteristics,
+            skillGroups: DSK.skillGroups,
+            skillBurdens: DSK.skillBurdens,
             weapontypes: DSK.weapontypes,
             hasLocalization: game.i18n.has(`dsk.Combatskilldescr.${this.item.name}`),
+            localizerPrefix: 'dsk.Combatskilldescr.',
+            StFs: DSK.StFs
         })
         return data
     }

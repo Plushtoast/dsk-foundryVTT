@@ -1,34 +1,18 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}} {{> systems/dsk/templates/items/item-stat.hbs}}
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.ap value=document.system.ap localize=true}}
 
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
+    <div class="form-group full-height">
+        <label class="label-text">{{localize "dsk.rule"}}</label>
+        {{formInput systemFields.rule value=document.system.rule toggled=true enriched=enrichedRule}}
+    </div>
 
+    {{formGroup systemFields.requirements value=document.system.requirements localize=true elementType="textarea" classes="full-height"}}
+    {{formGroup systemFields.max value=document.system.max localize=true}}
 
-    <section class="content">
-
-        {{> systems/dsk/templates/items/item-description.hbs}}
-
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-           
-
-            {{formGroup systemFields.ap value=document.system.ap localize=true}}
-
-            <div class="form-group full-height">
-                <label class="label-text">{{localize "dsk.rule"}}</label>
-                {{formInput systemFields.rule value=document.system.rule toggled=true enriched=enrichedRule}}
-            </div>
-
-            {{formGroup systemFields.requirements value=document.system.requirements localize=true elementType="textarea" classes="full-height"}}
-            {{formGroup systemFields.max value=document.system.max localize=true}}
-
-            {{#if isOwned}}
-            <div class="form-group">
-                <label class="label-text">{{#if canAdvance}}<a class="refund-step"><i class="fas fa-minus"></i></a> {{/if}}{{localize "dsk.stepValue"}}{{#if canAdvance}} <a class="advance-step"><i class="fas fa-plus"></i></a>{{/if}}</label>
-                {{formInput systemFields.level value=document.system.level}}
-            </div>
-            {{/if}}
-        </div>
-
-        {{> systems/dsk/templates/items/item-effects.hbs}}
-    </section>
-</form>
+    {{#if isOwned}}
+    <div class="form-group">
+        <label class="label-text">{{#if canAdvance}}<a class="refund-step"><i class="fas fa-minus"></i></a> {{/if}}{{localize "dsk.stepValue"}}{{#if canAdvance}} <a class="advance-step"><i class="fas fa-plus"></i></a>{{/if}}</label>
+        {{formInput systemFields.level value=document.system.level}}
+    </div>
+    {{/if}}
+</div>

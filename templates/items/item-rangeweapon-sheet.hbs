@@ -1,35 +1,20 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}} {{> systems/dsk/templates/items/item-equipment.hbs}}
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.tp value=document.system.tp localize=true}}
+    {{formGroup systemFields.lz value=document.system.lz localize=true}}
 
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
+    <div class="form-group">
+        <label class="label-text">{{localize "dsk.range"}}</label>
+        <input class="input-text weaponreach" type="text" name="system.rw" value="{{system.rw}}" data-dtype="String" />
+    </div>
 
+    {{formGroup systemFields.ammunitionType value=document.system.ammunitionType localize=true}}
 
-    <section class="content">
+    <div class="form-group">
+        <label class="label-text">{{localize "TYPES.Item.combatskill"}}</label>
+        <select name="system.combatskill" data-dtype="String">
+            {{selectOptions (selfObj combatskills) selected=system.combatskill}}
+        </select>
+    </div>
 
-        {{> systems/dsk/templates/items/item-description.hbs}}
-
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-
-            {{formGroup systemFields.tp value=document.system.tp localize=true}}
-            {{formGroup systemFields.lz value=document.system.lz localize=true}}
-
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.range"}}</label>
-                <input class="input-text weaponreach" type="text" name="system.rw" value="{{system.rw}}" data-dtype="String" />
-            </div>
-
-            {{formGroup systemFields.ammunitionType value=document.system.ammunitionType localize=true}}
-
-            <div class="form-group">
-                <label class="label-text">{{localize "TYPES.Item.combatskill"}}</label>
-                <select name="system.combatskill" data-dtype="String">
-                    {{selectOptions (selfObj combatskills) selected=system.combatskill}}
-                </select>
-            </div>
-
-            {{formGroup systemFields.length value=document.system.length localize=true}}
-        </div>
-
-        {{> systems/dsk/templates/items/item-effects.hbs}} 
-    </section>
-</form>
+    {{formGroup systemFields.length value=document.system.length localize=true}}
+</div>

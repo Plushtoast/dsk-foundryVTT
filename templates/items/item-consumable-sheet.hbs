@@ -1,68 +1,22 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}} 
-    <div class="row-section ">
-        <div class="col ten">
-            <img src="{{item.img}}" data-edit="img" />
-        </div>
-        <div class="ninety item-main">
-            <div class="row-section">
-                <div class="col four">
-                    <label class="label-text table-title">{{localize "dsk.category"}}</label>
-                </div>
-                <div class="col fourty">
-                    <label>{{itemCategory item.type}}</label>
-                </div>
-                <div class="col four">
-                    <label class="label-text table-title">{{localize "dsk.quantity"}}</label>
-                </div>
-                <div class="col fifteen">
-                    <input class="input-text" type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
-                </div>
-            </div>
-            <div class="row-section">
-                <div class="col four">
-                    <label data-tooltip="{{dskMoneyValue}}" class="label-text table-title">{{localize "dsk.price"}}</label>
-                </div>
-                <div class="col fourty">
-                    <label data-tooltip="{{dskMoneyValue}}" class="input-text" type="text">{{calculatedPrice}}</label>
-                </div>
-                <div class="col four">
-                    <label data-tooltip="dsk.UNITS.weight" class="label-text table-title">{{localize "dsk.weight"}}</label>
-                </div>
-                <div class="col fifteen">
-                    <input data-tooltip="dsk.UNITS.weight" class="input-text" type="number" name="system.weight" value="{{system.weight}}" />
-                </div>
-            </div>
-        </div>
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.category value=document.system.category localize=true}}
+    {{formGroup systemFields.qs value=document.system.qs localize=true}}
+    <div class="form-group">
+        <label class="label-text">{{localize "dsk.consumable.priceEachQL"}}</label>
+        {{formInput systemFields.price value=document.system.price}}
     </div>
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
-
-    <section class="content">
-         {{> systems/dsk/templates/items/item-description.hbs}}
-
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-            {{formGroup systemFields.category value=document.system.category localize=true}}
-            {{formGroup systemFields.qs value=document.system.qs localize=true}}
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.consumable.priceEachQL"}}</label>
-                {{formInput systemFields.price value=document.system.price}}
-            </div>
-            <div class="form-group full-height">
-                <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.0'}})</label>
-                {{formInput systemFields.effect0 value=document.system.effect0 elementType="textarea" classes="input-text"}}
-            </div>
-            <div class="form-group full-height">
-                <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.1'}})</label>
-                {{formInput systemFields.effect1 value=document.system.effect1 elementType="textarea" classes="input-text"}}
-            </div>
-            <div class="form-group full-height">
-                <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.2'}})</label>
-                {{formInput systemFields.effect2 value=document.system.effect2 elementType="textarea" classes="input-text"}}
-            </div>
-            {{formGroup systemFields.difficulty value=document.system.difficulty localize=true classes="full-height"}}
-            {{formGroup systemFields.ingredients value=document.system.ingredients localize=true elementType="textarea" classes="full-height"}}
-        </div>
-
-        {{> systems/dsk/templates/items/item-effects.hbs}} 
-    </section>
-</form>
+    <div class="form-group full-height">
+        <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.0'}})</label>
+        {{formInput systemFields.effect0 value=document.system.effect0 elementType="textarea" classes="input-text"}}
+    </div>
+    <div class="form-group full-height">
+        <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.1'}})</label>
+        {{formInput systemFields.effect1 value=document.system.effect1 elementType="textarea" classes="input-text"}}
+    </div>
+    <div class="form-group full-height">
+        <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.2'}})</label>
+        {{formInput systemFields.effect2 value=document.system.effect2 elementType="textarea" classes="input-text"}}
+    </div>
+    {{formGroup systemFields.difficulty value=document.system.difficulty localize=true classes="full-height"}}
+    {{formGroup systemFields.ingredients value=document.system.ingredients localize=true elementType="textarea" classes="full-height"}}
+</div>

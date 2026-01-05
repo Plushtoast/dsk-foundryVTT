@@ -487,7 +487,7 @@ export default class BookWizard extends DragMixin(DefaultAppv2) {
         const pinIcon = this.findSceneNote(journal.getFlag("dsk", "initId"))
         const enriched = await foundry.applications.ux.TextEditor.enrichHTML(content, { secrets: game.user.isGM })
 
-        return `<div><h1 class="journalHeader" data-uuid="${journal.uuid}">${journal.name}<div class="jrnIcons">${pinIcon}<a class="pinJournal"><i class="fas fa-thumbtack"></i></a><a class="showJournal"><i class="fas fa-eye"></i></a></div></h1>${enriched}`
+        return `<div><h1 class="journalHeader" data-uuid="${journal.uuid}">${journal.name}<div class="jrnIcons">${pinIcon}<a data-action="pinJournal"><i class="fas fa-thumbtack"></i></a><a data-action="showJournal"><i class="fas fa-eye"></i></a></div></h1>${enriched}`
     }
 
     async showJournal(journal) {

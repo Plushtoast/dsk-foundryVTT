@@ -1,3 +1,4 @@
+<div class="tab scrollable main {{tab.cssClass}}" data-tab="main" data-group="{{tab.group}}">
 {{#if prepare.canAdvance}} {{> systems/dsk/templates/actors/parts/characteristics-large.hbs}} {{else}} {{> systems/dsk/templates/actors/parts/characteristics-small.hbs}} {{/if}}
 
 <div class="main-row">
@@ -100,8 +101,8 @@
             </div>
             <div class="derivedAttrs row-section">
                 <div class="col two lineheight">
-                    {{localize "dsk.LeP"}} {{#if prepare.canAdvance}}<a data-attr="LeP" data-action="advanceWrapper" class="advance refund-points"><i data-tooltip="{{actor.system.stats.LeP.refund}}" class="fas fa-minus"></i></a>
-                    <a data-attr="LeP" data-action="advanceWrapper" class="advance advance-points"><i data-tooltip="{{actor.system.stats.LeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                    {{localize "dsk.LeP"}} {{#if prepare.canAdvance}}<a data-attr="LeP" data-action="advanceWrapper" data-fct="_refundPointsAdvance" class="advance"><i data-tooltip="{{actor.system.stats.LeP.refund}}" class="fas fa-minus"></i></a>
+                    <a data-attr="LeP" data-action="advanceWrapper" data-fct="_advancePoints" class="advance"><i data-tooltip="{{actor.system.stats.LeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
                     <span class="buttons">
                         <a data-char="regenerate" data-action="chRegenerate" class="ch-regenerate item" data-mod="regenerate" data-tooltip="dsk.regenerate">&nbsp;<i class="fas fa-moon"></i></a>
                     </span>
@@ -141,8 +142,8 @@
             {{#if prepare.magic.hasSpells}}
             <div class="derivedAttrs row-section">
                 <div class="col two lineheight">
-                    {{localize "dsk.AeP"}} {{#if prepare.canAdvance}}<a data-attr="AeP" data-action="advanceWrapper" class="advance refund-points"><i data-tooltip="{{actor.system.stats.AeP.refund}}" class="fas fa-minus"></i></a>
-                    <a data-attr="AeP" data-action="advanceWrapper" class="advance advance-points"><i data-tooltip="{{actor.system.stats.AeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                    {{localize "dsk.AeP"}} {{#if prepare.canAdvance}}<a data-attr="AeP" data-action="advanceWrapper" data-fct="_refundPointsAdvance" class="advance"><i data-tooltip="{{actor.system.stats.AeP.refund}}" class="fas fa-minus"></i></a>
+                    <a data-attr="AeP" data-action="advanceWrapper" data-fct="_advancePoints" class="advance"><i data-tooltip="{{actor.system.stats.AeP.cost}}" class="fas fa-plus"></i></a>{{/if}}
                 </div>
                 <div class="col eight lineheight center">
                     <input name="system.stats.AeP.initial" type="text" value="{{actor.system.stats.AeP.initial}}" data-dtype="Number" />
@@ -335,4 +336,5 @@
         {{/if}}
 
     </div>
+</div>
 </div>

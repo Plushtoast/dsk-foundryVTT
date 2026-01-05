@@ -52,6 +52,11 @@ export class ActorDataModel extends DSKDataModel {
       for (const k of Object.values(this.stats)) {
         k.gearmodifier = 0;
       }
+      // Initialize regeneration-specific gear modifiers
+      if (this.stats.regeneration) {
+        this.stats.regeneration.LePgearmodifier = 0;
+        this.stats.regeneration.AePgearmodifier = 0;
+      }
     }
 
     // Initialize gear modifiers for characteristics

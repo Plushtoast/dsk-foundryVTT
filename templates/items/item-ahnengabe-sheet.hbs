@@ -1,29 +1,13 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}} {{> systems/dsk/templates/items/item-stat.hbs}}
-
-
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
-
-
-    <section class="content">
-
-        {{> systems/dsk/templates/items/item-description.hbs}}
-
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-
-            {{formGroup systemFields.characteristic1 value=document.system.characteristic1 localize=true}}
-            {{formGroup systemFields.characteristic2 value=document.system.characteristic2 localize=true}}
-            {{formGroup systemFields.range value=document.system.range localize=true}}
-            {{formGroup systemFields.duration value=document.system.duration localize=true}}
-            {{formGroup systemFields.targetCategory value=document.system.targetCategory localize=true}}
-            {{formGroup systemFields.AeP value=document.system.AeP localize=true}}
-            {{formGroup systemFields.effect value=document.system.effect localize=true elementType="textarea" classes="full-height"}}
-            {{formGroup systemFields.effectFormula value=document.system.effectFormula localize=true}}
-            {{formGroup systemFields.distribution value=document.system.distribution localize=true}}
-            {{formGroup systemFields.resist value=document.system.resist localize=true}}
-            {{formGroup systemFields.StF value=document.system.StF localize=true}}
-        </div>
-
-        {{> systems/dsk/templates/items/item-effects.hbs}}
-    </section>
-</form>
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.characteristic1 value=document.system.characteristic1 localize=true}}
+    {{formGroup systemFields.characteristic2 value=document.system.characteristic2 localize=true}}
+    {{formGroup systemFields.range value=document.system.range localize=true}}
+    {{formGroup systemFields.duration value=document.system.duration localize=true}}
+    {{formGroup systemFields.targetCategory value=document.system.targetCategory localize=true}}
+    {{formGroup systemFields.AeP value=document.system.AeP localize=true}}
+    {{formGroup systemFields.effect value=document.system.effect localize=true elementType="textarea" classes="full-height"}}
+    {{formGroup systemFields.effectFormula value=document.system.effectFormula localize=true}}
+    {{formGroup systemFields.distribution value=document.system.distribution localize=true}}
+    {{formGroup systemFields.resist value=document.system.resist localize=true}}
+    {{formGroup systemFields.StF value=document.system.StF localize=true}}
+</div>

@@ -1,38 +1,23 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}} {{> systems/dsk/templates/items/item-stat.hbs}}
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.traitType value=document.system.traitType localize=true}}
 
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
+    {{#if (eq system.traitType "rangeAttack")}}
+    {{formGroup systemFields.at value=document.system.at localize=true}}
+    {{formGroup systemFields.tp value=document.system.tp localize=true}}
+    {{formGroup systemFields.rw value=document.system.rw localize=true}}
+    {{formGroup systemFields.lz value=document.system.lz localize=true}}
 
-    <section class="content">
+    {{/if}} {{#if (eq system.traitType "meleeAttack")}}
+    {{formGroup systemFields.at value=document.system.at localize=true}}
+    {{formGroup systemFields.pa value=document.system.pa localize=true}}
+    {{formGroup systemFields.tp value=document.system.tp localize=true}}
+    {{formGroup systemFields.rw value=document.system.rw localize=true}}
+  
+    {{/if}}{{#if (eq system.traitType "armor")}}
+    <div class="form-group">
+        <label class="label-text">{{localize "dsk.protection"}}</label>
+        {{formInput systemFields.at value=document.system.at}}
+    </div>
 
-        {{> systems/dsk/templates/items/item-description.hbs}}
-
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-
-            {{formGroup systemFields.traitType value=document.system.traitType localize=true}}
-
-            {{#if (eq system.traitType "rangeAttack")}}
-            {{formGroup systemFields.at value=document.system.at localize=true}}
-            {{formGroup systemFields.tp value=document.system.tp localize=true}}
-            {{formGroup systemFields.rw value=document.system.rw localize=true}}
-            {{formGroup systemFields.lz value=document.system.lz localize=true}}
-
-            {{/if}} {{#if (eq system.traitType "meleeAttack")}}
-            {{formGroup systemFields.at value=document.system.at localize=true}}
-            {{formGroup systemFields.pa value=document.system.pa localize=true}}
-            {{formGroup systemFields.tp value=document.system.tp localize=true}}
-            {{formGroup systemFields.rw value=document.system.rw localize=true}}
-          
-            {{/if}}{{#if (eq system.traitType "armor")}}
-            <div class="form-group">
-                <label class="label-text">{{localize "dsk.protection"}}</label>
-                {{formInput systemFields.at value=document.system.at}}
-            </div>
-
-            {{/if}} 
-
-        </div>
-
-        {{> systems/dsk/templates/items/item-effects.hbs}}
-    </section>
-</form>
+    {{/if}} 
+</div>

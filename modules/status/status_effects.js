@@ -207,6 +207,11 @@ export default class DSKStatusEffects{
                 data.conditions.push(condition)
             else if (!cnd.notApplicable) {
                 condition.uuid = cnd.uuid
+                condition.parent = {
+                    uuid: cnd.parent?.uuid,
+                    name: cnd.parent?.name,
+                    id: cnd.parent?.id
+                }
                 data.transferedConditions.push(condition)
             }
         }
@@ -231,7 +236,7 @@ export default class DSKStatusEffects{
     static calculateRollModifier(effectId, actor, item, options = {}) {
         if (item.type == "regenerate") return 0
 
-        return -1 * (actor.system.status[effectId] || 0)
+        return -1 * (actor.system?.status?.[effectId] || 0)
     }
 
     static ModifierIsSelected(item, options = {}, actor) {
@@ -241,8 +246,9 @@ export default class DSKStatusEffects{
     static getRollModifiers(actor, item, options = {}) {
         const source = game.i18n.localize('dsk.status') + "/" + game.i18n.localize('dsk.condition')
         const actorEffects = []
-        for(let key of Object.keys(actor.system.status)){
-            if(actor.system.status[key]){
+        const status = actor.system?.status || {}
+        for(let key of Object.keys(status)){
+            if(status[key]){
                 const effectClass = game.dsk.config.statusEffectClasses[key] || DSKStatusEffects
                 actorEffects.push({
                     name: game.i18n.localize(`dsk.CONDITION.${key}`),
@@ -278,7 +284,7 @@ class PainEffect extends DSKStatusEffects {
 class SelfconfidenceEffect extends DSKStatusEffects {
     static calculateRollModifier(effectId, actor, item, options = {}) {
         if (item.type == "regenerate") return 0
-        return actor.system.status.selfconfidence || 0
+        return actor.system?.status?.selfconfidence || 0
     }
 }
 

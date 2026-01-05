@@ -1,24 +1,14 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}} {{> systems/dsk/templates/items/item-equipment.hbs}}
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.ammunitionType value=document.system.ammunitionType localize=true}}
 
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
+    {{#if (eq system.ammunitionType 'mag')}}
+    <div class="form-group double">
+        <label class="label-text">{{localize "dsk.ammunition.mag"}}</label>
+        {{formInput systemFields.mag.fields.value value=document.system.mag.value}}
+        <span> / </span>
+        {{formInput systemFields.mag.fields.max value=document.system.mag.max}}
+    </div>
+    {{/if}}
 
-    <section class="content">
-
-        {{> systems/dsk/templates/items/item-description.hbs}} {{> systems/dsk/templates/items/item-effects.hbs}}
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-            {{formGroup systemFields.ammunitionType value=document.system.ammunitionType localize=true}}
-
-            {{#if (eq system.ammunitionType 'mag')}}
-            <div class="form-group double">
-                <label class="label-text">{{localize "dsk.ammunition.mag"}}</label>
-                {{formInput systemFields.mag.fields.value value=document.system.mag.value}}
-                <span> / </span>
-                {{formInput systemFields.mag.fields.max value=document.system.mag.max}}
-            </div>
-            {{/if}}
-
-            {{formGroup systemFields.length value=document.system.length localize=true}}
-        </div>
-    </section>
-</form>
+    {{formGroup systemFields.length value=document.system.length localize=true}}
+</div>

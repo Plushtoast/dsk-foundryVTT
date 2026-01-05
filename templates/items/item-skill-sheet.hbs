@@ -1,24 +1,7 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}} {{> systems/dsk/templates/items/item-stat.hbs}}
-
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
-
-
-    <section class="content">
-        <div class="tab description standard-form scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
-            {{#if hasLocalization}} {{{localize (concat "dsk.SKILLdescr." item.name)}}} {{else}}
-            {{formInput systemFields.description.fields.value value=document.system.description.value toggled=true enriched=enrichedDescription}}
-            {{/if}}
-        </div>
-
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-
-            {{formGroup systemFields.characteristic1 value=document.system.characteristic1 localize=true}}
-            {{formGroup systemFields.characteristic2 value=document.system.characteristic2 localize=true}}
-            {{formGroup systemFields.group value=document.system.group localize=true}}
-            {{formGroup systemFields.encumbers value=document.system.encumbers localize=true}}
-            {{formGroup systemFields.StF value=document.system.StF localize=true}}
-
-        </div>
-    </section>
-</form>
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.characteristic1 value=document.system.characteristic1 localize=true}}
+    {{formGroup systemFields.characteristic2 value=document.system.characteristic2 localize=true}}
+    {{formGroup systemFields.group value=document.system.group localize=true}}
+    {{formGroup systemFields.encumbers value=document.system.encumbers localize=true}}
+    {{formGroup systemFields.StF value=document.system.StF localize=true}}
+</div>

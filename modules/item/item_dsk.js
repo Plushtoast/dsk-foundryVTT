@@ -484,6 +484,8 @@ export default class ItemDSK extends Item{
 
     static parseEffect(effect, actor) {
         let itemModifiers = {}
+        if (!effect || typeof effect !== 'string') return itemModifiers
+        
         let regex = new RegExp(game.i18n.localize("dsk.CHARAbbrev.GS"), "gi")
         for (let mod of effect.split(/,|;/).map((x) => x.trim())) {
             let vals = mod.replace(/(\s+)/g, " ").trim().split(" ")
@@ -953,7 +955,8 @@ class ItemAhnengabe extends ItemDSK{
         ActorDSK.schipsModifier(html, testData.situationalModifiers)
         if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) actor.reduceSchips(0)
 
-        const formData = new foundry.applications.ux.FormDataExtended(html.find('form')[0]).object
+        const form = html[0].tagName == 'FORM' ? html[0] : html.find('form')[0]
+        const formData = new foundry.applications.ux.FormDataExtended(form).object
         testData.calculatedSpellModifiers = {
             castingTime: html.find(".castingTime").text(),
             cost: html.find(".aspcost").text(),

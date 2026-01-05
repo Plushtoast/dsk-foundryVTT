@@ -24,6 +24,71 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     #gearSearch;
     #conditionSearch;
 
+    static LIMITEDPARTS = {
+        header: {
+            template: 'systems/dsk/templates/actors/npc-limited-header.hbs',
+        },
+        tabs: {
+            template: 'systems/dsk/templates/actors/actorv2/tabs.hbs',
+            id: "tabs",
+        },
+        main: {
+            template: 'systems/dsk/templates/actors/npc-limited.hbs',
+            scrollable: ['']
+        },
+        notes: {
+            template: 'systems/dsk/templates/actors/actor-notes.hbs',
+            scrollable: [''],
+        },
+    }
+
+    static PARTS = {
+        header: {
+            template: 'systems/dsk/templates/actors/actorv2/header.hbs',
+            templates: [
+                'systems/dsk/templates/actors/actorv2/avatar.hbs',
+                'systems/dsk/templates/actors/actorv2/actor-header.hbs',
+                'systems/dsk/templates/actors/parts/rollhead.hbs',
+                'systems/dsk/templates/actors/parts/healthbar.hbs'
+            ],
+        },
+        tabs: {
+            template: 'systems/dsk/templates/actors/actorv2/tabs.hbs',
+            id: "tabs",
+            templates: [
+                "systems/dsk/templates/system/dsktabs.hbs"
+            ],
+        },
+        combat: {
+            template: 'systems/dsk/templates/actors/actor-combat.hbs',
+            scrollable: [''],
+        },
+        skills: {
+            template: 'systems/dsk/templates/actors/actor-talents.hbs',
+            scrollable: [''],
+        },
+        magic: {
+            template: 'systems/dsk/templates/actors/character/actor-magic.hbs',
+            scrollable: [''],
+        },
+        status: {
+            template: 'systems/dsk/templates/actors/parts/status_effects.hbs',
+            scrollable: [''],
+        },
+        notes: {
+            template: 'systems/dsk/templates/actors/actor-notes.hbs',
+            scrollable: [''],
+        },
+        main: {
+            template: 'systems/dsk/templates/actors/actor-main.hbs',
+            scrollable: [''],
+        },
+        inventory: {
+            template: 'systems/dsk/templates/actors/actor-equipment.hbs',
+            scrollable: [''],
+        },
+    }
+
     static TABS = {
         sheet: {
             tabs: [
@@ -55,6 +120,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
             conditionEdit: this._conditionEdit,
             chCollapse: this._chCollapse,
             statusCreate: this._statusCreate,
+            statusContextMenu: this.#statusContextMenu,
             itemDropdown: this._itemDropdown,
             itemEdit: this._itemEdit,
             chValue: this._chValue,
@@ -66,6 +132,10 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
             chRollCombat: this._chRollCombat,
             conditionShow: { handler: this._conditionShow, buttons: [0, 2] },
             spellSelect: { handler: this._spellSelect, buttons: [0, 2] },
+            statusAdd: { handler: this._statusAdd, buttons: [0, 2] },
+            disableRegeneration: this._disableRegeneration,
+            conditionValue: { handler: this._conditionValue, buttons: [0, 2] },
+            conditionToggle: this._conditionToggle,
         },
         ownerActions: {
             schipUpdate: this._schipUpdate,
@@ -74,10 +144,6 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
             itemSwapMag: this._itemSwapMag,
             itemToggle: this._itemToggle,
             swapWeaponHand: this._swapWeaponHand,
-            statusAdd: { handler: this._statusAdd, buttons: [0, 2] },
-            disableRegeneration: this._disableRegeneration,
-            conditionValue: { handler: this._conditionValue, buttons: [0, 2] },
-            conditionToggle: this._conditionToggle,
             advanceWrapper: this._advanceWrapper,
             onUseItem: { handler: this._onMacroUseItem, buttons: [0, 2] },
             quantityClick: { handler: this._quantityClick, buttons: [0, 2] },
@@ -134,11 +200,44 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         return this.actor.name;
     }
 
+    _configureRenderParts(options) {
+        if (this.constructor.LIMITEDPARTS && this.showLimited()) {
+            return foundry.utils.deepClone(this.constructor.LIMITEDPARTS);
+        }
+        return super._configureRenderParts(options);
+    }
+
+    async _preparePartContext(partId, context) {
+        const partContext = await super._preparePartContext(partId, context);
+        if (partId in partContext.tabs) partContext.tab = partContext.tabs[partId];
+        return partContext;
+    }
+
     _prepareTabs(group) {
         const tabs = super._prepareTabs(group);
         const prepare = this.actor.prepareSheet({});
         if (!prepare.magic?.hasSpells) delete tabs.magic;
+        this.cleanTabs(tabs);
         return tabs;
+    }
+
+    cleanTabs(tabs) {
+        if (this.constructor.LIMITEDPARTS && this.showLimited()) {
+            for (let key of Object.keys(tabs)) {
+                if (!['main', 'notes'].includes(key)) {
+                    delete tabs[key];
+                }
+            }
+        }
+
+        const tabKeys = Object.keys(tabs);
+        const hasActive = tabKeys.some(key => tabs[key].active);
+
+        if (!hasActive && tabKeys.length > 0) {
+            const firstTab = tabs[tabKeys[0]];
+            firstTab.active = true;
+            firstTab.cssClass = 'active';
+        }
     }
 
     async render(options = {}, _options = {}) {
@@ -242,6 +341,15 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         ev.stopPropagation();
         const { clientX, clientY } = ev;
         target.closest("[data-item-id]").querySelector('.withContext')?.dispatchEvent(new PointerEvent("contextmenu", {
+            view: window, bubbles: true, cancelable: true, clientX, clientY
+        }));
+    }
+
+    static #statusContextMenu(event, target) {
+        event.preventDefault();
+        event.stopPropagation();
+        const { clientX, clientY } = event;
+        target.closest("[data-id]").querySelector('.effectConfig')?.dispatchEvent(new PointerEvent("contextmenu", {
             view: window, bubbles: true, cancelable: true, clientX, clientY
         }));
     }
@@ -394,18 +502,20 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         await ef.update({ disabled: !ef.disabled });
     }
 
-    static async _advanceWrapper(ev, target) {
+    static _advanceWrapper(ev, target) {
+        this.advanceWrapper(target, target.dataset.fct, target.dataset.attr);
+    }
+
+    async advanceWrapper(trg, funct, ...params) {
         if (this.wrapperLocked) return;
 
-        const funct = target.dataset.funct;
-        const param = target.dataset.attr || this._getItemId(target);
-
         this.wrapperLocked = true;
-        const icon = target.tagName == 'i' ? $(target) : $(target).find('i');
-        icon.addClass('fa-spin fa-spinner');
-        await this[funct](param);
+        const target = trg.classList.contains('fas') ? $(trg) : $(trg).find('i');
+        target.addClass('fa-spin fa-spinner');
+        if (await this[funct](...params)) return;
+
         this.wrapperLocked = false;
-        icon.removeClass('fa-spin fa-spinner');
+        target.removeClass('fa-spin fa-spinner');
     }
 
     static async _onMacroUseItem(ev, target) {

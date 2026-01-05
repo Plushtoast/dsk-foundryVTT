@@ -1,20 +1,4 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}} {{> systems/dsk/templates/items/item-equipment.hbs}}
-
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
-
-
-    <section class="content">
-
-        {{> systems/dsk/templates/items/item-description.hbs}}
-
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-
-            {{formGroup systemFields.rs value=document.system.rs localize=true}}
-            {{formGroup systemFields.encumbrance value=document.system.encumbrance localize=true}}
-
-        </div>
-
-        {{> systems/dsk/templates/items/item-effects.hbs}} 
-    </section>
-</form>
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.rs value=document.system.rs localize=true}}
+    {{formGroup systemFields.encumbrance value=document.system.encumbrance localize=true}}
+</div>

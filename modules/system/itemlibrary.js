@@ -998,7 +998,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
       await this.setAdvancedFilters(category, type);
       if (isChecked) {
         const template = await this.buildDetailFilter(category, type);
-        $(this.element).find('.tab.active .advancedSearch .groupbox').html(template);
+        $(this.element).find('.advancedSearch .groupbox').html(template);
         ev.currentTarget.checked = isChecked;
       }
     }
@@ -1098,7 +1098,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
   static async _filterItem(ev, target) {
     const tab = $(target).closest('.tab')
     const category = tab.attr("data-tab")
-    const subcategory = $(target).attr("data-category")
+    const subcategory = $(target).attr("data-type")
     const isChecked = $(target).is(":checked")
     if (this.advancedFiltering && isChecked) {
       this.setAdvancedFilters()

@@ -1,3 +1,4 @@
+<div class="tab scrollable inventory {{tab.cssClass}}" data-tab="inventory" data-group="{{tab.group}}">
 {{> systems/dsk/templates/actors/parts/gearSearch.hbs}} {{#each prepare.inventory as |section sid|}} {{#if section.show}}
 <div class="groupbox">
     <div class="row-section table-title">
@@ -107,4 +108,5 @@
     <div class="col two">
         {{> systems/dsk/templates/actors/parts/purse.hbs}}
     </div>
+</div>
 </div>

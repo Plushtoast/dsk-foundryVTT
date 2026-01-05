@@ -1,3 +1,4 @@
+<div class="tab scrollable skills {{tab.cssClass}}" data-tab="skills" data-group="{{tab.group}}">
 <div class="row-section skills table-header searchbox">
     <div class="col two lineheight">
     </div>
@@ -32,8 +33,8 @@
         <div class="row-section wrap skills lineheight tableOdd item{{#if (eq item.system.level 0)}} notLearned{{/if}}" data-item-id="{{item._id}}">
             <div class="col sixty withContext">
                 <a data-action="itemEdit" class="item-edit talentName">{{item.name}}</a> {{#if item.canAdvance}}
-                <a data-action="advanceWrapper" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
-                <a data-action="advanceWrapper" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a> {{/if}}
+                <a data-action="advanceWrapper" data-fct="_refundItemAdvance" data-attr="{{item._id}}" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
+                <a data-action="advanceWrapper" data-fct="_advanceItem" data-attr="{{item._id}}" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a> {{/if}}
             </div>
             <div class="col five">
                 <a data-action="skillSelect" class="skill-select">
@@ -67,8 +68,8 @@
         <div class="row-section wrap skills lineheight tableOdd item{{#if (eq item.system.level 0)}} notLearned{{/if}}" data-item-id="{{item._id}}">
             <div class="col sixty withContext">
                 <a data-action="itemEdit" class="item-edit talentName">{{item.name}}</a> {{#if item.canAdvance}}
-                <a data-action="advanceWrapper" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
-                <a data-action="advanceWrapper" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                <a data-action="advanceWrapper" data-fct="_refundItemAdvance" data-attr="{{item._id}}" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
+                <a data-action="advanceWrapper" data-fct="_advanceItem" data-attr="{{item._id}}" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
             </div>
             <div class="col five">
                 <a data-action="skillSelect" class="skill-select">
@@ -83,4 +84,5 @@
         {{/each}}
        {{/each}}
     </div>
+</div>
 </div>

@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             {{#if cat}}
-                            <div class="row-section">
+                            <div class="row-section filterCategories">
                                 <div class="col">
                                     <div class="groupbox">
                                         <div class="row-section">
@@ -71,7 +71,7 @@
                                             <div class="col">
                                                 <ul class="wrap categories">
                                                     {{#each cat as |val fil|}}
-                                                    <li data-tooltip="{{val.label}}"><input class="filter" type="checkbox" id="filter_{{val.key}}" data-category="{{val.key}}" {{checked val.selected}} /><label for="filter_{{val.key}}">{{val.label}}</label></li>
+                                                    <li data-tooltip="{{val.label}}"><input class="filter" type="checkbox" id="filter_{{val.key}}" data-category="{{@../key}}" data-type="{{val.key}}" {{checked val.selected}} /><label for="filter_{{val.key}}">{{val.label}}</label></li>
                                                     {{/each}}
                                                 </ul>
                                             </div>

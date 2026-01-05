@@ -195,8 +195,9 @@ export default class DSKCombatDialog extends DialogShared {
         const isMelee = (source.type == "trait" && getProperty(source, "system.traitType") == "meleeAttack") || source.type == "meleeweapon"
         const testData = { source: this.dialogData.source, extra: { options: {} } }
         const actor = DSKUtility.getSpeaker(this.dialogData.speaker)
-        isMelee ? DSKCombatDialog.resolveMeleeDialog(testData, {}, this.element, actor, {}, -2, this.dialogData.mode) :
-            DSKCombatDialog.resolveRangeDialog(testData, {}, this.element, actor, {}, this.dialogData.mode, -2)
+        const html = $(this.element)
+        isMelee ? DSKCombatDialog.resolveMeleeDialog(testData, {}, html, actor, {}, -2, this.dialogData.mode) :
+            DSKCombatDialog.resolveRangeDialog(testData, {}, html, actor, {}, this.dialogData.mode, -2)
 
         this.dialogData.modifier = DiceDSK._situationalModifiers(testData)
         this.updateRollButton(this.readTargets())
@@ -206,7 +207,8 @@ export default class DSKCombatDialog extends DialogShared {
         this._resolveDefault(testData, cardOptions, html, actor, options);
 
         //TODO move this to situational modifiers only
-        const data = new foundry.applications.ux.FormDataExtended(html.find('form')[0]).object
+        const form = html[0].tagName == 'FORM' ? html[0] : html.find('form')[0]
+        const data = new foundry.applications.ux.FormDataExtended(form).object
             //testData.rangeModifier = html.find('[name="distance"]').val();
         testData.opposingWeaponSize = data.weaponsize
         testData.narrowSpace = data.narrowSpace
@@ -251,7 +253,8 @@ export default class DSKCombatDialog extends DialogShared {
         this._resolveDefault(testData, cardOptions, html, actor, options);
 
         //TODO move this to situational modifiers only
-        const data = new foundry.applications.ux.FormDataExtended(html.find('form')[0]).object
+        const form = html[0].tagName == 'FORM' ? html[0] : html.find('form')[0]
+        const data = new foundry.applications.ux.FormDataExtended(form).object
         testData.rangeModifier = data.distance
 
         testData.situationalModifiers.push({
@@ -297,7 +300,7 @@ export default class DSKCombatDialog extends DialogShared {
     }
 
     static _resolveDefault(testData, cardOptions, html, actor, options) {
-        cardOptions.rollMode = html.find('[name="rollMode"]').val();
+        cardOptions.rollMode = html.find('[name="rollMode"]:checked').val();
         testData.situationalModifiers = ActorDSK._parseModifiers(html);
         ActorDSK.schipsModifier(html, testData.situationalModifiers)
         testData.vw = html.find('[name="vw"]').val()

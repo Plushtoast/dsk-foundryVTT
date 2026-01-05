@@ -9,6 +9,7 @@ export default class DetailsTemplate extends DSKDataModel {
   static defineSchema() {
     return {
       details: new SchemaField({
+        species: new StringField({ initial: '', label: 'TYPES.Item.species' }),
         profession: new StringField({ initial: '', label: 'TYPES.Item.profession' }),
         culture: new StringField({ initial: '', label: 'TYPES.Item.culture' }),
         gender: new StringField({ initial: '', label: 'dsk.Gender' }),

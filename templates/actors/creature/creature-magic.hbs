@@ -1,3 +1,4 @@
+<div class="tab scrollable magic {{tab.cssClass}}" data-tab="magic" data-group="{{tab.group}}">
 <div class="groupbox">
     <div class="row-section wrap inverseRowtable">
         <div class="col">
@@ -20,8 +21,8 @@
             <div class="row-section skills lineheight">
                 <div class="col four">
                     <a data-action="itemEdit" class="item-edit">{{item.name}}</a> {{#if item.canAdvance}}
-                    <a data-action="advanceWrapper" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
-                    <a data-action="advanceWrapper" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                    <a data-action="advanceWrapper" data-fct="_refundItemAdvance" data-attr="{{item._id}}" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
+                    <a data-action="advanceWrapper" data-fct="_advanceItem" data-attr="{{item._id}}" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
                 </div>
                 <div class="col four center">
                     <a data-action="spellSelect" class="spell-select">
@@ -94,4 +95,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>

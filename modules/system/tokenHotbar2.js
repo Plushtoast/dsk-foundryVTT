@@ -221,7 +221,7 @@ export default class TokenHotbar2 extends DefaultAppv2 {
     }
 
     async _prepareContext(options) {
-        const data = {}
+        const data = await super._prepareContext(options)
         const actor = this.actor
         const items = {
             attacks: [],
@@ -236,7 +236,7 @@ export default class TokenHotbar2 extends DefaultAppv2 {
         let effects = []
         const direction = game.settings.get("dsk", "tokenhotbarLayout")
         const vertical = direction % 2
-        const itemWidth = TokenHotbar2.defaultOptions.itemWidth
+        const itemWidth = game.settings.get("dsk", "tokenhotbarSize")
         const spellTypes = ["ahnengabe"]
         if (actor) {
             const moreSkills = []

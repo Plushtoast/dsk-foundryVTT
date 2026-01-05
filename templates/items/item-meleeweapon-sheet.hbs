@@ -1,44 +1,30 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}} {{> systems/dsk/templates/items/item-equipment.hbs}}
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.tp value=document.system.tp localize=true}}
 
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
+    <div class="form-group">
+        <label class="label-text">{{localize "TYPES.Item.combatskill"}}</label>
+        <select name="system.combatskill" data-dtype="String">
+            {{selectOptions (selfObj combatskills) selected=system.combatskill}}
+        </select>
+    </div>
 
+    <div class="form-group doubleInput">
+        <label class="label-text">{{localize "dsk.ABBR.AW"}}</label>
+        {{formInput systemFields.aw value=document.system.aw}}
+        {{formInput systemFields.awoffhand value=document.system.awoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
+    </div>
 
-    <section class="content">
+    <div class="form-group doubleInput">
+        <label class="label-text">{{localize "dsk.ABBR.VW"}}</label>
+        {{formInput systemFields.vw value=document.system.vw}}
+        {{formInput systemFields.vwoffhand value=document.system.vwoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
+    </div>
 
-        {{> systems/dsk/templates/items/item-description.hbs}}
+    {{formGroup systemFields.rw value=document.system.rw localize=true}}
 
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-            {{formGroup systemFields.tp value=document.system.tp localize=true}}
+    {{#if isShield}}
+    {{formGroup systemFields.shieldsize value=document.system.shieldsize localize=true}}
+    {{/if}}
 
-            <div class="form-group">
-                <label class="label-text">{{localize "TYPES.Item.combatskill"}}</label>
-                <select name="system.combatskill" data-dtype="String">
-                    {{selectOptions (selfObj combatskills) selected=system.combatskill}}
-                </select>
-            </div>
-
-            <div class="form-group doubleInput">
-                <label class="label-text">{{localize "dsk.ABBR.AW"}}</label>
-                {{formInput systemFields.aw value=document.system.aw}}
-                {{formInput systemFields.awoffhand value=document.system.awoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
-            </div>
-
-            <div class="form-group doubleInput">
-                <label class="label-text">{{localize "dsk.ABBR.VW"}}</label>
-                {{formInput systemFields.vw value=document.system.vw}}
-                {{formInput systemFields.vwoffhand value=document.system.vwoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
-            </div>
-
-            {{formGroup systemFields.rw value=document.system.rw localize=true}}
-
-            {{#if isShield}}
-            {{formGroup systemFields.shieldsize value=document.system.shieldsize localize=true}}
-            {{/if}}
-
-            {{formGroup systemFields.length value=document.system.length localize=true}}
-        </div>
-
-        {{> systems/dsk/templates/items/item-effects.hbs}} 
-    </section>
-</form>
+    {{formGroup systemFields.length value=document.system.length localize=true}}
+</div>

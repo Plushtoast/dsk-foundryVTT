@@ -74,7 +74,8 @@ export default class SpecialabilityRulesDSK extends ItemRulesDSK {
             let callback
             if (rule.items == "text") {
                 template = await renderTemplate('systems/dsk/templates/dialog/requires-adoption-string-dialog.hbs', { original: item })
-                callback = function(dlg) {
+                callback = function(event, button, dialog) {
+                    let dlg = $(button.form);
                     let adoption = { name: dlg.find('[name="entryselection"]').val() }
                     SpecialabilityRulesDSK._specialabilityReturnFunction(actor, item, typeClass, adoption)
                 }

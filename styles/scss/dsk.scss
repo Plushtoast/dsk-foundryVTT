@@ -1,3 +1,5 @@
+@use 'sass:meta';
+
 :root {
   --border-color: #736953a6;
   --bg-color: #e1d3c6;
@@ -7,6 +9,7 @@
   --boldFont: "Signika";
   --normalFont: "Signika";
   --dskcolor: #582617;
+  --dskdesign1: #582617;
 }
 
 @font-face {
@@ -121,6 +124,49 @@ h7 {
 .columnFlex {
   flex-flow: column;
   align-items: stretch;
+}
+
+/* Button utility classes */
+.dskdesignbutton {
+  background-color: transparent;
+
+  &:hover {
+    background-color: var(--dskdesign1);
+    color: white;
+  }
+
+  &.noBorder:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  &.autoFlex {
+    flex: 1;
+  }
+}
+
+.noBorder {
+  border: none;
+}
+
+.noBG {
+  background: none;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-img {
+  display: flex;
+  justify-content: center;
+  
+  img {
+    max-width: 24px;
+    max-height: 24px;
+  }
 }
 
 .dsk {
@@ -1637,10 +1683,29 @@ form.dsk.item-sheet {
   position: unset;
 }
 
-.window-app .window-resizable-handle {
+.window-app .window-resizable-handle,
+.window-app .window-resize-handle {
   z-index: 2;
-  bottom: 3px;
+  bottom: 25px;
   right: 25px;
+  height: 24px;
+  width: 24px;
+  background: #0000009e;
+  border-radius: 4px;
+
+  &:before {
+    content: '\f066';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    line-height: 24px;
+    color: white;
+    width: 24px;
+    text-align: center;
+    font-size: var(--font-size-14);
+    font-family: var(--font-awesome);
+  }
 }
 
 .window-app .actor .window-resizable-handle {
@@ -1810,11 +1875,8 @@ form.dsk.item-sheet {
   .playlist.now-playing,
   .directory-list .directory-item.document {
     background-color: var(--sheet-bg);
-    margin: 3px;
     border: 1px solid var(--sheet-border);
     border-radius: 5px;
-    color: black;
-    margin-left: 10px;
   }
 }
 
@@ -3561,6 +3623,7 @@ select.noAppearance {
 .journalHeader .jrnIcons {
   color: rgb(92, 92, 92);
   float: right;
+  font-size: large;
 
   a {
     display: inline-block;
@@ -4748,6 +4811,25 @@ input[type="checkbox"].autoCheckbox {
   align-items: center;
 }
 
+.flexAlignCenter {
+  justify-content: center;
+  align-items: center;
+}
+
+/* Status tab layout classes */
+.singleColumnLayout .onlyMultiColumn,
+.onlySingleColumn {
+  display: none;
+}
+
+.actor-status-action {
+  justify-content: flex-end;
+}
+
+.actor-status-header {
+  align-items: center;
+}
+
 #settings .fshopButton {
   background: rgb(0, 111, 61);
   background: linear-gradient(90deg, rgba(0, 38, 13, 1) 0%, rgba(0, 111, 61, 1) 100%);
@@ -4946,3 +5028,5 @@ input[type="checkbox"].autoCheckbox {
     background-color: #a3a3a3b3;
   }
 }
+
+@include meta.load-css('foundryfixes.scss');

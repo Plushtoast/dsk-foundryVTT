@@ -1,36 +1,9 @@
-<form class="{{cssClass}} lock{{prepare.sheetLocked}}" autocomplete="off">
-    <fieldset disabled>
-        <header class="sheet-header row-section" ondragstart="return false;" ondrop="return false;">
-            <div class="charname headerInput col fourty">
-                {{formInput fields.name value=document.name placeholder=(localize 'dsk.name') classes="input name"}}
-                <span class="label name">{{localize "dsk.name"}}</span>
-            </div>
-
-            <div class="headerInput col fourty">
-                <input class="input species" name="system.details.species" type="text" value="{{actor.system.details.species}}" readonly placeholder="{{localize 'TYPES.Item.species'}}" />
-                <span class="label species">{{localize "TYPES.Item.species"}}</span>
-            </div>
-
-        </header>
-        <section id="tab-sections">
-            <nav id="dsk-primarytabs" class="sheet-tabs tabs" data-group="sheet" ondragstart="return false;" ondrop="return false;">
-                <a class="item active" data-action="tab" data-group="sheet" data-tab="main">{{localize "dsk.WIZARD.generalTab"}}</a>
-                <a class="item" data-action="tab" data-group="sheet" data-tab="notes">{{localize "dsk.notes"}}</a>
-            </nav>
-
-            <section class="content">
-                <div class="tab main save-scroll" data-tab="main" data-group="sheet">
-                    <div class="row-section">
-                        <div class="col center">
-                            <img src="{{actor.img}}" style="min-height: 200px;max-width:50%;border:none;" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab save-scroll" data-tab="notes" data-group="sheet">
-                    {{> systems/dsk/templates/actors/actor-notes.hbs}}
-                </div>
-            </section>
-        </section>
-    </fieldset>
-</form>
+<div class="tab scrollable main {{tab.cssClass}}" data-tab="main" data-group="{{tab.group}}">
+<fieldset disabled>
+    <div class="row-section">
+        <div class="col center">
+            <img src="{{actor.img}}" style="min-height: 200px;max-width:50%;border:none;" />
+        </div>
+    </div>
+</fieldset>
+</div>

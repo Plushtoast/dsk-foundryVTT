@@ -369,13 +369,15 @@ export default class ActorDSK extends Actor {
         singleDie: data.postData.characteristics.filter(x => x.char == "damage").length == 1
       });
       new DSKDialog({
-        title: game.i18n.localize("dsk.CHATFATE.selectDice"),
+        window: { title: game.i18n.localize("dsk.CHATFATE.selectDice") },
         content: html,
-        buttons: {
-          Yes: {
-            icon: '<i class="fa fa-check"></i>',
+        buttons: [
+          {
+            action: "yes",
+            icon: "fa fa-check",
             label: game.i18n.localize("dsk.ok"),
-            callback: async (dlg) => {
+            callback: async (event, button, dialog) => {
+              const dlg = $(button.form)
               let diesToReroll = dlg.find(".dieSelected").map(function () {return Number($(this).attr("data-index"));}).get();
               if (diesToReroll.length > 0) {
                 let oldDamageRoll = Roll.fromData(data.postData.damageRoll);
@@ -409,12 +411,12 @@ export default class ActorDSK extends Actor {
               }
             }
           },
-          cancel: {
-            icon: '<i class="fas fa-times"></i>',
+          {
+            action: "cancel",
+            icon: "fas fa-times",
             label: game.i18n.localize("dsk.cancel"),
           },
-        },
-        default: "Yes",
+        ],
       }).render(true);
 
       
@@ -430,13 +432,15 @@ export default class ActorDSK extends Actor {
         singleDie: data.postData.characteristics.filter(x => x.char != "damage").length == 1
       });
       new DSKDialog({
-        title: game.i18n.localize("dsk.CHATFATE.selectDice"),
+        window: { title: game.i18n.localize("dsk.CHATFATE.selectDice") },
         content: html,
-        buttons: {
-          Yes: {
-            icon: '<i class="fa fa-check"></i>',
+        buttons: [
+          {
+            action: "yes",
+            icon: "fa fa-check",
             label: game.i18n.localize("dsk.ok"),
-            callback: async (dlg) => {
+            callback: async (event, button, dialog) => {
+              const dlg = $(button.form)
               let diesToReroll = dlg.find(".dieSelected").map(function () {return Number($(this).attr("data-index"));}).get();
               if (diesToReroll.length > 0) {
                 let newRoll = [];
@@ -481,12 +485,12 @@ export default class ActorDSK extends Actor {
               }
             },
           },
-          cancel: {
-            icon: '<i class="fas fa-times"></i>',
+          {
+            action: "cancel",
+            icon: "fas fa-times",
             label: game.i18n.localize("dsk.cancel"),
           },
-        },
-        default: "Yes",
+        ],
       }).render(true);
     }
 
@@ -504,13 +508,15 @@ export default class ActorDSK extends Actor {
         postData: data.postData,
       });
       new DSKDialog({
-        title: game.i18n.localize("dsk.CHATFATE.selectDice"),
+        window: { title: game.i18n.localize("dsk.CHATFATE.selectDice") },
         content: html,
-        buttons: {
-          Yes: {
-            icon: '<i class="fa fa-check"></i>',
+        buttons: [
+          {
+            action: "yes",
+            icon: "fa fa-check",
             label: game.i18n.localize("dsk.ok"),
-            callback: async (dlg) => {
+            callback: async (event, button, dialog) => {
+              const dlg = $(button.form)
               let diesToReroll = dlg.find(".dieSelected").map(function () {return Number($(this).attr("data-index"));}).get();
               if (diesToReroll.length > 0) {
                 let newRoll = [];
@@ -546,12 +552,12 @@ export default class ActorDSK extends Actor {
               }
             },
           },
-          cancel: {
-            icon: '<i class="fas fa-times"></i>',
+          {
+            action: "cancel",
+            icon: "fas fa-times",
             label: game.i18n.localize("dsk.cancel"),
           },
-        },
-        default: "Yes",
+        ],
       }).render(true);
     }
 

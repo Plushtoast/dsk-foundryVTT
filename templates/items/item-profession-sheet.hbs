@@ -1,69 +1,17 @@
-<form class="dsk item-sheet {{cssClass}}" autocomplete="off">
-    {{> systems/dsk/templates/items/item-header.hbs}}
+<div class="tab details standard-form scrollable {{tab.cssClass}}" data-tab="details" data-group="{{tab.group}}">
+    {{formGroup systemFields.requirements.fields.advantage value=document.system.requirements.advantage localize=true elementType="textarea" classes="full-height"}}
+    {{formGroup systemFields.requirements.fields.specialability value=document.system.requirements.specialability localize=true elementType="textarea" classes="full-height"}}
 
-    <div class="row-section ">
+    {{formGroup systemFields.skills.fields.body value=document.system.skills.body localize=true elementType="textarea" classes="full-height"}}
+    {{formGroup systemFields.skills.fields.social value=document.system.skills.social localize=true elementType="textarea" classes="full-height"}}
+    {{formGroup systemFields.skills.fields.mental value=document.system.skills.mental localize=true elementType="textarea" classes="full-height"}}
+    {{formGroup systemFields.skills.fields.trade value=document.system.skills.trade localize=true elementType="textarea" classes="full-height"}}
+    {{formGroup systemFields.skills.fields.combat value=document.system.skills.combat localize=true elementType="textarea" classes="full-height"}}
 
-        <div class="col item-main noequipment" style="margin-bottom: 10px;">
-            <div class="row-section">
-                <div class="col fourty">
-                    <label class="label-text table-title">{{localize "dsk.category"}}</label>
-                </div>
-                <div class="col sixty">
-                    <label>{{itemCategory item.type}}</label>
-                </div>
-            </div>
+    {{formGroup systemFields.isAncestor value=document.system.isAncestor localize=true}}
 
-        </div>
-    </div>
-
-    {{> systems/dsk/templates/system/dsktabs.hbs}}
-
-
-    <section class="content career">
-
-        <div class="tab description standard-form scrollable {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
-            <div class="row-section">
-                <div class="col two">
-                    {{formInput systemFields.description.fields.value value=document.system.description.value toggled=true enriched=enrichedDescription}}
-                </div>
-                <div class="col two">
-                    <img src="{{item.img}}" class="fullImg" data-edit="img" /> 
-                    <div class="dskbox2">
-                        <div class="row-section flexaligncenter center">
-                            <div class="col">
-                                <b>{{localize 'TYPES.Item.equipment'}}</b>
-                            </div>
-                        </div>
-                        {{formInput systemFields.description.fields.gear value=document.system.description.gear toggled=true enriched=enrichedClothing}}
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-
-        <div class="tab details standard-form scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
-
-
-            {{formGroup systemFields.requirements.fields.advantage value=document.system.requirements.advantage localize=true elementType="textarea" classes="full-height"}}
-
-            {{formGroup systemFields.requirements.fields.specialability value=document.system.requirements.specialability localize=true elementType="textarea" classes="full-height"}}
-        
-
-            {{formGroup systemFields.skills.fields.body value=document.system.skills.body localize=true elementType="textarea" classes="full-height"}}
-            {{formGroup systemFields.skills.fields.social value=document.system.skills.social localize=true elementType="textarea" classes="full-height"}}
-            {{formGroup systemFields.skills.fields.mental value=document.system.skills.mental localize=true elementType="textarea" classes="full-height"}}
-            {{formGroup systemFields.skills.fields.trade value=document.system.skills.trade localize=true elementType="textarea" classes="full-height"}}
-            {{formGroup systemFields.skills.fields.combat value=document.system.skills.combat localize=true elementType="textarea" classes="full-height"}}
-                    
-
-            {{formGroup systemFields.isAncestor value=document.system.isAncestor localize=true}}
-           
-            {{#if system.isAncestor}}
-            {{formGroup systemFields.ahnengabe value=document.system.ahnengabe localize=true elementType="textarea" classes="full-height"}}
-            {{formGroup systemFields.ahnengeschenk value=document.system.ahnengeschenk localize=true elementType="textarea" classes="full-height"}}
-            {{/if}} 
-
-
-        </div>
-    </section>
-</form>
+    {{#if system.isAncestor}}
+    {{formGroup systemFields.ahnengabe value=document.system.ahnengabe localize=true elementType="textarea" classes="full-height"}}
+    {{formGroup systemFields.ahnengeschenk value=document.system.ahnengeschenk localize=true elementType="textarea" classes="full-height"}}
+    {{/if}}
+</div>

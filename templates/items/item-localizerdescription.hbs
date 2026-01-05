@@ -1,0 +1,7 @@
+<div class="tab description standard-form scrollable {{tab.cssClass}}" data-tab="description" data-group="{{tab.group}}">
+    {{#if hasLocalization}}
+        {{{localize (concat localizerPrefix item.name)}}}
+    {{else}}
+        {{formInput systemFields.description.fields.value value=document.system.description.value toggled=true enriched=enrichedDescription}}
+    {{/if}}
+</div>
