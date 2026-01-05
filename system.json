@@ -157,19 +157,22 @@
             "specialability": {
                 "htmlFields": [
                     "description.value",
-                    "description.gminfo"
+                    "description.gminfo",
+                    "rule"
                 ]
             },
             "advantage": {
                 "htmlFields": [
                     "description.value",
-                    "description.gminfo"
+                    "description.gminfo",
+                    "rule"
                 ]
             },
             "disadvantage": {
                 "htmlFields": [
                     "description.value",
-                    "description.gminfo"
+                    "description.gminfo",
+                    "rule"
                 ]
             },
             "trait": {

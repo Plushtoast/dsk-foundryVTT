@@ -1,4 +1,5 @@
 import ActorDSK from "../actor/actor_dsk.js"
+import { DefaultAppv2 } from "../actor/baseapp.js"
 import DSKUtility from "../system/dsk_utility.js"
 import OpposedDSK from "../system/opposeddsk.js"
 const { renderTemplate } = foundry.applications.handlebars;
@@ -83,68 +84,75 @@ export class ReactToSkillDialog extends DialogReactDSK {
     }
 }
 
-export class ActAttackDialog extends foundry.applications.api.DialogV2 {
+export class ActAttackDialog extends DefaultAppv2 {
     static DEFAULT_OPTIONS = {
+        window: { title: 'dsk.attacktest' },
         position: {
             width: 550
         },
+        actions: {
+            reactClick: this._reactClick
+        }
     };
 
+    static PARTS = {
+        main: {
+            template: 'systems/dsk/templates/dialog/dialog-reaction-attack.hbs',
+        },
+    };
+
+    constructor(actor, tokenId) {
+        super();
+        this.actor = actor;
+        this.tokenId = tokenId;
+    }
+
     static async showDialog(actor, tokenId) {
-        const dialog = new ActAttackDialog({
-            window: { title: game.i18n.localize("dsk.attacktest") },
-            content: await this.getTemplate(actor),
-            buttons: []
-        })
-        dialog.actor = actor
-        dialog.tokenId = tokenId
-        dialog.render(true)
+        new ActAttackDialog(actor, tokenId).render(true);
     }
 
-    async _onRender(context, options) {
-        await super._onRender(context, options);
-
-        const html = $(this.element);
-        html.find('.reactClick').on('click', ev => {
-            this.callbackResult(ev.currentTarget.dataset.value, this.actor, this.tokenId)
-            this.close()
-        });
+    static _reactClick(event, target) {
+        this.callbackResult(target.dataset.value, this.actor, this.tokenId);
+        this.close();
     }
 
-    static async getTemplate(actor) {
-        const combatskills = actor.items.filter(x => x.type == "combatskill").map(x => ActorDSK._calculateCombatSkillValues(x.toObject(), actor.system))
-        let items = []
+    async _prepareContext(_options) {
+        const data = await super._prepareContext(_options);
+        const combatskills = this.actor.items.filter(x => x.type == "combatskill").map(x => ActorDSK._calculateCombatSkillValues(x.toObject(), this.actor.system));
+        data.items = [];
 
-        const types = ["meleeweapon", "rangeweapon"]
-        const traitTypes = ["meleeAttack", "rangeAttack"]
+        const types = ["meleeweapon", "rangeweapon"];
+        const traitTypes = ["meleeAttack", "rangeAttack"];
 
-        for (let x of actor.items) {
+        for (let x of this.actor.items) {
             if (types.includes(x.type) && x.system.worn.value == true) {
-                const preparedItem = x.type == "meleeweapon" ? ActorDSK._prepareMeleeWeapon(x.toObject(), combatskills, actor) : ActorDSK._prepareRangeWeapon(x.toObject(), [], combatskills, actor)
-                items.push({
+                const preparedItem = x.type == "meleeweapon" ? ActorDSK._prepareMeleeWeapon(x.toObject(), combatskills, this.actor) : ActorDSK._prepareRangeWeapon(x.toObject(), [], combatskills, this.actor);
+                data.items.push({
                     name: x.name,
                     id: x.name,
                     img: x.img,
                     value: preparedItem.attack
-                })
+                });
             } else if (x.type == "trait" && traitTypes.includes(x.system.traitType)) {
-                items.push({
+                data.items.push({
                     name: x.name,
                     id: x.name,
                     img: x.img,
                     value: x.system.at
-                })
+                });
             }
         }
-        return await renderTemplate('systems/dsk/templates/dialog/dialog-reaction-attack.hbs', { dieClass: "die-mu", items, title: "dsk.DIALOG.selectAction" })
+        data.dieClass = "die-mu";
+        data.title = "dsk.DIALOG.selectAction";
+        return data;
     }
 
     callbackResult(text, actor, tokenId) {
-        const types = ["meleeweapon", "trait", "rangeweapon"]
-        const result = actor.items.find(x => { return types.includes(x.type) && x.name == text })
+        const types = ["meleeweapon", "trait", "rangeweapon"];
+        const result = actor.items.find(x => { return types.includes(x.type) && x.name == text });
         if (result) {
             actor.setupWeapon(result, "attack", {}, tokenId).then(setupData => {
-                actor.basicTest(setupData)
+                actor.basicTest(setupData);
             });
         }
     }

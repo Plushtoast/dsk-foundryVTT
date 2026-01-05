@@ -362,7 +362,7 @@ export default class TokenHotbar2 extends DefaultAppv2 {
 
     setPosition({ left, top, width, height, scale } = {}) {
         const currentPosition = super.setPosition({ left, top, width, height, scale })
-        const el = this.element[0];
+        const el = this.element;
 
         if (!el.style.width || width) {
             const tarW = width || el.offsetWidth;
@@ -393,7 +393,7 @@ export default class TokenHotbar2 extends DefaultAppv2 {
     }
 }
 
-class AddEffectDialog extends foundry.applications.api.DialogV2 {
+class AddEffectDialog extends DefaultAppv2 {
     static DEFAULT_OPTIONS = {
         classes: ["dsk", "tokenStatusEffects"],
         position: {
@@ -402,36 +402,44 @@ class AddEffectDialog extends foundry.applications.api.DialogV2 {
         },
         window: {
             resizable: true,
+            title: 'dsk.CONDITION.add'
+        },
+        actions: {
+            reactClick: this._reactClick
+        }
+    };
+
+    static PARTS = {
+        main: {
+            template: 'systems/dsk/templates/dialog/addstatusdialog.hbs',
         },
     };
 
     static async showDialog() {
-        const effects = foundry.utils.duplicate(CONFIG.statusEffects).map(x => {
+        new AddEffectDialog().render(true);
+    }
+
+    async _prepareContext(_options) {
+        const data = await super._prepareContext(_options);
+        data.effects = foundry.utils.duplicate(CONFIG.statusEffects).map(x => {
             return {
                 name: game.i18n.localize(x.name),
                 icon: x.img,
                 description: game.i18n.localize(x.description),
                 id: x.id
             }
-        }).sort((a, b) => a.name.localeCompare(b.name))
+        }).sort((a, b) => a.name.localeCompare(b.name));
+        return data;
+    }
 
-        const dialog = new AddEffectDialog({
-            window: { title: game.i18n.localize("dsk.CONDITION.add") },
-            content: await renderTemplate('systems/dsk/templates/dialog/addstatusdialog.hbs', { effects }),
-            buttons: [],
-            position: {
-                height: Math.ceil(effects.length / 3) * 36 + 170
-            }
-        })
-        dialog.render(true)
+    static _reactClick(event, target) {
+        this.addEffect(target.dataset.value);
     }
 
     async _onRender(context, options) {
         await super._onRender(context, options);
 
         const html = $(this.element);
-        html.find('.reactClick').on('click', ev => this.addEffect(ev));
-
         let filterConditions = ev => this._filterConditions($(ev.currentTarget), html);
 
         let search = html.find('.conditionSearch');
@@ -450,9 +458,9 @@ class AddEffectDialog extends foundry.applications.api.DialogV2 {
         }
     }
 
-    async addEffect(ev) {
+    async addEffect(value) {
         for (let token of canvas.tokens.controlled) {
-            await token.actor.addCondition(ev.currentTarget.dataset.value, 1, false, false)
+            await token.actor.addCondition(value, 1, false, false)
         }
         game.dsk.apps.tokenHotbar.render(true)
         this.close()

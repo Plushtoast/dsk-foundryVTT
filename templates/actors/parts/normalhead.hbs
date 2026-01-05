@@ -1,6 +1,6 @@
 <header class="sheet-header">
     <div class="charname headerInput">
-        <input class="input name" name="name" style="width:90%" type="text" value="{{actor.name}}" placeholder="{{localize 'dsk.name'}}" />
+        {{formInput fields.name value=document.name placeholder=(localize 'dsk.name') classes="input name"}}
         <a class="actorDrag" data-tooltip="dsk.TT.dragLink"><i class="fas fa-link"></i></a>
         <span class="label name">{{localize "dsk.name"}}</span>
     </div>

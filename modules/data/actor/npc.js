@@ -1,6 +1,7 @@
 import { ActorDataModel } from '../baseactor.js';
 import CharacteristicsTemplate from './templates/characteristics.js';
 import DetailsTemplate from './templates/details.js';
+import MerchantTemplate from './templates/merchant.js';
 import StatusTemplate from './templates/status.js';
 
 const { SchemaField, StringField } = foundry.data.fields;
@@ -10,6 +11,7 @@ const { SchemaField, StringField } = foundry.data.fields;
  */
 export default class NpcData extends ActorDataModel.mixin(
   CharacteristicsTemplate,
+  MerchantTemplate,
   StatusTemplate,
   DetailsTemplate
 ) {

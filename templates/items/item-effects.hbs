@@ -42,7 +42,7 @@
                 <a data-action="conditionToggle" class="condition-toggle" data-tooltip="dsk.SHEET.deactivate"><i class="far fa-check-circle"></i></a> {{/if}}
             </div>
         </div>
-        {{/each}} {{#each transferedConditions as |item i|}
+        {{/each}} {{#each transferedConditions as |item i|}}
         <div class="row-section col skills statusEffect" data-id="{{item._id}}">
             <div class="col ten">
                 {{#if item.disabled}}

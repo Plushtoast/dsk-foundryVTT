@@ -4,7 +4,7 @@ import APValueTemplate from './templates/apvalue.js';
 import MaxTemplate from './templates/max.js';
 import RequirementsTemplate from './templates/requirements.js';
 
-const { SchemaField, StringField } = foundry.data.fields;
+const { SchemaField, StringField, HTMLField } = foundry.data.fields;
 
 /**
  * DataModel for Disadvantage items
@@ -17,7 +17,7 @@ export default class DisadvantageData extends ItemDataModel.mixin(
 ) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      rule: new StringField({ initial: '' }),
+      rule: new HTMLField({ initial: '', label: 'dsk.rule' }),
       effect: new SchemaField({
         value: new StringField({ initial: '' }),
       }),

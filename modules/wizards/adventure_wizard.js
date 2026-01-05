@@ -419,13 +419,13 @@ export default class BookWizard extends DragMixin(DefaultAppv2) {
     _onClickPageLink(ev) {
         const anchor = ev.currentTarget.closest("[data-anchor]")?.dataset.anchor;
         if (anchor) {
-            const element = this.element[0].querySelector(`.chapter [data-anchor="${anchor}"]`)
+            const element = this.element.querySelector(`.chapter [data-anchor="${anchor}"]`)
             if (element) {
                 element.scrollIntoView({ behavior: "smooth" });
                 return;
             }
         }
-        const page = this.element[0].querySelector(`.journalHeader`);
+        const page = this.element.querySelector(`.journalHeader`);
         page?.scrollIntoView({ behavior: "smooth" });
     }
 

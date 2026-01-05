@@ -1,6 +1,7 @@
 import { ActorDataModel } from '../baseactor.js';
 import CharacteristicsTemplate from './templates/characteristics.js';
 import DetailsTemplate from './templates/details.js';
+import MerchantTemplate from './templates/merchant.js';
 import StatusTemplate from './templates/status.js';
 
 /**
@@ -8,6 +9,7 @@ import StatusTemplate from './templates/status.js';
  */
 export default class CharacterData extends ActorDataModel.mixin(
   CharacteristicsTemplate,
+  MerchantTemplate,
   StatusTemplate,
   DetailsTemplate
 ) {

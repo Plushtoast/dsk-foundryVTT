@@ -1,3 +1,4 @@
+import { DefaultAppv2 } from "./baseapp.js";
 import ItemDSK from "../item/item_dsk.js";
 import DSK from "../system/config.js";
 import DSKSoundEffect from "../system/dsk-soundeffect.js";
@@ -486,13 +487,8 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     async _prepareContext(options) {
         const data = await super._prepareContext(options);
         data["merchantType"] = getProperty(this.actor.system, "merchant.merchantType") || "none"
-        data["merchantTypes"] = {
-            none: game.i18n.localize("dsk.MERCHANT.typeNone"),
-            merchant: game.i18n.localize("dsk.MERCHANT.typeMerchant"),
-            loot: game.i18n.localize("dsk.MERCHANT.typeLoot"),
-            epic: game.i18n.localize("dsk.MERCHANT.typeEpic")
-        }
-        data["invName"] = data["merchantTypes"][data["merchantType"]]
+        data["merchantTypes"] = DSK.merchantTypes
+        data["invName"] = game.i18n.localize(DSK.merchantTypes[data["merchantType"]])
         data["players"] = game.users.filter(x => !x.isGM).map(x => {
             x.allowedMerchant = this.actor.testUserPermission(x, "LIMITED", false)
             x.buyingFactor = getProperty(this.actor.system, `merchant.factors.buyingFactor.${x.id}`)
@@ -579,19 +575,34 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     }
 }
 
-class SelectTradefriendDialog extends foundry.applications.api.DialogV2 {
-    static async getDialog(actor){
-        const users = await game.dsk.apps.gameMasterMenu?.getTrackedHeros()
+class SelectTradefriendDialog extends DefaultAppv2 {
+    static DEFAULT_OPTIONS = {
+        window: { title: 'dsk.DIALOG.setTargetToUser' },
+    };
 
-        if(!users) return ui.notifications.warn("The required functionality is not yet available.")
+    static PARTS = {
+        main: {
+            template: 'systems/dsk/templates/dialog/selectTradeFriend.hbs',
+        },
+    };
 
-        const dialog = new SelectTradefriendDialog({
-            window: { title: game.i18n.localize("dsk.DIALOG.setTargetToUser") },
-            content: await renderTemplate('systems/dsk/templates/dialog/selectTradeFriend.hbs', { users }),
-            buttons: [],
-        })
-        dialog.actor = actor
-        return dialog
+    constructor(actor) {
+        super();
+        this.actor = actor;
+    }
+
+    static async getDialog(actor) {
+        const users = await game.dsk.apps.gameMasterMenu?.getTrackedHeros();
+
+        if (!users) return ui.notifications.warn("The required functionality is not yet available.");
+
+        return new SelectTradefriendDialog(actor);
+    }
+
+    async _prepareContext(_options) {
+        const data = await super._prepareContext(_options);
+        data.users = await game.dsk.apps.gameMasterMenu?.getTrackedHeros();
+        return data;
     }
 
     async _onRender(context, options) {
@@ -601,8 +612,8 @@ class SelectTradefriendDialog extends foundry.applications.api.DialogV2 {
         html.find('.combatant').on('click', ev => this.setTargetToUser(ev));
     }
 
-    setTargetToUser(ev){
-        this.actor.setTradeFriend({_id: ev.currentTarget.dataset.id})
-        this.close()
+    setTargetToUser(ev) {
+        this.actor.setTradeFriend({ _id: ev.currentTarget.dataset.id });
+        this.close();
     }
 }

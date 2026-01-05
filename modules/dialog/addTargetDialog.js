@@ -1,31 +1,47 @@
+import { DefaultAppv2 } from "../actor/baseapp.js"
 import DPS from "../system/derepositioningsystem.js"
 import DSKUtility from "../system/dsk_utility.js"
 const { renderTemplate } = foundry.applications.handlebars;
 
-export class AddTargetDialog extends foundry.applications.api.DialogV2 {
-    static async getDialog(speaker){
-        const targets = Array.from(game.user.targets).map(x => x.id)
-        const selectables = []
-        const token = canvas.scene ? canvas.scene.tokens.get(speaker.token)?.object : undefined
-        if(game.combat){
-            game.combat.combatants.forEach(combatant => {
-                if (!combatant.visible ) return
+export class AddTargetDialog extends DefaultAppv2 {
+    static DEFAULT_OPTIONS = {
+        window: { title: 'dsk.DIALOG.addTarget' },
+    };
 
-                combatant.isSelected = targets.includes(combatant.token.id)
-                if(token && combatant.token){
-                    const combatantToken = canvas.scene.tokens.get(combatant.token.id).object
-                    combatant.distance = DPS.rangeFinder(token, combatantToken)
-                    combatant.distance.distanceSum = Number(combatant.distance.distanceSum.toFixed(1))
+    static PARTS = {
+        main: {
+            template: 'systems/dsk/templates/dialog/addTarget-dialog.hbs',
+        },
+    };
+
+    constructor(speaker) {
+        super();
+        this.speaker = speaker;
+    }
+
+    static async getDialog(speaker) {
+        return new AddTargetDialog(speaker);
+    }
+
+    async _prepareContext(_options) {
+        const data = await super._prepareContext(_options);
+        const targets = Array.from(game.user.targets).map(x => x.id);
+        data.selectables = [];
+        const token = canvas.scene?.tokens.get(this.speaker.token)?.object;
+        if (game.combat) {
+            game.combat.combatants.forEach(combatant => {
+                if (!combatant.visible) return;
+
+                combatant.isSelected = targets.includes(combatant.token.id);
+                if (token && combatant.token) {
+                    const combatantToken = canvas.scene.tokens.get(combatant.token.id).object;
+                    combatant.distance = DPS.rangeFinder(token, combatantToken);
+                    combatant.distance.distanceSum = Number(combatant.distance.distanceSum.toFixed(1));
                 }
-                selectables.push(combatant)
-            })
+                data.selectables.push(combatant);
+            });
         }
-        const dialog = new AddTargetDialog({
-            window: { title: game.i18n.localize("dsk.DIALOG.addTarget") },
-            content: await renderTemplate('systems/dsk/templates/dialog/addTarget-dialog.hbs', { selectables }),
-            buttons: [],
-        })
-        return dialog
+        return data;
     }
 
     async _onRender(context, options) {
@@ -40,56 +56,64 @@ export class AddTargetDialog extends foundry.applications.api.DialogV2 {
     }
 
     _onCombatantHoverOut(ev) {
-        this._getCombatApp()._onCombatantHoverOut(ev)
+        this._getCombatApp()._onCombatantHoverOut(ev);
     }
 
     _onCombatantHoverIn(ev) {
-        this._getCombatApp()._onCombatantHoverIn(ev)
+        this._getCombatApp()._onCombatantHoverIn(ev);
     }
 
-    _onRightClick(ev){
-        if(ev.button == 2){
-            const combatant = game.combat.combatants.get(ev.currentTarget.dataset.combatantId)
-            if ( combatant.token) {
-                return canvas.animatePan({x: combatant.token.x, y: combatant.token.y});
+    _onRightClick(ev) {
+        if (ev.button == 2) {
+            const combatant = game.combat.combatants.get(ev.currentTarget.dataset.combatantId);
+            if (combatant.token) {
+                return canvas.animatePan({ x: combatant.token.x, y: combatant.token.y });
             }
         }
     }
 
     _getCombatApp() {
-        return game.combats.apps[0]
+        return game.combats.apps[0];
     }
 
-    async setTargets(ev){
-        const isShift = ev.originalEvent.shiftKey
-        if(!isShift)
-            $(ev.currentTarget).closest('.directory').find('.combatant').removeClass('selectedTarget')
+    async setTargets(ev) {
+        const isShift = ev.originalEvent.shiftKey;
+        if (!isShift)
+            $(ev.currentTarget).closest('.directory').find('.combatant').removeClass('selectedTarget');
 
-        $(ev.currentTarget).addClass("selectedTarget")
-        const combatantId = ev.currentTarget.dataset.combatantId
-        const combatant = game.combat.combatants.get(combatantId)
-        
-        combatant.token.object.setTarget(true, {user: game.user, releaseOthers: !isShift, groupSelection: true });
+        $(ev.currentTarget).addClass("selectedTarget");
+        const combatantId = ev.currentTarget.dataset.combatantId;
+        const combatant = game.combat.combatants.get(combatantId);
+
+        combatant.token.object.setTarget(true, { user: game.user, releaseOthers: !isShift, groupSelection: true });
     }
 }
 
-export class SelectUserDialog extends foundry.applications.api.DialogV2 {
+export class SelectUserDialog extends DefaultAppv2 {
     static DEFAULT_OPTIONS = {
         classes: ["dsk5Decent"],
+        window: { title: 'dsk.DIALOG.setTargetToUser' },
     };
 
-    static async getDialog(){
-        const users = game.users.filter(x => x.active && !x.isGM)
-        return new SelectUserDialog({
-            window: { title: game.i18n.localize("dsk.DIALOG.setTargetToUser") },
-            content: await renderTemplate('systems/dsk/templates/dialog/selectForUserDialog.hbs', { users }),
-            buttons: [],
-        })
+    static PARTS = {
+        main: {
+            template: 'systems/dsk/templates/dialog/selectForUserDialog.hbs',
+        },
+    };
+
+    static async getDialog() {
+        return new SelectUserDialog();
     }
 
-    static registerButtons(){
+    async _prepareContext(_options) {
+        const data = await super._prepareContext(_options);
+        data.users = game.users.filter(x => x.active && !x.isGM);
+        return data;
+    }
+
+    static registerButtons() {
         Hooks.on("getSceneControlButtons", btns => {
-            if(!game.user.isGM) return
+            if (!game.user.isGM) return;
 
             const userSelect = {
                 name: "targetUser",
@@ -97,10 +121,10 @@ export class SelectUserDialog extends foundry.applications.api.DialogV2 {
                 icon: "fa fa-bullseye",
                 button: true,
                 order: 2,
-                onChange: async() => { (await SelectUserDialog.getDialog()).render(true) }
-            }
+                onChange: async () => { (await SelectUserDialog.getDialog()).render(true) }
+            };
             btns.tokens.tools.targetUser = userSelect;
-        })
+        });
     }
 
     async _onRender(context, options) {
@@ -110,13 +134,13 @@ export class SelectUserDialog extends foundry.applications.api.DialogV2 {
         html.find('.combatant').on('click', ev => this.setTargetToUser(ev));
     }
 
-    setTargetToUser(ev){
-        const targetIds = Array.from(game.user.targets).map(x => x.id)
-        const userId = ev.currentTarget.dataset.userId
-        const user = game.users.get(userId)
+    setTargetToUser(ev) {
+        const targetIds = Array.from(game.user.targets).map(x => x.id);
+        const userId = ev.currentTarget.dataset.userId;
+        const user = game.users.get(userId);
         user._onUpdateTokenTargets(targetIds);
-        game.socket.emit('userActivity', userId, { targets: targetIds})
-        this.close()
+        game.socket.emit('userActivity', userId, { targets: targetIds });
+        this.close();
     }
 }
 

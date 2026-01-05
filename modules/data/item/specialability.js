@@ -5,7 +5,7 @@ import MaxTemplate from './templates/max.js';
 import RequirementsTemplate from './templates/requirements.js';
 import DSK from '../../system/config.js';
 
-const { SchemaField, StringField, NumberField } = foundry.data.fields;
+const { SchemaField, StringField, NumberField, HTMLField } = foundry.data.fields;
 
 /**
  * DataModel for SpecialAbility items
@@ -18,7 +18,7 @@ export default class SpecialabilityData extends ItemDataModel.mixin(
 ) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      rule: new StringField({ initial: '', label: 'dsk.rule' }),
+      rule: new HTMLField({ initial: '', label: 'dsk.rule' }),
       category: new StringField({ 
         initial: 'general',
         choices: DSK.specialAbilityCategories,

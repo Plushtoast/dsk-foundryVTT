@@ -19,7 +19,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(
       ammunitionType: new StringField({ 
         initial: '-',
         choices: DSK.ammunitiongroups,
-        label: 'dsk.ammunitiontype'
+        label: 'dsk.ammunitionType'
       }),
       length: new StringField({ initial: '', label: 'dsk.length' }),
       rangeMultiplier: new NumberField({ initial: 1, label: 'dsk.rangeMultiplier', step: 0.1, min: 0 }),

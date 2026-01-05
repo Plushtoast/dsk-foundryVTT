@@ -1,5 +1,6 @@
 import { ActorDataModel } from '../baseactor.js';
 import CharacteristicsTemplate from './templates/characteristics.js';
+import MerchantTemplate from './templates/merchant.js';
 import StatusTemplate from './templates/status.js';
 
 const { SchemaField, StringField, NumberField, HTMLField } = foundry.data.fields;
@@ -9,6 +10,7 @@ const { SchemaField, StringField, NumberField, HTMLField } = foundry.data.fields
  */
 export default class CreatureData extends ActorDataModel.mixin(
   CharacteristicsTemplate,
+  MerchantTemplate,
   StatusTemplate
 ) {
   static defineSchema() {

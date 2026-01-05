@@ -24,7 +24,7 @@ export default class RangeweaponData extends ItemDataModel.mixin(
       ammunitionType: new StringField({ 
         initial: '-',
         choices: DSK.ammunitiongroups,
-        label: 'dsk.ammunitiontype'
+        label: 'dsk.ammunitionType'
       }),
       length: new NumberField({ initial: 0, label: 'dsk.length' }),
       combatskill: new StringField({ initial: 'Schusswaffen', label: 'TYPES.Item.combatskill' }),

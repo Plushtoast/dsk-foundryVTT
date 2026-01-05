@@ -541,6 +541,13 @@ DSK.equipmentTypes = {
     "alcohol": "dsk.Equipment.alcohol"
 };
 
+DSK.merchantTypes = {
+    "none": "dsk.MERCHANT.typeNone",
+    "merchant": "dsk.MERCHANT.typeMerchant",
+    "loot": "dsk.MERCHANT.typeLoot",
+    "epic": "dsk.MERCHANT.typeEpic"
+};
+
 DSK.systemTables = [
     { name: "Melee", attrs: "data-weaponless=\"false\"", roll: "botch-roll", pack: { de: "dsk.patzer", en: "dsk.botch" }, setting: { module: "", key: "" } },
     { name: "Range", attrs: "data-weaponless=\"false\"", roll: "botch-roll", pack: { de: "dsk.patzer", en: "dsk.botch" }, setting: { module: "", key: "" } },
