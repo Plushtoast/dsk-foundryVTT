@@ -142,6 +142,10 @@
             "poisoned": "Schlangen und anderes giftiges Getier ist im Umland Havenas nicht ungewöhnlich. Solange ein Gift wirkt, kann der Vergiftete nicht mehr durch eine normale Ruhephase (siehe Seite 190) regenerieren."
         },
         "sight": "Sicht",
+        "attributes": "Eigenschaften",
+        "group": "Gruppe",
+        "encumbrance": "Belastung",
+        "resist": "Widerstand",
         "MODS": {
             "partChecks": "Teilprobenmodifikator",
             "FP": "Fertigkeitspunktemodifikator",
@@ -965,7 +969,8 @@
             "noFilter": "Kein Filter",
             "indexWorldItems": "Welt Items indexieren (Deaktivieren verbessert Leistung, erfordert neuladen der Welt)",
             "fullTextSearch": "Volltextsuche (Deaktivieren verbessert Leistung, erfordert neuladen der Welt)",
-            "loading": "Lade {item}..."
+            "loading": "Lade {item}...",
+            "payDrag": "Ziehen zum Bezahlen"
         },
         "consumable": {
             "category": {

@@ -136,7 +136,16 @@ class DSKSystemConfiguration {
     const description = this.getDescription(item, fullTextSearch)
     const langKey = `TYPES.${item.documentName}.${item.type}`
     const type = game.i18n.has(langKey) ? game.i18n.localize(langKey) : item.type
-    return await renderTemplate("systems/dsk/templates/system/itemHover.hbs", { item, description, type })
+    let typeDetails = ""
+    if (item.documentName === "Item" && item.type) {
+      const templatePath = `systems/dsk/templates/items/browse/item_${item.type}.hbs`
+      try {
+        typeDetails = await renderTemplate(templatePath, { item })
+      } catch (e) {
+        typeDetails = ""
+      }
+    }
+    return await renderTemplate("systems/dsk/templates/system/itemHover.hbs", { item, description, type, typeDetails })
   }
 
   static getSearchFields(documentName, type, fullTextSearch) {
@@ -857,10 +866,13 @@ export default class DSKItemLibrary extends DefaultAppv2 {
   itemDragStart(ev) {
     ev.stopPropagation()
     $(this.element).animate({ opacity: 0.2 }, 100);
-    const uuid = ev.target.dataset.uuid
+    const dragTarget = ev.target.closest("[data-uuid]") || ev.target;
+    const uuid = dragTarget?.dataset?.uuid
+    if (!uuid) return
+    const pay = dragTarget?.dataset?.pay
     const { type } = foundry.utils.parseUuid(uuid);
-    ev.dataTransfer.setData("text/plain", JSON.stringify({ type, uuid, dragSource: "itemlibrary" }));
-    ev.target.addEventListener("dragend", () => {
+    ev.dataTransfer.setData("text/plain", JSON.stringify({ type, uuid, dragSource: "itemlibrary", pay }));
+    dragTarget.addEventListener("dragend", () => {
       window.setTimeout(() => $(this.element).animate({ opacity: 1 }, 300, () => $(this.element).css({ pointerEvents: "" })))
     }, { once: true });
   }
@@ -913,9 +925,10 @@ export default class DSKItemLibrary extends DefaultAppv2 {
     const uuid = ev.currentTarget.dataset.uuid;
     const item = await fromUuid(uuid);
 
+    if (!item) return
     if (item.documentName == "JournalEntry") return
 
-    let tooltip = await item.toEmbed?.({}, { skipHeader: true })
+    let tooltip = await item.toEmbed({}, { skipHeader: true })
 
     if (!tooltip) tooltip = await this.systemConfiguration.renderTooltip(item)
 

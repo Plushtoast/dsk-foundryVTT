@@ -1,0 +1,10 @@
+<div class="row-section tooltip-row">
+    <div class="col four label-text">{{localize "dsk.ammunitionType"}}</div>
+    <div class="col six">{{item.system.ammunitionType}}</div>
+</div>
+{{#if item.system.mag}}
+<div class="row-section tooltip-row">
+    <div class="col four label-text">{{localize "dsk.ammunition.mag"}}</div>
+    <div class="col six">{{item.system.mag.value}} / {{item.system.mag.max}}</div>
+</div>
+{{/if}}

@@ -1,10 +1,98 @@
-<div>
-   <div class="flexcol">
-        <img src="{{item.img}}"/>
-   </div>
-   <h1>{{item.name}}</h1>
-   <h2>{{type}}</h2>
-   <div class="description scrollable">
-        {{{description}}}
-    </div>
+<div class="itemTooltip itemLibraryTooltip-content">
+     <div class="tooltip-header row-section">
+          <div class="col four tooltip-image">
+               <img src="{{item.img}}" />
+          </div>
+          <div class="col sixty tooltip-title">
+               <h1>{{item.name}}</h1>
+               <h2>{{type}}</h2>
+               {{#if item.system.ap}}
+               <div class="row-section tooltip-row">
+                    <div class="col four label-text">{{localize "dsk.APValue"}}</div>
+                    <div class="col six">{{item.system.ap}}</div>
+               </div>
+               {{/if}}
+               {{#if item.system.level}}
+               <div class="row-section tooltip-row">
+                    <div class="col four label-text">{{localize "dsk.level"}}</div>
+                    <div class="col six">{{item.system.level}}</div>
+               </div>
+               {{/if}}
+          </div>
+     </div>
+
+     {{#if (eq item.documentName "Actor")}}
+     <div class="groupbox tooltip-section">
+          <div class="row-section table-title">
+               <div class="col">{{localize "dsk.value"}}</div>
+          </div>
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.LeP"}}</div>
+               <div class="col six">{{item.system.stats.LeP.current}} / {{item.system.stats.LeP.max}}</div>
+          </div>
+          {{#if item.system.stats.AeP}}
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.AeP"}}</div>
+               <div class="col six">{{item.system.stats.AeP.current}} / {{item.system.stats.AeP.max}}</div>
+          </div>
+          {{/if}}
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.CHARAbbrev.GS"}}</div>
+               <div class="col six">{{item.system.stats.gs.max}}</div>
+          </div>
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.soulpower"}}</div>
+               <div class="col six">{{item.system.stats.sk.max}}</div>
+          </div>
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.toughness"}}</div>
+               <div class="col six">{{item.system.stats.zk.max}}</div>
+          </div>
+     </div>
+     {{/if}}
+
+     {{#if (eq item.documentName "Item")}}
+     <div class="groupbox tooltip-section">
+          <div class="row-section table-title">
+               <div class="col">{{localize "dsk.details"}}</div>
+          </div>
+          {{#if item.system.category}}
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.category"}}</div>
+               <div class="col six">{{item.system.category}}</div>
+          </div>
+          {{/if}}
+          {{#if item.system.quantity}}
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.quantity"}}</div>
+               <div class="col six">{{item.system.quantity}}</div>
+          </div>
+          {{/if}}
+          {{#if item.system.price.value}}
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.price"}}</div>
+               <div class="col six">{{item.system.price.value}}</div>
+          </div>
+          {{else if item.system.price}}
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.price"}}</div>
+               <div class="col six">{{item.system.price}}</div>
+          </div>
+          {{/if}}
+          {{#if item.system.weight}}
+          <div class="row-section tooltip-row">
+               <div class="col four label-text">{{localize "dsk.weight"}}</div>
+               <div class="col six">{{item.system.weight}}</div>
+          </div>
+          {{/if}}
+
+          {{{typeDetails}}}
+     </div>
+     {{/if}}
+
+     {{#if description}}
+     <div class="description scrollable">
+          {{{description}}}
+     </div>
+     {{/if}}
 </div>

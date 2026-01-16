@@ -1,0 +1,10 @@
+<div class="row-section tooltip-row">
+    <div class="col four label-text">{{localize "dsk.attributes"}}</div>
+    <div class="col six">{{localize (concat "dsk.characteristics." item.system.characteristic1 ".abbr")}} / {{localize (concat "dsk.characteristics." item.system.characteristic2 ".abbr")}}</div>
+</div>
+{{#if item.system.weapontype}}
+<div class="row-section tooltip-row">
+    <div class="col four label-text">{{localize "dsk.weapontype"}}</div>
+    <div class="col six">{{item.system.weapontype}}</div>
+</div>
+{{/if}}
