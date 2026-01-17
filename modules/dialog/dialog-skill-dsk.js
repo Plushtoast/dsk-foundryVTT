@@ -21,7 +21,7 @@ export default class SkillDialogDSK extends DialogShared {
         // Add nonOpposedButton at the beginning
         buttons.unshift({
             action: "nonOpposedButton",
-            label: game.i18n.localize("dsk.Roll"),
+            label: "dsk.Roll",
             callback: (event, button, dialog) => {
                 const html = $(button.form);
                 game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html)

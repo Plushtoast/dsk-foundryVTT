@@ -21,7 +21,7 @@ export default class DSKTutorial {
         }));
 
         foundry.applications.api.DialogV2.wait({
-            window: { title: game.i18n.localize("dsk.DIALOG.firstTime") },
+            window: { title: "dsk.DIALOG.firstTime" },
             content: game.i18n.localize("dsk.DIALOG.firstTimeWarning"),
             buttons: buttons
         });

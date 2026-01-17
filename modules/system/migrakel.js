@@ -4,13 +4,13 @@ export default class Migrakel {
     static async showDialog(content) {
         let [result] = await new Promise((resolve, reject) => {
             foundry.applications.api.DialogV2.wait({
-                window: { title: game.i18n.localize("dsk.Migrakel.Migration") },
+                window: { title: "dsk.Migrakel.Migration" },
                 content,
                 buttons: [
                     {
                         action: "yes",
                         icon: "fa fa-check",
-                        label: game.i18n.localize("dsk.yes"),
+                        label: "dsk.yes",
                         default: true,
                         callback: () => {
                             resolve([true]);
@@ -19,7 +19,7 @@ export default class Migrakel {
                     {
                         action: "cancel",
                         icon: "fas fa-times",
-                        label: game.i18n.localize("dsk.cancel"),
+                        label: "dsk.cancel",
                         callback: () => {
                             resolve([false]);
                         },

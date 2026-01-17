@@ -3521,6 +3521,10 @@ a {
   min-height: 300px;
 }
 
+.item .editor.prosemirror {
+  min-height: 150px;
+}
+
 .dskbox2 .editor,
 .maskfield .editor {
   z-index: 2;

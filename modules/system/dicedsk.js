@@ -754,13 +754,13 @@ export default class DiceDSK{
                 });
                 [result, form] = await new Promise((resolve, reject) => {
                     new DSKDialog({
-                        window: { title: game.i18n.localize(options.cheat ? "dsk.DIALOG.cheat" : "dsk.SETTINGS.allowPhysicalDice") },
+                        window: { title: options.cheat ? "dsk.DIALOG.cheat" : "dsk.SETTINGS.allowPhysicalDice" },
                         content: template,
                         buttons: [
                             {
                                 action: "ok",
                                 icon: "fa fa-check",
-                                label: game.i18n.localize("dsk.yes"),
+                                label: "dsk.yes",
                                 callback: (event, button, dlg) => {
                                     resolve([true, $(button.form)])
                                 },
@@ -768,7 +768,7 @@ export default class DiceDSK{
                             {
                                 action: "cancel",
                                 icon: "fas fa-times",
-                                label: game.i18n.localize("dsk.cancel"),
+                                label: "dsk.cancel",
                                 callback: () => {
                                     resolve([false, 0])
                                 },

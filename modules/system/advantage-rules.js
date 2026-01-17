@@ -78,20 +78,20 @@ export default class AdvantageRulesDSK extends ItemRulesDSK {
                 }
             }
             await foundry.applications.api.DialogV2.wait({
-                window: { title: game.i18n.localize("dsk.DIALOG.ItemRequiresAdoption") },
+                window: { title: "dsk.DIALOG.ItemRequiresAdoption" },
                 content: template,
                 buttons: [
                     {
                         action: "yes",
                         icon: "fa fa-check",
-                        label: game.i18n.localize("dsk.yes"),
+                        label: "dsk.yes",
                         default: true,
                         callback: callback
                     },
                     {
                         action: "cancel",
                         icon: "fas fa-times",
-                        label: game.i18n.localize("dsk.cancel")
+                        label: "dsk.cancel"
                     },
                 ],
             });

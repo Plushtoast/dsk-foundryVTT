@@ -113,7 +113,7 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
         },
         majorButtons: [
             {
-                label: 'SHEET.RollEffect',
+                label: 'dsk.SHEET.RollEffect',
                 icon: 'fas fa-dice-d20',
                 action: 'rolleffect',
                 visible: function () {
@@ -126,7 +126,7 @@ export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applicati
             controls: [
                 {
                     icon: 'fas fa-comment',
-                    label: 'SHEET.PostItem',
+                    label: 'dsk.SHEET.PostItem',
                     action: 'showItemHead',
                 },
             ],

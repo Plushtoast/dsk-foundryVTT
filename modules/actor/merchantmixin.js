@@ -232,20 +232,20 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     async randomGoods(ev) {
         const html = await renderTemplate('systems/dsk/templates/dialog/randomGoods-dialog.hbs', { categories: DSK.equipmentCategories })
         foundry.applications.api.DialogV2.wait({
-            window: { title: game.i18n.localize("dsk.MERCHANT.randomGoods") },
+            window: { title: "dsk.MERCHANT.randomGoods" },
             content: html,
             buttons: [
                 {
                     action: "yes",
                     icon: "fa fa-check",
-                    label: game.i18n.localize("dsk.yes"),
+                    label: "dsk.yes",
                     default: true,
                     callback: (event, button, dialog) => this.addRandomGoods(this.actor, $(button.form), ev)
                 },
                 {
                     action: "cancel",
                     icon: "fas fa-times",
-                    label: game.i18n.localize("dsk.cancel")
+                    label: "dsk.cancel"
                 }
             ]
         });
@@ -253,13 +253,13 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
 
     async clearInventory(ev) {
         foundry.applications.api.DialogV2.wait({
-            window: { title: game.i18n.localize("dsk.MERCHANT.clearInventory") },
+            window: { title: "dsk.MERCHANT.clearInventory" },
             content: game.i18n.localize("dsk.MERCHANT.deleteAllGoods"),
             buttons: [
                 {
                     action: "yes",
                     icon: "fa fa-check",
-                    label: game.i18n.localize("dsk.yes"),
+                    label: "dsk.yes",
                     default: true,
                     callback: () => {
                         this.removeAllGoods(this.actor, ev)
@@ -268,7 +268,7 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
                 {
                     action: "cancel",
                     icon: "fas fa-times",
-                    label: game.i18n.localize("dsk.cancel")
+                    label: "dsk.cancel"
                 }
             ]
         });

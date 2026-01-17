@@ -11,13 +11,13 @@ export default class DialogActorConfig extends foundry.applications.api.DialogV2
     static async buildDialog(actor) {
         const template = await renderTemplate("systems/dsk/templates/actors/parts/actorConfig.hbs", { actor })
         new DialogActorConfig(actor, {
-            window: { title: game.i18n.localize("dsk.SHEET.actorConfig") },
+            window: { title: "dsk.SHEET.actorConfig" },
             content: template,
             buttons: [
                 {
                     action: "save",
                     icon: "fa fa-check",
-                    label: game.i18n.localize("dsk.save"),
+                    label: "dsk.save",
                     default: true,
                     callback: (event, button, dialog) => {
                         const dlg = $(button.form);
@@ -30,7 +30,7 @@ export default class DialogActorConfig extends foundry.applications.api.DialogV2
                 {
                     action: "cancel",
                     icon: "fas fa-times",
-                    label: game.i18n.localize("dsk.cancel")
+                    label: "dsk.cancel"
                 }
             ]
         }).render(true)

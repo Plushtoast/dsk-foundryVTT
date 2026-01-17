@@ -28,7 +28,7 @@ export default class DSKDialog extends DialogShared {
         const buttons = [
             {
                 action: 'rollButton',
-                label: game.i18n.localize("dsk.Roll"),
+                label: "dsk.Roll",
                 callback: (event, button, dialog) => {
                     const html = $(button.form);
                     game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html);
@@ -40,7 +40,7 @@ export default class DSKDialog extends DialogShared {
         if (game.user.isGM) {
             buttons.push({
                 action: 'cheat',
-                label: game.i18n.localize("dsk.DIALOG.cheat"),
+                label: "dsk.DIALOG.cheat",
                 callback: (event, button, dialog) => {
                     const html = $(button.form);
                     game.dsk.memory.remember(testData.extra.speaker, testData.source, testData.mode, html);

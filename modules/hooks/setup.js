@@ -34,13 +34,13 @@ export function initSetup(){
 
 const showWrongLanguageDialog = (forceLanguage) => {
     foundry.applications.api.DialogV2.wait({
-        window: { title: game.i18n.localize("dsk.SETTINGS.forceLanguage") },
+        window: { title: "dsk.SETTINGS.forceLanguage" },
         content: game.i18n.format("dsk.DSKError.wrongLanguage", { lang: forceLanguage }),
         buttons: [
             {
                 action: "ok",
                 icon: "fa fa-check",
-                label: game.i18n.localize("dsk.ok"),
+                label: "dsk.ok",
                 callback: async () => {
                     await game.settings.set("core", "language", forceLanguage)
                     foundry.utils.debouncedReload()
@@ -49,7 +49,7 @@ const showWrongLanguageDialog = (forceLanguage) => {
             {
                 action: "cancel",
                 icon: "fas fa-times",
-                label: game.i18n.localize("dsk.cancel"),
+                label: "dsk.cancel",
             }
         ]
     });
@@ -57,7 +57,7 @@ const showWrongLanguageDialog = (forceLanguage) => {
 
 const showForbiddenLanguageDialog = () => {
     foundry.applications.api.DialogV2.wait({
-        window: { title: game.i18n.localize("language") },
+        window: { title: "language" },
         content: "Your foundry language is not supported by this system. Due to technical reasons your foundry language setting has to be switched to german.",
         buttons: [
             {
@@ -72,7 +72,7 @@ const showForbiddenLanguageDialog = () => {
             {
                 action: "logout",
                 icon: "fas fa-door-closed",
-                label: game.i18n.localize('SETTINGS.Logout'),
+                label: 'SETTINGS.Logout',
                 callback: async () => {
                     ui.menu.items.logout.onClick()
                 }

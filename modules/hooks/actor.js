@@ -188,13 +188,13 @@ export function initActorHooks() {
 class AskForNameDialog {
     static async getDialog(tokenObject, setting){
         await foundry.applications.api.DialogV2.wait({
-            window: { title: game.i18n.localize("dsk.SETTINGS.obfuscateTokenNames") },
+            window: { title: "dsk.SETTINGS.obfuscateTokenNames" },
             content: `<label for="name">${game.i18n.localize('dsk.SETTINGS.rename')}</label> <input dtype="string" name="name" type="text" value="${tokenObject.actor.name}"/>`,
             buttons: [
                 {
                     action: "yes",
                     icon: "fa fa-check",
-                    label: game.i18n.localize("dsk.yes"),
+                    label: "dsk.yes",
                     default: true,
                     callback: async (event, button, dialog) => {
                         const html = $(button.form);
@@ -213,7 +213,7 @@ class AskForNameDialog {
                 {
                     action: "unknown",
                     icon: "fa fa-question",
-                    label: game.i18n.localize("dsk.unknown"),
+                    label: "dsk.unknown",
                     callback: async (event, button, dialog) => {
                         const tokenId = tokenObject.id || tokenObject._id
                         const token = canvas.scene.tokens.get(tokenId)
@@ -223,7 +223,7 @@ class AskForNameDialog {
                 {
                     action: "cancel",
                     icon: "fas fa-times",
-                    label: game.i18n.localize("dsk.cancel")
+                    label: "dsk.cancel"
                 }
             ]
         });

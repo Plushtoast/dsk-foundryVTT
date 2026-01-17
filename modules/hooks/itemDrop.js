@@ -86,7 +86,7 @@ const handleItemDrop = async(canvas, data) => {
             {
                 action: "yes",
                 icon: "fa fa-check",
-                label: game.i18n.localize("dsk.yes"),
+                label: "dsk.yes",
                 default: true,
                 callback: async (event, button, dlg) => {
                     const html = $(button.form);
@@ -96,7 +96,7 @@ const handleItemDrop = async(canvas, data) => {
             {
                 action: "cancel",
                 icon: "fas fa-times",
-                label: game.i18n.localize("dsk.cancel")
+                label: "dsk.cancel"
             }
         ]
     });

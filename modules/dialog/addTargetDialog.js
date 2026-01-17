@@ -149,13 +149,13 @@ export class UserMultipickDialog extends foundry.applications.api.DialogV2 {
         const users = game.users.filter(x => x.active && !x.isGM)
 
         new UserMultipickDialog({
-            window: { title: game.i18n.localize("dsk.SHEET.PostItem") },
+            window: { title: "dsk.SHEET.PostItem" },
             content: await renderTemplate('systems/dsk/templates/dialog/usermultipickdialog.hbs', { users }),
             buttons: [
                 {
                     action: "yes",
                     icon: "fa fa-check",
-                    label: game.i18n.localize("dsk.yes"),
+                    label: "dsk.yes",
                     default: true,
                     callback: (event, button, dialog) => {
                         this.postContent($(button.form), content)
@@ -164,7 +164,7 @@ export class UserMultipickDialog extends foundry.applications.api.DialogV2 {
                 {
                     action: "cancel",
                     icon: "fas fa-times",
-                    label: game.i18n.localize("dsk.cancel")
+                    label: "dsk.cancel"
                 }
             ],
         }).render(true)

@@ -188,13 +188,13 @@ export default class WizardDSK extends DefaultAppv2 {
         let result = false
         result = await new Promise((resolve, reject) => {
             foundry.applications.api.DialogV2.wait({
-                window: { title: game.i18n.localize("dsk.DIALOG.warning") },
+                window: { title: "dsk.DIALOG.warning" },
                 content: game.i18n.format('dsk.DIALOG.alreadyAddedCharacterpart', { category: DSKUtility.categoryLocalization(category) }),
                 buttons: [
                     {
                         action: "ok",
                         icon: "fas fa-check",
-                        label: game.i18n.localize('dsk.ok'),
+                        label: 'dsk.ok',
                         default: true,
                         callback: () => {
                             resolve(false);
@@ -203,7 +203,7 @@ export default class WizardDSK extends DefaultAppv2 {
                     {
                         action: "cancel",
                         icon: "fas fa-close",
-                        label: game.i18n.localize('dsk.cancel'),
+                        label: 'dsk.cancel',
                         callback: () => {
                             resolve(true);
                         },

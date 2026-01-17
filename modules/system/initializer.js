@@ -7,7 +7,7 @@ export default class DSKInitializer extends foundry.applications.api.DialogV2 {
         const buttons = [
             {
                 action: "initialize",
-                label: game.i18n.localize("dsk.initialize"),
+                label: "dsk.initialize",
                 callback: async (event, button, dialog) => {
                     if (dialog.lock) return
                     await dialog.initialize()
@@ -15,7 +15,7 @@ export default class DSKInitializer extends foundry.applications.api.DialogV2 {
             },
             {
                 action: "cancel",
-                label: game.i18n.localize("dsk.cancel"),
+                label: "dsk.cancel",
                 callback: async (event, button, dialog) => {
                     if (dialog.lock) return
                     await dialog.dontInitialize()
@@ -140,13 +140,13 @@ export default class DSKInitializer extends foundry.applications.api.DialogV2 {
                     if (!resetAll && found) {
                         [resetScene, resetAll] = await new Promise((resolve, reject) => {
                             foundry.applications.api.DialogV2.wait({
-                                window: { title: game.i18n.localize("dsk.Book.sceneReset") },
+                                window: { title: "dsk.Book.sceneReset" },
                                 content: game.i18n.format("dsk.Book.sceneResetDescription", { name: entry.name }),
                                 buttons: [
                                     {
                                         action: "yes",
                                         icon: "fa fa-check",
-                                        label: game.i18n.localize("dsk.yes"),
+                                        label: "dsk.yes",
                                         default: true,
                                         callback: () => {
                                             resolve([true, false])
@@ -155,7 +155,7 @@ export default class DSKInitializer extends foundry.applications.api.DialogV2 {
                                     {
                                         action: "all",
                                         icon: "fa fa-check",
-                                        label: game.i18n.localize("dsk.LocalizedIDs.all"),
+                                        label: "dsk.LocalizedIDs.all",
                                         callback: () => {
                                             resolve([true, true])
                                         }
@@ -163,7 +163,7 @@ export default class DSKInitializer extends foundry.applications.api.DialogV2 {
                                     {
                                         action: "cancel",
                                         icon: "fas fa-times",
-                                        label: game.i18n.localize("dsk.cancel"),
+                                        label: "dsk.cancel",
                                         callback: () => {
                                             resolve([false, false])
                                         }

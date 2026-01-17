@@ -14,13 +14,13 @@ export default class DialogReactDSK extends foundry.applications.api.DialogV2 {
     static async showDialog(startMessage) {
         let fun = this.callbackResult
         await foundry.applications.api.DialogV2.wait({
-            window: { title: game.i18n.localize("dsk.Unopposed"), resizable: true },
+            window: { title: "dsk.Unopposed", resizable: true },
             content: await this.getTemplate(startMessage),
             buttons: [
                 {
                     action: "ok",
                     icon: "fa fa-check",
-                    label: game.i18n.localize("dsk.ok"),
+                    label: "dsk.ok",
                     callback: (event, button, dialog) => {
                         fun($(button.form).find('[name="entryselection"]').val(), startMessage)
                     }
@@ -28,7 +28,7 @@ export default class DialogReactDSK extends foundry.applications.api.DialogV2 {
                 {
                     action: "cancel",
                     icon: "fas fa-times",
-                    label: game.i18n.localize("dsk.cancel"),
+                    label: "dsk.cancel",
                 }
             ]
         });
