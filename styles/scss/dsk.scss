@@ -664,25 +664,30 @@ select[multiple] option {
   }
 
   &.item .window-header {
+    background-color: transparent;
     &>a {
       margin-top: 10px;
     }
   }
 
-  .window-header>a {
-    width: 15px;
-    height: 15px;
-    margin-top: -7px;
+  .window-header .header-control {
+    width: 22px;
+    height: 22px;
+    border: 1px solid #111;
+    padding: 3px;
+    background-color: #444;
+    text-align: center;
+    border-radius: 100%;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    i {
-      width: 22px;
-      border: 1px solid #111;
-      padding: 3px;
-      background-color: #444;
-      text-align: center;
-      border-radius: 100%;
-      color: white;
-    }
+  .window-header .header-control:hover,
+  .window-header .header-control:focus {
+    background-color: #666;
+    border-color: #222;
   }
 
   .aa-item-settings i,
@@ -694,6 +699,31 @@ select[multiple] option {
     text-align: center;
     border-radius: 100%;
     color: white;
+  }
+
+  .window-resize-handle,
+  .window-resizable-handle {
+    z-index: 2;
+    bottom: 25px;
+    right: 25px;
+    height: 24px;
+    width: 24px;
+    background: #0000009e;
+    border-radius: 4px;
+
+    &:before {
+      content: '\f066';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      line-height: 24px;
+      color: white;
+      width: 24px;
+      text-align: center;
+      font-size: var(--font-size-14);
+      font-family: var(--font-awesome);
+    }
   }
 }
 
@@ -1370,6 +1400,11 @@ a.img-entity-link {
       background-position: top, bottom;
       background-repeat: no-repeat, no-repeat;
       background-color: white;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 70px;
+      box-sizing: border-box;
 
       h1 {
         background: url('../../icons/backgrounds/journtitle.webp') no-repeat;
@@ -1387,8 +1422,23 @@ a.img-entity-link {
 
       .chapter,
       .three.toc {
-        margin-bottom: 70px;
+        margin-bottom: 30px;
       }
+
+      .toc,
+      .tocList {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+      }
+    }
+
+    .tocList h2,
+    .toc h2,
+    .tocList h2 {
+      background: linear-gradient(90deg, rgba(188, 136, 111, 0.85) 0%, rgba(255, 255, 255, 0) 100%);
+      border-radius: 4px;
+      padding: 2px 6px;
     }
   }
 
@@ -1760,14 +1810,21 @@ form.dsk.item-sheet {
 
 .dsk.item {
   .item-header {
+    background-color: transparent;
     background-image: url('../../icons/backgrounds/kapitelstart.webp');
     background-size: 100% 50px;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat;    
+    background-position: 0 -5px;
     height: 50px;
+
+    svg text {
+      fill: var(--color-text-primary);
+    }
 
     h1 {
       margin: 0 10%;
       cursor: pointer;
+      background: none;
     }
   }
 
@@ -1786,6 +1843,12 @@ form.dsk.item-sheet {
   .window-header .window-title {
     color: transparent;
     text-shadow: none;
+  }
+
+  .window-header > a i,
+  .window-header .header-button i {
+    color: white;
+    background-color: #444;
   }
 }
 
@@ -1831,6 +1894,50 @@ form.dsk.item-sheet {
 
   /*font-size: 12px;*/
   text-align: center;
+}
+
+form.dsk.item-sheet .standard-form {
+  --dsk-item-label-width: 40%;
+
+  .form-group {
+    display: grid;
+    grid-template-columns: var(--dsk-item-label-width) 1fr;
+    align-items: center;
+    column-gap: 8px;
+  }
+
+  .form-group > label {
+    grid-column: 1;
+    margin: 0;
+  }
+
+  .form-group > .form-fields,
+  .form-group > input,
+  .form-group > select,
+  .form-group > textarea {
+    grid-column: 2;
+    width: 100%;
+  }
+
+  .form-group > .form-fields {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .form-group.doubleInput > input,
+  .form-group.doubleInput > select,
+  .form-group.doubleInput > .form-fields > input,
+  .form-group.doubleInput > .form-fields > select {
+    width: calc(50% - 4px);
+  }
+
+  .form-group.doubleInput > input + input,
+  .form-group.doubleInput > select + select,
+  .form-group.doubleInput > .form-fields > input + input,
+  .form-group.doubleInput > .form-fields > select + select {
+    margin-left: 8px;
+  }
 }
 
 .form-group .label-text i,
@@ -2590,12 +2697,21 @@ input[type="search"] {
 }
 
 .statusEffectMenu {
+  .status-create {
+    line-height: 26px;
+    display: block;
+  }
+
+  .conditionSearch {
+    color: white;
+  }
+
   ul {
     display: none;
     position: absolute;
     right: -10px;
     top: -10px;
-    width: 164px;
+    width: 224px;
     border: 1px solid black;
     background: rgba(0, 0, 0, 0.7);
     padding: 8px;
@@ -2603,21 +2719,25 @@ input[type="search"] {
     min-height: 90px;
   }
 
+  li button {
+    padding: 0;
+  }
+
   li.search {
     display: block;
     width: 100%;
     margin-bottom: 10px;
+    height: 32px;
 
     input {
-      color: white;
-      width: 80%;
+      min-height: 100%;
+      flex-grow: 1;
     }
 
-    a {
-      color: white;
-      border: 1px solid white;
-      padding: 3px;
-      border-radius: 2px;
+    button {
+      padding: 4px 8px;
+      display: inline-block;
+      flex: 0 0 20px;
     }
   }
 }
@@ -4940,6 +5060,8 @@ input[type="checkbox"].autoCheckbox {
 
 .actor-status-header {
   align-items: center;
+  min-height: 26px;
+  line-height: 26px;
 }
 
 #settings .fshopButton {

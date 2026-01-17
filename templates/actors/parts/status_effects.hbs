@@ -1,4 +1,4 @@
-<div class="tab scrollable status {{tab.cssClass}}" data-tab="status" data-group="{{tab.group}}">
+<div class="tab scrollable gap0px {{tabs.status.cssClass}}" data-tab="status" data-group="{{tabs.status.group}}">
 <div class="actor-status groupbox">
     <div class="actor-status-header row-section">
         <div class="col ten">
@@ -8,7 +8,7 @@
             <b>{{localize "dsk.statuseffects"}}</b>
         </div>
         <div class="col ten center flexrow flexAlignCenter">
-            <button type="button" data-action="statusCreate" class="icon fas fa-plus noBorder dskdesignbutton very-small" data-tooltip="dsk.CONDITION.add"></button>
+            <button type="button" data-action="statusCreate" class="icon fas fa-plus noBorder dskdesignbutton very-small status-create" data-tooltip="dsk.CONDITION.add"></button>
             <div class="statusEffectMenu">
                 <ul>
                     <li class="search">
@@ -74,6 +74,11 @@
                 <div class="ellipsis">
                     <a data-action="conditionShow" class="gTooltip" data-category="effect" data-id="{{item._id}}">{{localize item.name}}</a>
                 </div>
+                <small class="flexrow gap2px ellipsis">
+                    {{#each item.pips as |pip|}}
+                    <small class="smallBoxItem flex0 gTooltip" data-category="{{pip.category}}" data-id="{{pip.id}}">{{{pip.content}}}</small>
+                    {{/each}}
+                </small>
             </div>
             <div class="col ten center flexrow">
                 {{#if item.editable}}{{#unless item.boolean}}
@@ -97,7 +102,7 @@
 </div>
 
 <div class="actor-status groupbox">
-    <div class="actor-status-header row-section" data-tooltip="dsk.cummulativeStatusEffectsHint">
+    <div class="actor-status-header row-section">
         <div class="col ten">
 
         </div>
@@ -174,7 +179,7 @@
 </div>
 
 <div class="actor-status groupbox">
-    <div class="actor-status-header row-section">
+    <div class="actor-status-header row-section" data-tooltip="dsk.cummulativeStatusEffectsHint">
         <div class="col ten">
 
         </div>
