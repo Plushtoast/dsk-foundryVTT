@@ -26,4 +26,16 @@ export default class EquipmentTemplate extends DSKDataModel {
   get totalWeight() {
     return (this.weight || 0) * (this.quantity || 1);
   }
+
+  /**
+   * Migrate old shield size values to new ones
+   * @param {Object} source - The source data
+   */
+  static _migrateData(source) {
+    super._migrateData(source);
+
+    if (source.price == null || isNaN(source.price)) {
+      source.price = 0;
+    }
+  }
 }

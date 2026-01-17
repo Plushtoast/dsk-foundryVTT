@@ -6,18 +6,18 @@
             <div class="col ten">
 
             </div>
-            <div class="col two">
+            <div class="col two flexrow">
                 {{localize "dsk.condition"}}
             </div>
 
-            <div class="col ten center">
+            <div class="col ten center flexrow">
                 {{localize "dsk.ABBR.modifiers"}}
             </div>
-            <div class="col ten center" data-tooltip="dsk.value">
+            <div class="col ten center flexrow" data-tooltip="dsk.value">
                 {{localize "dsk.ABBR.value"}}
             </div>
-            <div class="col five right">
-                <button type="button" class="icon noBorder fa fa-plus" data-action="statusAdd" data-tooltip="dsk.CONDITION.add"></button>
+            <div class="col five right flexrow flexAlignCenter">
+                <button type="button" class="icon noBorder dskdesignbutton fa fa-plus" data-action="statusAdd" data-tooltip="dsk.CONDITION.add"></button>
             </div>
         </div>
         {{#each conditions as |item i|}}

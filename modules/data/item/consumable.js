@@ -16,19 +16,20 @@ export default class ConsumableData extends ItemDataModel.mixin(
 ) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      category: new NumberField({ 
-        initial: 0, 
+      category: new NumberField({
+        initial: 0,
         choices: DSK.consumableCategories,
-        label: 'dsk.equipmentType' 
+        label: 'dsk.equipmentType'
       }),
+      price: new StringField({ initial: '0', label: 'dsk.price' }),
       ingredients: new StringField({ initial: '', label: 'dsk.consumable.ingredients' }),
       effect0: new StringField({ initial: '', label: 'dsk.consumable.effect' }),
       effect1: new StringField({ initial: '', label: 'dsk.consumable.effect' }),
       effect2: new StringField({ initial: '', label: 'dsk.consumable.effect' }),
-      qs: new NumberField({ 
-        initial: 0, 
+      qs: new NumberField({
+        initial: 0,
         choices: DSK.qsOptions,
-        label: 'dsk.consumable.qs.label' 
+        label: 'dsk.consumable.qs.label'
       }),
       difficulty: new NumberField({ initial: 0, label: 'dsk.consumable.difficulty' }),
     });
@@ -51,5 +52,17 @@ export default class ConsumableData extends ItemDataModel.mixin(
     item.system.preparedWeight = this.parent.system.preparedWeight;
     this._setOnUseEffect(item);
     return item;
+  }
+
+  /**
+   * Migrate old shield size values to new ones
+   * @param {Object} source - The source data
+   */
+  static _migrateData(source) {
+    super._migrateData(source);
+
+    if (source.price == null) {
+      source.price = '0';
+    }
   }
 }
