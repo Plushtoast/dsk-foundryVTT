@@ -201,10 +201,17 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     }
 
     _configureRenderParts(options) {
+        let parts;
         if (this.constructor.LIMITEDPARTS && this.showLimited()) {
-            return foundry.utils.deepClone(this.constructor.LIMITEDPARTS);
+            parts = foundry.utils.deepClone(this.constructor.LIMITEDPARTS);
+        } else {
+            parts = super._configureRenderParts(options);
         }
-        return super._configureRenderParts(options);
+
+        const prepare = this.actor.prepareSheet({});
+        if (!prepare.magic?.hasSpells) delete parts.magic;
+
+        return parts;
     }
 
     async _preparePartContext(partId, context) {
