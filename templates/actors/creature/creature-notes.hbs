@@ -2,14 +2,7 @@
 {{> systems/dsk/templates/actors/parts/information.hbs}}
 
 <div class="groupbox">
-    <div class="row-section header-label">
-        <div class="col ninety lineheight">
-            <b>{{localize "dsk.description"}}</b>
-        </div>
-        <div class="col lineheight ten">
-            <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
-        </div>
-    </div>
+    <legend class="table-title lineheight">{{localize "dsk.description"}} <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a></legend>
     <div class="row-section">
         <div class="col notes-box">
             {{formInput systemFields.notes.fields.description value=document.system.notes.description toggled=true enriched=enrichedNotes}}
@@ -17,14 +10,7 @@
     </div>
 </div>
 <div class="groupbox">
-    <div class="row-section header-label">
-        <div class="col ninety lineheight">
-            <b>{{localize "dsk.fight"}}</b>
-        </div>
-        <div class="col lineheight ten">
-            <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
-        </div>
-    </div>
+    <legend class="table-title lineheight">{{localize "dsk.fight"}} <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a></legend>
     <div class="row-section">
         <div class="col notes-box">
             {{formInput systemFields.notes.fields.fight value=document.system.notes.fight toggled=true enriched=enrichedBehaviour}}
@@ -32,14 +18,7 @@
     </div>
 </div>
 <div class="groupbox">
-    <div class="row-section header-label">
-        <div class="col ninety lineheight">
-            <b>{{localize "dsk.specialRules"}}</b>
-        </div>
-        <div class="col lineheight ten">
-            <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
-        </div>
-    </div>
+    <legend class="table-title lineheight">{{localize "dsk.specialRules"}} <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a></legend>
     <div class="row-section">
         <div class="col notes-box">
             {{formInput systemFields.notes.fields.specialRules value=document.system.notes.specialRules toggled=true enriched=enrichedSpecialrules}}
@@ -48,14 +27,7 @@
 </div>
 {{#if actor.isOwner}}
 <div class="groupbox">
-    <div class="row-section header-label">
-        <div class="col ninety lineheight">
-            <b>{{localize "dsk.ownerNotes"}}</b>
-        </div>
-        <div class="col lineheight ten">
-            <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
-        </div>
-    </div>
+    <legend class="table-title lineheight">{{localize "dsk.ownerNotes"}} <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a></legend>
     <div class="row-section">
         <div class="col notes-box">
             {{formInput systemFields.notes.fields.owner value=document.system.notes.owner toggled=true enriched=enrichedOwnerdescription}}

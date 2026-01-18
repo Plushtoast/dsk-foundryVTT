@@ -134,7 +134,6 @@ export class DSKTokenRuler extends foundry.canvas.placeables.tokens.TokenRuler {
         if (!actor) return DSKTokenRuler.COLOR_WALKING;
 
         let colors = this._colorByAction(waypoint.action);
-        // DSK uses system.stats.gs.max for speed (GS = Geschwindigkeit)
         const speed = actor.system?.stats?.gs?.max ?? 0;
 
         if (waypoint.measurement.cost > speed * 2) {

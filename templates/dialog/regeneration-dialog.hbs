@@ -1,7 +1,8 @@
 <form class="skill-test">
-    <div class="row-section">
-        <div class="col fourty"></div>
-        <div class="row-section col sixty">
+    <div class="flexcol gap0px">
+    <div class="form-group">
+        <label></label>
+        <div class="row-section">
             <div class="col">
 
             </div>
@@ -62,7 +63,7 @@
     {{#if hasSituationalModifiers}}
     <div class="modifiers form-group custom-select">
         <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>
-        <select name="situationalModifiers" multiple data-tooltip="dsk.DIALOG.deselectWithStrg">
+        <select name="situationalModifiers" multiple size="6" class="height100" data-tooltip="dsk.DIALOG.deselectWithStrg">
             {{#each situationalModifiers as |mod t|}}
             <option data-tooltip="{{situationalTooltip mod}}" data-type="{{mod.type}}" value="{{mod.value}}" {{#if
                 mod.selected}}selected{{/if}}>
@@ -94,4 +95,5 @@
 
 
     <div class="roll-dialog-tag">regeneration</div>
+    </div>
 </form>

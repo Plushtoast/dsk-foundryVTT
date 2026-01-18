@@ -32,8 +32,8 @@
 
 {{#if hasSituationalModifiers}}
 <div class="modifiers form-group custom-select">
-    <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>
-    <select name="situationalModifiers" multiple data-tooltip="dsk.DIALOG.deselectWithStrg">
+        <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>
+        <select name="situationalModifiers" multiple size="6" class="height100" data-tooltip="dsk.DIALOG.deselectWithStrg">
       {{#each situationalModifiers as |mod t|}}
       <option data-tooltip="{{situationalTooltip mod}}"  data-type="{{mod.type}}" {{#if mod.specAbId}}data-spec-ab-id="{{mod.specAbId}}"{{/if}} {{#if mod.armorPen}}data-armor-pen="{{mod.armorPen}}"{{/if}} value="{{mod.value}}" {{#if mod.selected}}selected{{/if}}>
         {{localize mod.name}} [{{mod.value}}]

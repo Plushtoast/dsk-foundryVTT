@@ -23,7 +23,7 @@ import DiceDSK from "./system/dicedsk.js"
 import RollMemory from "./system/roll_memory.js"
 import MacroDSK from "./system/macroControl.js"
 import "./system/pause.js"
-import { DSKToken } from "./hooks/token.js"
+import { DSKToken, DSKTokenDocument, DSKTokenRuler } from "./hooks/token.js"
 import { CombatantDataModels, DSK_ACTOR_MODELS, DSK_ITEM_MODELS, registerDataModels } from "./data/model.js"
 import TestSuite from "./system/testsuite.js"
 
@@ -78,6 +78,9 @@ Hooks.once("init", () => {
     CONFIG.ChatMessage.template = "systems/dsk/templates/chat/chat-message.hbs"
     CONFIG.ActiveEffect.legacyTransferral = false
     CONFIG.Token.objectClass = DSKToken
+    CONFIG.Token.documentClass = DSKTokenDocument;
+    CONFIG.Token.rulerClass = DSKTokenRuler;
+    CONFIG.Token.movement.defaultSpeed = 16;
 
     // Register DataModels for Actors and Items
     registerDataModels()

@@ -2187,6 +2187,10 @@ fieldset,
 }
 
 .dsk {
+  .allTalents {
+    margin-left: 10px;
+  }
+
   .flexgrow-0 {
     flex-grow: 0;
   }
@@ -5022,6 +5026,20 @@ input[type="checkbox"].autoCheckbox {
     float: left;
     border: none;
   }
+}
+
+.reactClick.row-section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.reactClick.row-section img {
+  float: none;
+}
+
+.height100 {
+  height: 100%;
 }
 
 #pause.dskpause {

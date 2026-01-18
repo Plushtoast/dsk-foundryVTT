@@ -1,10 +1,6 @@
 <div class="tab scrollable gap0px notes {{tab.cssClass}}" data-tab="notes" data-group="{{tab.group}}">
 <div class="groupbox">
-    <div class="row-section header-label">
-        <div class="col  lineheight">
-            <b>{{localize "dsk.details"}}</b>
-        </div>
-    </div>
+    <legend class="table-title lineheight">{{localize "dsk.details"}}</legend>
     <div class="row-section">
         <section class="general col">
             <div class="row-section wrap">
@@ -25,7 +21,7 @@
 
                     <div class="headerInput col four">
                         {{formInput systemFields.details.fields.age value=document.system.details.age placeholder=(localize 'dsk.Age') classes="input-details"}}
-                        <span class="label-details">{{localize "dsk.Age"}}<span>
+                        <span class="label-details">{{localize "dsk.Age"}}</span>
                     </div>
                 </div>
 
@@ -38,14 +34,7 @@
 {{> systems/dsk/templates/actors/parts/information.hbs}}
 
 <div class="groupbox">
-    <div class="row-section header-label">
-        <div class="col ninety lineheight">
-            <b>{{localize "dsk.biography"}}</b>
-        </div>
-        <div class="col lineheight ten">
-            <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
-        </div>
-    </div>
+    <legend class="table-title lineheight">{{localize "dsk.biography"}} <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a></legend>
     <div class="row-section">
         <div class="col notes-box">
             {{formInput systemFields.notes.fields.biography value=document.system.notes.biography toggled=true enriched=enrichedBiography}}
@@ -53,14 +42,7 @@
     </div>
 </div>
 <div class="groupbox">
-    <div class="row-section header-label">
-        <div class="col ninety lineheight">
-            <b>{{localize "dsk.notes"}}</b>
-        </div>
-        <div class="col lineheight ten">
-            <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
-        </div>
-    </div>
+    <legend class="table-title lineheight">{{localize "dsk.notes"}} <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a></legend>
     <div class="row-section">
         <div class="col notes-box">
             {{formInput systemFields.notes.fields.description value=document.system.notes.description toggled=true enriched=enrichedNotes}}
@@ -69,14 +51,7 @@
 </div>
 {{#if actor.isOwner}}
 <div class="groupbox">
-    <div class="row-section header-label">
-        <div class="col ninety lineheight">
-            <b>{{localize "dsk.ownerNotes"}}</b>
-        </div>
-        <div class="col lineheight ten">
-            <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
-        </div>
-    </div>
+    <legend class="table-title lineheight">{{localize "dsk.ownerNotes"}} <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a></legend>
     <div class="row-section">
         <div class="col notes-box">
             {{formInput systemFields.notes.fields.owner value=document.system.notes.owner toggled=true enriched=enrichedOwnerdescription}}
@@ -85,14 +60,7 @@
 </div>
 {{/if}} {{#if isGM}}
 <div class="groupbox">
-    <div class="row-section header-label">
-        <div class="col ninety lineheight">
-            <b>{{localize "dsk.gmnotes"}}</b>
-        </div>
-        <div class="col lineheight ten">
-            <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a>
-        </div>
-    </div>
+    <legend class="table-title lineheight">{{localize "dsk.gmnotes"}} <a data-action="chCollapse" class="ch-collapse"><i class="fas fa-angle-up" data-tooltip="dsk.SHEET.collapse"></i></a></legend>
     <div class="row-section">
         <div class="col notes-box">
             {{formInput systemFields.notes.fields.gm value=document.system.notes.gm toggled=true enriched=enrichedGmdescription}}

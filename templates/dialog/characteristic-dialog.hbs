@@ -1,19 +1,19 @@
 <form class="characteristic-test">
-    <div class="row-section">
-        <div class="col fourty">{{localize 'dsk.attributes'}}</div>
-        <div class="row-section col sixty">
-            {{#each characteristics as |item i|}}
-            <div class="col five center" style="max-width: 16.66%;" data-tooltip="{{attrLoc item 'name'}}">
-                <select class="noAppearance" name="characteristics{{i}}">
-                    {{selectOptions ../attributesList selected=item}}
-                </select>
-            </div>
-            {{/each}}
-            <div class="col five">
+    <div class="flexcol gap0px">
+        <div class="form-group">
+            <label>{{localize 'dsk.attributes'}}</label>
+            <div class="form-fields">
+                {{#each characteristics as |item i|}}
+                <div class="col center" style="max-width: 50%;" data-tooltip="{{attrLoc item 'name'}}">
+                    <select class="noAppearance" name="characteristics{{i}}">
+                        {{selectOptions ../attributesList selected=item}}
+                    </select>
+                </div>
+                {{/each}}
             </div>
         </div>
-    </div>
-    {{> systems/dsk/templates/dialog/default-dialog.hbs}}
+        {{> systems/dsk/templates/dialog/default-dialog.hbs}}
 
-    <div class="roll-dialog-tag">characteristic</div>
+        <div class="roll-dialog-tag">characteristic</div>
+    </div>
 </form>

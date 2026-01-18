@@ -62,7 +62,7 @@ export default function migrateWorld() {
         //betaWarning()
         await setupDefaulTokenConfig()
         const currentVersion = await game.settings.get("dsk", "migrationVersion")
-        const NEEDS_MIGRATION_VERSION = 29
+        const NEEDS_MIGRATION_VERSION = 30
         const needsMigration = currentVersion < NEEDS_MIGRATION_VERSION
 
         if (!needsMigration) return;
@@ -135,7 +135,7 @@ class PatchViewer extends DefaultAppv2 {
         const data = await super._prepareContext(_options);
         let version = this.json["notes"][this.json["notes"].length - 1]
         const patchName = this.json["default"].replace(/VERSION/g, version.version)
-        let msg = `<h1>CHANGELOG</h1><p>${patchName}. </br><b>Important updates</b>: ${version.text}</p><p>For details or proposals visit our github page at <a href="https://github.com/Plushtoast/dsk-foundryVTT" target="_blank">Github</a> or show the <a style="text-decoration: underline;color:#ff6400;" class="showPatchViewer">Full Changelog in Foundry</a>. Have fun.</p>`
+        let msg = `<h2>CHANGELOG</h2><p>${patchName}. </br><b>Important updates</b>: ${version.text}</p><p>For details or proposals visit our github page at <a href="https://github.com/Plushtoast/dsk-foundryVTT" target="_blank">Github</a> or show the <a style="text-decoration: underline;color:#ff6400;" class="showPatchViewer">Full Changelog in Foundry</a>. Have fun.</p>`
         await ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
 
         const lang = game.i18n.lang

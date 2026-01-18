@@ -1,19 +1,19 @@
-<div class="row-section">
-    <div class="col fourty"></div>
-    <div class="row-section col sixty">
+<div class="form-group">
+    <label></label>
+    <div class="row-section">
         <div class="col five">
         </div>
         {{#each characteristics as |item i|}}
-        <div class="col five center" style="max-width: 16.66%;" data-tooltip="{{attrLoc item 'name'}}">
+        <div class="col five center" style="max-width: 20%;" data-tooltip="{{attrLoc item 'name'}}">
             <select class="noAppearance" name="characteristics{{i}}">
                 {{selectOptions ../attributesList selected=item}}
             </select>
         </div>
         {{/each}}
-        <div class="col five center" data-tooltip="dsk.FW">
+        <div class="col five flexrow flexAlignCenter" data-tooltip="dsk.FW">
             {{localize 'dsk.CHARAbbrev.FW'}}
         </div>
-        <div class="col five center" data-tooltip="dsk.qualityStep">
+        <div class="col five flexrow flexAlignCenter" data-tooltip="dsk.qualityStep">
             {{localize 'dsk.CHARAbbrev.QS'}}
         </div>
     </div>
@@ -60,7 +60,7 @@
 {{#if hasSituationalModifiers}}
 <div class="modifiers form-group custom-select">
     <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>
-    <select name="situationalModifiers" multiple data-tooltip="dsk.DIALOG.deselectWithStrg">
+    <select name="situationalModifiers" multiple size="6" class="height100" data-tooltip="dsk.DIALOG.deselectWithStrg">
         {{#each situationalModifiers as |mod t|}}
         <option data-tooltip="{{situationalTooltip mod}}" data-type="{{mod.type}}" {{#if mod.armorPen}}data-armor-pen="{{mod.armorPen}}"{{/if}} value="{{mod.value}}" {{#if
             mod.selected}}selected{{/if}}>

@@ -1,21 +1,27 @@
 <div class="form-group">
-    <label>{{localize "dsk.Modifier"}}</label>
+  <label>{{localize "dsk.Modifier"}}</label>
+  <div class="form-fields">
     <input class="quantity-click" type="number" name="testModifier" value="{{testModifier}}" />
+  </div>
 </div>
 {{#if difficultyLabels}}
 <div class="form-group custom-select">
-    <label>{{localize "dsk.Difficulty"}}</label>
+  <label>{{localize "dsk.Difficulty"}}</label>
+  <div class="form-fields">
     <select name="testDifficulty">
       {{selectOptions difficultyLabels selected="challenging" localize=true}}
     </select>
+  </div>
 </div>
 {{/if}}
 
 <div class="form-group custom-select">
-    <label>{{localize "dsk.DIALOG.RollMode"}}</label>
+  <label>{{localize "dsk.DIALOG.RollMode"}}</label>
+  <div class="form-fields">
     <select name="rollMode">
-      {{selectOptions rollModes selected=rollMode localize=true}}  
+      {{selectOptions rollModes selected=rollMode localize=true}}
     </select>
+  </div>
 </div>
 {{#if hasSchips}}
 <div class="form-group">
@@ -25,13 +31,16 @@
 {{/if}}
 {{#if hasSituationalModifiers}}
 <div class="modifiers form-group custom-select">
-    <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>
-    <select name="situationalModifiers" multiple data-tooltip="dsk.DIALOG.deselectWithStrg">
+  <label>{{localize "dsk.DIALOG.SituationalModifiers"}}</label>
+  <div class="form-fields">
+    <select name="situationalModifiers" multiple size="6" class="height100" data-tooltip="dsk.DIALOG.deselectWithStrg">
       {{#each situationalModifiers as |mod t|}}
-      <option data-tooltip="{{situationalTooltip mod}}" data-type="{{mod.type}}" value="{{mod.value}}" {{#if mod.selected}}selected{{/if}}>
+      <option data-tooltip="{{situationalTooltip mod}}" data-type="{{mod.type}}" value="{{mod.value}}" {{#if
+        mod.selected}}selected{{/if}}>
         {{localize mod.name}} [{{mod.value}}]
       </option>
       {{/each}}
     </select>
+  </div>
 </div>
 {{/if}}

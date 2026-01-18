@@ -31,10 +31,12 @@
         </div>
         {{#each this as |item i|}}
         <div class="row-section wrap skills lineheight tableOdd item{{#if (eq item.system.level 0)}} notLearned{{/if}}" data-item-id="{{item._id}}">
-            <div class="col sixty withContext">
+            <div class="col sixty withContext flexrow flexAlignCenter">
+                <div>
                 <a data-action="itemEdit" class="item-edit talentName">{{item.name}}</a> {{#if item.canAdvance}}
                 <a data-action="advanceWrapper" data-fct="_refundItemAdvance" data-attr="{{item._id}}" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
                 <a data-action="advanceWrapper" data-fct="_advanceItem" data-attr="{{item._id}}" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a> {{/if}}
+                </div>
             </div>
             <div class="col five">
                 <a data-action="skillSelect" class="skill-select">
@@ -43,7 +45,7 @@
                  </a>                
             </div>
             <div class="col ten"><input class="skill-advances" type="number" data-dtype="Number" value="{{item.system.level}}" /></div>
-            <div class="col ten center">{{item.PW}}</div>
+            <div class="col ten flexrow flexAlignCenter">{{item.PW}}</div>
         </div>
 
         {{/each}} {{/each}}
@@ -66,10 +68,12 @@
         </div>
         {{#each this as |item i|}}
         <div class="row-section wrap skills lineheight tableOdd item{{#if (eq item.system.level 0)}} notLearned{{/if}}" data-item-id="{{item._id}}">
-            <div class="col sixty withContext">
+            <div class="col sixty withContext flexrow flexAlignCenter">
+                <div>
                 <a data-action="itemEdit" class="item-edit talentName">{{item.name}}</a> {{#if item.canAdvance}}
                 <a data-action="advanceWrapper" data-fct="_refundItemAdvance" data-attr="{{item._id}}" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
                 <a data-action="advanceWrapper" data-fct="_advanceItem" data-attr="{{item._id}}" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                </div>
             </div>
             <div class="col five">
                 <a data-action="skillSelect" class="skill-select">
@@ -78,7 +82,7 @@
                  </a>                
             </div>
             <div class="col ten"><input class="skill-advances" type="number" data-dtype="Number" value="{{item.system.level}}" /></div>
-            <div class="col ten center">{{item.PW}}</div>
+            <div class="col ten flexrow flexAlignCenter">{{item.PW}}</div>
         </div>
 
         {{/each}}

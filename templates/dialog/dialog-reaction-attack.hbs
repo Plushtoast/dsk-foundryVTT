@@ -1,9 +1,12 @@
 <div class="selection">
-    <p>{{localize title}}</p>
     <div class="row-section wrap">
         {{#each items as |itm i|}}
-        <div class="col two">
-            <button data-action="reactClick" class="reactClick" data-value="{{itm.id}}"><img src="{{itm.img}}" /><span class="{{../dieClass}} d20">{{itm.value}}</span>{{itm.name}}</button>
+        <div class="col two flexrow">
+            <button data-action="reactClick" class="reactClick row-section" data-value="{{itm.id}}">
+                <div class="col ten"><span class="{{../dieClass}} d20">{{itm.value}}</span></div>
+                <img class="col ten" src="{{itm.img}}" />
+                <div class="col eighty">{{itm.name}}</div>
+            </button>
         </div>
         {{/each}}
     </div>
