@@ -239,19 +239,13 @@ h7 {
 
 .character-sheet nav.sheet-tabs,
 .creature-sheet nav.sheet-tabs,
-.npc-sheet nav.sheet-tabs,
-form.character-sheet nav.sheet-tabs,
-form.creature-sheet nav.sheet-tabs,
-form.npc-sheet nav.sheet-tabs {
+.npc-sheet nav.sheet-tabs {
   margin-bottom: 20px;
 }
 
 .character-sheet .general,
 .npc-sheet .general,
-.creature-sheet .general,
-form.character-sheet .general,
-form.npc-sheet .general,
-form.creature-sheet .general {
+.creature-sheet .general {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -284,8 +278,7 @@ table.infoTable {
   }
 }
 
-.creature-sheet,
-form.creature-sheet {
+.creature-sheet {
 
   .headerInput,
   .sheet-header .headerInput {
@@ -294,14 +287,12 @@ form.creature-sheet {
   }
 }
 
-.character-sheet .general .headerInput,
-form.character-sheet .general .headerInput {
+.character-sheet .general .headerInput {
   box-sizing: border-box;
   margin: 5px;
 }
 
-.npc-sheet .general,
-form.npc-sheet .general {
+.npc-sheet .general {
 
   .headerInput,
   .sheet-header .headerInput {
@@ -310,14 +301,12 @@ form.npc-sheet .general {
   }
 }
 
-.character-sheet .sheet-header .headerInput,
-form.character-sheet .sheet-header .headerInput {
+.character-sheet .sheet-header .headerInput {
   box-sizing: border-box;
   margin: 5px;
 }
 
-.npc-sheet,
-form.npc-sheet {
+.npc-sheet {
 
   .general .headerInput input,
   .sheet-header .headerInput input {
@@ -330,8 +319,7 @@ form.npc-sheet {
   }
 }
 
-.creature-sheet,
-form.creature-sheet {
+.creature-sheet {
 
   .headerInput input,
   .sheet-header .headerInput input {
@@ -344,8 +332,7 @@ form.creature-sheet {
   }
 }
 
-.character-sheet,
-form.character-sheet {
+.character-sheet {
 
 
   .general .headerInput input,
@@ -359,8 +346,7 @@ form.character-sheet {
   }
 }
 
-.creature-sheet,
-form.creature-sheet {
+.creature-sheet {
 
   .headerInput span,
   .sheet-header .headerInput span {
@@ -371,8 +357,7 @@ form.creature-sheet {
   }
 }
 
-.npc-sheet,
-form.npc-sheet {
+.npc-sheet {
 
   .general .headerInput span,
   .sheet-header .headerInput span {
@@ -383,8 +368,7 @@ form.npc-sheet {
   }
 }
 
-.character-sheet,
-form.character-sheet {
+.character-sheet {
 
   .general .headerInput span,
   .sheet-header .headerInput span {
@@ -509,15 +493,6 @@ input[type=text].emphasize {
   object-fit: contain;
 }
 
-.character-sheet form {
-  border-color: #000;
-  border-style: double;
-  border-width: 25px 20px 40px 20px;
-  border-image: url("../../icons/backgrounds/char_full.webp") 70 50 70 50;
-  padding: 4px;
-  margin: 0px;
-}
-
 .characteristics-table {
   flex: 1;
   display: block;
@@ -535,10 +510,13 @@ input[type=text].emphasize {
 }
 
 .character-sheet .window-content {
-  padding: 0;
-  top: -25px;
   border: 1px solid rgb(31, 29, 29);
-
+  border-color: #000;
+  border-style: double;
+  border-width: 0px 20px 40px 20px;
+  border-image: url("../../icons/backgrounds/char_full.webp") 70 50 70 50; // 70
+  padding: 6px 10px 6px 6px;
+  margin: 0px;
 }
 
 .application .window-content select:not([multiple]) option,
@@ -1573,14 +1551,37 @@ form.dsk.item-sheet {
   &.npc-sheet,
   &.character-sheet {
     .window-header {
-      background-image: url('../../icons/backgrounds/char_full.webp');
-      background-repeat: no-repeat;
-      background-size: contain;
       border: none;
+      border: none;
+      border-bottom-left-radius: 0px;
+      border-bottom-right-radius: 0px;
+      background-image:
+        url("../../icons/backgrounds/tl_bgborder.webp"),
+        url("../../icons/backgrounds/c_tgborder.webp"),
+        url("../../icons/backgrounds/tr_bgborder.webp");
+
+      background-repeat:
+        no-repeat,
+        no-repeat,
+        no-repeat;
+
+      background-size:
+        30px 25px,
+        calc(100% - 50px) 25px,
+        20px 25px;
+
+      background-position:
+        left top,
+        center top,
+        right top;
 
       h4.window-title {
         margin-top: 0;
       }
+    }
+
+    .window-content {
+      background-size: 115% 1400px;
     }
   }
 
