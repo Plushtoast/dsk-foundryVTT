@@ -942,6 +942,7 @@ export default class ActorDSK extends Actor {
             break;
           case "trait":            
             traits[i.system.traitType].push(i);
+            if (i.system.traitType == "armor") totalArmor += Number(i.system.at);
             hasTrait = true;
             break;
           case "poison":

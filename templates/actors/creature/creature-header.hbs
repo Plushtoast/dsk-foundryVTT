@@ -4,7 +4,7 @@
             {{> 'systems/dsk/templates/actors/actorv2/avatar.hbs'}}
         </div>
         <div>
-            <header class="sheet-header lock{{prepare.sheetLocked}}">
+            <header class="sheet-header flexrow lock{{prepare.sheetLocked}}">
                 <div class="headerInput">
                     {{formInput fields.name value=document.name placeholder=(localize 'dsk.name') classes="input name"}}
                     <a class="actorDrag" data-tooltip="dsk.TT.dragLink"><i class="fas fa-link"></i></a>
@@ -13,26 +13,6 @@
                 <div class="headerInput">
                     <input class="input creatureClass" data-dtype="String" name="system.details.species" type="text" value="{{actor.system.details.species}}" placeholder="{{localize 'dsk.typus'}}" />
                     <span class="label creatureClass ">{{localize "dsk.typus"}}</span>
-                </div>
-                {{#if prepare.schips}}
-                <div class="row-section schips-row">
-                    <div class="col ten lineheight center" data-tooltip="dsk.fatePoints">
-                        {{localize 'dsk.CHARAbbrev.fatePoints'}}
-                    </div>
-                    <div class="col eighty center" data-tooltip="dsk.fatePoints">
-                        <input class="dskhidden" type="text" name="system.stats.schips.value" data-dtype="Number" value="{{actor.system.stats.schips.value}}" /> 
-                        {{#each prepare.schips as |item i|}}
-                        <a data-action="schipUpdate" class="schip {{item.cssClass}}" data-val="{{item.value}}"></a>
-                        {{/each}}
-                    </div>
-                    <div class="col ten center">
-                    </div>
-                </div>
-                {{/if}}
-                <div class="maxDefense" data-tooltip="dsk.ABBR.VW">
-                    <div class="center dskrelative diet-shield d20height" data-tooltip="{{actor.system.maxDefense.name}}">
-                        <h3>{{actor.system.maxDefense.parry}}</h3>
-                    </div>
                 </div>
             </header>
             {{> 'systems/dsk/templates/actors/parts/rollhead.hbs'}}

@@ -239,13 +239,19 @@ h7 {
 
 .character-sheet nav.sheet-tabs,
 .creature-sheet nav.sheet-tabs,
-.npc-sheet nav.sheet-tabs {
+.npc-sheet nav.sheet-tabs,
+form.character-sheet nav.sheet-tabs,
+form.creature-sheet nav.sheet-tabs,
+form.npc-sheet nav.sheet-tabs {
   margin-bottom: 20px;
 }
 
 .character-sheet .general,
 .npc-sheet .general,
-.creature-sheet .general {
+.creature-sheet .general,
+form.character-sheet .general,
+form.npc-sheet .general,
+form.creature-sheet .general {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -278,7 +284,8 @@ table.infoTable {
   }
 }
 
-.creature-sheet {
+.creature-sheet,
+form.creature-sheet {
 
   .headerInput,
   .sheet-header .headerInput {
@@ -287,12 +294,14 @@ table.infoTable {
   }
 }
 
-.character-sheet .general .headerInput {
+.character-sheet .general .headerInput,
+form.character-sheet .general .headerInput {
   box-sizing: border-box;
   margin: 5px;
 }
 
-.npc-sheet .general {
+.npc-sheet .general,
+form.npc-sheet .general {
 
   .headerInput,
   .sheet-header .headerInput {
@@ -301,12 +310,14 @@ table.infoTable {
   }
 }
 
-.character-sheet .sheet-header .headerInput {
+.character-sheet .sheet-header .headerInput,
+form.character-sheet .sheet-header .headerInput {
   box-sizing: border-box;
   margin: 5px;
 }
 
-.npc-sheet {
+.npc-sheet,
+form.npc-sheet {
 
   .general .headerInput input,
   .sheet-header .headerInput input {
@@ -319,7 +330,8 @@ table.infoTable {
   }
 }
 
-.creature-sheet {
+.creature-sheet,
+form.creature-sheet {
 
   .headerInput input,
   .sheet-header .headerInput input {
@@ -332,7 +344,8 @@ table.infoTable {
   }
 }
 
-.character-sheet {
+.character-sheet,
+form.character-sheet {
 
 
   .general .headerInput input,
@@ -346,7 +359,8 @@ table.infoTable {
   }
 }
 
-.creature-sheet {
+.creature-sheet,
+form.creature-sheet {
 
   .headerInput span,
   .sheet-header .headerInput span {
@@ -357,7 +371,8 @@ table.infoTable {
   }
 }
 
-.npc-sheet {
+.npc-sheet,
+form.npc-sheet {
 
   .general .headerInput span,
   .sheet-header .headerInput span {
@@ -368,7 +383,8 @@ table.infoTable {
   }
 }
 
-.character-sheet {
+.character-sheet,
+form.character-sheet {
 
   .general .headerInput span,
   .sheet-header .headerInput span {
@@ -1207,7 +1223,6 @@ select[multiple] option {
   border: 1px solid var(--border-color);
   border-radius: 3px;
   margin: 10px 2px;
-  min-height: 50px;
 }
 
 .header-label {

@@ -47,17 +47,14 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate) 
    * @returns {Object} The prepared item data
    */
   prepareEmbeddedItemSheet() {
-    const item = super.prepareEmbeddedItemSheet();
+    let item = super.prepareEmbeddedItemSheet();
 
     switch (item.system.traitType) {
       case "rangeAttack":
-        item = this.constructor._prepareRangeTrait(item, actorData);
+        item = this.constructor._prepareRangeTrait(item, this.actor);
         break;
       case "meleeAttack":
-        item = this.constructor._prepareMeleetrait(item, actorData);
-        break;
-      case "armor":
-        totalArmor += Number(item.system.at);
+        item = this.constructor._prepareMeleetrait(item, this.actor);
         break;
     }
 
