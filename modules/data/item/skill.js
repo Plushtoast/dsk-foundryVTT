@@ -39,8 +39,8 @@ export default class SkillData extends ItemDataModel.mixin(
    */
   prepareEmbeddedItemSheet() {
     const item = super.prepareEmbeddedItemSheet();
-    this.constructor._prepareItemStructure(item);
-    this._setOnUseEffect(item);
+    this._prepareItemAdvancementCost(item)
+    this.constructor._calculatePW(item, this.actor.system)
     return item;
   }
 }

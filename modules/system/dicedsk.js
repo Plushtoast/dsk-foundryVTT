@@ -1,4 +1,5 @@
 import ActorDSK from "../actor/actor_dsk.js"
+import CombatskillData from "../data/item/combatskill.js"
 import DSKDialog from "../dialog/dialog-dsk.js"
 import ItemDSK from "../item/item_dsk.js"
 import DSKActiveEffectConfig from "../status/active_effects.js"
@@ -844,7 +845,7 @@ export default class DiceDSK{
         let actor = testData.extra.actor
         const combatskill = source.system.combatskill
 
-        let skill = ActorDSK._calculateCombatSkillValues(
+        let skill = CombatskillData._calculateCombatSkillValues(
             actor.items.find((x) => x.type == "combatskill" && x.name == combatskill),
             actor.system
         )
@@ -1048,7 +1049,7 @@ export default class DiceDSK{
         let weapon
         
         if (testData.source.type == "meleeweapon") {
-            const skill = ActorDSK._calculateCombatSkillValues(
+            const skill = CombatskillData._calculateCombatSkillValues(
                 testData.extra.actor.items.find(
                     (x) => x.type == "combatskill" && x.name == testData.source.system.combatskill
                 ),
@@ -1056,7 +1057,7 @@ export default class DiceDSK{
             )
             weapon = ActorDSK._prepareMeleeWeapon(testData.source, [skill], testData.extra.actor)
         } else if (testData.source.type == "rangeweapon") {
-            const skill = ActorDSK._calculateCombatSkillValues(
+            const skill = CombatskillData._calculateCombatSkillValues(
                 testData.extra.actor.items.find(
                     (x) => x.type == "combatskill" && x.name == testData.source.system.combatskill
                 ),

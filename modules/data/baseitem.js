@@ -114,5 +114,27 @@ export class ItemDataModel extends DSKDataModel {
     };
 
     return ChatMessage.create(chatMessage);
+  }  
+
+  static buildReloadProgress(item) {
+    const progress = item.system.reloadTimeprogress / item.LZ;
+    item.title = game.i18n.format("dsk.WEAPON.loading", {
+      status: `${item.system.reloadTimeprogress}/${item.LZ}`,
+    });
+    item.progress = `${item.system.reloadTimeprogress}/${item.LZ}`;
+    if (progress >= 1) {
+      item.title = game.i18n.localize("dsk.WEAPON.loaded");
+    }
+    this.progressTransformation(item, progress);
+  }
+
+  static progressTransformation(item, progress) {
+    if (progress >= 0.5) {
+      item.transformRight = "181deg";
+      item.transformLeft = `${Math.round(progress * 360 - 179)}deg`;
+    } else {
+      item.transformRight = `${Math.round(progress * 360 + 1)}deg`;
+      item.transformLeft = 0;
+    }
   }
 }

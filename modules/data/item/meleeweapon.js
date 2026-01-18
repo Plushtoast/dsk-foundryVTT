@@ -71,9 +71,9 @@ export default class MeleeweaponData extends ItemDataModel.mixin(
    */
   prepareEmbeddedItemSheet() {
     const item = super.prepareEmbeddedItemSheet();
-    item.toggleValue = item.system.worn.value || false;
+    item.toggleValue = item.system.worn.value;
     item.toggle = true;
-    this.constructor._prepareItemStructure(item);
+    this.constructor._prepareItemStructure(item);    
     item.system.preparedWeight = this.parent.system.preparedWeight;
     this._setOnUseEffect(item);
     return item;

@@ -162,7 +162,7 @@ h7 {
 .status-img {
   display: flex;
   justify-content: center;
-  
+
   img {
     max-width: 24px;
     max-height: 24px;
@@ -625,7 +625,7 @@ select[multiple] option {
 .dskjournal .window-content table tr:first-child,
 .table-title,
 .label-text,
-.dsk .standard-form .form-group > label {
+.dsk .standard-form .form-group>label {
   font-weight: bold;
   font-family: var(--boldFont);
 
@@ -665,6 +665,7 @@ select[multiple] option {
 
   &.item .window-header {
     background-color: transparent;
+
     &>a {
       margin-top: 10px;
     }
@@ -1813,7 +1814,7 @@ form.dsk.item-sheet {
     background-color: transparent;
     background-image: url('../../icons/backgrounds/kapitelstart.webp');
     background-size: 100% 50px;
-    background-repeat: no-repeat;    
+    background-repeat: no-repeat;
     background-position: 0 -5px;
     height: 50px;
 
@@ -1845,7 +1846,7 @@ form.dsk.item-sheet {
     text-shadow: none;
   }
 
-  .window-header > a i,
+  .window-header>a i,
   .window-header .header-button i {
     color: white;
     background-color: #444;
@@ -1888,7 +1889,7 @@ form.dsk.item-sheet {
 }
 
 .label-text,
-.dsk .standard-form .form-group > label {
+.dsk .standard-form .form-group>label {
   border: 1px solid var(--border-color);
   padding: 0px 6px;
 
@@ -1906,42 +1907,42 @@ form.dsk.item-sheet .standard-form {
     column-gap: 8px;
   }
 
-  .form-group > label {
+  .form-group>label {
     grid-column: 1;
     margin: 0;
   }
 
-  .form-group > .form-fields,
-  .form-group > input,
-  .form-group > select,
-  .form-group > textarea {
+  .form-group>.form-fields,
+  .form-group>input,
+  .form-group>select,
+  .form-group>textarea {
     grid-column: 2;
     width: 100%;
   }
 
-  .form-group > .form-fields {
+  .form-group>.form-fields {
     display: flex;
     gap: 6px;
     align-items: center;
   }
 
-  .form-group.doubleInput > input,
-  .form-group.doubleInput > select,
-  .form-group.doubleInput > .form-fields > input,
-  .form-group.doubleInput > .form-fields > select {
+  .form-group.doubleInput>input,
+  .form-group.doubleInput>select,
+  .form-group.doubleInput>.form-fields>input,
+  .form-group.doubleInput>.form-fields>select {
     width: calc(50% - 4px);
   }
 
-  .form-group.doubleInput > input + input,
-  .form-group.doubleInput > select + select,
-  .form-group.doubleInput > .form-fields > input + input,
-  .form-group.doubleInput > .form-fields > select + select {
+  .form-group.doubleInput>input+input,
+  .form-group.doubleInput>select+select,
+  .form-group.doubleInput>.form-fields>input+input,
+  .form-group.doubleInput>.form-fields>select+select {
     margin-left: 8px;
   }
 }
 
 .form-group .label-text i,
-.dsk .standard-form .form-group > label i {
+.dsk .standard-form .form-group>label i {
   font-size: 10px;
 }
 
@@ -2196,6 +2197,23 @@ fieldset,
     &:hover em {
       background-color: white;
       color: black;
+    }
+  }
+}
+
+.dsk {
+  .flexgrow-0 {
+    flex-grow: 0;
+  }
+
+  .avatar-container {
+    min-width: 180px;
+
+    img {
+      transition: all 0.5s ease-in-out;
+      margin: 0 auto;
+      height: 150px;
+      object-fit: contain;
     }
   }
 }
@@ -2948,41 +2966,41 @@ input[type="search"] {
 }
 
 @media (max-width: 1120px) {
-    #hotbar {
-      &:before {
-        background-size:
-          36px 88px,
-          66px 88px,
-          190% 100%;
-        background-position:
-          -3px 18px,
-          calc(100% + 3px) 18px,
-          center;
-        right: -58px;
-        left: 6px;
-      }
+  #hotbar {
+    &:before {
+      background-size:
+        36px 88px,
+        66px 88px,
+        190% 100%;
+      background-position:
+        -3px 18px,
+        calc(100% + 3px) 18px,
+        center;
+      right: -58px;
+      left: 6px;
+    }
 
-      &.hotbarV3:before {
-        background-size:
-          36px 105px,
-          66px 105px,
-          190% 100%;
-        background-position:
-          -1px 24px,
-          calc(100% + 30px) 24px,
-          center;
-        left: 0px;
-        right: 0px;
-      }
+    &.hotbarV3:before {
+      background-size:
+        36px 105px,
+        66px 105px,
+        190% 100%;
+      background-position:
+        -1px 24px,
+        calc(100% + 30px) 24px,
+        center;
+      left: 0px;
+      right: 0px;
+    }
 
-      #hotbar-controls-right,
-      #hotbar-controls-left {
-        a {
-          margin: 6px 0;
-        }
+    #hotbar-controls-right,
+    #hotbar-controls-left {
+      a {
+        margin: 6px 0;
       }
     }
   }
+}
 
 .dsklist {
   list-style-type: none;

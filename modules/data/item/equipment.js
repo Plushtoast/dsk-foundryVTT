@@ -46,8 +46,8 @@ export default class EquipmentData extends ItemDataModel.mixin(
    */
   prepareEmbeddedItemSheet() {
     const item = super.prepareEmbeddedItemSheet();
-    item.toggleValue = item.system.worn.value || false;
-    item.toggle = true;
+    item.toggle = this.worn.wearable;
+    item.toggleValue = item.system.worn.value && item.toggle;    
     this.constructor._prepareItemStructure(item);
     item.system.preparedWeight = this.parent.system.preparedWeight;
     this._setOnUseEffect(item);

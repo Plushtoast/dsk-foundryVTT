@@ -1,6 +1,7 @@
 import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
 import DSK from '../../system/config.js';
+import ActorDSK from '../../actor/actor_dsk.js';
 
 const { StringField, NumberField } = foundry.data.fields;
 
@@ -10,14 +11,14 @@ const { StringField, NumberField } = foundry.data.fields;
 export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
-      traitType: new StringField({ 
+      traitType: new StringField({
         initial: 'meleeAttack',
         choices: DSK.traitCategories,
         label: 'dsk.category'
       }),
       at: new StringField({ initial: '', label: 'dsk.ABBR.AW' }),
       pa: new StringField({ initial: '', label: 'dsk.ABBR.VW' }),
-      rw: new StringField({ 
+      rw: new StringField({
         initial: 'medium',
         label: 'dsk.range'
       }),
@@ -47,12 +48,34 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate) 
    */
   prepareEmbeddedItemSheet() {
     const item = super.prepareEmbeddedItemSheet();
-    this.constructor._prepareItemStructure(item);
-    this._setOnUseEffect(item);
-    
-    item.attack = Number(item.system.at);
-    if (item.system.pa != 0) item.parry = Number(item.system.pa);
-    
+
+    switch (item.system.traitType) {
+      case "rangeAttack":
+        item = this.constructor._prepareRangeTrait(item, actorData);
+        break;
+      case "meleeAttack":
+        item = this.constructor._prepareMeleetrait(item, actorData);
+        break;
+      case "armor":
+        totalArmor += Number(item.system.at);
+        break;
+    }
+
     return item;
+  }
+
+  static _prepareRangeTrait(item, actor) {
+    item.attack = Number(item.system.at) + Number(actor.system.rangeStats.attack);
+    item.LZ = Number(item.system.lz);
+    if (item.LZ > 0) this.buildReloadProgress(item);
+
+    return ActorDSK._parseDmg(item);
+  }
+
+  static _prepareMeleetrait(item, actor) {
+    item.attack = Number(item.system.at);
+    item.parry = Math.max(0, (Number(item.system.pa) || Math.round(item.attack / 4)) + Number(actor.system.meleeStats.parry));
+
+    return ActorDSK._parseDmg(item);
   }
 }

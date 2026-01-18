@@ -1,5 +1,6 @@
 import ActorDSK from "../actor/actor_dsk.js"
 import { DefaultAppv2 } from "../actor/baseapp.js";
+import CombatskillData from "../data/item/combatskill.js";
 import OnUseEffect from "./onUseEffects.js";
 const { getProperty, mergeObject, duplicate } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
@@ -243,7 +244,7 @@ export default class TokenHotbar2 extends DefaultAppv2 {
             let moreSpells = []
             effects = (await actor.actorEffects()).map(x => { return { name: x.name, id: x.id, icon: x.img, cssClass: "effect", abbrev: `${x.name[0]} ${x.getFlag("dsk","value") || ""}`, subfunction: "effect" } })
             if (game.combat) {
-                const combatskills = actor.items.filter(x => x.type == "combatskill").map(x => ActorDSK._calculateCombatSkillValues(x.toObject(), actor.system))
+                const combatskills = actor.items.filter(x => x.type == "combatskill").map(x => CombatskillData._calculateCombatSkillValues(x.toObject(), actor.system))
 
                 const attacktypes = ["meleeweapon", "rangeweapon"]
                 const traitTypes = ["meleeAttack", "rangeAttack"]                

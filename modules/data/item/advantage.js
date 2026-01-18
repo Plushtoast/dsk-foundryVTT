@@ -37,7 +37,6 @@ export default class AdvantageData extends ItemDataModel.mixin(
    */
   prepareEmbeddedItemSheet() {
     const item = super.prepareEmbeddedItemSheet();
-    this.constructor._prepareItemStructure(item);
     this._setOnUseEffect(item);
     return item;
   }

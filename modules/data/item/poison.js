@@ -40,14 +40,4 @@ export default class PoisonData extends ItemDataModel.mixin(
       { key: 'dsk.effect', val: data.effect },
     ];
   }
-
-  /**
-   * Prepare the item for display in an embedded sheet (actor sheet)
-   * @returns {Object} The prepared item data
-   */
-  prepareEmbeddedItemSheet() {
-    const item = super.prepareEmbeddedItemSheet();
-    this.constructor._prepareItemStructure(item);
-    return item;
-  }
 }

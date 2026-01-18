@@ -1,33 +1,66 @@
-<div class="row-section" style="margin-top:10px;">
-    <div class="col ten center lineheight" data-tooltip="dsk.LeP">
-        {{localize 'dsk.CHARAbbrev.LeP'}}
-    </div>
-    <div class="col {{#if prepare.magic.hasSpells}}fourty{{else}}ninety{{/if}}">
-        <div class="healthbar barLeft{{#if prepare.magic.hasSpells}}{{else}} soloBar{{/if}}" data-tooltip="dsk.LeP">
-
-            <div class="bar LeP" style="--a: {{actor.system.stats.LeP.value}}; --b: {{actor.system.stats.LeP.max}}">
+<div class="row-section">
+    <div class="flexcol col seventy">
+        <div class="row-section flexAlignCenter" style="margin-top:10px;">
+            <div class="col ten center lineheight" data-tooltip="dsk.LeP">
+                {{localize 'dsk.CHARAbbrev.LeP'}}
             </div>
-            <div class="barLabel">
-                <input type="text" data-tooltip="dsk.Current" name="system.stats.LeP.value" data-dtype="Number" value="{{actor.system.stats.LeP.value}}" /> /
-                <span data-tooltip="dsk.ABBR.max">{{actor.system.stats.LeP.max}}</span>
+            <div class="col {{#if prepare.magic.hasSpells}}fourty{{else}}ninety{{/if}}">
+                <div class="healthbar barLeft{{#if prepare.magic.hasSpells}}{{else}} soloBar{{/if}}"
+                    data-tooltip="dsk.LeP">
+
+                    <div class="bar LeP"
+                        style="--a: {{actor.system.stats.LeP.value}}; --b: {{actor.system.stats.LeP.max}}">
+                    </div>
+                    <div class="barLabel">
+                        <input type="text" data-tooltip="dsk.Current" name="system.stats.LeP.value" data-dtype="Number"
+                            value="{{actor.system.stats.LeP.value}}" /> /
+                        <span data-tooltip="dsk.ABBR.max">{{actor.system.stats.LeP.max}}</span>
+                    </div>
+                </div>
+            </div>
+            {{#if prepare.magic.hasSpells}}
+            <div class="col fourty">
+                <div class="healthbar barRight" data-tooltip="dsk.AeP">
+                    <div class="barLabel">
+                        <input type="text" data-tooltip="dsk.Current" name="system.stats.AeP.value" data-dtype="Number"
+                            value="{{actor.system.stats.AeP.value}}" /> /
+                        <span data-tooltip="dsk.ABBR.max">{{actor.system.stats.AeP.max}}</span>
+                    </div>
+                    <div class="bar AeP"
+                        style="--a: {{actor.system.stats.AeP.value}}; --b: {{actor.system.stats.AeP.max}}">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col ten center lineheight" data-tooltip="dsk.AeP'">
+                {{localize 'dsk.CHARAbbrev.AeP'}}
+            </div>
+
+            {{/if}}
+        </div>
+        {{log this}}
+        {{#if prepare.schips}}
+        <div class="row-section schips-row">
+            <div class="col ten lineheight center" data-tooltip="dsk.fatePoints">
+                {{localize 'dsk.CHARAbbrev.fatePoints'}}
+            </div>
+            <div class="col eighty center" data-tooltip="dsk.fatePoints">
+                {{#each prepare.schips as |item i|}}
+                <a class="schip {{item.cssClass}}" data-val="{{item.value}}"></a>
+                {{/each}}
+            </div>
+            <div class="col ten center">
+            </div>
+        </div>
+        {{/if}}
+
+        
+    </div>
+    <div class="col third">
+        <div class="maxDefense " data-tooltip="dsk.ABBR.VW">
+            <div class="center dskrelative diet-shield d20height" data-tooltip="{{actor.system.maxDefense.name}}">
+                <h3>{{actor.system.maxDefense.parry}}</h3>
             </div>
         </div>
     </div>
-     {{#if prepare.magic.hasSpells}}
-    <div class="col fourty">
-        <div class="healthbar barRight" data-tooltip="dsk.AeP">
-            <div class="barLabel">
-                <input type="text" data-tooltip="dsk.Current" name="system.stats.AeP.value" data-dtype="Number" value="{{actor.system.stats.AeP.value}}" /> /
-                <span data-tooltip="dsk.ABBR.max">{{actor.system.stats.AeP.max}}</span>
-            </div>
-            <div class="bar AeP" style="--a: {{actor.system.stats.AeP.value}}; --b: {{actor.system.stats.AeP.max}}">
-
-            </div>
-        </div>
-    </div>
-    <div class="col ten center lineheight" data-tooltip="dsk.AeP'">
-        {{localize 'dsk.CHARAbbrev.AeP'}}
-    </div>
-    
-    {{/if}}
 </div>

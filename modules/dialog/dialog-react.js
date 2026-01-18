@@ -1,5 +1,6 @@
 import ActorDSK from "../actor/actor_dsk.js"
 import { DefaultAppv2 } from "../actor/baseapp.js"
+import CombatskillData from "../data/item/combatskill.js";
 import DSKUtility from "../system/dsk_utility.js"
 import OpposedDSK from "../system/opposeddsk.js"
 const { renderTemplate } = foundry.applications.handlebars;
@@ -118,7 +119,7 @@ export class ActAttackDialog extends DefaultAppv2 {
 
     async _prepareContext(_options) {
         const data = await super._prepareContext(_options);
-        const combatskills = this.actor.items.filter(x => x.type == "combatskill").map(x => ActorDSK._calculateCombatSkillValues(x.toObject(), this.actor.system));
+        const combatskills = this.actor.items.filter(x => x.type == "combatskill").map(x => CombatskillData._calculateCombatSkillValues(x.toObject(), this.actor.system));
         data.items = [];
 
         const types = ["meleeweapon", "rangeweapon"];

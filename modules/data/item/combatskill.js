@@ -3,6 +3,8 @@ import DescriptionTemplate from './templates/description.js';
 import SkillTemplate from './templates/skill.js';
 import EncumbranceTemplate from './templates/encumbrance.js';
 import DSK from '../../system/config.js';
+import ActorDSK from '../../actor/actor_dsk.js';
+import DSKUtility from '../../system/dsk_utility.js';
 
 const { StringField, NumberField } = foundry.data.fields;
 
@@ -58,8 +60,23 @@ export default class CombatskillData extends ItemDataModel.mixin(
    */
   prepareEmbeddedItemSheet() {
     const item = super.prepareEmbeddedItemSheet();
-    this.constructor._prepareItemStructure(item);
-    this._setOnUseEffect(item);
+    this.constructor._calculateCombatSkillValues(item, this.actor.system);
+    this._prepareItemAdvancementCost(item);
     return item;
+  }
+
+  static _calculateCombatSkillValues(i, actorData) {
+    i = this._calculatePW(i, actorData)
+    // Store calculated values on item, not in system (DataModel is read-only)
+    i.attack = i.PW
+    if (i.system.weapontype == "melee") {
+      i.parry = Math.round(i.PW * 0.25);
+    } else {
+      i.parry = 0;
+    }
+    i.cost = game.i18n.format("dsk.advancementCost", {
+      cost: DSKUtility._calculateAdvCost(i.system.level, i.system.StF),
+    });
+    return i;
   }
 }

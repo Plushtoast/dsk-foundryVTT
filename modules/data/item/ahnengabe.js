@@ -58,8 +58,8 @@ export default class AhnengabeData extends ItemDataModel.mixin(DescriptionTempla
    */
   prepareEmbeddedItemSheet() {
     const item = super.prepareEmbeddedItemSheet();
-    this.constructor._prepareItemStructure(item);
-    this._setOnUseEffect(item);
+    this._prepareItemAdvancementCost(item)
+    this.constructor._calculatePW(item, this.actor.system)
     return item;
   }
 }

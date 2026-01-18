@@ -7,6 +7,7 @@ import SpecialabilityRulesDSK from "../system/specialability-rules.js";
 import DSKDialog from "./dialog-dsk.js";
 import DialogShared from "./dialog-shared.js";
 import DSK from "../system/config.js";
+import CombatskillData from "../data/item/combatskill.js";
 const { getProperty } = foundry.utils
 
 export default class DSKCombatDialog extends DialogShared {
@@ -126,7 +127,7 @@ export default class DSKCombatDialog extends DialogShared {
         if (actor) {
             if (["meleeweapon", "rangeweapon"].includes(source.type)) {
                 const combatskill = source.system.combatskill
-                let skill = ActorDSK._calculateCombatSkillValues(actor.items.find((x) => x.type == "combatskill" && x.name == combatskill).toObject(),
+                let skill = CombatskillData._calculateCombatSkillValues(actor.items.find((x) => x.type == "combatskill" && x.name == combatskill).toObject(),
                 actor.system)
                 
                 switch (source.type) {
