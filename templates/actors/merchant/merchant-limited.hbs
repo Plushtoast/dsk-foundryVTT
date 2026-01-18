@@ -1,188 +1,159 @@
-<form class="{{cssClass}} lock{{prepare.sheetLocked}}" autocomplete="off">
-    <fieldset disabled>
-        <header class="sheet-header row-section">
-
-            <div class="charname headerInput col fourty">
-                {{formInput fields.name value=document.name placeholder=(localize 'dsk.name') classes="input name"}}
-                <span class="label name">{{localize "dsk.name"}}</span>
-            </div>
-            <div class="headerInput col fourty">
-                <input class="input species" name="system.details.species" type="text" value="{{actor.system.details.species}}" readonly placeholder="{{localize 'TYPES.Item.species'}}" />
-                <span class="label species">{{localize "TYPES.Item.species"}}</span>
-            </div>
-
-        </header>
-    </fieldset>
-    <section id="tab-sections">
-        <nav id="dsk-primarytabs" class="sheet-tabs tabs" data-group="sheet">
-            <a class="item active" data-action="tab" data-group="sheet" data-tab="main">{{localize "dsk.MERCHANT.commerce"}}</a>
-            <a class="item" data-action="tab" data-group="sheet" data-tab="notes">{{localize "dsk.notes"}}</a>
-        </nav>
-
-        <section class="content">
-            <div class="tab main save-scroll" data-tab="main" data-group="sheet">
+<div class="tab scrollable {{tabs.inventory.cssClass}}" data-tab="inventory" data-group="{{tabs.inventory.group}}">
+    <div class="row-section">
+        <div class="col ten"></div>
+        <div class="col fourty center">
+            <img src="{{tradeFriend.img}}" class="centerMargin" style="height: 50px;max-width:40%;border:none;" />
+        </div>
+        <div class="col ten">{{#if hasOtherTradeFriend}}
+            <a data-action="removeOtherTradeFriend"><i class="fas fa-times"></i></a> {{else}}
+            <a data-action="choseTradefriend"><i class="fas fa-plus" data-tooltip="dsk.MERCHANT.otherTradeFriend"></i></a>
+                {{/if}}
+        </div>
+        <div class="col ten"></div>
+        <div class="col fourty center">
+            <img src="{{actor.img}}" class="centerMargin" style="height: 50px;max-width:40%;border:none;" />
+        </div>
+        <div class="col ten"></div>
+    </div>
+    <div class="row-section">
+        <div class="col two">
+            <h3 class="center">&zwnj;{{tradeFriend.name}}</h3>
+        </div>
+        <div class="col two">
+            <h3 class="center">{{actor.name}}</h3>
+        </div>
+    </div>
+    {{> systems/dsk/templates/actors/parts/gearSearch.hbs}}
+    <fieldset class="noBorder" disabled>
+        <div class="row-section">
+            <div class="col two">
                 <div class="row-section">
-                    <div class="col ten"></div>
-                    <div class="col fourty center">
-                        <img src="{{tradeFriend.img}}" class="centerMargin" style="height: 50px;max-width:40%;border:none;" />
+                    <div class="col eighty">
+                        {{dskMoney}}
                     </div>
-                    <div class="col ten">{{#if hasOtherTradeFriend}}
-                        <a class="removeOtherTradeFriend"><i class="fas fa-times"></i></a> {{else}}
-                        <a><i class="fas fa-plus choseTradefriend" data-tooltip="dsk.MERCHANT.otherTradeFriend"></i></a>
-                         {{/if}}
-                    </div>
-                    <div class="col ten"></div>
-                    <div class="col fourty center">
-                        <img src="{{actor.img}}" class="centerMargin" style="height: 50px;max-width:40%;border:none;" />
-                    </div>
-                    <div class="col ten"></div>
-                </div>
-                <div class="row-section">
-                    <div class="col two">
-                        <h3 class="center">&zwnj;{{tradeFriend.name}}</h3>
-                    </div>
-                    <div class="col two">
-                        <h3 class="center">{{actor.name}}</h3>
+                    <div class="col five center">
+                        {{tradeFriend.money}}
                     </div>
                 </div>
-                {{> systems/dsk/templates/actors/parts/gearSearch.hbs}}
-                <fieldset disabled>
-                    <div class="row-section">
-                        <div class="col two">
-                            <div class="row-section">
-                                <div class="col eighty">
-                                    {{dskMoney}}
-                                </div>
-                                <div class="col five center">
-                                    {{tradeFriend.money}}
-                                </div>
-                            </div>
+            </div>
+            <div class="col two">
+                <div class="row-section">
+                    <div class="col eighty">
+                        {{dskMoney}}
+                    </div>
+                    <div class="col five center">
+                        {{#if actor.system.merchant.hideMoney}}?{{else}}{{actor.system.money}}{{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row-section">
+            <div class="col two">
+                {{#unless tradeFriend.name}}
+                <div class="row-section">
+                    <div class="col">
+                        <p>{{localize 'dsk.DSKError.noProperActor'}}</p>
+                        <p>{{localize 'dsk.TT.assignCharacter'}}</p>
+                        <p>{{localize 'dsk.MERCHANT.otherTradeFriend'}}</p>
+                    </div>
+                </div>
+                {{/unless}}
+                {{#each tradeFriend.inventory as |section sid|}} {{#if section.show}}
+                <div class="groupbox">
+                    <div class="row-section table-title">
+                        <div class="col eight"></div>
+                        <div class="col">
+                            <b>{{localize (concat "dsk.Equipment." @key)}}</b>
                         </div>
-                        <div class="col two">
-                            <div class="row-section">
-                                <div class="col eighty">
-                                    {{dskMoney}}
-                                </div>
-                                <div class="col five center">
-                                    {{#if actor.system.merchant.hideMoney}}?{{else}}{{actor.system.money}}{{/if}}
-                                </div>
-                            </div>
+
+                        <div class="col four center">
+                            <span data-tooltip="dsk.price"><i class="fas fa-coins"></i></span>
+                        </div>
+                        <div class="col eight center">
+                            <span data-tooltip="dsk.quantity">#</span>
+                        </div>
+                        <div class="col eight center">
+
                         </div>
                     </div>
-
-                    <div class="row-section">
-                        <div class="col two">
-                            {{#unless tradeFriend.name}}
+                    <div class="row-section wrap rowtable inventory">
+                        {{#each section.items as |item i|}}
+                        <div class="col item" data-item-id="{{item._id}}">
                             <div class="row-section">
+                                <div class="col eight image {{item.enchantClass}}">
+                                    <div class="image" style="background-image: url('{{item.img}}')">
+
+                                    </div>
+                                </div>
                                 <div class="col">
-                                    <p>{{localize 'dsk.DSKError.noProperActor'}}</p>
-                                    <p>{{localize 'dsk.TT.assignCharacter'}}</p>
-                                    <p>{{localize 'dsk.MERCHANT.otherTradeFriend'}}</p>
-                                </div>                            
+                                    <a data-action="itemExternalEdit">{{item.name}}</a>
+                                </div>
+                                <div class="col four center">
+                                    {{item.calculatedPrice}}
+                                </div>
+                                <div class="col eight center">
+                                    {{item.system.quantity}}
+                                </div>
+                                <div class="col eight center">
+                                    <a data-action="tradeWrapper" data-fct="sellItem" class="button icon dskdesignbutton noBorder fas fa-piggy-bank" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.sell"></a>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}} {{/each}}
+            </div>
+            <div class="col two">
+                {{#each prepare.inventory as |section sid|}} {{#if section.show}}
+                <div class="groupbox">
+                    <div class="row-section table-title">
+                        <div class="col eight"></div>
+                        <div class="col">
+                            <b>{{localize (concat "dsk.Equipment." @key)}}</b>
+                        </div>
+
+                        <div class="col four center">
+                            <span data-tooltip="dsk.price"><i class="fas fa-coins"></i></span>
+                        </div>
+                        <div class="col eight center">
+                            <span data-tooltip="dsk.quantity">#</span>
+                        </div>
+                        <div class="col eight center">
+
+                        </div>
+                    </div>
+                    <div class="row-section wrap rowtable inventory">
+                        {{#each section.items as |item i|}} 
+                            {{#unless item.system.tradeLocked}}
+                            <div class="col item" data-item-id="{{item._id}}">
+                                <div class="row-section">
+                                    <div class="col eight image {{item.enchantClass}}">
+                                        <div class="image" style="background-image: url('{{item.img}}')">
+
+                                        </div>
+                                    </div>
+                                    <div class="equipment-item-name col">
+                                        <a data-action="itemEdit">{{item.name}}</a>
+                                    </div>
+                                    <div class="col four center">
+                                        {{item.calculatedPrice}}
+                                    </div>
+                                    <div class="col eight center">
+                                        {{item.system.quantity}}
+                                    </div>
+                                    <div class="col eight center">
+                                        <a class="fas button fa-shopping-cart icon noBorder dskdesignbutton" data-action="tradeWrapper" data-fct="buyItem" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.buy"></a>
+                                    </div>
+                                </div>
                             </div>
                             {{/unless}}
-                            {{#each tradeFriend.inventory as |section sid|}} {{#if section.show}}
-                            <div class="groupbox">
-                                <div class="row-section table-title">
-                                    <div class="col eight"></div>
-                                    <div class="col">
-                                        <b>{{localize (concat "dsk.Equipment." @key)}}</b>
-                                    </div>
-
-                                    <div class="col four center">
-                                        <span data-tooltip="{{dskMoneyValue}}"><i class="fas fa-coins"></i></span>
-                                    </div>
-                                    <div class="col eight center">
-                                        <span data-tooltip="dsk.quantity">#</span>
-                                    </div>
-                                    <div class="col eight center">
-
-                                    </div>
-                                </div>
-                                <div class="row-section wrap rowtable inventory">
-                                    {{#each section.items as |item i|}}
-                                    <div class="col item" data-item-id="{{item._id}}">
-                                        <div class="row-section">
-                                            <div class="col eight image {{item.enchantClass}}">
-                                                <div class="image" style="background-image: url('{{item.img}}')">
-
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <a data-action="externalEdit" class="item-external-edit">{{item.name}}</a>
-                                            </div>
-                                            <div class="col four center">
-                                                {{item.calculatedPrice}}
-                                            </div>
-                                            <div class="col eight center">
-                                                {{item.system.quantity}}
-                                            </div>
-                                            <div class="col eight center">
-                                                <a data-action="sellItem" class="sell-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.sell"><i class="fas fa-piggy-bank"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{/each}}
-                                </div>
-                            </div>
-                            {{/if}} {{/each}}
-                        </div>
-                        <div class="col two">
-                            {{#each prepare.inventory as |section sid|}} {{#if section.show}}
-                            <div class="groupbox">
-                                <div class="row-section table-title">
-                                    <div class="col eight"></div>
-                                    <div class="col">
-                                        <b>{{localize (concat "dsk.Equipment." @key)}}</b>
-                                    </div>
-
-                                    <div class="col four center">
-                                        <span data-tooltip="{{dskMoneyValue}}"><i class="fas fa-coins"></i></span>
-                                    </div>
-                                    <div class="col eight center">
-                                        <span data-tooltip="dsk.quantity">#</span>
-                                    </div>
-                                    <div class="col eight center">
-
-                                    </div>
-                                </div>
-                                <div class="row-section wrap rowtable inventory">
-                                    {{#each section.items as |item i|}} {{#unless item.system.tradeLocked}}
-                                    <div class="col item" data-item-id="{{item._id}}">
-                                        <div class="row-section">
-                                            <div class="col eight image {{item.enchantClass}}">
-                                                <div class="image" style="background-image: url('{{item.img}}')">
-
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <a data-action="itemEdit" class="item-edit">{{item.name}}</a>
-                                            </div>
-                                            <div class="col four center">
-                                                {{item.calculatedPrice}}
-                                            </div>
-                                            <div class="col eight center">
-                                                {{item.system.quantity}}
-                                            </div>
-                                            <div class="col eight center">
-                                                <a data-action="buyItem" class="buy-item" data-price="{{item.calculatedPrice}}" data-tooltip="dsk.MERCHANT.buy"><i class="fas fa-shopping-cart"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{/unless}} {{/each}}
-                                </div>
-                            </div>
-                            {{/if}} {{/each}}
-                        </div>
+                        {{/each}}
                     </div>
-                </fieldset>
+                </div>
+                {{/if}} {{/each}}
             </div>
-
-            <div class="tab save-scroll" data-tab="notes">
-                <fieldset disabled>
-                    {{> systems/dsk/templates/actors/actor-notes.hbs}}
-                </fieldset>
-            </div>
-        </section>
-    </section>
-</form>
+        </div>
+    </fieldset>
+</div>

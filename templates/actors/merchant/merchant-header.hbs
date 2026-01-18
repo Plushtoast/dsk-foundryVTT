@@ -1,0 +1,18 @@
+<header class="sheet-header flexrow lock{{prepare.sheetLocked}}">
+    <div class="charname headerInput">
+        {{formInput fields.name value=document.name placeholder=(localize 'dsk.name') classes="input name"}}
+        <a class="actorDrag" data-tooltip="dsk.TT.dragLink"><i class="fas fa-link"></i></a>
+        <span class="label name">{{localize "dsk.name"}}</span>
+    </div>
+
+    {{#if (ne merchantType 'loot')}}
+    <div class="headerInput" {{#unless actor.system.details.species}}data-tooltip="dsk.addSpeciesHint"{{/unless}}>
+        {{formInput systemFields.details.fields.species value=document.system.details.species readonly=true placeholder=(localize 'TYPES.Item.species') classes="input species"}}
+        <span class="label species">{{localize 'TYPES.Item.species'}}</span>
+    </div>
+    <div id="field-careerlevel" class="headerInput">
+        {{formInput systemFields.details.fields.profession value=document.system.details.profession placeholder=(localize 'TYPES.Item.profession') classes="input-details"}}
+        <span class="label-details">{{localize "TYPES.Item.profession"}}</span>
+    </div>
+    {{/if}}
+</header>

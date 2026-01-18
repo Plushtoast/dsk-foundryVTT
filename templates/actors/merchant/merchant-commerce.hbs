@@ -1,247 +1,201 @@
-<div class="row-section">
-    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-    <div class="col two">
-        {{> systems/dsk/templates/actors/parts/purse.hbs}}
-    </div>
-    <div class="col two">
-        <div class="groupbox">
-            <div class="row-section">
-                <div class="col fourty">
-                    {{localize "dsk.category"}}
-                </div>
-                <div class="col sixty">
-                    <select name="system.merchant.merchantType" data-dtype="String" style="width:100%">
-                        {{selectOptions merchantTypes selected=actor.system.merchant.merchantType localize=true}}
-                    </select>
+<div class="tab scrollable gap0px inventory {{tabs.inventory.cssClass}}" data-tab="inventory" data-group="{{tabs.inventory.group}}">
+    <div class="row-section">
+        {{#if (ne actor.system.merchant.merchantType "none")}}
+        {{#if isGM}}
+        <div class="col morph40">
+            <div class="groupbox">
+                <legend class="table-title lineheight">{{localize 'TYPES.Item.equipment'}}</legend>
+                <div class="flexrow">
+                    <button type="button" data-action="randomGoods" class="sheetButton">{{localize
+                        "dsk.MERCHANT.randomGoods"}}</button>
+                    <button type="button" data-action="clearInventory" class="sheetButton">{{localize
+                        "dsk.MERCHANT.clearInventory"}}</button>
                 </div>
             </div>
-            {{#if (eq actor.system.merchant.merchantType "merchant")}}
-            <div class="row-section">
-                <div class="col fourty">
-                    {{localize "dsk.MERCHANT.Factor"}}
+        </div>
+
+        {{/if}}
+        {{/if}}
+        <div class="col morph60">
+            <div class="groupbox">
+                <legend class="table-title lineheight">{{localize 'dsk.SHEET.actorConfig'}}</legend>
+
+                <div class="row-section">
+                    <div class="col fourty">
+                        {{localize "dsk.category"}}
+                    </div>
+                    <div class="col sixty">
+                        <select name="system.merchant.merchantType" data-dtype="String" style="width:100%">
+                            {{selectOptions merchantTypes selected=actor.system.merchant.merchantType localize=true}}
+                        </select>
+                    </div>
                 </div>
-                <div class="col ten center" data-tooltip="dsk.MERCHANT.sellingFactor">
-                    <i class="fas fa-piggy-bank"></i>
+
+                {{#if (eq actor.system.merchant.merchantType "merchant")}}
+                <div class="row-section">
+                    <div class="col fourty">
+                        {{localize "dsk.MERCHANT.Factor"}}
+                    </div>
+                    <div class="col ten center" data-tooltip="dsk.MERCHANT.sellingFactor">
+                        <i class="fas fa-piggy-bank"></i>
+                    </div>
+                    <div class="col five" data-tooltip="dsk.MERCHANT.sellingFactor">
+                        <input name="system.merchant.sellingFactor" type="text" value="{{actor.system.merchant.sellingFactor}}" data-dtype="Number" />
+                    </div>
+                    <div class="col ten center" data-tooltip="dsk.MERCHANT.buyingFactor">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="col five" data-tooltip="dsk.MERCHANT.buyingFactor">
+                        <input name="system.merchant.buyingFactor" type="text" value="{{actor.system.merchant.buyingFactor}}" data-dtype="Number" />
+                    </div>
                 </div>
-                <div class="col five" data-tooltip="dsk.MERCHANT.sellingFactor">
-                    <input name="system.merchant.sellingFactor" type="text" value="{{actor.system.merchant.sellingFactor}}" data-dtype="Number" />
+                {{#if isGM}}
+                <div class="row-section">
+                    <div class="col two row-section" data-tooltip="dsk.MERCHANT.hidePlayerHint">
+                        <div class="col eighty">
+                            {{localize 'dsk.MERCHANT.hidePlayer'}}
+                        </div>
+                        <div class="col five">
+                            <input name="system.merchant.hidePlayer" type="checkbox" value="1" {{checked actor.system.merchant.hidePlayer}} />
+                        </div>
+                    </div>
+                    <div class="col two row-section" data-tooltip="dsk.MERCHANT.hideMoneyHint">
+                        <div class="col eighty">
+                            {{localize 'dsk.MERCHANT.hideMoney'}}
+                        </div>
+                        <div class="col five">
+                            <input name="system.merchant.hideMoney" type="checkbox" value="1" {{checked actor.system.merchant.hideMoney}} />
+                        </div>
+                    </div>
                 </div>
-                <div class="col ten center" data-tooltip="dsk.MERCHANT.buyingFactor">
-                    <i class="fas fa-coins"></i>
-                </div>
-                <div class="col five" data-tooltip="dsk.MERCHANT.buyingFactor">
-                    <input name="system.merchant.buyingFactor" type="text" value="{{actor.system.merchant.buyingFactor}}" data-dtype="Number" />
-                </div>
-            </div>
-            {{#if isGM}}
-            <div class="row-section">
-                <div class="col two row-section" data-tooltip="dsk.MERCHANT.hidePlayerHint">
-                    <div class="col eighty">
+                {{/if}} {{/if}} {{#if (eq actor.system.merchant.merchantType "loot")}} {{#if isGM}}
+                <div class="row-section">
+                    <div class="col fourty" data-tooltip="dsk.MERCHANT.hidePlayerHint">
                         {{localize 'dsk.MERCHANT.hidePlayer'}}
                     </div>
-                    <div class="col five">
+                    <div class="col ten" data-tooltip="dsk.MERCHANT.hidePlayerHint">
                         <input name="system.merchant.hidePlayer" type="checkbox" value="1" {{checked actor.system.merchant.hidePlayer}} />
                     </div>
-                </div>
-                <div class="col two row-section" data-tooltip="dsk.MERCHANT.hideMoneyHint">
-                    <div class="col eighty">
-                        {{localize 'dsk.MERCHANT.hideMoney'}}
+                    <div class="col fourty">
+                        {{localize 'dsk.MERCHANT.locked'}}
                     </div>
-                    <div class="col five">
-                        <input name="system.merchant.hideMoney" type="checkbox" value="1" {{checked actor.system.merchant.hideMoney}} />
+                    <div class="col ten">
+                        <input name="system.merchant.locked" type="checkbox" value="1" {{checked actor.system.merchant.locked}} />
                     </div>
                 </div>
-            </div>
-            {{/if}} {{/if}} {{#if (eq actor.system.merchant.merchantType "loot")}} {{#if isGM}}
-            <div class="row-section">
-                <div class="col fourty" data-tooltip="dsk.MERCHANT.hidePlayerHint">
-                    {{localize 'dsk.MERCHANT.hidePlayer'}}
-                </div>
-                <div class="col ten" data-tooltip="dsk.MERCHANT.hidePlayerHint">
-                    <input name="system.merchant.hidePlayer" type="checkbox" value="1" {{checked actor.system.merchant.hidePlayer}} />
-                </div>
-                <div class="col fourty">
-                    {{localize 'dsk.MERCHANT.locked'}}
-                </div>
-                <div class="col ten">
-                    <input name="system.merchant.locked" type="checkbox" value="1" {{checked actor.system.merchant.locked}} />
-                </div>
-            </div>
-            <div class="row-section">
-                <div class="col fourty" data-tooltip="dsk.MERCHANT.emptyDestroyHint">
-                    {{localize 'dsk.MERCHANT.emptyDestroy'}}
-                </div>
-                <div class="col ten">
-                    <input name="system.merchant.temporary" data-tooltip="dsk.MERCHANT.emptyDestroyHint" type="checkbox" value="1" {{checked actor.system.merchant.temporary}} />
-                </div>
-                <div class="col fourty">
+                <div class="row-section">
+                    <div class="col fourty" data-tooltip="dsk.MERCHANT.emptyDestroyHint">
+                        {{localize 'dsk.MERCHANT.emptyDestroy'}}
+                    </div>
+                    <div class="col ten">
+                        <input name="system.merchant.temporary" data-tooltip="dsk.MERCHANT.emptyDestroyHint" type="checkbox" value="1" {{checked actor.system.merchant.temporary}} />
+                    </div>
+                    <div class="col fourty">
 
-                </div>
-                <div class="col ten">
+                    </div>
+                    <div class="col ten">
 
+                    </div>
                 </div>
+                {{/if}} {{/if}}
             </div>
-            {{/if}} {{/if}}
         </div>
     </div>
-</div>
 
-{{#if (ne actor.system.merchant.merchantType "none")}} {{#if isGM}}
-<div class="row-section">
-    <button class="sheetButton randomGoods">{{localize "dsk.MERCHANT.randomGoods"}}</button>
-    <button class="sheetButton clearInventory">{{localize "dsk.MERCHANT.clearInventory"}}</button>
-</div>
-{{/if}}
-<div class="groupbox">
-    <div class="row-section lineheight" data-tooltip="PERMISSION.Configure">
-        <div class="col two row-section">
-            <div class="col seventy table-title">
-                {{localize 'TYPES.Actor.character'}}
+    {{#if (ne actor.system.merchant.merchantType "none")}}
+    {{> systems/dsk/templates/actors/merchant/merchant-permission-part.hbs}}
+    {{/if}}
+
+    {{> systems/dsk/templates/actors/parts/gearSearch.hbs}}
+    {{#each prepare.inventory as |section sid|}} 
+        {{#if section.show}}
+    <div class="groupbox">
+        <div class="row-section table-title">
+            <div class="col eight"></div>
+            <div class="col">
+                <b>{{localize (concat "dsk.Equipment." @key)}}</b>
             </div>
-            {{#if (eq actor.system.merchant.merchantType "merchant")}}
-            <div class="col ten center" data-tooltip="dsk.MERCHANT.sellingFactor">
-                <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="col ten center" data-tooltip="dsk.MERCHANT.buyingFactor">
-                <i class="fas fa-coins"></i>
+            {{#if (or (eq ../actor.system.merchant.merchantType "merchant") (eq ../actor.system.merchant.merchantType "loot"))}}
+            <div class="col eight center">
+                <button type="button" class="icon noBorder dskdesignbutton fa fa-lock" data-tooltip="dsk.MERCHANT.untradable" data-action="lockTradeSection" data-type="{{section.dataType}}"></button>
             </div>
             {{/if}}
-            <div class="col ten center">
-                <a class="toggleAllAllowMerchant" data-lock="true"><i class="fas fa-unlock"></i></a>
-                <a class="toggleAllAllowMerchant" data-lock="false"><i class="fas fa-lock"></i></a>
+            <div class="col eight center">
+                <i class="fa fa-shield-alt" data-tooltip="dsk.equipped"></i>
+            </div>
+            <div class="col four center">
+                <span data-tooltip="dsk.price"><i class="fas fa-coins"></i></span>
+            </div>
+            <div class="col eight flexrow flexAlignCenter">
+                <button type="button" class="icon noBorder dskdesignbutton" data-action="changeAmountAllItems" data-type="{{section.dataType}}"><span data-tooltip="dsk.quantity">#</span></button>
+            </div>
+            <div class="col eight center">
+                <i class="fa fa-anchor" data-tooltip="dsk.weight"></i>
+            </div>
+            <div class="col ten center flexAlignCenter flexrow">
+                <button type="button" data-action="itemCreate" class="icon fas fa-plus noBorder dskdesignbutton very-small" data-tooltip="dsk.SHEET.addItem" item-section="{{sid}}" data-type="{{section.dataType}}"></button>
             </div>
         </div>
-        <div class="col two row-section">
-            <div class="col seventy table-title">
-                {{localize 'TYPES.Actor.character'}}
-            </div>
-            {{#if (eq actor.system.merchant.merchantType "merchant")}}
-            <div class="col ten center" data-tooltip="dsk.MERCHANT.sellingFactor">
-                <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="col ten center" data-tooltip="dsk.MERCHANT.buyingFactor">
-                <i class="fas fa-coins"></i>
-            </div>
-            {{/if}}
-            <div class="col ten center">
-                <a class="toggleAllAllowMerchant" data-lock="true"><i class="fas fa-unlock"></i></a>
-                <a class="toggleAllAllowMerchant" data-lock="false"><i class="fas fa-lock"></i></a>
-            </div>
-        </div>
-
-    </div>
-    <div class="row-section wrap">
-        {{#each players as |player i|}}
-        <div class="col two row-section">
-            <div class="col seventy">
-                {{player.name}}
-            </div>
-            {{#if (eq ../actor.system.merchant.merchantType "merchant")}}
-            <div class="col ten center" data-tooltip="dsk.MERCHANT.sellingFactor">
-                <input name="system.merchant.factors.sellingFactor.{{player.id}}" type="text" value="{{player.sellingFactor}}" data-dtype="Number" />
-
-            </div>
-            <div class="col ten center" data-tooltip="dsk.MERCHANT.buyingFactor">
-                <input name="system.merchant.factors.buyingFactor.{{player.id}}" type="text" value="{{player.buyingFactor}}" data-dtype="Number" />
-            </div>
-            {{/if}}
-            <div class="col ten center">
-                <a data-action="allowMerchant" class="allowMerchant" data-user-id="{{player.id}}">
-                    {{#if player.allowedMerchant}}
-                    <i class="far fa-check-circle"></i>
-                    {{else}}
-                    <i class="far fa-circle"></i>
-                    {{/if}}
-                </a>
-            </div>
-        </div>
-
-        {{/each}}
-    </div>
-
-</div>
-{{/if}} {{> systems/dsk/templates/actors/parts/gearSearch.hbs}} {{#each prepare.inventory as |section sid|}} {{#if section.show}}
-<div class="groupbox">
-    <div class="row-section table-title">
-        <div class="col eight"></div>
-        <div class="col">
-            <b>{{localize (concat "dsk.Equipment." @key)}}</b>
-        </div>
-        {{#if (or (eq ../actor.system.merchant.merchantType "merchant") (eq ../actor.system.merchant.merchantType "loot"))}}
-        <div class="col eight center">
-            <a class="lockTradeSection" data-type="{{section.dataType}}"><i class="fa fa-lock" data-tooltip="dsk.MERCHANT.untradable"></i></a>
-        </div>
-        {{/if}}
-        <div class="col eight center">
-            <i class="fa fa-shield-alt" data-tooltip="dsk.equipped"></i>
-        </div>
-        <div class="col four center">
-            <span data-tooltip="dsk.price"><i class="fas fa-coins"></i></span>
-        </div>
-        <div class="col eight center">
-            <a class="changeAmountAllItems" data-type="{{section.dataType}}"><span data-tooltip="dsk.quantity">#</span></a>
-        </div>
-        <div class="col eight center">
-            <i class="fa fa-anchor" data-tooltip="dsk.weight"></i>
-        </div>
-        <div class="col ten center">
-            <a data-action="itemCreate" class="item-create very-small" data-tooltip="dsk.SHEET.addItem" item-section="{{sid}}" data-type="{{section.dataType}}"><i class="fas fa-plus"></i></a>
-        </div>
-    </div>
-    <div class="row-section wrap rowtable inventory">
-        {{#each section.items as |item i|}}
-        <div class="col item" data-item-id="{{item._id}}">
-            <div class="row-section">
-                <div class="col eight image {{item.enchantClass}}">
-                    <div class="image" style="background-image: url('{{item.img}}')">
-                        {{#if item.structureMax}}
-                        <div class="item-structure" style="--a: {{item.structureMax}}; --b: {{item.structureCurrent}}">
-                            <div class="inner"></div>
+        <div class="row-section wrap rowtable inventory">
+            {{#each section.items as |item i|}}
+            <div class="col item" data-item-id="{{item._id}}">
+                <div class="row-section">
+                    <div class="col eight image {{item.enchantClass}}">
+                        <div class="image" style="background-image: url('{{item.img}}')">
+                            {{#if item.structureMax}}
+                            <div class="item-structure" style="--a: {{item.structureMax}}; --b: {{item.structureCurrent}}">
+                                <div class="inner"></div>
+                            </div>
+                            {{/if}}
                         </div>
+                    </div>
+                    <div class="equipment-item-name col withContext">
+                        <a data-action="itemEdit" class="item-edit {{#if item.consumable}}consume-item{{/if}}">{{item.name}}</a>
+                    </div>
+                    {{#if (or (eq ../../actor.system.merchant.merchantType "merchant") (eq ../../actor.system.merchant.merchantType "loot"))}}
+                    <div class="col eight center" data-tooltip="dsk.MERCHANT.untradable">
+                        <button type="button" class="icon noBorder dskdesignbutton" data-action="toggleTradeLock"><i class="fas fa-{{ifThen item.system.tradeLocked '' 'un'}}lock"></i></button>
+                    </div>
+                    {{/if}}
+                    <div class="col eight flexrow flexAlignCenter">
+                        {{#if item.toggle}} 
+                        {{#if item.toggleValue}}
+                        <button type="button" class="icon noBorder dskdesignbutton far fa-check-circle" data-action="itemToggle" data-tooltip="dsk.SHEET.EquipItem"></button>
+                        {{else}}
+                        <button type="button" class="icon noBorder dskdesignbutton far fa-circle" data-action="itemToggle" data-tooltip="dsk.SHEET.EquipItem"></button>
+                        {{/if}}
                         {{/if}}
                     </div>
+                    <div data-action="setCustomPrice" class="col four center setCustomPrice" data-tooltip="dsk.MERCHANT.priceMod">
+                        {{item.defaultPrice}}<span class="priceTag">{{item.priceTag}}</span>
+                        <input class="customPriceTag" type="number" value="{{item.flags.dsk.customPriceTag}}" />
+                    </div>
+                    <div class="col eight flexrow flexAlignCenter">
+                        <button type="button" class="noBorder dskdesignbutton" data-action="quantityClick" data-tooltip="dsk.TT.strgx10" data-tooltip-direction="RIGHT">{{item.system.quantity}}</button>
+                    </div>
+                    <div class="equipment-item-weight col eight flexrow flexAlignCenter">
+                        {{item.system.preparedWeight}}
+                    </div>
+                    <div class="col ten very-small center flexrow">
+                        {{#if item.OnUseEffect}}
+                        <button type="button" data-tooltip="dsk.SHEET.onUseEffect" class="icon fas fa-dice-six autoFlex very-small noBorder dskdesignbutton" data-action="onUseItem"></button>
+                        {{/if}}
+                        {{#if item.children}}
+                        <button type="button" data-action="itemDropdown" class="icon fas fa-chevron-down autoFlex very-small noBorder dskdesignbutton" data-tooltip="dsk.SHEET.Dropdown"></button>
+                        {{/if}}
+                        <button type="button" data-action="itemContextMenu" class="icon fas fa-ellipsis-vertical autoFlex very-small noBorder dskdesignbutton" data-tooltip="dsk.SHEET.EditItem"></button>
+                    </div>
                 </div>
-                <div class="col">
-                    <a data-action="itemEdit" class="item-edit {{#if item.consumable}}consume-item{{/if}}">{{item.name}}</a>
+                <div class="row-section lineheight expandDetails {{item.detailed}}">
+                    <div class="col">
+                        {{#if item.children}} {{> systems/dsk/templates/actors/parts/containerContent.hbs this}} {{/if}}
+                    </div>
                 </div>
-                {{#if (or (eq ../../actor.system.merchant.merchantType "merchant") (eq ../../actor.system.merchant.merchantType "loot"))}}
-                <div class="col eight center" data-tooltip="dsk.MERCHANT.untradable">
-                    {{#if item.system.tradeLocked}}
-                    <a data-action="tradeLock" class="item-tradeLock"><i class="fas fa-lock"></i></a> {{else}}
-                    <a data-action="tradeLock" class="item-tradeLock"><i class="fas fa-unlock"></i></a> {{/if}}
-                </div>
-                {{/if}}
-                <div class="col eight center">
-                    {{#if item.toggle}} {{#if item.toggleValue}}
-                    <a data-action="itemToggle" class="item-toggle"><i class="far fa-check-circle"></i></a> {{else}}
-                    <a data-action="itemToggle" class="item-toggle"><i class="far fa-circle"></i></a> {{/if}} {{/if}}
-                </div>
-                <div class="col four center setCustomPrice" data-tooltip="dsk.MERCHANT.priceMod">
-                    {{item.defaultPrice}}<span class="priceTag">{{item.priceTag}}</span>
-                    <input class="customPriceTag" type="number" data-dtype="Number" value="{{item.flags.dsk.customPriceTag}}" />
-                </div>
-                <div class="col eight center">
-                    <a data-action="quantityClick" class="quantity-click">{{item.system.quantity}}</a>
-                </div>
-                <div class="col eight center">
-                    {{item.system.preparedWeight}}
-                </div>
-                <div class="col ten very-small center">
-                    <a data-action="itemPost" class="item-post" data-tooltip="dsk.SHEET.PostItem"><i class="fas fa-comment"></i></a>
-                    <a data-action="itemEdit" class="item-control item-edit" data-tooltip="dsk.SHEET.EditItem"><i class="fas fa-edit"></i></a>
-                    <a data-action="itemDropdown" class="item-dropdown" data-tooltip="dsk.SHEET.Dropdown"><i class="fas fa-chevron-down"></i></a>
-                    <a data-action="deleteItem" class="item-control item-delete" data-tooltip="dsk.SHEET.DeleteItem"><i class="fas fa-trash"></i></a>
-                </div>
-            </div>
-            <div class="row-section lineheight expandDetails {{item.detailed}}">
-                <div class="col">
-                    <ul>
-                    </ul>
-                </div>
-            </div>
 
+            </div>
+            {{/each}}
         </div>
-        {{/each}}
     </div>
+    {{/if}} 
+    {{/each}}
 </div>
-{{/if}} {{/each}}

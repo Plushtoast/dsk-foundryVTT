@@ -1,5 +1,6 @@
 import { ItemDataModel } from '../baseitem.js';
 import DescriptionTemplate from './templates/description.js';
+import SkillTemplate from './templates/skill.js';
 import DSK from '../../system/config.js';
 
 const { StringField, NumberField } = foundry.data.fields;
@@ -7,7 +8,7 @@ const { StringField, NumberField } = foundry.data.fields;
 /**
  * DataModel for Ahnengabe items
  */
-export default class AhnengabeData extends ItemDataModel.mixin(DescriptionTemplate) {
+export default class AhnengabeData extends ItemDataModel.mixin(DescriptionTemplate, SkillTemplate) {
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
       characteristic1: new StringField({ 

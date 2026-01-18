@@ -9,63 +9,182 @@ const { mergeObject, getProperty, duplicate } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
 //todo add on use button to merchant sheet
 
-export const MerchantSheetMixin = (superclass) => class extends superclass {
-    static DEFAULT_OPTIONS = {
-        classes: ['merchant-sheet'],
-        actions: {
-            ...superclass.DEFAULT_OPTIONS?.actions,
-            allowMerchant: this._allowMerchant,
-            toggleAllAllowMerchant: this._toggleAllAllowMerchant,
-            lockTradeSection: this._lockTradeSection,
-            tradeLock: this._tradeLock,
-            randomGoods: this._randomGoods,
-            clearInventory: this._clearInventory,
-            removeOtherTradeFriend: this._removeOtherTradeFriend,
-            choseTradefriend: this._choseTradefriend,
-            setCustomPrice: this._setCustomPrice,
-            buyItem: this._buyItem,
-            sellItem: this._sellItem,
-            externalEdit: this._externalEdit,
-            changeAmountAllItems: { handler: this._changeAmountAllItems, buttons: [0, 2] },
-        },
-        majorButtons: [
-            ...(superclass.DEFAULT_OPTIONS?.majorButtons || []),
-            {
-                action: 'playerview',
-                icon: function () {
-                    return `fas fa-toggle-${getProperty(this.actor.system, "merchant.playerView") ? 'on' : 'off'}`;
+export const MerchantSheetMixin = (superclass) => {
+    const baseParts = superclass.PARTS ?? {};
+    const limitedParts = superclass.LIMITEDPARTS ?? {};
+
+    return class extends superclass {
+        static merchantDefaultTypes = new Set(['merchant', 'loot', 'epic']);
+
+        static DEFAULT_OPTIONS = {
+            classes: ['merchant-sheet'],
+            actions: {
+                ...superclass.DEFAULT_OPTIONS?.actions,
+                allowMerchant: this._allowMerchant,
+                toggleAllAllowMerchant: this._toggleAllAllowMerchant,
+                lockTradeSection: this._lockTradeSection,
+                clearInventory: this._clearInventory,
+                randomGoods: this._randomGoods,
+                setCustomPrice: this._setCustomPrice,
+                choseTradefriend: this._choseTradefriend,
+                removeOtherTradeFriend: this._removeOtherTradeFriend,
+                toggleTradeLock: this._toggleTradeLock,
+                itemExternalEdit: this._itemExternalEdit,
+                tradeWrapper: this._tradeWrapper,
+                changeAmountAllItems: { handler: this.changeAmountAllItems, buttons: [0, 2] },
+            },
+            ownerActions: {
+                ...superclass.DEFAULT_OPTIONS?.actions,
+                allowMerchant: this._allowMerchant,
+                toggleAllAllowMerchant: this._toggleAllAllowMerchant,
+                lockTradeSection: this._lockTradeSection,
+                clearInventory: this._clearInventory,
+                randomGoods: this._randomGoods,
+                setCustomPrice: this._setCustomPrice,
+                choseTradefriend: this._choseTradefriend,
+                removeOtherTradeFriend: this._removeOtherTradeFriend,
+                toggleTradeLock: this._toggleTradeLock,
+                itemExternalEdit: this._itemExternalEdit,
+                tradeWrapper: this._tradeWrapper,
+                changeAmountAllItems: { handler: this.changeAmountAllItems, buttons: [0, 2] },
+            },
+            majorButtons: [
+                ...(superclass.DEFAULT_OPTIONS?.majorButtons || []),
+                {
+                    action: 'playerview',
+                    icon: function () {
+                        return `fas fa-toggle-${getProperty(this.actor.system, "merchant.playerView") ? 'on' : 'off'}`;
+                    },
+                    label: 'dsk.SHEET.switchLimited',
+                    visible: function () {
+                        return this.actor.isOwner;
+                    },
                 },
-                label: 'dsk.SHEET.switchLimited',
-                visible: function () {
-                    return this.actor.isOwner;
+            ],
+        };
+
+        static PARTS = {
+            header: {
+                template: 'systems/dsk/templates/actors/actorv2/merchant-header.hbs',
+                templates: [
+                    'systems/dsk/templates/actors/merchant/merchant-header.hbs',
+                    'systems/dsk/templates/actors/parts/rollhead.hbs',
+                    'systems/dsk/templates/actors/parts/healthbar.hbs',
+                    'systems/dsk/templates/actors/actorv2/avatar.hbs',
+                ],
+            },
+            tabs: baseParts.tabs,
+            main: {
+                template: 'systems/dsk/templates/actors/actor-main.hbs',
+                scrollable: [''],
+            },
+            combat: baseParts.combat,
+            skills: baseParts.skills,
+            magic: baseParts.magic,
+            inventory: {
+                template: 'systems/dsk/templates/actors/merchant/merchant-commerce.hbs',
+                scrollable: [''],
+                templates: [
+                    'systems/dsk/templates/actors/parts/gearSearch.hbs',
+                    'systems/dsk/templates/actors/parts/containerContent.hbs',
+                    'systems/dsk/templates/actors/merchant/merchant-permission-part.hbs',
+                ],
+            },
+            status: baseParts.status,
+            notes: baseParts.notes,
+        };
+
+        static MERCHANTPARTS = {
+            merchant: {
+                header: {
+                    template: 'systems/dsk/templates/actors/merchant/merchant_limited_header.hbs',
+                },
+                tabs: baseParts.tabs,
+                inventory: {
+                    template: 'systems/dsk/templates/actors/merchant/merchant-limited.hbs',
+                    templates: ['systems/dsk/templates/actors/parts/gearSearch.hbs'],
+                },
+                notes: {
+                    template: 'systems/dsk/templates/actors/actor-notes.hbs',
+                    scrollable: [''],
                 },
             },
-        ],
-    };
+            loot: {
+                inventory: {
+                    template: 'systems/dsk/templates/actors/merchant/merchant-limited-loot.hbs',
+                    templates: ['systems/dsk/templates/actors/parts/gearSearch.hbs'],
+                },
+            },
+            epic: {
+                tabs: baseParts.tabs,
+                inventory: {
+                    template: 'systems/dsk/templates/actors/merchant/merchant-epic.hbs',
+                },
+                notes: {
+                    template: 'systems/dsk/templates/actors/actor-notes.hbs',
+                    scrollable: [''],
+                },
+            },
+        };
 
-    static get merchantTemplate() {
-        return "systems/dsk/templates/actors/merchant/merchant-sheet.hbs";
+
+    _configureRenderParts(options) {
+        if (this.merchantSheetActivated()) {
+            const merchantType = getProperty(this.actor.system, "merchant.merchantType");
+            if (this.constructor.merchantDefaultTypes.has(merchantType)) {
+                return foundry.utils.deepClone(this.constructor.MERCHANTPARTS[merchantType]);
+            }
+            return foundry.utils.deepClone(limitedParts);
+        }
+        return super._configureRenderParts(options);
     }
 
-    get template() {
+    cleanTabs(tabs) {
         if (this.merchantSheetActivated()) {
-            switch (getProperty(this.actor.system, "merchant.merchantType")) {
-                case "merchant":
-                    return "systems/dsk/templates/actors/merchant/merchant-limited.hbs";
-                case "loot":
-                    return "systems/dsk/templates/actors/merchant/merchant-limited-loot.hbs";
+            let toKeep;
+            const merchantType = getProperty(this.actor.system, "merchant.merchantType") || "none";
+            switch (merchantType) {
                 case "epic":
-                    return "systems/dsk/templates/actors/merchant/merchant-epic.hbs";
-                default:
-                    return super.template
+                case "merchant":
+                    toKeep = new Set(["inventory", "notes"]);
+                    break;
+                case "loot":
+                    toKeep = new Set(["inventory"]);
+                    break;
             }
-        }
 
-        return this.constructor.merchantTemplate
+            if (toKeep) {
+                let hasAnyActive = false;
+                for (const tab of Object.keys(tabs)) {
+                    if (!toKeep.has(tab)) {
+                        delete tabs[tab];
+                        continue;
+                    }
+                    hasAnyActive = hasAnyActive || tabs[tab].active;
+                }
+                if (!hasAnyActive && tabs.inventory) {
+                    tabs.inventory.active = true;
+                    tabs.inventory.cssClass = "active";
+                }
+            }
+        } else {
+            super.cleanTabs(tabs);
+        }
+    }
+
+    _toggleDisabled(disabled) {
+        console.warn("Merchant sheet does not support disabled state");
+    }
+
+    _prepareTabs(group) {
+        const tabs = super._prepareTabs(group);
+        const merchantType = getProperty(this.actor.system, "merchant.merchantType") || "none";
+        if (tabs.inventory) tabs.inventory.label = DSK.merchantTypes[merchantType];
+        return tabs;
     }
 
     merchantSheetActivated() {
-        return this.showLimited() || (this.playerViewEnabled() && ["merchant", "loot", "epic"].includes(getProperty(this.actor.system, "merchant.merchantType")))
+        return this.showLimited() || (this.playerViewEnabled() && this.constructor.merchantDefaultTypes.has(getProperty(this.actor.system, "merchant.merchantType")))
     }
 
     async allowMerchant(ids, allow) {
@@ -77,8 +196,8 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         await this.actor.update({ ownership: curPermissions }, { diff: false, recursive: false, noHook: true })
     }
 
-    _onRender(context, options) {
-        super._onRender(context, options);
+    async _onRender(context, options) {
+        await super._onRender(context, options);
         const html = $(this.element);
         html.find('.customPriceTag').on('change', async (ev) => this._handleCustomPriceChange(ev))
             .on('blur', (ev) => $(ev.currentTarget).closest('.setCustomPrice').removeClass("edit"));
@@ -88,9 +207,10 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     // Static action handlers for AppV2
     static async _allowMerchant(ev, target) {
         const id = target.dataset.userId;
-        const i = $(target).find('i');
-        await this.allowMerchant([id], !(i.hasClass("fa-check-circle")));
-        i.toggleClass("fa-circle fa-check-circle");
+        const shouldAllow = !target.classList.contains("fa-check-circle");
+        await this.allowMerchant([id], shouldAllow);
+        target.classList.toggle("fa-circle");
+        target.classList.toggle("fa-check-circle");
     }
 
     static async _toggleAllAllowMerchant(ev, target) {
@@ -101,11 +221,7 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     }
 
     static _lockTradeSection(ev, target) {
-        this.lockTradeSection(ev);
-    }
-
-    static _tradeLock(ev, target) {
-        this.toggleTradeLock(ev);
+        this.lockTradeSection(target);
     }
 
     static _randomGoods(ev, target) {
@@ -117,36 +233,41 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
     }
 
     static _removeOtherTradeFriend(ev, target) {
-        this.removeOtherTradeFriend();
+        this.otherTradeFriend = undefined;
+        this.render(true);
     }
 
     static _choseTradefriend(ev, target) {
-        this.choseTradefriend();
+        SelectTradefriendDialog.getDialog(this).then((dialog) => dialog?.render(true));
     }
 
     static _setCustomPrice(ev, target) {
-        $(target).addClass("edit");
+        target.classList.toggle("edit");
     }
 
-    static _buyItem(ev, target) {
-        this.advanceWrapper(ev, "buyItem", ev);
-        DSKSoundEffect.playMoneySound();
-    }
-
-    static _sellItem(ev, target) {
-        this.advanceWrapper(ev, "sellItem", ev);
-        DSKSoundEffect.playMoneySound();
-    }
-
-    static _externalEdit(ev, target) {
+    static _itemExternalEdit(ev, target) {
         ev.preventDefault();
         let itemId = this._getItemId(ev);
         const item = this.getTradeFriend().items.get(itemId);
         item.sheet.render(true);
     }
 
+    static _toggleTradeLock(ev, target) {
+        const itemId = this._getItemId(ev);
+        const item = this.actor.items.get(itemId);
+        this.actor.updateEmbeddedDocuments("Item", [{ _id: item.id, "system.tradeLocked": !item.system.tradeLocked }]);
+    }
+
+    static _tradeWrapper(ev, target) {
+        const dataset = { ...target.dataset };
+        dataset.itemId = this._getItemId(ev);
+        dataset.amount = ev.ctrlKey ? 10 : 1;
+        const action = target.dataset.fct;
+        if (action && typeof this[action] === "function") this[action](dataset);
+    }
+
     static _changeAmountAllItems(ev, target) {
-        this.changeAmountAllItems(ev);
+        this.changeAmountAllItems(ev, target);
     }
 
     async _handleCustomPriceChange(ev) {
@@ -157,12 +278,6 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         return !this.merchantSheetActivated() && this.isEditable;
     }
 
-    async toggleTradeLock(ev) {
-        const itemId = this._getItemId(ev);
-        let item = this.actor.items.get(itemId)
-        this.actor.updateEmbeddedDocuments("Item", [{ _id: item.id, "system.tradeLocked": !item.system.tradeLocked }]);
-    }
-
     async setCustomPrice(ev) {
         ev.stopPropagation()
         ev.preventDefault()
@@ -171,18 +286,9 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         await this.actor.updateEmbeddedDocuments("Item", [{ _id: itemId, "flags.dsk.customPriceTag": Number(ev.target.value) }])
     }
 
-    removeOtherTradeFriend() {
-        this.otherTradeFriend = undefined
-        this.render(true)
-    }
-
-    async choseTradefriend(){
-        (await SelectTradefriendDialog.getDialog(this)).render(true)
-    }
-
-    async lockTradeSection(ev) {
+    async lockTradeSection(target) {
         const updates = []
-        const rule = this.filterRule(ev)
+        const rule = this.filterRule(target)
         let newValue
         for (let item of this.actor.items) {
             if (rule(item)) {
@@ -196,8 +302,8 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         this.actor.updateEmbeddedDocuments("Item", updates);
     }
 
-    filterRule(ev) {
-        const filter = ev.currentTarget.dataset.type
+    filterRule(target) {
+        const filter = target.dataset.type
         if (DSK.equipmentTypes[filter]) {
             return (item) => { return item.type == "equipment" && item.system.category == filter }
         } else {
@@ -205,9 +311,9 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         }
     }
 
-    async changeAmountAllItems(ev) {
+    async changeAmountAllItems(ev, target) {
         const updates = []
-        const rule = this.filterRule(ev)
+        const rule = this.filterRule(target)
         for (let item of this.actor.items) {
             if (rule(item)) {
                 let upd = item.toObject()
@@ -222,11 +328,13 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         return getProperty(this.actor.system, "merchant.playerView")
     }
 
-    async buyItem(ev) {
-        await this.transferItem(this.actor, this.getTradeFriend(), ev, true)
+    async buyItem(dataset) {
+        DSKSoundEffect.playMoneySound();
+        await this.transferItem(this.actor, this.getTradeFriend(), dataset, true)
     }
-    async sellItem(ev) {
-        await this.transferItem(this.getTradeFriend(), this.actor, ev, false)
+    async sellItem(dataset) {
+        DSKSoundEffect.playMoneySound();
+        await this.transferItem(this.getTradeFriend(), this.actor, dataset, false)
     }
 
     async randomGoods(ev) {
@@ -328,10 +436,20 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         $(ev.currentTarget).text(text)
     }
 
-    async transferItem(source, target, ev, buy = true) {
-        let itemId = this._getItemId(ev);
-        let price = $(ev.currentTarget).attr("data-price")
-        let amount = ev.ctrlKey ? 10 : 1
+    async transferItem(source, target, data, buy = true) {
+        let itemId
+        let price
+        let amount
+
+        if (data?.currentTarget) {
+            itemId = this._getItemId(data);
+            price = $(data.currentTarget).attr("data-price")
+            amount = data.ctrlKey ? 10 : 1
+        } else {
+            itemId = data?.itemId
+            price = data?.price
+            amount = data?.amount || 1
+        }
 
         if (game.user.isGM) {
             await this.constructor.finishTransaction(source, target, price, itemId, buy, amount)
@@ -468,6 +586,18 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         }
     }
 
+    async _onDropActor(event, item) {
+        const limited = this.actor.limited;
+        const owner = this.actor.isOwner;
+
+        if (!(limited || owner)) return false;
+        if (item.uuid == this.actor.uuid) return false;
+
+        if (owner || (limited && item.documentName == "Actor")) {
+            return await this._manageDragItems(item, item.type);
+        }
+    }
+
     setTradeFriend(otherTradeFriend) {
         const newTradeFriend = game.actors.get(otherTradeFriend._id)
         if (newTradeFriend.isOwner) {
@@ -496,19 +626,23 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
             return x
         })
 
+        this.prepareStorage(data)
         if (data.merchantType != "epic") {
-            this.prepareStorage(data)
             if (this.merchantSheetActivated()) {
                 this.filterWornEquipment(data)
                 this.prepareTradeFriend(data)
-                if (data.prepare.inventory["misc"].items.length == 0) data.prepare.inventory["misc"].show = false
+                this.hideEmptyCategories(data.prepare.inventory)
             }
-        } else {
-            this.prepareStorage(data)
         }
         data.hasOtherTradeFriend = !!this.otherTradeFriend
 
         return data;
+    }
+
+    hideEmptyCategories(inventory) {
+        for (const key of Object.keys(inventory)) {
+            inventory[key].show = inventory[key].items.length && inventory[key].items.some(x => !x.system.tradeLocked)
+        }
     }
 
     filterWornEquipment(data) {
@@ -545,7 +679,7 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
             let tradeData = friend.prepareItems({ details: [] })
             let factor = getProperty(this.actor.system, "merchant.merchantType") == "loot" ? 1 : (getProperty(this.actor.system, "merchant.buyingFactor") || 1) * (getProperty(this.actor.system, `merchant.factors.buyingFactor.${game.user.id}`) || 1)
             let inventory = this.prepareSellPrices(tradeData.inventory, factor)
-            if (inventory["misc"].items.length == 0) inventory["misc"].show = false
+            this.hideEmptyCategories(inventory)
 
             mergeObject(data, {
                 tradeFriend: {
@@ -573,11 +707,21 @@ export const MerchantSheetMixin = (superclass) => class extends superclass {
         }
         return inventory
     }
-}
+    }
+};
 
 class SelectTradefriendDialog extends DefaultAppv2 {
     static DEFAULT_OPTIONS = {
-        window: { title: 'dsk.DIALOG.setTargetToUser' },
+        window: {
+            title: 'dsk.DIALOG.setTargetToUser',
+            resizable: true,
+        },
+        position: {
+            width: 400,
+        },
+        actions: {
+            select: this.setTargetToUser,
+        },
     };
 
     static PARTS = {
@@ -586,17 +730,14 @@ class SelectTradefriendDialog extends DefaultAppv2 {
         },
     };
 
-    constructor(actor) {
-        super();
-        this.actor = actor;
-    }
-
     static async getDialog(actor) {
         const users = await game.dsk.apps.gameMasterMenu?.getTrackedHeros();
 
         if (!users) return ui.notifications.warn("The required functionality is not yet available.");
 
-        return new SelectTradefriendDialog(actor);
+        const dialog = new SelectTradefriendDialog();
+        dialog.actor = actor;
+        return dialog;
     }
 
     async _prepareContext(_options) {
@@ -605,15 +746,8 @@ class SelectTradefriendDialog extends DefaultAppv2 {
         return data;
     }
 
-    async _onRender(context, options) {
-        await super._onRender(context, options);
-
-        const html = $(this.element);
-        html.find('.combatant').on('click', ev => this.setTargetToUser(ev));
-    }
-
-    setTargetToUser(ev) {
-        this.actor.setTradeFriend({ _id: ev.currentTarget.dataset.id });
+    static setTargetToUser(ev, target) {
+        this.actor.setTradeFriend({ _id: target.dataset.id });
         this.close();
     }
 }
