@@ -22,7 +22,7 @@
                     <div class="col eighty center" data-tooltip="dsk.fatePoints">
                         <input class="dskhidden" type="text" name="system.stats.schips.value" data-dtype="Number" value="{{actor.system.stats.schips.value}}" /> 
                         {{#each prepare.schips as |item i|}}
-                        <a class="schip {{item.cssClass}}" data-val="{{item.value}}"></a>
+                        <a data-action="schipUpdate" class="schip {{item.cssClass}}" data-val="{{item.value}}"></a>
                         {{/each}}
                     </div>
                     <div class="col ten center">
