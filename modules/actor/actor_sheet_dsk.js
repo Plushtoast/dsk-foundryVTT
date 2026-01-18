@@ -177,7 +177,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         ],
         window: {
             resizable: true,
-            contentClasses: ['standard-form'],
+            contentClasses: ['standard-form', 'gap2px'],
             controls: [
                 {
                     action: 'actorConfig',
@@ -306,8 +306,8 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     }
 
     static async _conditionEdit(ev, target) {
-        const effect = target.dataset.uuid 
-            ? (await fromUuid(target.dataset.uuid)) 
+        const effect = target.dataset.uuid
+            ? (await fromUuid(target.dataset.uuid))
             : this.actor.effects.get(target.dataset.id);
         effect.sheet.render(true);
     }
@@ -320,8 +320,13 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     }
 
     static _statusCreate(ev, target) {
-        const menu = $(target).closest(".statusEffectMenu").find('ul');
-        menu.fadeIn('fast', () => { menu.find('input').focus(); });
+        const menu = $(target).closest(".actor-status-header").find('.statusEffectMenu ul');
+        if (!menu.length) return;
+        if (menu.is(':visible')) {
+            menu.fadeOut('fast');
+        } else {
+            menu.fadeIn('fast', () => { menu.find('input').focus(); });
+        }
     }
 
     static _itemDropdown(ev, target) {
@@ -395,7 +400,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         ev.preventDefault();
         const id = target.dataset.id;
         const descriptor = $(target).parents(".statusEffect").attr("data-descriptor");
-        
+
         if (ev.button == 0) {
             const origin = $(target).parents(".statusEffect").attr("data-origin");
             if (origin) {
@@ -414,7 +419,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                     }
                 }
                 const elem = $(target).closest('.groupbox').find('.effectDescription');
-                elem.fadeOut('fast', function() { elem.html(text).fadeIn('fast'); });
+                elem.fadeOut('fast', function () { elem.html(text).fadeIn('fast'); });
             }
         } else if (ev.button == 2 && !target.dataset.locked) {
             this._deleteActiveEffect(id);
@@ -503,7 +508,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
     static async _conditionToggle(ev, target) {
         if (!this.isEditable) return;
-        
+
         const condKey = $(target).parents(".statusEffect").attr("data-id");
         const ef = this.actor.effects.get(condKey);
         await ef.update({ disabled: !ef.disabled });
@@ -578,7 +583,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
     _saveSearchFields() {
         if (this.element === null) return;
-        
+
         const html = $(this.element);
         this.searchFields = {
             talentFiltered: html.find(".filterTalents").hasClass("filtered"),
@@ -589,7 +594,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
     _restoreSearchFields() {
         if (this.searchFields == undefined) return;
-        
+
         const html = $(this.element);
         if (this.searchFields.talentFiltered) {
             html.find(".filterTalents").addClass("filtered");
@@ -620,7 +625,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
     _setCollapsed() {
         if (!this.collapsedBoxes) return;
-        
+
         const html = $(this.element);
         const boxes = html.find(".ch-collapse i");
         for (let i = 0; i < boxes.length; i++) {
@@ -634,7 +639,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
         this.wrapperLocked = false;
-        
+
         return {
             ...context,
             actor: this.actor,
@@ -684,8 +689,12 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     }
 
     _onStatusEffectContext(target) {
-        const effectId = $(target).closest('.statusEffect').attr('data-id');
-        const effect = this.actor.effects.get(effectId);
+        const header = target.closest('[data-id]');
+        if (!header) return;
+        const effectId = header.dataset.id;
+        const itemId = header.dataset.itemId;
+        const item = itemId ? this.actor.items.get(itemId) : null;
+        const effect = item ? item.effects.get(effectId) : this.actor.effects.get(effectId);
         if (!effect) return;
         ui.context.menuItems = this._getStatusEffectContextOptions(effect);
     }
@@ -743,9 +752,9 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
         // Status effect menu
         html.find(".statusEffectMenu ul").on('mouseleave', ev => $(ev.currentTarget).fadeOut());
-        
+
         // Ammo selector change
-        html.find('.ammo-selector').on('change', async(ev) => {
+        html.find('.ammo-selector').on('change', async (ev) => {
             ev.preventDefault();
             const itemId = this._getItemId(ev.currentTarget);
             await this.actor.updateEmbeddedDocuments("Item", [{ _id: itemId, "system.currentAmmo": $(ev.currentTarget).val() }]);
@@ -781,7 +790,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 ev.currentTarget.appendChild(div);
             }
         });
-        
+
         html.find(".cards .item").on('mouseleave', ev => {
             let e = ev.toElement || ev.relatedTarget;
             if (!e || e.parentNode == this || e == this) return;
@@ -790,7 +799,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
         // Actor drag
         const uuid = this.actor.uuid;
-        html.find('.actorDrag').each(function(i, cond) {
+        html.find('.actorDrag').each(function (i, cond) {
             cond.setAttribute("draggable", true);
             cond.addEventListener("dragstart", ev => {
                 const dataTransfer = {
@@ -843,13 +852,14 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     }
 
     async _refundAttributeAdvance(attr) {
-        const advances = Number(this.actor.system.characteristics[attr].advances) + Number(this.actor.system.characteristics[attr].initial)
-        if (Number(this.actor.system.characteristics[attr].advances) > 0) {
-            const cost = DSKUtility._calculateAdvCost(advances, "Eig", 0) * -1
-            await this._updateAPs(cost, {
-                [`system.characteristics.${attr}.advances`]: Number(this.actor.system.characteristics[attr].advances) - 1
-            })
-        }
+        const baseAdvances = this.actor.system.characteristics[attr].advances
+        if (baseAdvances <= 0) return;
+
+        const advances = baseAdvances + Number(this.actor.system.characteristics[attr].initial)
+        const cost = DSKUtility._calculateAdvCost(advances, "Eig", 0) * -1
+        await this._updateAPs(cost, {
+            [`system.characteristics.${attr}.advances`]: baseAdvances - 1
+        })
     }
 
     async _advancePoints(attr) {
@@ -943,7 +953,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 "system.effect": ""
             })
         }
-        if(!["aggregatedTest", "ahnengabe"].includes(data.type)){
+        if (!["aggregatedTest", "ahnengabe"].includes(data.type)) {
             data["system.weight"] = 0
             data["system.quantity"] = 0
         }
@@ -1121,10 +1131,13 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     }
 
     async handleItemCopy(item, typeClass) {
-        if (DSK.equipmentCategories.includes(typeClass)) {
-            item.name += " (Copy)"
-            return await this._addLoot(item)
-        }
+        const copy = duplicate(item);
+        delete copy._id;
+        copy.name += " (Copy)";
+
+        if (this._tabs?.[0]?.active == "combat" && copy.system?.worn) copy.system.worn.value = true;
+
+        return (await this.actor.createEmbeddedDocuments("Item", [copy]))[0];
     }
 
     async _addLoot(item) {
@@ -1142,32 +1155,32 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     async _manageDragItems(item, typeClass) {
         switch (typeClass) {
             case "meleeweapon":
-                case "rangeweapon":
-                case "equipment":
-                case "ammunition":
-                case "consumable":
-                case "armor":
-                case "poison":
-                    return await this._addLoot(item)
-                    break
-                case "disadvantage":
-                case "advantage":
-                    await this._addVantage(item, typeClass)
-                    break;
-                case "specialability":
-                    await this._addSpecialAbility(item, typeClass)
-                    break;
-                case "information":
-                case "skill":
-                    await this._addUniqueItem(item)
-                    break
-                case "ahnengabe":
-                case "ahnengeschenk":
-                    await this._addSpellOrLiturgy(item)
-                    break;
-                case "effectwrapper":
-                    await this._handleEffectWrapper(item)
-                    break
+            case "rangeweapon":
+            case "equipment":
+            case "ammunition":
+            case "consumable":
+            case "armor":
+            case "poison":
+                return await this._addLoot(item)
+                break
+            case "disadvantage":
+            case "advantage":
+                await this._addVantage(item, typeClass)
+                break;
+            case "specialability":
+                await this._addSpecialAbility(item, typeClass)
+                break;
+            case "information":
+            case "skill":
+                await this._addUniqueItem(item)
+                break
+            case "ahnengabe":
+            case "ahnengeschenk":
+                await this._addSpellOrLiturgy(item)
+                break;
+            case "effectwrapper":
+                await this._handleEffectWrapper(item)
+                break
             default:
                 ui.notifications.error(game.i18n.format("dsk.DSKError.canNotBeAdded", { item: item.name, category: game.i18n.localize(item.type) }))
         }

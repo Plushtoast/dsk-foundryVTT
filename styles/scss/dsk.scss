@@ -240,7 +240,7 @@ h7 {
 .character-sheet nav.sheet-tabs,
 .creature-sheet nav.sheet-tabs,
 .npc-sheet nav.sheet-tabs {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 
 .character-sheet .general,
@@ -699,8 +699,8 @@ select[multiple] option {
   .window-resize-handle,
   .window-resizable-handle {
     z-index: 2;
-    bottom: 25px;
-    right: 25px;
+    bottom: 10px;
+    right: 15px;
     height: 24px;
     width: 24px;
     background: #0000009e;
@@ -1574,10 +1574,6 @@ form.dsk.item-sheet {
         left top,
         center top,
         right top;
-
-      h4.window-title {
-        margin-top: 0;
-      }
     }
 
     .window-content {
@@ -1799,7 +1795,6 @@ form.dsk.item-sheet {
 
   .window-header .window-title {
     text-align: center;
-    margin-left: 15%;
     color: white;
     font-family: var(--boldFont);
     font-weight: bold;
@@ -1815,13 +1810,9 @@ form.dsk.item-sheet {
 
   &.npc-sheet .window-header .window-title,
   &.character-sheet .window-header .window-title {
-    margin-top: 10px;
+    margin-top: 0px;
     color: black;
     text-shadow: 1px 1px white;
-  }
-
-  .header-button.close {
-    margin-right: 25px;
   }
 }
 
@@ -2152,10 +2143,6 @@ form.dsk.item-sheet .standard-form {
     border-right: 2px solid black;
     border-left: 2px solid black;
     border-radius: 5px;
-  }
-
-  &.creature-sheet:after {
-    background-image: url('../../icons/backgrounds/blackcreaturebot.webp');
   }
 
   &.creature-sheet .window-resizable-handle {

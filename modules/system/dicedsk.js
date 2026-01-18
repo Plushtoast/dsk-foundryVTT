@@ -102,7 +102,7 @@ export default class DiceDSK{
             return new Promise((resolve, reject) => {
                 let dialog = DSKDialog.getDialogForItem(testData.source.type)
                 new dialog({
-                        title: dialogOptions.title,
+                        window: { title: dialogOptions.title },
                         content: html,
                         buttons: dialog.getRollButtons(testData, dialogOptions, resolve, reject),
                         default: "rollButton",

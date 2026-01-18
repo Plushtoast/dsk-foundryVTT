@@ -1,4 +1,4 @@
-<div class="tab scrollable inventory {{tab.cssClass}}" data-tab="inventory" data-group="{{tab.group}}">
+<div class="tab scrollable gap0px inventory {{tab.cssClass}}" data-tab="inventory" data-group="{{tab.group}}">
 {{> systems/dsk/templates/actors/parts/gearSearch.hbs}} {{#each prepare.inventory as |section sid|}} {{#if section.show}}
 <div class="groupbox">
     <div class="row-section table-title">
@@ -33,7 +33,7 @@
                     <div class="image" style="background-image: url('{{item.img}}')">
                     </div>
                 </div>
-                <div class="col">
+                <div class="col withContext">
                     <a data-action="itemEdit" class="item-edit {{#if item.consumable}}consume-item{{/if}}">{{item.name}}</a>
                 </div>
                 {{#if (eq item.system.category 'bags')}}
@@ -53,12 +53,14 @@
                 <div class="col eight center">
                     {{item.system.preparedWeight}}
                 </div>
-                <div class="col ten very-small center">
-                    {{#if item.OnUseEffect}}<a data-action="onUseItem" data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}
-                    <a data-action="itemPost" class="item-post" data-tooltip="dsk.SHEET.PostItem"><i class="fas fa-comment"></i></a>
-                    <a data-action="itemEdit" class="item-control item-edit" data-tooltip="dsk.SHEET.EditItem"><i class="fas fa-edit"></i></a>
-                    <a data-action="itemDropdown" class="item-dropdown" data-tooltip="dsk.SHEET.Dropdown"><i class="fas fa-chevron-down"></i></a>
-                    <a data-action="deleteItem" class="item-control item-delete" data-tooltip="dsk.SHEET.DeleteItem"><i class="fas fa-trash"></i></a>
+                <div class="col ten very-small center flexrow">
+                    {{#if item.OnUseEffect}}
+                    <button type="button" data-action="onUseItem" data-tooltip="dsk.SHEET.onUseEffect" class="icon autoFlex fas fa-dice-six very-small noBorder dskdesignbutton"></button>
+                    {{/if}}
+                    {{#if item.children}}
+                    <button type="button" data-action="itemDropdown" class="icon fas fa-chevron-down very-small noBorder autoFlex dskdesignbutton" data-tooltip="dsk.SHEET.Dropdown"></button>
+                    {{/if}}
+                    <button type="button" data-action="itemContextMenu" class="icon fas fa-ellipsis-vertical very-small autoFlex noBorder dskdesignbutton" data-tooltip="dsk.SHEET.EditItem"></button>
                 </div>
             </div>
             <div class="row-section lineheight expandDetails {{item.detailed}}">

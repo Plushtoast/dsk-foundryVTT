@@ -66,7 +66,7 @@
             </div>
         </div>
         {{#each conditions as |item i|}}
-        <div class="row-section col morph skills" data-id="{{item._id}}" {{#if item.descriptor}}data-descriptor="{{item.descriptor}}" {{/if}} {{{ifThen item.disabled 'style="opacity:0.5;"' ''}}}>
+        <div class="row-section col morph skills statusEffect" data-id="{{item._id}}" {{#if item.descriptor}}data-descriptor="{{item.descriptor}}" {{/if}} {{{ifThen item.disabled 'style="opacity:0.5;"' ''}}}>
             <div class="status-img col ten flexcol flexAlignCenter statusEffect effectConfig">
                 <img src="{{item.img}}" />
             </div>
