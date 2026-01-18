@@ -49,9 +49,10 @@ export class AddTargetDialog extends DefaultAppv2 {
 
         const html = $(this.element);
         const combatants = html.find('.combatant');
+        combatants.on('dblclick', ev => this.setTargets(ev, true));
         combatants.on('click', ev => this.setTargets(ev));
-        combatants.on('mouseenter', this._onCombatantHoverIn.bind(this));
-        combatants.on('mouseleave', this._onCombatantHoverOut.bind(this));
+        combatants.on('pointerover', this._onCombatantHoverIn.bind(this));
+        combatants.on('pointerout', this._onCombatantHoverOut.bind(this));
         combatants.on('mousedown', ev => this._onRightClick(ev));
     }
 
@@ -76,7 +77,7 @@ export class AddTargetDialog extends DefaultAppv2 {
         return game.combats.apps[0];
     }
 
-    async setTargets(ev) {
+    async setTargets(ev, close = false) {
         const isShift = ev.originalEvent.shiftKey;
         if (!isShift)
             $(ev.currentTarget).closest('.directory').find('.combatant').removeClass('selectedTarget');
@@ -86,6 +87,8 @@ export class AddTargetDialog extends DefaultAppv2 {
         const combatant = game.combat.combatants.get(combatantId);
 
         combatant.token.object.setTarget(true, { user: game.user, releaseOthers: !isShift, groupSelection: true });
+
+        if (close) this.close();
     }
 }
 

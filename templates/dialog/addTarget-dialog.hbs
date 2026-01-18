@@ -1,4 +1,4 @@
-<div class="directory targetChoser">
+<div class="directory targetChoser scrollable">
     <ul class="directory-list">
         <li class="actor directory-item flexrow">
             <div class="combatant-advanced">
@@ -11,13 +11,14 @@
                 <b>{{localize 'dsk.distance'}}</b>
             </div>
         </li>
-        {{#if selectables}} {{#each selectables as |combatant i|}}
+        {{#if selectables}} 
+        {{#each selectables as |combatant i|}}
         <li class="combatant actor directory-item flexrow {{#if combatant.hidden}}hidden{{/if}} {{#if combatant.isSelected}}selectedTarget{{/if}}" data-combatant-id="{{combatant.id}}">
             <div class="combatant-advanced">
-                <img class="token-image" data-tooltip="{{combatant.token.name}}" src="{{combatant.token.texture.src}}">
+                <img class="token-image" data-tooltip="{{combatant.token.name}}" src="{{combatant.token.texture.src}}" />
             </div>
             <div class="token-name flexcol">
-                <h4>{{combatant.token.name}}</h4>
+                <b>{{combatant.token.name}}</b>
             </div>
 
             <div class="token-name flexcol">
@@ -26,6 +27,9 @@
                 {{/if}}
             </div>
         </li>
-        {{/each}} {{else}} {{localize 'dsk.DIALOG.onlyInCombatTargets'}} {{/if}}
+        {{/each}} 
+        {{else}} 
+        <li>{{localize 'dsk.DIALOG.onlyInCombatTargets'}}</li>
+        {{/if}}
     </ul>
-    </div
+</div>
