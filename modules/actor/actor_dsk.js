@@ -135,13 +135,11 @@ export default class ActorDSK extends Actor {
     return Math.clamp(pain, 0, 4)
   }
 
-  
-
   async prepareMerchant() {
-    if (getProperty(this, "system.merchant.merchantType") == "loot") {
-      if (getProperty(this, "system.merchant.locked") && !this.hasCondition("locked")) {
+    if (this.system.merchant.merchantType == "loot") {
+      if (this.system.merchant.locked && !this.hasCondition("locked")) {
         await this.addCondition(ActorDSK.lockedCondition());
-      } else if (!getProperty(this, "system.merchant.locked")) {
+      } else if (!this.system.merchant.locked) {
         let ef = this.effects.find((x) => x.statuses.has("locked"));
         if (ef) await this.deleteEmbeddedDocuments("ActiveEffect", [ef.id]);
       }
@@ -165,7 +163,7 @@ export default class ActorDSK extends Actor {
   }
 
   isMerchant() {
-    return ["merchant", "loot"].includes(getProperty(this, "system.merchant.merchantType"));
+    return ["merchant", "loot"].includes(this.system.merchant.merchantType);
   }
 
   applyActiveEffects() {
@@ -629,8 +627,6 @@ export default class ActorDSK extends Actor {
     return preparedData;
   }
 
-  
-
   static _prepareRangeWeapon(item, ammunitions, combatskills, actor) {
     let skill = combatskills.find((i) => i.name == item.system.combatskill);
     item.calculatedRange = item.system.rw;
@@ -1043,16 +1039,6 @@ export default class ActorDSK extends Actor {
     return ItemDSK.getSubClass(spell.type).setupDialog(null, options, spell, this, tokenId);
   }
 
-  static _prepareitemStructure(item) {
-    const enchants = getProperty(item, "flags.dsk.enchantments");
-    if (enchants && enchants.length > 0) {
-      item.enchantClass = "rar";
-    } else if (item.effects.length > 0) {
-      item.enchantClass = "common"
-    }
-    return item;
-  }
-
   async checkEnoughXP(cost) {
     if (!this.system.canAdvance) return true;
     if (isNaN(cost) || cost == null) return true;
@@ -1133,14 +1119,6 @@ export default class ActorDSK extends Actor {
 
   setupSkill(skill, options = {}, tokenId) {
     return ItemDSK.getSubClass(skill.type).setupDialog(null, options, skill, this, tokenId);
-  }
-
-  static prepareMag(item) {
-    if (item.system.ammunitiongroup == "mag") {
-      item.structureMax = item.system.mag.max;
-      item.structureCurrent = item.system.mag.value;
-    }
-    return item;
   }
 
   async _updateAPs(APValue, dataUpdate = {}, options = {}) {
@@ -1469,7 +1447,6 @@ export default class ActorDSK extends Actor {
       elem.children = [];
 
       for (let child of containers.get(elem._id)) {
-        elem.children.push(ActorDSK._prepareitemStructure(child));
         if (containers.has(child._id)) {
           this._setBagContent(child, containers);
         }

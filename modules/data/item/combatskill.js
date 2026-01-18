@@ -68,11 +68,11 @@ export default class CombatskillData extends ItemDataModel.mixin(
   static _calculateCombatSkillValues(i, actorData) {
     i = this._calculatePW(i, actorData)
     // Store calculated values on item, not in system (DataModel is read-only)
-    i.attack = i.PW
+    i.system.attack = i.PW
     if (i.system.weapontype == "melee") {
-      i.parry = Math.round(i.PW * 0.25);
+      i.system.parry = Math.round(i.PW * 0.25);
     } else {
-      i.parry = 0;
+      i.system.parry = 0;
     }
     i.cost = game.i18n.format("dsk.advancementCost", {
       cost: DSKUtility._calculateAdvCost(i.system.level, i.system.StF),

@@ -35,7 +35,7 @@ export default class ArmorData extends ItemDataModel.mixin(
    */
   prepareEmbeddedItemSheet() {
     const item = super.prepareEmbeddedItemSheet();
-    item.toggleValue = item.system.worn.value || false;
+    item.toggleValue = item.system.worn.value;
     item.toggle = true;
     this.constructor._prepareItemStructure(item);
     item.system.preparedWeight = this.parent.system.preparedWeight;
