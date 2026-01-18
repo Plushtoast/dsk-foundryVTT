@@ -52,6 +52,17 @@ export default class CharacteristicsTemplate extends DSKDataModel {
         }, { label: 'dsk.characteristics.kk.name' }),
       }),
       sheetLocked: new BooleanField({ initial: false, label: 'dsk.SHEET.Lock' }),
+      playerView: new BooleanField({ initial: false, label: 'dsk.SHEET.switchLimited' }),
     };
+  }
+
+  static _migrateData(source) {
+    super._migrateData(source);
+
+    const hasPlayerView = foundry.utils.hasProperty(source, 'playerView');
+    const merchantPlayerView = foundry.utils.getProperty(source, 'merchant.playerView');
+    if (!hasPlayerView && merchantPlayerView !== undefined) {
+      foundry.utils.setProperty(source, 'playerView', merchantPlayerView);
+    }
   }
 }

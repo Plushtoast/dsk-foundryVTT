@@ -50,16 +50,6 @@ export const MerchantSheetMixin = (superclass) => {
             },
             majorButtons: [
                 ...(superclass.DEFAULT_OPTIONS?.majorButtons || []),
-                {
-                    action: 'playerview',
-                    icon: function () {
-                        return `fas fa-toggle-${getProperty(this.actor.system, "merchant.playerView") ? 'on' : 'off'}`;
-                    },
-                    label: 'dsk.SHEET.switchLimited',
-                    visible: function () {
-                        return this.actor.isOwner;
-                    },
-                },
             ],
         };
 
@@ -325,7 +315,7 @@ export const MerchantSheetMixin = (superclass) => {
     }
 
     playerViewEnabled() {
-        return getProperty(this.actor.system, "merchant.playerView")
+        return getProperty(this.actor.system, "playerView")
     }
 
     async buyItem(dataset) {

@@ -28,10 +28,6 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         header: {
             template: 'systems/dsk/templates/actors/npc-limited-header.hbs',
         },
-        tabs: {
-            template: 'systems/dsk/templates/actors/actorv2/tabs.hbs',
-            id: "tabs",
-        },
         main: {
             template: 'systems/dsk/templates/actors/npc-limited.hbs',
             scrollable: ['']
@@ -266,7 +262,9 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
     // Static action handlers
     static async _togglePlayerview(ev, target) {
+        await this.close();
         await this.actor.update({ "system.playerView": !this.actor.system.playerView });
+        this.render(true);
     }
 
     static async _configActor(ev, target) {
@@ -657,8 +655,12 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         };
     }
 
+    playerViewEnabled() {
+        return this.actor.system.playerView;
+    }
+
     showLimited() {
-        return !game.user.isGM && this.actor.limited;
+        return (!game.user.isGM && this.actor.limited) || this.playerViewEnabled();
     }
 
     getTokenId() {

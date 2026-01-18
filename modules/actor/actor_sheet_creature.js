@@ -56,10 +56,6 @@ export default class ActorSheetCreature extends ActorSheetDSK {
         header: {
             template: 'systems/dsk/templates/actors/creature/creature-limited-header.hbs',
         },
-        tabs: {
-            template: 'systems/dsk/templates/actors/actorv2/tabs.hbs',
-            id: "tabs",
-        },
         main: {
             template: 'systems/dsk/templates/actors/creature-limited.hbs',
             scrollable: ['']
