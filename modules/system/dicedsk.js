@@ -16,6 +16,15 @@ const { mergeObject, deepClone, getProperty, duplicate } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
 
 export default class DiceDSK{
+    static _getActorFromTestData(testData) {
+        const speaker = testData?.extra?.speaker
+        return DSKUtility.getSpeaker(speaker) || (testData?.extra?.actor?._id ? game.actors.get(testData.extra.actor._id) : null)
+    }
+
+    static _getActorData(testData) {
+        return this._getActorFromTestData(testData) || testData?.extra?.actor
+    }
+
     static async rollTest(testData) {
         //testData.function = "rollTest"
         let rollResults
@@ -70,7 +79,8 @@ export default class DiceDSK{
             testModifier: dialogOptions.data.modifier || 0,
         })
 
-        let situationalModifiers = dialogOptions.data.situationalModifiers || (testData.extra.actor ? DSKStatusEffects.getRollModifiers(testData.extra.actor, testData.source) : [])
+        const actorData = this._getActorData(testData)
+        let situationalModifiers = dialogOptions.data.situationalModifiers || (actorData ? DSKStatusEffects.getRollModifiers(actorData, testData.source) : [])
         
         if (testData.extra.options.moreModifiers != undefined) {
             situationalModifiers.push(...testData.extra.options.moreModifiers)
@@ -192,6 +202,7 @@ export default class DiceDSK{
     }
 
     static async rollSpell(testData) {
+        const actorData = this._getActorData(testData)
         let res = await this._roll2D20(testData)
         res["rollType"] = testData.source.types
         res.preData.calculatedSpellModifiers.finalcost = Number(res.preData.calculatedSpellModifiers.cost)
@@ -236,7 +247,7 @@ export default class DiceDSK{
                 }
                 const damageBonusDescription = []
                 const statusDmg = await DiceDSK._stringToRoll(
-                    testData.extra.actor.system.spellStats.damage,
+                    actorData?.system?.spellStats?.damage ?? 0,
                     testData
                 )
                 if (statusDmg != 0) {
@@ -255,11 +266,12 @@ export default class DiceDSK{
     }
 
     static calculateEnergyCost(res, testData) {
+        const actorData = this._getActorData(testData)
         let costModifiers = []
  
         if(res.successLevel < 0){
             const traditions = ["traditionWitch", "traditionFjarning", "braniborian"].map(x => game.i18n.localize(`dsk.LocalizedIDs.${x}`))
-            const factor = testData.extra.actor.items.some(x => x.type == "specialability" && traditions.includes(x.name)) ? 3 : 2
+            const factor = (actorData?.items || []).some(x => x.type == "specialability" && traditions.includes(x.name)) ? 3 : 2
             res.preData.calculatedSpellModifiers.finalcost = Math.round(res.preData.calculatedSpellModifiers.finalcost / factor)
         }
         let feature = "AePCost"
@@ -270,15 +282,15 @@ export default class DiceDSK{
         costModifiers.push(
             {
                 name: weakBody,
-                value: AdvantageRulesDSK.vantageStep(testData.extra.actor, weakBody),
+                value: AdvantageRulesDSK.vantageStep(actorData || testData.extra.actor, weakBody),
             },
             {
                 name: energy,
-                value: SpecialabilityRulesDSK.abilityStep(testData.extra.actor, energy) * -1,
+                value: SpecialabilityRulesDSK.abilityStep(actorData || testData.extra.actor, energy) * -1,
             },
             {
                 name: `${game.i18n.localize("dsk.statuseffects")} (${game.i18n.localize("dsk.CHARAbbrev." + globalMod.name)})`,
-                value: testData.extra.actor.system[globalMod.val] + this._situationalModifiers(testData, feature)
+                value: (actorData?.system?.[globalMod.val] || 0) + this._situationalModifiers(testData, feature)
             }
         )
         costModifiers = costModifiers.filter((x) => x.value != 0)
@@ -330,6 +342,7 @@ export default class DiceDSK{
     }
 
     static async evaluateDamage(testData, result, weapon, isRangeWeapon, doubleDamage) {
+        const actorData = this._getActorData(testData)
         let rollFormula = weapon.system.tp.replace(/[Ww]/g, "d")
         let overrideDamage = []
         let dmgMultipliers = weapon.dmgMultipliers || []
@@ -412,9 +425,9 @@ export default class DiceDSK{
                 damage += rangeDamageMod
                 if (rangeDamageMod != 0) damageBonusDescription.push(game.i18n.localize("dsk.distance") + " " + rangeDamageMod)
 
-                status = testData.extra.actor.system.rangeStats.damage
+                status = actorData?.system?.rangeStats?.damage ?? 0
             } else {
-                status = testData.extra.actor.system.meleeStats.damage
+                status = actorData?.system?.meleeStats?.damage ?? 0
             }
 
             const statusDmg = await DiceDSK._stringToRoll(status, testData)
@@ -483,21 +496,7 @@ export default class DiceDSK{
         let roll = testData.roll ? (testData.roll instanceof Roll ? testData.roll : Roll.fromData(testData.roll)) : await new Roll("1d20+1d20").evaluate()
         let description = []
         let successLevel = 0
-
-        const sourceSystem = testData?.source?.system
-        if (sourceSystem && (!sourceSystem.characteristic1 || !sourceSystem.characteristic2)) {
-            const combatskill = sourceSystem.combatskill
-            const actor = testData?.extra?.actor
-            if (combatskill && actor?.items?.length) {
-                const skill = actor.items.find(
-                    (item) => item.type == "combatskill" && (item.name == combatskill || item._id == combatskill)
-                )
-                if (skill?.system?.characteristic1 && skill?.system?.characteristic2) {
-                    sourceSystem.characteristic1 = skill.system.characteristic1
-                    sourceSystem.characteristic2 = skill.system.characteristic2
-                }
-            }
-        }
+        const actorData = this._getActorData(testData)
 
         if(testData.testDifficulty) this._appendSituationalModifiers(testData, game.i18n.localize("dsk.Difficulty"), testData.testDifficulty)
 
@@ -513,13 +512,14 @@ export default class DiceDSK{
         let basePW = testData.source.attack || Number(testData.source.system.at)
         
         if(!basePW){
+            const characteristics = actorData?.system?.characteristics || testData.extra.actor?.system?.characteristics || {}
             if(testData.source.system.level == undefined){
-                basePW = -5 + testData.extra.actor.system.characteristics[testData.source.system.characteristic1].value
-                + testData.extra.actor.system.characteristics[testData.source.system.characteristic2].value
+                basePW = -5 + (characteristics[testData.source.system.characteristic1]?.value || 0)
+                + (characteristics[testData.source.system.characteristic2]?.value || 0)
             }   
             else{
-                basePW = testData.source.system.level + 5 + Math.round((testData.extra.actor.system.characteristics[testData.source.system.characteristic1].value
-                    + testData.extra.actor.system.characteristics[testData.source.system.characteristic2].value)/2)
+                basePW = testData.source.system.level + 5 + Math.round(((characteristics[testData.source.system.characteristic1]?.value || 0)
+                    + (characteristics[testData.source.system.characteristic2]?.value || 0))/2)
             }
         }
 
@@ -538,7 +538,7 @@ export default class DiceDSK{
         if (
             testData.source.type == "skill" &&
             AdvantageRulesDSK.hasVantage(
-                testData.extra.actor,
+                actorData || testData.extra.actor,
                 `${game.i18n.localize("dsk.LocalizedIDs.incompetent")} (${testData.source.name})`
             )
         ) {
@@ -561,7 +561,7 @@ export default class DiceDSK{
         if (
             testData.source.type == "skill" &&
             TraitRulesDSK.hasTrait(
-                testData.extra.actor,
+                actorData || testData.extra.actor,
                 `${game.i18n.localize("dsk.LocalizedIDs.automaticSuccess")} (${testData.source.name})`
             )
         ) {
@@ -571,7 +571,7 @@ export default class DiceDSK{
         } else if (
             testData.source.type == "skill" &&
             TraitRulesDSK.hasTrait(
-                testData.extra.actor,
+                actorData || testData.extra.actor,
                 `${game.i18n.localize("dsk.LocalizedIDs.automaticFail")} (${testData.source.name})`
             )
         ) {
@@ -605,7 +605,7 @@ export default class DiceDSK{
                 return {
                     char: testData.source.system[`characteristic${x + 1}`] || testData.source.type,
                     res: roll.terms[x * 2].results[0].result,
-                    tar: testData.extra.actor?.system.characteristics[testData.source.system[`characteristic${x + 1}`]]?.value,
+                    tar: (actorData?.system?.characteristics || testData.extra.actor?.system?.characteristics || {})[testData.source.system[`characteristic${x + 1}`]]?.value,
                 }
             }),
             qualityStep,
@@ -859,17 +859,17 @@ export default class DiceDSK{
         let weapon
 
         let source = testData.source
-        let actor = testData.extra.actor
+        const actor = this._getActorData(testData)
         const combatskill = source.system.combatskill
 
         let skill = CombatskillData._calculateCombatSkillValues(
-            actor.items.find((x) => x.type == "combatskill" && x.name == combatskill),
-            actor.system
+            (actor?.items || []).find((x) => x.type == "combatskill" && x.name == combatskill),
+            actor?.system || {}
         )
 
         const isMelee = source.type == "meleeweapon"
         if (isMelee) {
-            weapon = ActorDSK._prepareMeleeWeapon(source, [skill], testData.extra.actor)
+            weapon = ActorDSK._prepareMeleeWeapon(source, [skill], actor || testData.extra.actor)
 
             this._appendSituationalModifiers(
                 testData,
@@ -878,7 +878,7 @@ export default class DiceDSK{
             )
 
         } else {
-            weapon = ActorDSK._prepareRangeWeapon(source, [], [skill], testData.extra.actor)
+            weapon = ActorDSK._prepareRangeWeapon(source, [], [skill], actor || testData.extra.actor)
 
             this._appendSituationalModifiers(
                 testData,
@@ -902,6 +902,7 @@ export default class DiceDSK{
     }
 
     static async rollRegeneration(testData) {
+        const actorData = this._getActorData(testData)
         let modifier = this._situationalModifiers(testData)
         let roll = testData.roll
         let chars = []
@@ -916,10 +917,10 @@ export default class DiceDSK{
         const attrs = []
 
         if (testData.regenerateLeP) attrs.push("LeP")
-        if (testData.extra.actor.system.isMage && testData.regenerateAeP) attrs.push("AeP")
+        if (actorData?.system?.isMage && testData.regenerateAeP) attrs.push("AeP")
         let index = 0
 
-        const isSick = testData.extra.actor.effects.some((x) => x.statuses.includes("sick"))
+        const isSick = (actorData?.effects || []).some((x) => x.statuses.includes("sick"))
         if (isSick) {
             this._appendSituationalModifiers(testData, game.i18n.localize("dsk.CONDITION.sick"), "*0")
             for (let k of attrs) {
@@ -932,14 +933,14 @@ export default class DiceDSK{
                 this._appendSituationalModifiers(
                     testData,
                     game.i18n.localize(`dsk.LocalizedIDs.regeneration${k}`),
-                    AdvantageRulesDSK.vantageStep(testData.extra.actor, game.i18n.localize(`dsk.LocalizedIDs.regeneration${k}`)),
+                    AdvantageRulesDSK.vantageStep(actorData || testData.extra.actor, game.i18n.localize(`dsk.LocalizedIDs.regeneration${k}`)),
                     k
                 )
                 this._appendSituationalModifiers(
                     testData,
                     game.i18n.localize(`dsk.LocalizedIDs.weakRegeneration${k}`),
                     AdvantageRulesDSK.vantageStep(
-                        testData.extra.actor,
+                        actorData || testData.extra.actor,
                         game.i18n.localize(`dsk.LocalizedIDs.weakRegeneration${k}`)
                     ) * -1,
                     k
@@ -948,7 +949,7 @@ export default class DiceDSK{
                     testData,
                     game.i18n.localize(`dsk.LocalizedIDs.advancedRegeneration${k}`),
                     SpecialabilityRulesDSK.abilityStep(
-                        testData.extra.actor,
+                        actorData || testData.extra.actor,
                         game.i18n.localize(`dsk.LocalizedIDs.advancedRegeneration${k}`)
                     ),
                     k
@@ -984,6 +985,7 @@ export default class DiceDSK{
     static async rollDices(testData, cardOptions) {
         if (!testData.roll) {
             const d3dColors = game.dsk.apps.DiceSoNiceCustomization.getAttributeConfiguration
+            const actorData = this._getActorData(testData)
             let roll
             switch (testData.source.type) {
                 case "char":
@@ -998,11 +1000,11 @@ export default class DiceDSK{
                     const leDie = []
 
                     if (testData.regenerateLeP ) leDie.push("1d6")
-                    if (testData.extra.actor.isMage && testData.regenerateAeP) leDie.push("1d6")
+                    if (actorData?.system?.isMage && testData.regenerateAeP) leDie.push("1d6")
 
                     roll = await new Roll(leDie.join("+")).evaluate()
                     if (testData.regenerateLeP ) mergeObject(roll.dice[0].options, d3dColors("mu"))
-                    if (testData.extra.actor.isMage && testData.regenerateAeP) mergeObject(roll.dice[leDie.length - 1].options, d3dColors("ge"))
+                    if (actorData?.system?.isMage && testData.regenerateAeP) mergeObject(roll.dice[leDie.length - 1].options, d3dColors("ge"))
                     break
                 case "meleeweapon":
                 case "rangeweapon":
@@ -1064,23 +1066,24 @@ export default class DiceDSK{
 
     static async damageFormula(testData){
         let weapon
+        const actorData = this._getActorData(testData)
         
         if (testData.source.type == "meleeweapon") {
             const skill = CombatskillData._calculateCombatSkillValues(
-                testData.extra.actor.items.find(
+                (actorData?.items || []).find(
                     (x) => x.type == "combatskill" && x.name == testData.source.system.combatskill
                 ),
-                testData.extra.actor.system
+                actorData?.system || {}
             )
-            weapon = ActorDSK._prepareMeleeWeapon(testData.source, [skill], testData.extra.actor)
+            weapon = ActorDSK._prepareMeleeWeapon(testData.source, [skill], actorData || testData.extra.actor)
         } else if (testData.source.type == "rangeweapon") {
             const skill = CombatskillData._calculateCombatSkillValues(
-                testData.extra.actor.items.find(
+                (actorData?.items || []).find(
                     (x) => x.type == "combatskill" && x.name == testData.source.system.combatskill
                 ),
-                testData.extra.actor.system
+                actorData?.system || {}
             )
-            weapon = ActorDSK._prepareRangeWeapon(testData.source, [], [skill], testData.extra.actor)
+            weapon = ActorDSK._prepareRangeWeapon(testData.source, [], [skill], actorData || testData.extra.actor)
         } else {
             weapon = testData.source.system
         }
