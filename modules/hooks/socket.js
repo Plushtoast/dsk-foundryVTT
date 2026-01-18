@@ -23,7 +23,7 @@ export function connectSocket() {
             case "target":
                 {
                     let scene = game.scenes.get(data.payload.scene)
-                    let token = new new foundry.canvas.placeables.Token(scene.getEmbeddedDocument("Token", data.payload.target))
+                    let token = new foundry.canvas.placeables.Token(scene.getEmbeddedDocument("Token", data.payload.target))
                     token.actor.update({
                         "flags.oppose": data.payload.opposeFlag
                     })

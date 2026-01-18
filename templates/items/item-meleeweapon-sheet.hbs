@@ -8,16 +8,20 @@
         </select>
     </div>
 
-    <div class="form-group doubleInput">
+    <div class="form-group">
         <label class="label-text">{{localize "dsk.ABBR.AW"}}</label>
-        {{formInput systemFields.aw value=document.system.aw}}
-        {{formInput systemFields.awoffhand value=document.system.awoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
+        <div class="form-fields">
+            {{formInput systemFields.aw value=document.system.aw}}
+            {{formInput systemFields.awoffhand value=document.system.awoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
+        </div>        
     </div>
 
-    <div class="form-group doubleInput">
+    <div class="form-group">
         <label class="label-text">{{localize "dsk.ABBR.VW"}}</label>
-        {{formInput systemFields.vw value=document.system.vw}}
-        {{formInput systemFields.vwoffhand value=document.system.vwoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
+        <div class="form-fields">
+            {{formInput systemFields.vw value=document.system.vw}}
+            {{formInput systemFields.vwoffhand value=document.system.vwoffhand data-tooltip="dsk.ITEMSHEET.offHandMod"}}
+        </div>
     </div>
 
     {{formGroup systemFields.rw value=document.system.rw localize=true}}

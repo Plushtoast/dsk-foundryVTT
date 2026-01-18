@@ -96,10 +96,10 @@
                     {{actor.system.stats.LeP.current}}
                 </div>
                 <div class="col eight center">
-                    <input name="system.stats.LeP.modifier" type="text" value="{{actor.system.stats.LeP.modifier}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.LeP.fields.modifier value=actor.system.stats.LeP.modifier}}
                 </div>
                 <div class="col eight center">
-                    <input name="system.stats.LeP.advances" type="text" value="{{actor.system.stats.LeP.advances}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.LeP.fields.advances value=actor.system.stats.LeP.advances}}
                 </div>
                 <div class="col eight lineheight center">
                     {{actor.system.stats.LeP.max}}
@@ -113,11 +113,11 @@
                 <div class="col eight lineheight center">
 
                 </div>
-                <div class="col eight center inputTooltipAvailable">
-                    <input name="system.stats.regeneration.LePMod" type="text" value="{{actor.system.stats.regeneration.LePMod}}" data-dtype="Number" data-tooltip="dsk.SHEET.permRegeneration" />
+                <div class="col eight center inputTooltipAvailable" data-tooltip="dsk.SHEET.permRegeneration">
+                    {{formInput systemFields.stats.fields.regeneration.fields.LePMod value=actor.system.stats.regeneration.LePMod}}
                 </div>
-                <div class="col eight center inputTooltipAvailable">
-                    <input name="system.stats.regeneration.LePTemp" type="text" value="{{actor.system.stats.regeneration.LePTemp}}" data-dtype="Number" data-tooltip="dsk.SHEET.tempRegeneration" />
+                <div class="col eight center inputTooltipAvailable" data-tooltip="dsk.SHEET.tempRegeneration">
+                    {{formInput systemFields.stats.fields.regeneration.fields.LePTemp value=actor.system.stats.regeneration.LePTemp}}
                 </div>
                 <div class="col eight lineheight center">
                     {{actor.system.stats.regeneration.LePmax}}
@@ -134,10 +134,10 @@
                     {{actor.system.stats.AeP.current}}
                 </div>
                 <div class="col eight center">
-                    <input name="system.stats.AeP.modifier" type="text" value="{{actor.system.stats.AeP.modifier}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.AeP.fields.modifier value=actor.system.stats.AeP.modifier}}
                 </div>
                 <div class="col eight center">
-                    <input name="system.stats.AeP.advances" type="text" value="{{actor.system.stats.AeP.advances}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.AeP.fields.advances value=actor.system.stats.AeP.advances}}
                 </div>
                 <div class="col eight lineheight center">
                     {{actor.system.stats.AeP.max}}
@@ -151,11 +151,11 @@
                 <div class="col eight lineheight center">
 
                 </div>
-                <div class="col eight center inputTooltipAvailable">
-                    <input name="system.stats.regeneration.AePMod" type="text" value="{{actor.system.stats.regeneration.AePMod}}" data-dtype="Number" data-tooltip="dsk.SHEET.permRegeneration" />
+                <div class="col eight center inputTooltipAvailable" data-tooltip="dsk.SHEET.permRegeneration">
+                    {{formInput systemFields.stats.fields.regeneration.fields.AePMod value=actor.system.stats.regeneration.AePMod}}
                 </div>
-                <div class="col eight center inputTooltipAvailable">
-                    <input name="system.stats.regeneration.AePTemp" type="text" value="{{actor.system.stats.regeneration.AePTemp}}" data-dtype="Number" data-tooltip="dsk.SHEET.tempRegeneration" />
+                <div class="col eight center inputTooltipAvailable" data-tooltip="dsk.SHEET.tempRegeneration">
+                    {{formInput systemFields.stats.fields.regeneration.fields.AePTemp value=actor.system.stats.regeneration.AePTemp}}
                 </div>
                 <div class="col eight lineheight center">
                     {{actor.system.stats.regeneration.AePmax}}
@@ -171,7 +171,7 @@
                     {{actor.system.stats.sk.value}}
                 </div>
                 <div class="col eight center">
-                    <input name="system.stats.sk.modifier" type="text" value="{{actor.system.stats.sk.modifier}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.sk.fields.modifier value=actor.system.stats.sk.modifier}}
                 </div>
                 <div class="col eight">
 
@@ -188,7 +188,7 @@
                     {{actor.system.stats.zk.value}}
                 </div>
                 <div class="col eight center">
-                    <input name="system.stats.zk.modifier" type="text" value="{{actor.system.stats.zk.modifier}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.zk.fields.modifier value=actor.system.stats.zk.modifier}}
                 </div>
                 <div class="col eight">
 
@@ -206,7 +206,7 @@
                     {{actor.system.stats.gs.initial}}
                 </div>
                 <div class="col eight center">
-                    <input name="system.stats.gs.modifier" type="text" value="{{actor.system.stats.gs.modifier}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.gs.fields.modifier value=actor.system.stats.gs.modifier}}
                 </div>
                 <div class="col eight">
 
@@ -223,7 +223,7 @@
                 <div class="col eight lineheight center">
                 </div>
                 <div class="col eight center">
-                    <input name="system.stats.ini.modifier" type="text" value="{{actor.system.stats.ini.modifier}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.ini.fields.modifier value=actor.system.stats.ini.modifier}}
                 </div>
                 <div class="col eight">
 
@@ -258,10 +258,10 @@
                     {{localize "dsk.fatePoints"}}
                 </div>
                 <div class="col eight lineheight center">
-                    <input name="system.stats.schips.current" type="text" value="{{actor.system.stats.schips.current}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.schips.fields.current value=actor.system.stats.schips.current}}
                 </div>
                 <div class="col eight center">
-                    <input name="system.stats.schips.modifier" type="text" value="{{actor.system.stats.schips.modifier}}" data-dtype="Number" />
+                    {{formInput systemFields.stats.fields.schips.fields.modifier value=actor.system.stats.schips.modifier}}
                 </div>
                 <div class="col eight">
 

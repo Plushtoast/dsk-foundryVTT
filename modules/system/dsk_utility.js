@@ -113,7 +113,7 @@ export default class DSKUtility {
         if (!actor) {
             let scene = game.scenes.get(speaker.scene)
             try {
-                if (scene) actor = new Token(scene.getEmbeddedDocument("Token", speaker.token))?.actor
+                if (scene) actor = new foundry.canvas.placeables.Token(scene.getEmbeddedDocument("Token", speaker.token))?.actor
             } catch (error) {}
         }
 

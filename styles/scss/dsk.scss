@@ -444,10 +444,6 @@ form {
       flex: 2;
     }
 
-    &.doubleInput .input-text {
-      flex: 1.45;
-    }
-
     div.input-text {
       padding: 0 3px;
 
@@ -1931,20 +1927,6 @@ form.dsk.item-sheet .standard-form {
     display: flex;
     gap: 6px;
     align-items: center;
-  }
-
-  .form-group.doubleInput>input,
-  .form-group.doubleInput>select,
-  .form-group.doubleInput>.form-fields>input,
-  .form-group.doubleInput>.form-fields>select {
-    width: calc(50% - 4px);
-  }
-
-  .form-group.doubleInput>input+input,
-  .form-group.doubleInput>select+select,
-  .form-group.doubleInput>.form-fields>input+input,
-  .form-group.doubleInput>.form-fields>select+select {
-    margin-left: 8px;
   }
 }
 
@@ -4306,6 +4288,11 @@ select.noAppearance {
         max-width: 155px;
         text-overflow: ellipsis;
         white-space: nowrap;
+        color: black;
+      }
+
+      li {
+        color: black;
       }
     }
   }

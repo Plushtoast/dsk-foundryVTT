@@ -9,12 +9,8 @@ export default class TokenHotbar2 extends DefaultAppv2 {
     static DEFAULT_OPTIONS = {
         id: 'token-hotbar',
         classes: ['dsk', 'tokenQuickHot'],
-        position: {
-            width: 'auto',
-            height: 'auto',
-        },
         window: {
-            frame: true,
+            frame: false,
             minimizable: false,
             resizable: false,
             title: "TokenHotbar"
@@ -96,20 +92,7 @@ export default class TokenHotbar2 extends DefaultAppv2 {
     resetPosition() {
         const hotbarPosition = $('#hotbar').first().position()
         const itemWidth = game.settings.get("dsk", "tokenhotbarSize")
-        this.position.left = hotbarPosition.left + 8
-        this.position.top = hotbarPosition.top - itemWidth - 25
-    }
-
-    _getInitialPosition() {
-        const hotbarPosition = $('#hotbar').first().position()
-        const itemWidth = game.settings.get("dsk", "tokenhotbarSize")
-        const position = game.settings.get("dsk", "tokenhotbarPosition")
-        return {
-            left: position.left ?? hotbarPosition.left + 8,
-            top: position.top ?? hotbarPosition.top - itemWidth - 25,
-            width: itemWidth,
-            height: itemWidth + 45
-        }
+        this.setPosition({ left: hotbarPosition.left + 8, top: hotbarPosition.top - itemWidth - 25 })
     }
 
     _onRender(context, options) {
@@ -117,12 +100,18 @@ export default class TokenHotbar2 extends DefaultAppv2 {
         const html = $(this.element);
         
         const container = html.find(".dragHandler");
-        new foundry.applications.ux.Draggable(this, html, container[0], false);
+        if (container[0]) new foundry.applications.ux.Draggable(this, this.element, container[0], this.options.resizable);
 
         container.on('wheel', async(ev) => {
             ev.stopPropagation()
             ev.preventDefault()
             await this._onWheelResize(ev)
+            return false
+        })
+
+        html.find('li').on('mousedown', async (ev) => {
+            ev.stopPropagation()
+            await this.executeQuickButton(ev)
             return false
         })
                  
@@ -223,6 +212,18 @@ export default class TokenHotbar2 extends DefaultAppv2 {
 
     async _prepareContext(options) {
         const data = await super._prepareContext(options)
+        const hotbarPosition = $('#hotbar').first().position()
+        const itemWidth = game.settings.get("dsk", "tokenhotbarSize")
+        const savedPosition = game.settings.get("dsk", "tokenhotbarPosition")
+
+        const position = mergeObject({
+            height: itemWidth + 45,
+            zIndex: 61,
+            left: hotbarPosition.left + 8,
+            top: hotbarPosition.top - itemWidth - 25,
+        }, savedPosition)
+        mergeObject(options, { position })
+
         const actor = this.actor
         const items = {
             attacks: [],
@@ -237,7 +238,6 @@ export default class TokenHotbar2 extends DefaultAppv2 {
         let effects = []
         const direction = game.settings.get("dsk", "tokenhotbarLayout")
         const vertical = direction % 2
-        const itemWidth = game.settings.get("dsk", "tokenhotbarSize")
         const spellTypes = ["ahnengabe"]
         if (actor) {
             const moreSkills = []
@@ -342,11 +342,11 @@ export default class TokenHotbar2 extends DefaultAppv2 {
         const count = Object.keys(items).reduce((prev, cur) => { return prev + items[cur].length }, 0)
 
         if (vertical) {
-            this.position.width = itemWidth
-            this.position.height = itemWidth * count + 14
+            options.position.width = itemWidth
+            options.position.height = itemWidth * count + 14
         } else {
-            this.position.width = itemWidth * count + 14
-            this.position.height = itemWidth
+            options.position.width = itemWidth * count + 14
+            options.position.height = itemWidth
         }
 
         mergeObject(data, { items, itemWidth, direction, count })
@@ -363,15 +363,6 @@ export default class TokenHotbar2 extends DefaultAppv2 {
 
     setPosition({ left, top, width, height, scale } = {}) {
         const currentPosition = super.setPosition({ left, top, width, height, scale })
-        const el = this.element;
-
-        if (!el.style.width || width) {
-            const tarW = width || el.offsetWidth;
-            const maxW = el.style.maxWidth || window.innerWidth;
-            currentPosition.width = width = Math.clamp(tarW, 0, maxW);
-            el.style.width = width + "px";
-            if ((width + currentPosition.left) > window.innerWidth) left = currentPosition.left;
-        }
         game.settings.set("dsk", "tokenhotbarPosition", { left: currentPosition.left, top: currentPosition.top })
         return currentPosition
     }

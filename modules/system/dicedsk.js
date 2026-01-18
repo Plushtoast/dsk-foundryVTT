@@ -597,8 +597,6 @@ export default class DiceDSK{
 
         if (qualityStep < automaticResult) qualityStep = automaticResult
 
-        console.log(testData.source)
-
         return {
             result: fws,
             characteristics: [0, 1].map((x) => {
@@ -627,6 +625,8 @@ export default class DiceDSK{
         delete preData.extra.actor
         delete testData.actor
         delete testData.preData
+        if (preData.roll instanceof Roll) preData.roll = preData.roll.toJSON()
+        if (preData.damageRoll instanceof Roll) preData.damageRoll = preData.damageRoll.toJSON()
 
         const hasAreaTemplate = testData.successLevel > 0 && preData.source.system.target && (preData.source.system.target.type in game.dsk.config.areaTargetTypes)
 
@@ -1128,14 +1128,14 @@ export default class DiceDSK{
             case "roll":
                 index = input.attr("data-edit-id")
                 let newValue = Number(input.val())
-                
-                if (newTestData.roll.terms.length > index * 2) {
-                    let newRoll = Roll.fromData(newTestData.roll)
-                    newRoll.editRollAtIndex([{index, val: newValue}])
-                    newTestData.roll = newRoll
+
+                const baseRoll = Roll.fromData(newTestData.roll)
+                if (baseRoll.terms.length > index * 2) {
+                    baseRoll.editRollAtIndex([{index, val: newValue}])
+                    newTestData.roll = baseRoll
                 } else {
-                    let oldDamageRoll = Roll.fromData(data.postData.damageRoll)
-                    index = index - newTestData.roll.terms.filter((x) => x.results).length
+                    const oldDamageRoll = Roll.fromData(data.postData.damageRoll)
+                    index = index - baseRoll.terms.filter((x) => x.results).length
                     oldDamageRoll.editRollAtIndex([{index, val: newValue}])
                     newTestData.damageRoll = oldDamageRoll
                 }
