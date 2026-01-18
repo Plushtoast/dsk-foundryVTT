@@ -484,6 +484,21 @@ export default class DiceDSK{
         let description = []
         let successLevel = 0
 
+        const sourceSystem = testData?.source?.system
+        if (sourceSystem && (!sourceSystem.characteristic1 || !sourceSystem.characteristic2)) {
+            const combatskill = sourceSystem.combatskill
+            const actor = testData?.extra?.actor
+            if (combatskill && actor?.items?.length) {
+                const skill = actor.items.find(
+                    (item) => item.type == "combatskill" && (item.name == combatskill || item._id == combatskill)
+                )
+                if (skill?.system?.characteristic1 && skill?.system?.characteristic2) {
+                    sourceSystem.characteristic1 = skill.system.characteristic1
+                    sourceSystem.characteristic2 = skill.system.characteristic2
+                }
+            }
+        }
+
         if(testData.testDifficulty) this._appendSituationalModifiers(testData, game.i18n.localize("dsk.Difficulty"), testData.testDifficulty)
 
         if(testData.vw){
@@ -581,6 +596,8 @@ export default class DiceDSK{
         }
 
         if (qualityStep < automaticResult) qualityStep = automaticResult
+
+        console.log(testData.source)
 
         return {
             result: fws,

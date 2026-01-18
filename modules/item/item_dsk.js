@@ -598,13 +598,14 @@ class ItemTrait extends ItemDSK {
     static setupDialog(ev, options, item, actor, tokenId) {
         let mode = options["mode"]
         let title = item.name + " " + game.i18n.localize("dsk." + mode + "test")
-        mergeObject(item.system,{
+        const source = item.toObject()
+        mergeObject(source.system,{
             characteristic1: "attack",
             characteristic2: "attack",
         })
         let testData = {
             opposable: true,
-            source: item,
+            source,
             mode,
             extra: {
                 actor: actor.toObject(false),
@@ -612,7 +613,7 @@ class ItemTrait extends ItemDSK {
                 speaker: ItemDSK.buildSpeaker(actor, tokenId),
             },
         }
-        const multipleDefenseValue = RuleChaos.multipleDefenseValue(actor, item.toObject())
+        const multipleDefenseValue = RuleChaos.multipleDefenseValue(actor, source)
         let data = {
             rollMode: options.rollMode,
             mode,
@@ -696,14 +697,16 @@ class ItemMeleeweapon extends ItemDSK{
         let mode = options.mode
         let title = item.name + " " + game.i18n.localize("dsk." + mode + "test")
 
+        const source = item.toObject()
         const skill = actor.items.find(x => x.type == "combatskill" && x.name == item.system.combatskill)
-        mergeObject(item.system,{
+        mergeObject(source.system, {
             characteristic1: skill.system.characteristic1,
             characteristic2: skill.system.characteristic2,
         })
+        
         let testData = {
             opposable: true,
-            source: item,
+            source,
             mode,
             extra: {
                 actor: actor.toObject(false),
@@ -837,13 +840,14 @@ class ItemRangeweapon extends ItemDSK{
         let mode = options.mode
         let title = item.name + " " + game.i18n.localize("dsk." + mode + "test")
         const skill = actor.items.find(x => x.type == "combatskill" && x.name == item.system.combatskill)
-        mergeObject(item.system,{
+        const source = item.toObject()
+        mergeObject(source.system, {
             characteristic1: skill.system.characteristic1,
             characteristic2: skill.system.characteristic2,
         })
         let testData = {
             opposable: true,
-            source: item,
+            source,
             mode,
             extra: {
                 actor: actor.toObject(false),
@@ -854,7 +858,7 @@ class ItemRangeweapon extends ItemDSK{
 
         if (!(await this.checkAmmunitionState(item, testData, actor, mode))) return
 
-        const multipleDefenseValue = RuleChaos.multipleDefenseValue(actor, testData.source);
+        const multipleDefenseValue = RuleChaos.multipleDefenseValue(actor, source);
         let data = {
             rollMode: options.rollMode,
             mode,
