@@ -1,24 +1,23 @@
-<section class="content" data-cost="0">
-    <h1>{{title}}</h1>
-    <p style="margin-bottom:10px;">{{{description}}}</p>
+<div class="scrollable">
+    <section class="content" data-cost="0">
+        <h1>{{title}}</h1>
+        <p style="margin-bottom:10px;">{{{description}}}</p>
 
-    <nav class="sheet-tabs tabs" data-group="sheet">
-        <a class="item active" data-action="tab" data-group="sheet" data-tab="description">{{localize "dsk.description"}}</a> {{#if generalToChose}} <a class="item" data-action="tab" data-group="sheet" data-tab="general">{{localize "WIZARD.generalTab"}}</a> {{/if}} {{#if vantagesToChose}} <a class="item" data-action="tab" data-group="sheet" data-tab="vantages">{{localize "vantages"}}</a>        {{/if}}
-    </nav>
+        {{> systems/dsk/templates/system/dsktabs.hbs}}
 
-    <div class="tab description active" data-group="sheet" data-tab="description">
-        <div class="row-section">
-            <div class="col two">
-                {{{culture.system.description.value}}}
-            </div>
-            <div class="col two">
-                <img src="{{culture.img}}" style="max-width:100%; max-height: 100%;float: left;" data-edit="img" />
+        <div class="tab {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
+            <div class="row-section">
+                <div class="col two">
+                    {{{culture.system.description.value}}}
+                </div>
+                <div class="col two">
+                    <img src="{{culture.img}}" style="max-width:100%; max-height: 100%;float: left;" data-edit="img" />
+                </div>
             </div>
         </div>
-    </div>
 
-    {{#if vantagesToChose}}
-    <div class="tab vantages" data-group="sheet" data-tab="vantages">
+        {{#if vantagesToChose}}
+        <div class="tab {{tabs.vantages.cssClass}}" data-tab="vantages" data-group="{{tabs.vantages.group}}">
         <p>{{localize 'WIZARD.vantageDescriptionCulture'}}</p>
         {{#if advantagesToChose}}
         <h2>{{localize 'recommendedAdvantages'}}</h2>
@@ -45,7 +44,8 @@
         {{/if}}
     </div>
     {{/if}}
-    <div class="tab general" data-group="sheet" data-tab="general">
+    {{#if generalToChose}}
+    <div class="tab {{tabs.general.cssClass}}" data-tab="general" data-group="{{tabs.general.group}}">
         <h2>{{localize 'dsk.LocalizedIDs.localKnowledge'}}</h2>
         <p>{{localize 'WIZARD.localKnowledgeDescr'}}</p>
         <div class="row-section">
@@ -78,16 +78,18 @@
         </div>
         {{/if}}
     </div>
+        {{/if}}
 
 
-</section>
-<div class="dialog-buttons">
-    <button class="dialog-button ok default" data-action="ok">
-    <i class="fas fa-check"></i>
-    {{localize 'dsk.ok'}}
-  </button>
-    <button class="dialog-button cancel default" data-action="cancel">
-    <i class="fas fa-close"></i>
-    {{localize 'dsk.cancel'}}
-  </button>
+        </section>
+        <div class="dialog-buttons flexrow">
+                <button class="dialog-button ok default" data-action="ok">
+                <i class="fas fa-check"></i>
+                {{localize 'dsk.ok'}}
+            </button>
+                <button class="dialog-button cancel default" data-action="cancel">
+                <i class="fas fa-close"></i>
+                {{localize 'dsk.cancel'}}
+            </button>
+        </div>
 </div>

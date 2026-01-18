@@ -10,14 +10,23 @@ export default class SpeciesWizard extends WizardDSK {
     };
 
     static PARTS = {
-        wizard: {
+        main: {
             template: 'systems/dsk/templates/wizard/add-species-wizard.hbs',
+            scrollable: [''],
+            templates: ['systems/dsk/templates/system/dsktabs.hbs'],
         },
     };
 
-    get template() {
-        return SpeciesWizard.PARTS.wizard.template;
-    }
+    static TABS = {
+        sheet: {
+            tabs: [
+                { id: 'description', label: 'dsk.description' },
+                { id: 'general', label: 'dsk.WIZARD.generalTab' },
+                { id: 'vantages', label: 'TYPES.Item.advantage' },
+            ],
+            initial: 'description',
+        },
+    };
 
     get title() {
         return game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.species")} ${this.species?.name || ''}` });
@@ -46,7 +55,7 @@ export default class SpeciesWizard extends WizardDSK {
     }
 
     async _prepareContext(options) {
-        const data = {}
+        const data = await super._prepareContext(options);
         const {anyAttributeRequirements, attributeRequirements, optionals} = await this._parseBonus(this.species.system.advantages)
         const generalToChose = anyAttributeRequirements
         mergeObject(data, {
@@ -57,8 +66,11 @@ export default class SpeciesWizard extends WizardDSK {
             generalToChose,
             anyAttributeRequirements,
             optionals,
-            attributeRequirements
+            attributeRequirements,
+            general: generalToChose,
+            vantages: optionals?.length > 0
         })
+        this.filterTabs(data)
         return data
     }
 

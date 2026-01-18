@@ -1,27 +1,23 @@
-<section class="content" data-cost="{{baseCost}}">
-    <h1>{{title}}</h1>
-    <p style="margin-bottom:10px;">{{{description}}}</p>
+<div class="scrollable">
+    <section class="content" data-cost="{{baseCost}}">
+        <h1>{{title}}</h1>
+        <p style="margin-bottom:10px;">{{{description}}}</p>
 
-    <nav class="sheet-tabs tabs" data-group="sheet">
-        <a class="item active" data-action="tab" data-group="sheet" data-tab="description">{{localize "dsk.description"}}</a> 
-        {{#if generalToChose}} <a class="item" data-action="tab" data-group="sheet" data-tab="general">{{localize "WIZARD.generalTab"}}</a> {{/if}} 
-        {{#if vantagesToChose}} <a class="item" data-action="tab" data-group="sheet" data-tab="vantages">{{localize "TYPES.Item.advantage"}}</a> {{/if}} 
-        {{#if magicToChose}} <a class="item" data-action="tab" data-group="sheet" data-tab="magic">{{localize "Magic"}}</a> {{/if}} 
-    </nav>
+        {{> systems/dsk/templates/system/dsktabs.hbs}}
 
-    <div class="tab description active" data-group="sheet" data-tab="description">
-        <div class="row-section">
-            <div class="col two">
-                {{{career.system.description.value}}}
-            </div>
-            <div class="col two">
-                <img src="{{career.img}}" style="max-width:100%; max-height: 100%;float: left;" data-edit="img" /> {{{career.system.description.gear}}}
+        <div class="tab {{tabs.description.cssClass}}" data-tab="description" data-group="{{tabs.description.group}}">
+            <div class="row-section">
+                <div class="col two">
+                    {{{career.system.description.value}}}
+                </div>
+                <div class="col two">
+                    <img src="{{career.img}}" style="max-width:100%; max-height: 100%;float: left;" data-edit="img" /> {{{career.system.description.gear}}}
+                </div>
             </div>
         </div>
-    </div>
 
-    {{#if vantagesToChose}}
-    <div class="tab vantages" data-group="sheet" data-tab="vantages">
+        {{#if vantagesToChose}}
+        <div class="tab {{tabs.vantages.cssClass}}" data-tab="vantages" data-group="{{tabs.vantages.group}}">
         <p>{{localize 'WIZARD.vantageDescription'}}</p>
         {{#if missingVantagesToChose}}
         <h2>{{localize 'WIZARD.missingVantages'}}</h2>
@@ -59,7 +55,7 @@
         {{/if}}
     </div>
     {{/if}} {{#if generalToChose}}
-    <div class="tab general" data-group="sheet" data-tab="general">
+    <div class="tab {{tabs.general.cssClass}}" data-tab="general" data-group="{{tabs.general.group}}">
         {{#if anyAttributeRequirements}}
         <h2>{{localize 'WIZARD.attributeRequirements'}}</h2>
         <div class="row-section wrap">
@@ -85,7 +81,7 @@
         {{/if}}
     </div>
     {{/if}} {{#if combatToChose}}
-    <div class="tab combat" data-group="sheet" data-tab="combat">
+    <div class="tab {{tabs.combat.cssClass}}" data-tab="combat" data-group="{{tabs.combat.group}}">
         <h2>{{localize 'combatskill'}}</h2>
         {{#each combatskillchoices as |item i|}}
         <p class="allowedCount_{{i}}" data-count="{{item.allowedCount}}">{{localize 'WIZARD.chose'}} {{item.allowedCount}}. </p>
@@ -100,7 +96,7 @@
         <hr /> {{/each}}
     </div>
     {{/if}} {{#if magicToChose}}
-    <div class="tab magic" data-group="sheet" data-tab="magic">
+    <div class="tab {{tabs.magic.cssClass}}" data-tab="magic" data-group="{{tabs.magic.group}}">
         <h2>{{localize 'magictricks'}}</h2>
         <p class="maxTricks" data-spelltricklimit="{{career.system.spelltrickCount.value}}">{{localize 'WIZARD.chose'}} {{career.system.spelltrickCount.value}}.</p>
         <div class="row-section wrap">
@@ -113,19 +109,16 @@
             {{/each}}
         </div>
     </div>
-    {{/if}} {{#if religionToChose}}
-    <div class="tab religion" data-group="sheet" data-tab="religion">
-
-    </div>
     {{/if}}
-</section>
-<div class="dialog-buttons">
-    <button class="dialog-button ok default" data-action="ok">
-        <i class="fas fa-check"></i>
-        {{localize 'dsk.ok'}}
-    </button>
-    <button class="dialog-button cancel default" data-action="cancel">
-        <i class="fas fa-close"></i>
-        {{localize 'dsk.cancel'}}
-    </button>
+    </section>
+    <div class="dialog-buttons flexrow">
+        <button class="dialog-button ok default" data-action="ok">
+            <i class="fas fa-check"></i>
+            {{localize 'dsk.ok'}}
+        </button>
+        <button class="dialog-button cancel default" data-action="cancel">
+            <i class="fas fa-close"></i>
+            {{localize 'dsk.cancel'}}
+        </button>
+    </div>
 </div>

@@ -10,28 +10,40 @@ export default class CultureWizard extends WizardDSK {
     };
 
     static PARTS = {
-        wizard: {
+        main: {
             template: 'systems/dsk/templates/wizard/add-culture-wizard.hbs',
+            scrollable: [''],
+            templates: ['systems/dsk/templates/system/dsktabs.hbs'],
         },
     };
 
-    get template() {
-        return CultureWizard.PARTS.wizard.template;
-    }
+    static TABS = {
+        sheet: {
+            tabs: [
+                { id: 'description', label: 'dsk.description' },
+                { id: 'general', label: 'dsk.WIZARD.generalTab' },
+                { id: 'vantages', label: 'TYPES.Item.advantage' },
+            ],
+            initial: 'description',
+        },
+    };
 
     get title() {
         return game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.culture")} ${this.culture?.name || ''}` });
     }
 
     async _prepareContext(options) {
-        const data = {}
+        const data = await super._prepareContext(options);
 
         const baseCost = 0
         mergeObject(data, {
             title: game.i18n.format("dsk.WIZARD.addItem", { item: `${DSKUtility.categoryLocalization("culture")} ${this.culture.name}` }),
             culture: this.culture,
-            description: game.i18n.format("dsk.WIZARD.culturedescr", { culture: this.culture.name, cost: baseCost })
+            description: game.i18n.format("dsk.WIZARD.culturedescr", { culture: this.culture.name, cost: baseCost }),
+            general: !!data.generalToChose,
+            vantages: !!data.vantagesToChose
         })
+        this.filterTabs(data)
         return data
     }
 

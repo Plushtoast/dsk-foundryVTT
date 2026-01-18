@@ -11,21 +11,32 @@ export default class CareerWizard extends WizardDSK {
     };
 
     static PARTS = {
-        wizard: {
+        main: {
             template: 'systems/dsk/templates/wizard/add-career-wizard.hbs',
+            scrollable: [''],
+            templates: ['systems/dsk/templates/system/dsktabs.hbs'],
         },
     };
 
-    get template() {
-        return CareerWizard.PARTS.wizard.template;
-    }
+    static TABS = {
+        sheet: {
+            tabs: [
+                { id: 'description', label: 'dsk.description' },
+                { id: 'general', label: 'dsk.WIZARD.generalTab' },
+                { id: 'combat', label: 'dsk.Combat' },
+                { id: 'vantages', label: 'TYPES.Item.advantage' },
+                { id: 'magic', label: 'dsk.SPECIALABILITYCATEGORIES.ahnen' },
+            ],
+            initial: 'description',
+        },
+    };
 
     get title() {
         return game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.profession")} ${this.career?.name || ''}` });
     }
 
     async _prepareContext(options) {
-        const data = {}
+        const data = await super._prepareContext(options);
         const requirements =
             [
                 ...await this.parseToItem(this.career.system.requirements.advantage, ["disadvantage", "advantage"]),
@@ -43,8 +54,13 @@ export default class CareerWizard extends WizardDSK {
             description: game.i18n.format("dsk.WIZARD.careerdescr", { career: this.career.name, cost: baseCost + reqCost }),
             baseCost,
             missingVantagesToChose: missingVantages.length > 0,
-            missingSpecialabiltiesToChose: missingSpecialabilities.length > 0
+            missingSpecialabiltiesToChose: missingSpecialabilities.length > 0,
+            general: missingSpecialabilities.length > 0,
+            vantages: missingVantages.length > 0,
+            combat: this.career.system.skills?.combat?.trim?.() && this.career.system.skills.combat.trim() !== "",
+            magic: this.career.system.spelltrickCount?.value || this.career.system.spells?.trim?.() || this.career.system.ahnengabe?.trim?.()
         })
+        this.filterTabs(data)
         return data
     }
 

@@ -31,6 +31,12 @@ export default class WizardDSK extends DefaultAppv2 {
         },
     };
 
+    filterTabs(data) {
+        for (let tab of Object.keys(data.tabs)) {
+            if (!data[data.tabs[tab].id]) delete data.tabs[tab]
+        }
+    }
+
     constructor(options = {}) {
         super(options)
         this.items = []
@@ -157,18 +163,21 @@ export default class WizardDSK extends DefaultAppv2 {
         })
     }
 
-    _validateInput(parent) {
-        let exclusives = new Set()
+    _validateInput(parent, app = this) {
         let regex = /^exclusive_/
-        for (let k of parent.find('.exclusive')) {
-            exclusives.add(k.className.split(/\s+/).filter(x => regex.test(x))[0])
-        }
-        for (let k of exclusives) {
-            let choice = parent.find('.allowedCount_' + k.split("_")[1])
-            let allowed = Number(choice.attr('data-count'))
-            if (parent.find(`.${k}:checked`).length != allowed) {
-                this._showInputValidation(choice, parent, app)
-                return false
+        for (let tab of parent.find('.tab')) {
+            const tb = $(tab)
+            let exclusives = new Set()
+            for (let k of tb.find('.exclusive')) {
+                exclusives.add(k.className.split(/\s+/).filter(x => regex.test(x))[0])
+            }
+            for (let k of exclusives) {
+                let choice = tb.find('.allowedCount_' + k.split("_")[1])
+                let allowed = Number(choice.attr('data-count'))
+                if (tb.find(`.${k}:checked`).length != allowed) {
+                    this._showInputValidation(choice, tb, app)
+                    return false
+                }
             }
         }
         return true
@@ -176,9 +185,12 @@ export default class WizardDSK extends DefaultAppv2 {
 
     _showInputValidation(choice, parent, app){
         ui.notifications.error("dsk.DSKError.MissingChoices", { localize: true })
-        let tabElem = choice.closest('.tab').attr("data-tab")
-        app.activateTab(tabElem) 
-        WizardDSK.flashElem(parent.find(`.tabs a[data-tab='${tabElem}']`))
+        const tabElem = choice.closest('.tab')[0]?.dataset
+        if (tabElem?.tab) {
+            const group = tabElem.group || 'sheet'
+            app.changeTab(tabElem.tab, group)
+            WizardDSK.flashElem(parent.find(`.tabs a[data-tab='${tabElem.tab}']`))
+        }
         WizardDSK.flashElem(choice.closest("div"))
     }
 

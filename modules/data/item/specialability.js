@@ -26,9 +26,7 @@ export default class SpecialabilityData extends ItemDataModel.mixin(
       }),
       subcategory: new NumberField({ initial: 0, label: 'dsk.subcategory' }),
       combatskills: new StringField({ initial: '', label: 'dsk.combatskills' }),
-      effect: new SchemaField({
-        value: new StringField({ initial: '', label: 'dsk.effect' }),
-      }),
+      effect: new StringField({ initial: '', label: 'dsk.effect' }),
     });
   }
 

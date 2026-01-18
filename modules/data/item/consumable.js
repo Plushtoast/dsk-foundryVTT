@@ -59,10 +59,12 @@ export default class ConsumableData extends ItemDataModel.mixin(
    * @param {Object} source - The source data
    */
   static _migrateData(source) {
-    super._migrateData(source);
+    //super._migrateData(source);
 
     if (source.price == null) {
       source.price = '0';
+    } else if (typeof source.price !== 'string') {
+      source.price = String(source.price);
     }
   }
 }
