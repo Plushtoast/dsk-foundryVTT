@@ -36,12 +36,21 @@ export default class CultureWizard extends WizardDSK {
         const data = await super._prepareContext(options);
 
         const baseCost = 0
+        const vantages = await this.parseToItem(this.culture.system.advantages ?? "", ["advantage", "disadvantage"])
+        const advantages = vantages.filter(x => x.type == "advantage")
+        const disadvantages = vantages.filter(x => x.type == "disadvantage")
+        const vantagesToChose = advantages.length > 0 || disadvantages.length > 0
         mergeObject(data, {
             title: game.i18n.format("dsk.WIZARD.addItem", { item: `${DSKUtility.categoryLocalization("culture")} ${this.culture.name}` }),
             culture: this.culture,
             description: game.i18n.format("dsk.WIZARD.culturedescr", { culture: this.culture.name, cost: baseCost }),
+            vantagesToChose,
+            advantagesToChose: advantages.length > 0,
+            disadvantagesToChose: disadvantages.length > 0,
+            advantages,
+            disadvantages,
             general: !!data.generalToChose,
-            vantages: !!data.vantagesToChose
+            vantages: vantagesToChose
         })
         this.filterTabs(data)
         return data
@@ -65,7 +74,8 @@ export default class CultureWizard extends WizardDSK {
         let update = { "system.details.culture": this.culture.name }
 
         await this.actor._updateAPs(apCost, {}, { render: false })
-        await this.updateSkill(this.culture.system.skills.split(","), "skill")
+        await this.addSelections(parent.find('.optional:checked'))
+        await this.updateSkill(this.culture.system.skills.split(","), ["combatskill", "skill"])
         await this.actor.update(update);
 
         this.finalizeUpdate()

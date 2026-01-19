@@ -66,19 +66,20 @@ export default class WizardDSK extends DefaultAppv2 {
     }
 
     async updateSkill(skills, itemType, factor = 1, bonus = true) {
+        const typesToSearch = Array.isArray(itemType) ? itemType : [itemType];
         let itemsToUpdate = []
         for (let skill of skills) {
             if(["", "-"].includes(skill.trim())) continue
 
             let parsed = DSKUtility.parseAbilityString(skill.trim())
-            let res = this.actor.items.find(i => { return i.type == itemType && i.name == parsed.name });
+            let res = this.actor.items.find(i => { return typesToSearch.includes(i.type) && i.name == parsed.name });
             if (res) {
                 let skillUpdate = duplicate(res)
                 skillUpdate.system.level = Math.max(0, factor * parsed.step + (bonus ? Number(skillUpdate.system.level) : 0))
                 itemsToUpdate.push(skillUpdate)
             } else {
-                console.warn(`Could not find ${itemType} ${skill}`)
-                this.errors.push(`${DSKUtility.categoryLocalization(itemType)}: ${skill}`)
+                console.warn(`Could not find ${typesToSearch.join(",")} ${skill}`)
+                this.errors.push(`${typesToSearch.map(x => DSKUtility.categoryLocalization(x)).join(", ")}: ${skill}`)
             }
         }
         await this.actor.updateEmbeddedDocuments("Item", itemsToUpdate, {}, { render: false });
