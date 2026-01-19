@@ -7,3 +7,4 @@ test
 devTemp
 build.js
 tools
+.ruby-lsp

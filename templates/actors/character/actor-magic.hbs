@@ -3,26 +3,28 @@
     <div class="row-section wrap inverseRowtable">
         <div class="col">
             <div class="row-section skills table-title">
-                <div class="col four">
+                <div class="col four flexrow">
                     {{localize "TYPES.Item.ahnengabe"}}
                 </div>
-                <div class="col four center">{{localize "dsk.probe"}}</div>
-                <div class="col ten center" data-tooltip="dsk.FW">{{localize "dsk.CHARAbbrev.FW"}}</div>
-                <div class="col ten center" data-tooltip="dsk.PW">{{localize "dsk.CHARAbbrev.PW"}}</div>
-                <div class="col ten center" data-tooltip="dsk.AeP">{{localize "dsk.CHARAbbrev.AeP"}}</div>
-                <div class="col ten center">{{localize "dsk.range"}}</div>
-                <div class="col ten center">
-                    <a data-action="itemCreate" class="item-create very-small" data-tooltip="dsk.SHEET.addItem" item-section="ahnengabe" data-type="ahnengabe"><i class="fas fa-plus"></i></a>
+                <div class="col four flexrow flexAlignCenter">{{localize "dsk.probe"}}</div>
+                <div class="col ten flexrow flexAlignCenter" data-tooltip="dsk.FW">{{localize "dsk.CHARAbbrev.FW"}}</div>
+                <div class="col ten flexrow flexAlignCenter" data-tooltip="dsk.PW">{{localize "dsk.CHARAbbrev.PW"}}</div>
+                <div class="col ten flexrow flexAlignCenter" data-tooltip="dsk.AeP">{{localize "dsk.CHARAbbrev.AeP"}}</div>
+                <div class="col ten flexrow flexAlignCenter">{{localize "dsk.range"}}</div>
+                <div class="col ten flexrow">
+                    <button type="button" data-action="itemCreate" class="dskdesignbutton noBorder item-create very-small" data-tooltip="dsk.SHEET.addItem" item-section="ahnengabe" data-type="ahnengabe"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
         </div>
         {{#each prepare.magic.ahnengabe as |item i|}}
         <div class="col spells item" data-item-id="{{item._id}}">
             <div class="row-section skills lineheight">
-                <div class="col four">
+                <div class="col four flexrow withContext">
+                    <div>
                     <a data-action="itemEdit" class="item-edit">{{item.name}}</a> {{#if item.canAdvance}}
                     <a data-action="advanceWrapper" data-fct="_refundItemAdvance" data-attr="{{item._id}}" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
                     <a data-action="advanceWrapper" data-fct="_advanceItem" data-attr="{{item._id}}" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
+                    </div>
                 </div>
                 <div class="col four center">
                     <a data-action="spellSelect" class="spell-select">
@@ -33,21 +35,19 @@
                 <div class="col ten center">
                     <input class="skill-advances" type="text" data-dtype="Number" value="{{item.system.level}}" />
                 </div>
-                <div class="col ten center">
+                <div class="col ten flexrow flexAlignCenter">
                     {{item.PW}}
                 </div>
-                <div class="col ten center">
+                <div class="col ten flexrow flexAlignCenter">
                     {{item.system.AeP}}
                 </div>
                 
-                <div class="col ten center">
+                <div class="col ten flexrow flexAlignCenter">
                     {{item.system.range}}
                 </div>
 
-                <div class="col ten very-small center">
-                    <a data-action="itemPost" class="item-post" data-tooltip="dsk.SHEET.PostItem"><i class="fas fa-comment"></i></a>
-                    <a data-action="itemDropdown" class="item-dropdown" data-tooltip="dsk.SHEET.Dropdown"><i class="fas fa-chevron-down"></i></a>
-                    <a data-action="deleteItem" class="item-control item-delete" data-tooltip="dsk.SHEET.DeleteItem"><i class="fas fa-trash"></i></a> 
+                <div class="col ten very-small center flexrow">
+                    <button type="button" data-action="itemContextMenu" class="icon fas fa-ellipsis-vertical very-small autoFlex noBorder dskdesignbutton" data-tooltip="dsk.SHEET.EditItem"></button>
                 </div>
             </div>
             <div class="row-section lineheight expandDetails {{item.detailed}}">

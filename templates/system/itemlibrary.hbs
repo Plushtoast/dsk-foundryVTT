@@ -1,104 +1,100 @@
-<div class="itemLibrary">
-    <div class="row-section">
+<div class="itemLibrary flexcol">
 
-        <div class="col">
-            <nav class="sheet-tabs tabs" data-group="sheet">
-                <a class="item flexcol active" data-action="tab" data-group="sheet" data-tab="equipment">
-                    <div><img src="systems/dsk/icons/categories/equipment.webp" class="centerMargin" height="20" /></div>
-                    <span>{{localize "TYPES.Item.equipment"}}</span>
-                </a>
-                <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="character">
-                    <div><img src="systems/dsk/icons/categories/advantage.webp" class="centerMargin" height="20" /></div>
-                    <span>{{localize "TYPES.Actor.character"}}</span>
-                </a>
-                <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="journal">
-                    <div><img src="systems/dsk/icons/categories/DSK-Auge.webp" class="centerMargin" height="20" /></div>
-                    <span>{{localize "Journal"}}</span>
-                </a>
-                <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="spell">
-                    <div><img src="systems/dsk/icons/categories/ahnengabe.webp" class="centerMargin" height="20" /></div>
-                    <span>{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</span>
-                </a>
-                {{#if isGM}}
-                <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="zoo">
-                    <div><img src="systems/dsk/icons/categories/profession.webp" class="centerMargin" height="20" /></div>
-                    <span>{{localize "dsk.zoo"}}</span>
-                </a>{{/if}}
-            </nav>
+    <nav class="sheet-tabs tabs" data-group="sheet">
+        <a class="item flexcol active" data-action="tab" data-group="sheet" data-tab="equipment">
+            <div><img src="systems/dsk/icons/categories/equipment.webp" class="centerMargin" height="20" /></div>
+            <span>{{localize "TYPES.Item.equipment"}}</span>
+        </a>
+        <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="character">
+            <div><img src="systems/dsk/icons/categories/advantage.webp" class="centerMargin" height="20" /></div>
+            <span>{{localize "TYPES.Actor.character"}}</span>
+        </a>
+        <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="journal">
+            <div><img src="systems/dsk/icons/categories/DSK-Auge.webp" class="centerMargin" height="20" /></div>
+            <span>{{localize "Journal"}}</span>
+        </a>
+        <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="spell">
+            <div><img src="systems/dsk/icons/categories/ahnengabe.webp" class="centerMargin" height="20" /></div>
+            <span>{{localize "dsk.SPECIALABILITYCATEGORIES.ahnen"}}</span>
+        </a>
+        {{#if isGM}}
+        <a class="item flexcol" data-action="tab" data-group="sheet" data-tab="zoo">
+            <div><img src="systems/dsk/icons/categories/profession.webp" class="centerMargin" height="20" /></div>
+            <span>{{localize "dsk.zoo"}}</span>
+        </a>{{/if}}
+    </nav>
 
-            <section class="content">
-                <div class="row-section">
-                    <div class="col third advancedSearch" {{#unless advancedMode}}style="display:none" {{/unless}}>
-                        <label class="label-text">{{localize 'dsk.Library.advanced'}}</label>
-                        <div class="groupbox">
-                            {{{advancedFilter}}}
-                        </div>
-                    </div>
-                    <div class="col seventy contentShow">
-                        {{#each categories as |cat i|}}
-                        <div class="tab {{@key}} {{#if @first}}active{{/if}}" data-tab="{{@key}}" data-group="sheet">
-                            <div class="row-section">
-                                <div class="col">
-                                    <div>
-                                        <div class="form-group libButton">
-                                            <label class="label-text">{{ localize "dsk.Library.search"}}</label>
-                                            <label class="label-text">
-                                                <a data-tooltip="dsk.Library.advanced" data-action="toggleAdvancedMode" class="toggleAdvancedMode {{../advancedMode}}">
-                                                    <i class="fas fa-toggle-off"></i> <i class="fas fa-brain"></i>
-                                                </a>
-                                            </label>
-                                            <label class="label-text"><a data-tooltip="dsk.Library.indexWorldItems" data-action="toggleWorldIndex" class="toggleWorldIndex {{../worldIndexed}}">
-                                                <i class="fas fa-toggle-off"></i> <i class="fas fa-globe-europe"></i></a>
-                                            </label>
-                                            <label class="label-text"><a data-tooltip="dsk.Library.fullTextSearch" data-action="fulltextsearch" class="fulltextsearch {{../fullTextEnabled}}">
-                                                <i class="fas fa-toggle-off"></i> <i class="fas fa-align-center"></i></a>
-                                            </label>
-                                            <input class="input-text filterBy-search" name="librarySearch" type="text" placeholder="{{localize 'dsk.Library.searchPlaceholder'}}" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{#if cat}}
-                            <div class="row-section filterCategories">
-                                <div class="col">
-                                    <div class="groupbox">
-                                        <div class="row-section">
-                                            <div class="col">
-                                                <p>{{localize "dsk.Library.searchCategoryDescription"}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row-section">
-                                            <div class="col">
-                                                <ul class="wrap categories">
-                                                    {{#each cat as |val fil|}}
-                                                    <li data-tooltip="{{val.label}}"><input class="filter" type="checkbox" id="filter_{{val.key}}" data-category="{{@../key}}" data-type="{{val.key}}" {{checked val.selected}} /><label for="filter_{{val.key}}">{{val.label}}</label></li>
-                                                    {{/each}}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{/if}}
-                            <div class="row-section ">
-                                <a data-action="showDetails" class="showDetails dskhidden" data-btn="{{@key}}" data-tooltip="dsk.SHEET.collapse"><i class="fa fa-caret-right"></i></a>
-                            </div>
-                            <div class="row-section libcontainer libraryImg">
-                                <div class="col third detailBox dskhidden">
-
-                                </div>
-                                <div class="col seventy row-section wrap searchResult">
-                                    <ul class="item-list save-scroll">
-                                    </ul>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        {{/each}}
-                    </div>
+    <section class="content">
+        <div class="row-section">
+            <div class="col third advancedSearch" {{#unless advancedMode}}style="display:none" {{/unless}}>
+                <label class="label-text">{{localize 'dsk.Library.advanced'}}</label>
+                <div class="groupbox">
+                    {{{advancedFilter}}}
                 </div>
-            </section>
+            </div>
+            <div class="col seventy contentShow">
+                {{#each categories as |cat i|}}
+                <div class="tab scrollable {{@key}} {{#if @first}}active{{/if}}" data-tab="{{@key}}" data-group="sheet">
+                    <div class="row-section">
+                        <div class="col">
+                            <div>
+                                <div class="form-group libButton">
+                                    <label class="label-text">{{ localize "dsk.Library.search"}}</label>
+                                    <label class="label-text">
+                                        <a data-tooltip="dsk.Library.advanced" data-action="toggleAdvancedMode" class="toggleAdvancedMode {{../advancedMode}}">
+                                            <i class="fas fa-toggle-off"></i> <i class="fas fa-brain"></i>
+                                        </a>
+                                    </label>
+                                    <label class="label-text"><a data-tooltip="dsk.Library.indexWorldItems" data-action="toggleWorldIndex" class="toggleWorldIndex {{../worldIndexed}}">
+                                        <i class="fas fa-toggle-off"></i> <i class="fas fa-globe-europe"></i></a>
+                                    </label>
+                                    <label class="label-text"><a data-tooltip="dsk.Library.fullTextSearch" data-action="fulltextsearch" class="fulltextsearch {{../fullTextEnabled}}">
+                                        <i class="fas fa-toggle-off"></i> <i class="fas fa-align-center"></i></a>
+                                    </label>
+                                    <input class="input-text filterBy-search" name="librarySearch" type="text" placeholder="{{localize 'dsk.Library.searchPlaceholder'}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{#if cat}}
+                    <div class="row-section filterCategories">
+                        <div class="col">
+                            <div class="groupbox">
+                                <div class="row-section">
+                                    <div class="col">
+                                        <p>{{localize "dsk.Library.searchCategoryDescription"}}</p>
+                                    </div>
+                                </div>
+                                <div class="row-section">
+                                    <div class="col">
+                                        <ul class="wrap categories">
+                                            {{#each cat as |val fil|}}
+                                            <li data-tooltip="{{val.label}}"><input class="filter" type="checkbox" id="filter_{{val.key}}" data-category="{{@../key}}" data-type="{{val.key}}" {{checked val.selected}} /><label for="filter_{{val.key}}">{{val.label}}</label></li>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+                    <div class="row-section ">
+                        <a data-action="showDetails" class="showDetails dskhidden" data-btn="{{@key}}" data-tooltip="dsk.SHEET.collapse"><i class="fa fa-caret-right"></i></a>
+                    </div>
+                    <div class="row-section libcontainer libraryImg">
+                        <div class="col third detailBox dskhidden">
+
+                        </div>
+                        <div class="col seventy row-section wrap searchResult">
+                            <ul class="item-list save-scroll">
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{/each}}
+            </div>
         </div>
-    </div>
+    </section>
 </div>

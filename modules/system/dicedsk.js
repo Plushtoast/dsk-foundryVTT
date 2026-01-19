@@ -920,7 +920,7 @@ export default class DiceDSK{
         if (actorData?.system?.isMage && testData.regenerateAeP) attrs.push("AeP")
         let index = 0
 
-        const isSick = (actorData?.effects || []).some((x) => x.statuses.includes("sick"))
+        const isSick = (actorData?.effects || []).some((x) => x.statuses?.has("sick"))
         if (isSick) {
             this._appendSituationalModifiers(testData, game.i18n.localize("dsk.CONDITION.sick"), "*0")
             for (let k of attrs) {

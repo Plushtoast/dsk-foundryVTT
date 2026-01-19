@@ -67,18 +67,21 @@ export default class DSKpellDialog extends DialogShared {
         let bigCasts = parent.find(".ritual").length > 0;
 
         let maxMods = parent.find(".maxMods");
-        if (parent.find(".spellModifier:checked").length > Number(maxMods.text())) {
-            if(event) event.currentTarget.checked = false;
-            maxMods.addClass("emphasize");
-            setTimeout(function() {
-                maxMods.removeClass("emphasize");
-            }, 600);
-            return;
+        if (maxMods.length) {
+            const maxModsValue = Number(maxMods.text());
+            if (!Number.isNaN(maxModsValue) && parent.find(".spellModifier:checked").length > maxModsValue) {
+                if(event) event.currentTarget.checked = false;
+                maxMods.addClass("emphasize");
+                setTimeout(function() {
+                    maxMods.removeClass("emphasize");
+                }, 600);
+                return;
+            }
         }
 
-        let baseAsp = source.system.AeP
+        let baseAsp = aspcost.attr("data-base") ?? source.system.AeP
         let baseReach = source.system.range
-        let baseCastingTime = 2
+        let baseCastingTime = castingTime.attr("data-base") ?? 2
 
         let newPosition = baseAsp;
 

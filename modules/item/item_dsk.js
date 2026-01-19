@@ -1045,6 +1045,8 @@ class ItemAhnengabe extends ItemDSK{
             rollMode: options.rollMode,
             hasSKModifier: spell.system.resist == "sk",
             hasZKModifier: spell.system.resist == "zk",
+            spellCost: spell.system.AeP,
+            spellCastingTime: spell.system.duration,
             spellReach: spell.system.range,
             hasSchips: this.hasSchips(actor),
             characteristics: [1, 2].map((x) => spell.system[`characteristic${x}`]),

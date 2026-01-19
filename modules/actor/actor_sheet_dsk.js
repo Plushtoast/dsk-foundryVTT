@@ -712,6 +712,15 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 name: "dsk.SHEET.PostItem",
                 icon: "<i class='fas fa-comment fa-fw'></i>",
                 callback: () => item.postItem()
+            },            
+            {
+                name: "dsk.SHEET.Dropdown",
+                icon: "<i class='fas fa-chevron-down fa-fw'></i>",
+                condition: () => !!this.element?.querySelector(`.item[data-item-id="${item.id}"] .expandDetails`),
+                callback: () => {
+                    const details = this.element?.querySelector(`.item[data-item-id="${item.id}"] .expandDetails`);
+                    details?.classList.toggle('shown');
+                }
             },
             {
                 name: "dsk.SHEET.DuplicateItem",
