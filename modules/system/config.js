@@ -602,6 +602,12 @@ DSK.weapontypes = {
     "range": "TYPES.Item.rangeweapon"
 }
 
+DSK.poisonSubtypes = {
+    "poison": "dsk.POISON.subtype.poison",
+    "healing": "dsk.POISON.subtype.healing",
+    "mushroom": "dsk.POISON.subtype.mushroom"
+}
+
 DSK.characteristics = {
     "mu": "dsk.characteristics.mu.name",
     "kl": "dsk.characteristics.kl.name",

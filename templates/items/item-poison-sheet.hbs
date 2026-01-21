@@ -1,4 +1,5 @@
 <div class="tab standard-form gap2px scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
+    {{formGroup systemFields.subtype value=document.system.subtype localize=true}}
     {{formGroup systemFields.level value=document.system.level localize=true}}
     {{formGroup systemFields.category value=document.system.category localize=true}}
     {{formGroup systemFields.resist value=document.system.resist localize=true}}
@@ -12,4 +13,8 @@
             {{formInput systemFields.process value=document.system.process}}
         </div>
     </div>
+    {{#if (eq document.system.subtype "mushroom")}}
+        {{formGroup systemFields.harvest value=document.system.harvest localize=true}}
+        {{formGroup systemFields.location value=document.system.location localize=true}}
+    {{/if}}    
 </div>

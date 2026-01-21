@@ -142,7 +142,6 @@
             "poisoned": "Schlangen und anderes giftiges Getier ist im Umland Havenas nicht ungewöhnlich. Solange ein Gift wirkt, kann der Vergiftete nicht mehr durch eine normale Ruhephase (siehe Seite 190) regenerieren."
         },
         "sight": "Sicht",
-        "attributes": "Eigenschaften",
         "group": "Gruppe",
         "encumbrance": "Belastung",
         "resist": "Widerstand",
@@ -199,6 +198,9 @@
             "targetForUser": "Ziel für Spieler wählen"
         },
         "source": "Quelle",
+        "subtype": "Unterart",
+        "harvest": "Ernten",
+        "location": "Ort",
         "cummulativeStatusEffects": "Kumulative Statuseffekte",
         "cummulativeStatusEffectsHint": "Zustände deren Gesamteffekt aus mehreren Quellen berechnet wird.",
         "DIALOG": {
@@ -252,6 +254,13 @@
             "loaded": "Bereit",
             "reload": "Konzentrieren",
             "isReloading": "{actor} konzentriert sich auf {item} ({status})."
+        },
+        "POISON": {
+            "subtype": {
+                "poison": "Gift",
+                "healing": "Heilmittel",
+                "mushroom": "Pilz"
+            }
         },
         "SHEET": {
             "increaseFontSize": "Schriftgröße verändern",

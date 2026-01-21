@@ -37,7 +37,7 @@ export default class DSKChatAutoCompletion {
         chatInput.addEventListener('keyup', this._parseInput.bind(this));
 
         $(document.querySelector('#chat-notifications .chat-input')).on('blur', (ev) => {
-            if ($(ev.relatedTarget).closest('.quick-item').length || $(ev.relatedTarget).hasClass('quick-item')) return;
+            if ($(ev.relatedTarget).closest('.quickfind').length || $(ev.relatedTarget).closest('.quick-item').length || $(ev.relatedTarget).hasClass('quick-item')) return;
             this._closeQuickfind(ev);
         });
     }
@@ -98,6 +98,10 @@ export default class DSKChatAutoCompletion {
             element = document.querySelector('#chat-notifications');
         }
         return $(element);
+    }
+
+    isChatNotifications(target) {
+        return target.id === 'chat-notifications'
     }
 
     _closeQuickfind(ev) {
@@ -176,7 +180,10 @@ export default class DSKChatAutoCompletion {
         let html = $(`<div class="quickfind dsklist"><ul>${result.map(x => `<li data-type="${x.type}" data-category="${cmd}" class="quick-item">${x.name}</li>`).join("")}</ul></div>`)
 
         html.find(`.quick-item:first`).addClass('focus');
-        html.find('.quick-item').on('click', ev => this._quickSelect($(ev.currentTarget)));
+        html.find('.quick-item').on('mousedown', ev => {
+            ev.preventDefault();
+            this._quickSelect($(ev.currentTarget));
+        });
 
         const container = this.getContainer(ev.currentTarget || ev.target);
         const existing = container.find('.quickfind');
@@ -184,7 +191,11 @@ export default class DSKChatAutoCompletion {
         if (existing.length) {
             existing.replaceWith(html);
         } else {
-            container.append(html);
+            if (this.isChatNotifications(container[0])) {
+                container.find('.overflow').after(html);
+            } else {
+                container.append(html);
+            }
         }
     }
 

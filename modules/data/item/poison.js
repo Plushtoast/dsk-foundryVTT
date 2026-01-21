@@ -15,6 +15,7 @@ export default class PoisonData extends ItemDataModel.mixin(
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
       level: new NumberField({ initial: 1, label: 'dsk.level' }),
+      subtype: new StringField({ initial: 'poison', label: 'dsk.subtype', choices: DSK.poisonSubtypes }),
       category: new StringField({ initial: '', label: 'dsk.category' }),
       resist: new StringField({ 
         initial: '-',
@@ -26,6 +27,8 @@ export default class PoisonData extends ItemDataModel.mixin(
       duration: new StringField({ initial: '', label: 'dsk.duration' }),
       search: new StringField({ initial: '-', label: 'dsk.search' }),
       process: new StringField({ initial: '-', label: 'dsk.process' }),
+      harvest: new StringField({ initial: '', label: 'dsk.harvest' }),
+      location: new StringField({ initial: '', label: 'dsk.location' }),
       price: new NumberField({ initial: 0, label: 'dsk.price' }),
       quantity: new NumberField({ initial: 1, label: 'dsk.quantity' }),
       weight: new NumberField({ initial: 0, label: 'dsk.weight' }),
