@@ -1146,7 +1146,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         delete copy._id;
         copy.name += " (Copy)";
 
-        if (this._tabs?.[0]?.active == "combat" && copy.system?.worn) copy.system.worn.value = true;
+        if (this.tabGroups.sheet == "combat" && copy.system?.worn) copy.system.worn.value = true;
 
         return (await this.actor.createEmbeddedDocuments("Item", [copy]))[0];
     }
@@ -1155,7 +1155,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         item = duplicate(item)
         let res = this.actor.items.find(i => ItemDSK.areEquals(item, i));
         if (!res) {
-            if (this._tabs[0].active == "combat" && item.system.worn) item.system.worn.value = true
+            if (this.tabGroups.sheet == "combat" && item.system.worn) item.system.worn.value = true
 
             return (await this.actor.createEmbeddedDocuments("Item", [item]))[0];
         } else {
@@ -1268,7 +1268,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         let container_id
         let parentItem = $(event.target).parents(".item")
 
-        if (parentItem && parentItem.attr("data-category") == "bags" && DSK.equipmentCategories.includes(item.type)) {
+        if (parentItem && parentItem.attr("data-category") == "bags" && DSK.equipmentCategories.has(item.type)) {
             if (parentItem.attr("data-item-id") != item.id) container_id = parentItem.attr("data-item-id")
         }
         const selfTarget = this.actor.uuid === item.parent?.uuid
@@ -1280,7 +1280,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 if (item.system.worn && item.system.worn.value)
                     upd["system.worn.value"] = false
                 await this.actor.updateEmbeddedDocuments("Item", [upd])
-            } else if (DSK.equipmentCategories.includes(item.type)) {
+            } else if (DSK.equipmentCategories.has(item.type)) {
                 await this.actor.updateEmbeddedDocuments("Item", [{ _id: item.id, system: { parent_id: 0 } }])
             }
             //return this._onSortItem(event, itemData);
@@ -1288,7 +1288,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
             await this._onDropItemCreate(itemData);
         }
 
-        if (event.altKey && !selfTarget && DSK.equipmentCategories.includes(item.type))
+        if (event.altKey && !selfTarget && DSK.equipmentCategories.has(item.type))
             await this._handleRemoveSourceOnDrop(item)
     }
 }

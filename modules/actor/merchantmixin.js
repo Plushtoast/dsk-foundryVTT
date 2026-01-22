@@ -297,7 +297,7 @@ export const MerchantSheetMixin = (superclass) => {
         if (DSK.equipmentTypes[filter]) {
             return (item) => { return item.type == "equipment" && item.system.category == filter }
         } else {
-            return (item) => { return item.type == filter && DSK.equipmentCategories.includes(item.type) }
+            return (item) => { return item.type == filter && DSK.equipmentCategories.has(item.type) }
         }
     }
 
@@ -421,7 +421,7 @@ export const MerchantSheetMixin = (superclass) => {
     async removeAllGoods(actor, ev) {
         let text = $(ev.currentTarget).text()
         $(ev.currentTarget).html(' <i class="fa fa-spin fa-spinner"></i>')
-        let ids = actor.items.filter(x => DSK.equipmentCategories.includes(x.type) && !getProperty(x, "worn.value")).map(x => x.id)
+        let ids = actor.items.filter(x => DSK.equipmentCategories.has(x.type) && !getProperty(x, "worn.value")).map(x => x.id)
         await actor.deleteEmbeddedDocuments("Item", ids);
         $(ev.currentTarget).text(text)
     }
@@ -496,7 +496,7 @@ export const MerchantSheetMixin = (superclass) => {
 
     static async selfDestruction(target) {
         if (this.isTemporaryToken(target)) {
-            const hasItemsLeft = target.items.some(x => DSK.equipmentCategories.includes(x.type) || (x.type == "money" && x.system.quantity > 0))
+            const hasItemsLeft = target.items.some(x => DSK.equipmentCategories.has(x.type) || (x.type == "money" && x.system.quantity > 0))
             if (!hasItemsLeft) {
                 game.socket.emit("system.dsk", {
                     type: "hideDeletedSheet",

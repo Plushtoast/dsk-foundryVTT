@@ -1448,6 +1448,7 @@ export default class ActorDSK extends Actor {
       elem.children = [];
 
       for (let child of containers.get(elem._id)) {
+        elem.children.push(child);
         if (containers.has(child._id)) {
           this._setBagContent(child, containers);
         }

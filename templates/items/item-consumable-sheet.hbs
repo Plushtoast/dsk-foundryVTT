@@ -1,22 +1,36 @@
 <div class="tab standard-form gap2px scrollable {{tabs.details.cssClass}}" data-tab="details" data-group="{{tabs.details.group}}">
     {{formGroup systemFields.category value=document.system.category localize=true}}
-    {{formGroup systemFields.qs value=document.system.qs localize=true}}
+    {{formGroup systemFields.qs value=document.system.qs localize=true max=(ifThen (eq document.system.category 0) 2 1)}}
     <div class="form-group">
         <label class="label-text">{{localize "dsk.consumable.priceEachQL"}}</label>
         {{formInput systemFields.price value=document.system.price}}
     </div>
-    <div class="form-group full-height">
-        <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.0'}})</label>
-        {{formInput systemFields.effect0 value=document.system.effect0 elementType="textarea" classes="input-text"}}
-    </div>
-    <div class="form-group full-height">
-        <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.1'}})</label>
-        {{formInput systemFields.effect1 value=document.system.effect1 elementType="textarea" classes="input-text"}}
-    </div>
-    <div class="form-group full-height">
-        <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.2'}})</label>
-        {{formInput systemFields.effect2 value=document.system.effect2 elementType="textarea" classes="input-text"}}
-    </div>
-    {{formGroup systemFields.difficulty value=document.system.difficulty localize=true classes="full-height"}}
+    {{#if (eq document.system.category 0)}}
+        <div class="form-group full-height">
+            <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.0'}})</label>
+            {{formInput systemFields.effect0 value=document.system.effect0 elementType="textarea" classes="input-text"}}
+        </div>
+        <div class="form-group full-height">
+            <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.1'}})</label>
+            {{formInput systemFields.effect1 value=document.system.effect1 elementType="textarea" classes="input-text"}}
+        </div>
+        <div class="form-group full-height">
+            <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.qs.2'}})</label>
+            {{formInput systemFields.effect2 value=document.system.effect2 elementType="textarea" classes="input-text"}}
+        </div>
+        {{formGroup systemFields.difficulty value=document.system.difficulty localize=true classes="full-height"}}
+    {{/if}}
+    {{#if (eq document.system.category 1)}}
+        <div class="form-group full-height">
+            <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.mushroom_qs.0'}})</label>
+            {{formInput systemFields.effect0 value=document.system.effect0 elementType="textarea" classes="input-text"}}
+        </div>
+        <div class="form-group full-height">
+            <label class="label-text">{{localize "dsk.consumable.effect"}} ({{localize 'dsk.consumable.mushroom_qs.1'}})</label>
+            {{formInput systemFields.effect1 value=document.system.effect1 elementType="textarea" classes="input-text"}}
+        </div>
+        {{formGroup systemFields.difficulty label="dsk.consumable.mushroom_difficulty" value=document.system.difficulty localize=true classes="full-height"}}
+    {{/if}}
+    
     {{formGroup systemFields.ingredients value=document.system.ingredients localize=true elementType="textarea" classes="full-height"}}
 </div>

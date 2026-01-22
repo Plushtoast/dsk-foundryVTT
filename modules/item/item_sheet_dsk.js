@@ -572,7 +572,7 @@ class ItemSheetEquipment extends ItemSheetObfuscation(EffectsEquipmentSheet){
             let weightSum = 0
             mergeObject(data, {
                 containerContent: this.item.actor.items
-                .filter(x => DSK.equipmentCategories.includes(x.type) && x.system.parent_id == this.item.id)
+                .filter(x => DSK.equipmentCategories.has(x.type) && x.system.parent_id == this.item.id)
                 .map(x => {
                     x.weight = parseFloat((x.system.weight * x.system.quantity).toFixed(3));
                     weightSum += Number(x.weight)
@@ -647,7 +647,7 @@ class ItemSheetEquipment extends ItemSheetObfuscation(EffectsEquipmentSheet){
             const selfItem = this.item.id == item.id
             const ownItem = this.item.parent.id == dragData.actorId
 
-            if (DSK.equipmentCategories.includes(typeClass) && !selfItem) {
+            if (DSK.equipmentCategories.has(typeClass) && !selfItem) {
                 item.system.parent_id = this.item.id
                 if (item.system.worn && item.system.worn.value)
                     item.system.worn.value = false

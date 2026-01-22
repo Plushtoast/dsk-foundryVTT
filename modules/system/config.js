@@ -603,9 +603,9 @@ DSK.weapontypes = {
 }
 
 DSK.poisonSubtypes = {
-    "poison": "dsk.POISON.subtype.poison",
-    "healing": "dsk.POISON.subtype.healing",
-    "mushroom": "dsk.POISON.subtype.mushroom"
+    0: "dsk.POISON.subtype.poison",
+    1: "dsk.POISON.subtype.healing",
+    2: "dsk.POISON.subtype.mushroom"
 }
 
 DSK.characteristics = {
@@ -653,7 +653,8 @@ DSK.skillGroups = {
 };
 
 DSK.consumableCategories = {
-    0: "dsk.consumable.category.0"
+    0: "dsk.consumable.category.0",
+    1: "dsk.consumable.category.0"
 }
 
 DSK.qsOptions = {

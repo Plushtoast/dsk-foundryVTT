@@ -2,10 +2,14 @@
     {{formGroup systemFields.subtype value=document.system.subtype localize=true}}
     {{formGroup systemFields.level value=document.system.level localize=true}}
     {{formGroup systemFields.category value=document.system.category localize=true}}
-    {{formGroup systemFields.resist value=document.system.resist localize=true}}
+    {{#unless (eq document.system.subtype 1)}}        
+        {{formGroup systemFields.resist value=document.system.resist localize=true}}    
+    {{/unless}}    
     {{formGroup systemFields.effect value=document.system.effect localize=true}}
-    {{formGroup systemFields.start value=document.system.start localize=true}}
-    {{formGroup systemFields.duration value=document.system.duration localize=true}}
+    {{#unless (eq document.system.subtype 1)}}
+        {{formGroup systemFields.start value=document.system.start localize=true}}
+        {{formGroup systemFields.duration value=document.system.duration localize=true}}
+    {{/unless}}
     <div class="form-group">
         <label class="label-text">{{localize "dsk.search"}} / {{localize "dsk.process"}}</label>
         <div class="form-fields">
@@ -13,7 +17,7 @@
             {{formInput systemFields.process value=document.system.process}}
         </div>
     </div>
-    {{#if (eq document.system.subtype "mushroom")}}
+    {{#if (eq document.system.subtype 2)}}
         {{formGroup systemFields.harvest value=document.system.harvest localize=true}}
         {{formGroup systemFields.location value=document.system.location localize=true}}
     {{/if}}    

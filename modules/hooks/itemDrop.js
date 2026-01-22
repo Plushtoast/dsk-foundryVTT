@@ -75,7 +75,7 @@ const handleItemDrop = async(canvas, data) => {
     const item = await Item.implementation.fromDropData(data);
     const sourceActor = item.parent
 
-    if (!DSK.equipmentCategories.includes(item.type)) return
+    if (!DSK.equipmentCategories.has(item.type)) return
 
     const content = await renderTemplate("systems/dsk/templates/dialog/dropToGround.hbs", { name: item.name, count: item.system.quantity })
 

@@ -38,7 +38,7 @@ export default class ConsumableData extends ItemDataModel.mixin(
   static chatData(data, name) {
     return [
       { key: 'dsk.category', val: data.category },
-      { key: 'dsk.qs', val: data.qs },
+      { key: 'dsk.QL', val: data[`effect${data.qs}`] },
     ];
   }
 
