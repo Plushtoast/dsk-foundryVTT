@@ -712,7 +712,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 name: "dsk.SHEET.PostItem",
                 icon: "<i class='fas fa-comment fa-fw'></i>",
                 callback: () => item.postItem()
-            },            
+            },
             {
                 name: "dsk.SHEET.Dropdown",
                 icon: "<i class='fas fa-chevron-down fa-fw'></i>",
@@ -850,6 +850,19 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
 
         DSKChatAutoCompletion.bindRollCommands(html);
         bindImgToCanvasDragStart(html, "img.charimg");
+        new foundry.applications.ux.DragDrop.implementation({
+            dragSelector: ".item",
+            dropSelector: null,
+            permissions: {
+                dragstart: this._canDragStart.bind(this),
+                drop: this._canDragDrop.bind(this)
+            },
+            callbacks: {
+                dragstart: this._onDragStart.bind(this),
+                dragover: this._onDragOver.bind(this),
+                drop: this._onDrop.bind(this)
+            }
+        }).bind(this.element);
     }
 
     async _advanceAttribute(attr) {
