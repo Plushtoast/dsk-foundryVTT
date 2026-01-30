@@ -21,7 +21,7 @@
             <div class="row-section skills lineheight">
                 <div class="col four flexrow withContext">
                     <div>
-                    <a data-action="itemEdit" class="item-edit">{{item.name}}</a> {{#if item.canAdvance}}
+                    <a data-action="itemEdit">{{item.name}}</a> {{#if item.canAdvance}}
                     <a data-action="advanceWrapper" data-fct="_refundItemAdvance" data-attr="{{item._id}}" class="advance refund-item"><i data-tooltip="{{item.refund}}" class="fas fa-minus"></i></a>
                     <a data-action="advanceWrapper" data-fct="_advanceItem" data-attr="{{item._id}}" class="advance advance-item"><i data-tooltip="{{item.cost}}" class="fas fa-plus"></i></a>{{/if}}
                     </div>
@@ -71,7 +71,7 @@
     <div class="row-section wrap cards">
         {{#each prepare.specAbs.ahnen as |item i|}}
         <div class="item" data-item-id="{{item._id}}">
-            {{#if item.OnUseEffect}}<a data-action="onUseItem" data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a data-action="itemEdit" class="item-edit">{{item.name}}{{roman item.system.level item.system.max}}</a>
+            {{#if item.OnUseEffect}}<a data-action="onUseItem" data-tooltip="dsk.SHEET.onUseEffect" class="onUseItem"><i class="fas fa-dice-six"></i></a>{{/if}}<a data-action="itemEdit">{{item.name}}{{roman item.system.level item.system.max}}</a>
         </div>
         {{/each}}
     </div>
@@ -104,7 +104,7 @@
             <div class="row-section wrap cards">
                 {{#each prepare.magic.ahnengeschenk as |item i|}}
                 <div class="item" data-item-id="{{item._id}}">
-                    <a data-action="itemEdit" class="item-edit">{{item.name}}</a>
+                    <a data-action="itemEdit">{{item.name}}</a>
                 </div>
                 {{/each}}
             </div>

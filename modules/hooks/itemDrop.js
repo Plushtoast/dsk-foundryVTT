@@ -80,7 +80,7 @@ const handleItemDrop = async(canvas, data) => {
     const content = await renderTemplate("systems/dsk/templates/dialog/dropToGround.hbs", { name: item.name, count: item.system.quantity })
 
     const dialog = new DropToGroundDialog({
-        window: { title: data.name },
+        window: { title: item.name },
         content,
         buttons: [
             {

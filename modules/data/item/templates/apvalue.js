@@ -11,13 +11,4 @@ export default class APValueTemplate extends DSKDataModel {
       ap: new StringField({ initial: '0', label: 'dsk.APValue' }),
     };
   }
-
-  /**
-   * Get numeric AP value
-   */
-  get apCost() {
-    const ap = this.ap;
-    if (typeof ap === 'number') return ap;
-    return parseInt(ap) || 0;
-  }
 }

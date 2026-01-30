@@ -319,6 +319,10 @@ class EffectsEquipmentSheet extends ItemSheetDSK {
             template: 'systems/dsk/templates/items/item-effects.hbs',
             scrollable: [''],
         },
+        containerContent: {
+            template: 'systems/dsk/templates/items/item-bag.hbs',
+            scrollable: [''],
+        }
     }
 }
 
@@ -589,6 +593,7 @@ class ItemSheetEquipment extends ItemSheetObfuscation(EffectsEquipmentSheet){
     async breakOverflow(data, parent) {
         let elm = $(await renderTemplate('systems/dsk/templates/items/baghover.hbs', data))
 
+        console.log(elm)
         let top = parent.offset().top + 52;
         let left = parent.offset().left - 75;
         elm.appendTo($('body'));

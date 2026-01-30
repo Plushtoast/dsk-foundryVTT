@@ -1,0 +1,15 @@
+<div class="tab standard-form gap2px scrollable {{tabs.containerContent.cssClass}}" data-tab="containerContent" data-group="{{tabs.containerContent.group}}">
+    <div class="bagUsage">
+        <div class="fillage {{weightExceeded}}" {{{weightWidth}}}></div>
+        <div class="center fillText">
+            {{weightSum}} / {{system.capacity}} <i class="fas fa-weight-hanging"></i>
+        </div>
+    </div>
+    <div class="bags row-section wrap">
+        {{#each containerContent as |item i|}}
+        <div class="slot {{item.enchantClass}}" data-item-id="{{item.id}}" data-name="{{item.name}}" data-weight="{{item.weight}}" data-quantity="{{item.system.quantity}}">
+            <div style="background-image:url('{{item.img}}')"></div>
+        </div>
+        {{/each}}
+    </div>
+</div>
