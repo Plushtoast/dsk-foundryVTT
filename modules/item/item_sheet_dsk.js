@@ -560,9 +560,9 @@ class ItemSheetEquipment extends ItemSheetObfuscation(EffectsEquipmentSheet){
                 group: 'sheet',
                 icon: '',
                 label: 'dsk.Equipment.bags',
-                cssClass: ''
+                cssClass: this.tabGroups?.sheet == 'containerContent' ? 'active' : ''
             };
-        }
+        }         
         return tabs;
     }
 
@@ -593,7 +593,6 @@ class ItemSheetEquipment extends ItemSheetObfuscation(EffectsEquipmentSheet){
     async breakOverflow(data, parent) {
         let elm = $(await renderTemplate('systems/dsk/templates/items/baghover.hbs', data))
 
-        console.log(elm)
         let top = parent.offset().top + 52;
         let left = parent.offset().left - 75;
         elm.appendTo($('body'));
@@ -648,22 +647,20 @@ class ItemSheetEquipment extends ItemSheetObfuscation(EffectsEquipmentSheet){
     async _onDrop(event) {
         if (this.isBagWithContents()) {
             const dragData = JSON.parse(event.dataTransfer.getData("text/plain"))
-            const { item, typeClass, selfTarget } = await itemFromDrop(dragData, undefined)
-            const selfItem = this.item.id == item.id
-            const ownItem = this.item.parent.id == dragData.actorId
+            const { item, typeClass, selfTarget } = await itemFromDrop(dragData, this.item.parent.uuid);
+            const selfItem = this.item.id == item._id;
 
             if (DSK.equipmentCategories.has(typeClass) && !selfItem) {
-                item.system.parent_id = this.item.id
-                if (item.system.worn && item.system.worn.value)
-                    item.system.worn.value = false
+                item.system.parent_id = this.item.id;
+                if (item.system.worn && item.system.worn.value) item.system.worn.value = false;
 
-                if (ownItem) {
-                    await this.item.actor.updateEmbeddedDocuments("Item", [item])
+                if (selfTarget) {
+                    await this.item.actor.updateEmbeddedDocuments('Item', [item]);
                 } else {
-                    await this.item.actor.sheet._addLoot(item)
+                    await this.actor.sheet._addLoot(item);
                 }
-                this.render({ force: true })
-                return
+                await this.render(true);
+                return;
             }
         }
 

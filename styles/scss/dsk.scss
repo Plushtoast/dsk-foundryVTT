@@ -2527,9 +2527,13 @@ input[type="search"] {
   font-family: var(--normalFont);
   max-height: 500px;
   overflow: hidden;
-  position: relative;
 
-  &:not(.tooltipBox)::after {
+  .itemLibraryTooltip-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  &:not(.tooltipBox) .itemLibraryTooltip-content::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -2538,11 +2542,6 @@ input[type="search"] {
     height: 2.5rem;
     background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8));
     pointer-events: none;
-  }
-
-  .itemLibraryTooltip-content {
-    position: relative;
-    z-index: 1;
   }
 
   .tooltip-header {
