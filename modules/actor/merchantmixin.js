@@ -488,6 +488,18 @@ export const MerchantSheetMixin = (superclass) => {
                 }
             }
         }
+
+        if (source.sheet.rendered) source.sheet.render(true)
+        if (target.sheet.rendered) target.sheet.render(true)
+        game.socket.emit("system.dsk", {
+            type: "refreshSheets",
+            payload: {
+                sheets: [
+                    { id: source.id, type: "ActorSheet", sheetId: source.sheet.id },
+                    { id: target.id, type: "ActorSheet", sheetId: target.sheet.id },
+                ],
+            },
+        })
     }
 
     static isTemporaryToken(target) {

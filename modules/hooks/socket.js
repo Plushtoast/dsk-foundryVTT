@@ -12,6 +12,18 @@ export function connectSocket() {
                 let target = data.payload.target.token ? game.actors.tokens[data.payload.target.token] : game.actors.get(data.payload.target.actor)
                 MerchantSheetDSK.hideDeletedSheet(target)
                 break
+            case "refreshSheets":
+                for (let app of Object.values(ui.windows)) {
+                    if (data.payload.sheets.find((x) => app?.options?.baseApplication == x.type && x.id == app.object?.id)) app.render(true)
+                }
+                for (let sheet of data.payload.sheets) {
+                    if (!sheet.sheetId) continue
+                    let app = foundry.applications.instances.get(sheet.sheetId)
+                    if (app && app.rendered) {
+                        app.render(true)
+                    }
+                }
+                break
         }
     })
     if (!DSKUtility.isActiveGM()) return;
