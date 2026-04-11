@@ -2482,7 +2482,7 @@ input[type="search"] {
   color: white;
   position: relative;
   z-index: 1;
-  text-shadow: 0px 0px 3px black;
+  text-shadow: 0px 0px 3px black;  
 
   input {
     height: 22px;
@@ -2496,6 +2496,8 @@ input[type="search"] {
     color: white;
     box-shadow: none;
     background: rgba(255, 255, 255, 0.12);
+    margin-top: -1px;
+    text-align: center;
 
     &::placeholder {
       color: rgba(255, 255, 255, 0.8);

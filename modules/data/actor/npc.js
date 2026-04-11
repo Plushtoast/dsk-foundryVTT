@@ -28,15 +28,6 @@ export default class NpcData extends ActorDataModel.mixin(
     return false;
   }
 
-  prepareDerivedData() {
-    // Same calculations as character
-    for (const [key, char] of Object.entries(this.characteristics || {})) {
-      char.value = (char.initial || 8) + (char.modifier || 0) + (char.advances || 0) + (char.gearmodifier || 0);
-    }
-
-    this._calculateStats();
-  }
-
   _calculateStats() {
     // Calculate LeP
     const LeP = this.stats?.LeP;

@@ -13,7 +13,6 @@
                 </div>
             </div>
         </div>
-
         {{/if}}
         {{/if}}
         <div class="col morph60">
@@ -198,4 +197,41 @@
     </div>
     {{/if}} 
     {{/each}}
+
+    <div class="row-section">
+        <div class="col two">
+            <div class="groupbox" data-tooltip="dsk.UNITS.weight">
+                <div class="row-section">
+                    <div class="col header-label">
+                        <b>{{localize "dsk.carrycapacity"}}</b>
+                    </div>
+                </div>
+                <div class="row-section table-title">
+                    <div class="col three center">
+                        {{localize "dsk.carrycapacity"}}
+                    </div>
+                    <div class="col three center">
+                        {{localize "dsk.Current"}}
+                    </div>
+                    <div class="col three center">
+                        {{localize "dsk.CONDITION.encumbered"}}
+                    </div>
+                </div>
+                <div class="row-section">
+                    <div class="col three center">
+                        {{prepare.carrycapacity}}
+                    </div>
+                    <div class="col three center">
+                        {{prepare.totalWeight}}
+                    </div>
+                    <div class="col three center">
+                        {{actor.system.status.encumbered}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col two">
+            {{> systems/dsk/templates/actors/parts/purse.hbs}}
+        </div>
+    </div>
 </div>
