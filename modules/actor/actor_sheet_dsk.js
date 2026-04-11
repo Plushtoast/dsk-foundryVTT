@@ -11,6 +11,7 @@ import RuleChaos from "../system/rule_chaos.js";
 import AdvantageRulesDSK from "../system/advantage-rules.js"
 import SpecialabilityRulesDSK from "../system/specialability-rules.js"
 import ActorDSK from "./actor_dsk.js";
+import { transferBagWithContents } from "../hooks/itemDrop.js";
 import { itemFromDrop } from "../system/view_helper.js";
 import { AppV2Mixin } from "./mixins/appv2_mixin.js";
 import OnUseEffect from "../system/onUseEffects.js";
@@ -1298,10 +1299,19 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
             }
             //return this._onSortItem(event, itemData);
         } else {
-            await this._onDropItemCreate(itemData);
+            const sourceActor = item.parent
+            const isBagWithContents = sourceActor && item.type == "equipment" && getProperty(item, "system.category") == "bags" && sourceActor.items.some((i) => i.system.parent_id == item.id)
+            if (isBagWithContents) {
+                await transferBagWithContents(sourceActor, this.actor, itemData)
+            } else {
+                await this._onDropItemCreate(itemData);
+            }
         }
 
-        if (event.altKey && !selfTarget && DSK.equipmentCategories.has(item.type))
-            await this._handleRemoveSourceOnDrop(item)
+        if (event.altKey && !selfTarget && DSK.equipmentCategories.has(item.type)) {
+            const sourceActor = item.parent
+            const isBagWithContents = sourceActor && item.type == "equipment" && getProperty(item, "system.category") == "bags" && sourceActor.items.some((i) => i.system.parent_id == item.id)
+            if (!isBagWithContents) await this._handleRemoveSourceOnDrop(item)
+        }
     }
 }

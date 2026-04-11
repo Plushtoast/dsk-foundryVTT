@@ -4,6 +4,7 @@ import DSK from "../system/config.js";
 import DSKSoundEffect from "../system/dsk-soundeffect.js";
 import DSKUtility from "../system/dsk_utility.js";
 import DSKPayment from "../system/payment.js";
+import { fetchBagItems, transferBagWithContents } from "../hooks/itemDrop.js";
 import RuleChaos from "../system/rule_chaos.js";
 const { mergeObject, getProperty, duplicate } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
@@ -466,24 +467,49 @@ export const MerchantSheetMixin = (superclass) => {
         return id
     }
 
+    static getItemPrice(item) {
+        return Number(getProperty(item, "flags.dsk.customPriceTag")) || (item.type == "consumable" ? game.dsk.config.ItemSubClasses.consumable.consumablePrice(item) : Number(item.system.price))
+    }
+
     static async finishTransaction(source, target, price, itemId, buy, amount) {
-        const item = source.items.get(itemId).toObject()
+        const sourceItem = source.items.get(itemId)
+        if (!sourceItem) return
+
+        const item = sourceItem.toObject()
         if (Number(item.system.quantity) > 0) {
             amount = Math.min(Number(item.system.quantity), amount)
-            price = `${Number(price) * amount}`
+            let totalPrice = Number(price) * amount
+            const isBagWithContents = item.type == "equipment" && getProperty(item, "system.category") == "bags" && source.items.some((i) => i.system.parent_id == itemId)
+
+            if (isBagWithContents && !this.noNeedToPay(target, source, `${totalPrice}`)) {
+                const children = fetchBagItems(sourceItem, source)
+                for (const child of children) {
+                    totalPrice += this.getItemPrice(child) * (child.system.quantity || 1)
+                }
+            }
+
+            price = `${totalPrice}`
             const noNeedToPay = this.noNeedToPay(target, source, price)
             const hasPaid = noNeedToPay || DSKPayment.payMoney(target, price, true)
             if (hasPaid) {
                 if (getProperty(item, "system.worn.value")) item.system.worn.value = false
 
                 if (buy) {
-                    await this.updateTargetTransaction(target, item, amount, source, price)
-                    await this.updateSourceTransaction(source, target, item, price, itemId, amount)
+                    if (isBagWithContents) {
+                        await transferBagWithContents(source, target, item)
+                    } else {
+                        await this.updateTargetTransaction(target, item, amount, source, price)
+                        await this.updateSourceTransaction(source, target, item, price, itemId, amount)
+                    }
                     await this.transferNotification(item, target, source, buy, price, amount, noNeedToPay)
                     await this.selfDestruction(source)
                 } else {
-                    await this.updateSourceTransaction(source, target, item, price, itemId, amount)
-                    await this.updateTargetTransaction(target, item, amount, source, price)
+                    if (isBagWithContents) {
+                        await transferBagWithContents(source, target, item)
+                    } else {
+                        await this.updateSourceTransaction(source, target, item, price, itemId, amount)
+                        await this.updateTargetTransaction(target, item, amount, source, price)
+                    }
                     await this.transferNotification(item, source, target, buy, price, amount, noNeedToPay)
                 }
             }
