@@ -1,0 +1,52 @@
+<form class="information-query-approval standard-form scrollable">
+    <p class="center"><b>{{localize 'dsk.qualityStep'}}</b>: {{rolledQS}}</p>
+    <hr>
+    <fieldset class="col morph">
+        <legend>{{localize "dsk.INFORMATIONQUERY.availableInformation"}}</legend>
+        {{#each qsEntries}}
+        <div class="form-group skills tableOdd">
+            <label>{{localize "dsk.CHARAbbrev.QS"}} {{this.qs}}</label>
+            <div class="form-fields">
+                <input type="checkbox" name="{{this.key}}" {{#if this.included}}checked{{/if}}>
+            </div>
+            <p class="hint">{{{this.text}}}</p>
+        </div>
+        {{/each}}
+
+        {{#if critText}}
+        <div class="form-group skills tableOdd">
+            <label>
+                {{localize "dsk.CriticalSuccess"}}
+            </label>
+            <div class="form-fields">
+                <input type="checkbox" name="crit" {{#if critIncluded}}checked{{/if}}>
+            </div>
+            <p class="hint">{{{critText}}}</p>
+        </div>
+        {{/if}}
+
+        {{#if botchText}}
+        <div class="form-group skills tableOdd">
+            <label>
+                {{localize "dsk.CriticalFailure"}}
+            </label>
+            <div class="form-fields">
+                <input type="checkbox" name="botch" {{#if botchIncluded}}checked{{/if}}>
+            </div>
+            <p class="hint">{{{botchText}}}</p>
+        </div>
+        {{/if}}
+
+        {{#if failText}}
+        <div class="form-group skills tableOdd ">
+            <label>
+                {{localize "dsk.Failure"}}
+            </label>
+            <div class="form-fields">
+                <input type="checkbox" name="fail" {{#if failIncluded}}checked{{/if}}>
+            </div>
+            <p class="hint">{{{failText}}}</p>
+        </div>
+        {{/if}}
+    </fieldset>
+</form>

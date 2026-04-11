@@ -22,6 +22,8 @@ import DPS from "./system/derepositioningsystem.js"
 import DiceDSK from "./system/dicedsk.js"
 import RollMemory from "./system/roll_memory.js"
 import MacroDSK from "./system/macroControl.js"
+import RequestRoll from "./system/request-roll.js"
+import InformationQueryService from "./system/information-query.js"
 import "./system/pause.js"
 import { DSKToken, DSKTokenDocument, DSKTokenRuler } from "./hooks/token.js"
 import { CombatantDataModels, DSK_ACTOR_MODELS, DSK_ITEM_MODELS, registerDataModels } from "./data/model.js"
@@ -41,7 +43,9 @@ Hooks.once("init", () => {
             Migrakel,
             DPS,
             DiceDSK,
-            DSKStatusEffects
+            DSKStatusEffects,
+            RequestRoll,
+            InformationQueryService
         },
         documents: {
             ActorDSK,

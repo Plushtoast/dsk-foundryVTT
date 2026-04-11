@@ -560,6 +560,15 @@
             "NotEnoughAeP": "Nicht genug Ahnenergie",
             "mapsViaJournalbrowser": "Diese Karte sollte über den Journalbrowser importiert werden, um die korrekte Funktion zu gewährleisten."
         },
+        "INFORMATIONQUERY": {
+            "approve": "Freigeben",
+            "availableInformation": "Freizugebende Informationen",
+            "dialogTitle": "Wissensprobe: {item}",
+            "noInformationSelected": "Es wurden keine Informationen zur Freigabe ausgewählt.",
+            "reject": "Ablehnen",
+            "requestSent": "Anfrage an die Spielleitung gesendet.",
+		    "itemName": "Wissensprobe"
+        },
         "gridUnits": "Schritt",
         "name": "Name",
         "probe": "Probe",

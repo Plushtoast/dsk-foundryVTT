@@ -1,6 +1,8 @@
 import DSKChatAutoCompletion from "./chat_autocompletion.js"
 import DSKUtility from "./dsk_utility.js"
 
+const { TextEditor } = foundry.applications.ux
+
 export default class RequestRoll {
     static async requestRoll(category, name, modifier = 0) {
         const { actor, tokenId } = DSKChatAutoCompletion._getActor()
@@ -39,22 +41,33 @@ export default class RequestRoll {
         ChatMessage.create(DSKUtility.chatDataSetup(msg));
     }
 
-    static async updateInformationRoll(postFunction, result, source) {
-        const availableQs = result.result.qualityStep || 0
-        if (availableQs > 0) {
-            const item = await fromUuid(postFunction.uuid)
-            const msg = [`<p><b>${item.name}</b></p>`]
-            for (let i = 1; i <= availableQs; i++) {
-                const qs = `qs${i}`
-                if (item.system[qs]) {
-                    msg.push(`<p>${item.system[qs]}</p>`)
-                }
-            }
-            const chatData = DSKUtility.chatDataSetup(msg.join(""))
-            if (postFunction.recipients.length) chatData["whisper"] = postFunction.recipients
-
-            ChatMessage.create(chatData);
+    static getInformationSections(item, qualityStep = 0, successLevel = 0) {
+        const sections = []
+        for (let i = 1; i <= qualityStep; i++) {
+            const qs = `qs${i}`
+            if (item.system[qs]) sections.push(item.system[qs])
         }
+
+        if (successLevel > 1 && item.system.crit) sections.push(item.system.crit)
+        else if (successLevel < -1 && item.system.botch) sections.push(item.system.botch)
+        else if (!qualityStep && item.system.fail) sections.push(item.system.fail)
+
+        return sections
+    }
+
+    static async updateInformationRoll(postFunction, result, source) {
+        const item = await fromUuid(postFunction.uuid)
+        if (!item) return
+
+        const sections = this.getInformationSections(item, result.result.qualityStep || 0, result.result.successLevel || 0)
+        if (!sections.length) return
+
+        const enrichedSections = await Promise.all(sections.map(section => TextEditor.enrichHTML(section, {})))
+        const msg = [`<p><b>${item.name}</b></p>`, ...enrichedSections.map(s => `<div class="information-section">${s}</div>`)]
+        const chatData = DSKUtility.chatDataSetup(msg.join(""))
+        if (postFunction.recipients.length) chatData["whisper"] = postFunction.recipients
+
+        ChatMessage.create(chatData);
     }
 
     static async informationRequestRoll(ev) {

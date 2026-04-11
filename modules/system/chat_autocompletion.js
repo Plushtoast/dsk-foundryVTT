@@ -380,6 +380,11 @@ export default class DSKChatAutoCompletion {
             ev.stopPropagation()
             return false
         })
+        html.on('click', '.informationEnricherRoll', ev => {
+            game.dsk.apps.InformationQueryService.informationEnricherRoll(ev)
+            ev.stopPropagation()
+            return false
+        })
     }
 
 }

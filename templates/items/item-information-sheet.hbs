@@ -6,10 +6,40 @@
         </select>
     </div>
     {{formGroup systemFields.modifier value=document.system.modifier localize=true}}
-    {{formGroup systemFields.qs1 value=document.system.qs1 localize=true elementType="textarea" classes="full-height"}}
-    {{formGroup systemFields.qs2 value=document.system.qs2 localize=true elementType="textarea" classes="full-height"}}
-    {{formGroup systemFields.qs3 value=document.system.qs3 localize=true elementType="textarea" classes="full-height"}}
-    {{formGroup systemFields.qs4 value=document.system.qs4 localize=true elementType="textarea" classes="full-height"}}
-    {{formGroup systemFields.qs5 value=document.system.qs5 localize=true elementType="textarea" classes="full-height"}}
-    {{formGroup systemFields.qs6 value=document.system.qs6 localize=true elementType="textarea" classes="full-height"}}
+    <div class='form-group full-height'>
+        <label>{{localize 'dsk.CHARAbbrev.QS'}} 1</label>
+        <div class='form-fields'>
+            {{formInput systemFields.qs1 value=document.system.qs1 localize=true elementType="textarea"}}
+        </div>
+    </div>
+    <div class='form-group full-height'>
+        <label>{{localize 'dsk.CHARAbbrev.QS'}} 2</label>
+        <div class='form-fields'>
+            {{formInput systemFields.qs2 value=document.system.qs2 localize=true elementType="textarea"}}
+        </div>
+    </div>
+    <div class='form-group full-height'>
+        <label>{{localize 'dsk.CHARAbbrev.QS'}} 3</label>
+        <div class='form-fields'>
+            {{formInput systemFields.qs3 value=document.system.qs3 localize=true elementType="textarea"}}
+        </div>
+    </div>
+    <div class='form-group full-height'>
+        <label>{{localize 'dsk.CHARAbbrev.QS'}} 4</label>
+        <div class='form-fields'>
+            {{formInput systemFields.qs4 value=document.system.qs4 localize=true elementType="textarea"}}
+        </div>
+    </div>
+    <div class='form-group full-height'>
+        <label>{{localize 'dsk.CHARAbbrev.QS'}} 5</label>
+        <div class='form-fields'>
+            {{formInput systemFields.qs5 value=document.system.qs5 localize=true elementType="textarea"}}
+        </div>
+    </div>
+    <div class='form-group full-height'>
+        <label>{{localize 'dsk.CHARAbbrev.QS'}} 6</label>
+        <div class='form-fields'>
+            {{formInput systemFields.qs6 value=document.system.qs6 localize=true elementType="textarea"}}
+        </div>
+    </div>
 </div>

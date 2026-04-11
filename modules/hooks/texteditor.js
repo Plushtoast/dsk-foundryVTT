@@ -41,7 +41,15 @@ export function setEnrichers() {
                 let uuid = match[0].match(/(?:\[)(.*?)(?=\])/)[0].slice(1)
                 const item = await fromUuid(uuid)
                 if(!item || item.type != "information") return $('<a class="content-link broken"><i class="fas fa-unlink"></i>info</a>')[0]
-                if(!game.user.isGM) return $(`<a class="content-link"><i class="fas fa-mask"></i>${game.i18n.localize('dsk.GM notes')}</a>`)[0]
+                if(!game.user.isGM) {
+                    const templ = await renderTemplate("systems/dsk/templates/items/infopreview-player.hbs", {
+                        uuid,
+                        name: item.name,
+                        skill: item.system.skill,
+                        modifier: item.system.modifier
+                    })
+                    return $(templ)[0]
+                }
 
                 const templ = await renderTemplate("systems/dsk/templates/items/infopreview.hbs", { item })
                 return $(templ)[0]

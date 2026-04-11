@@ -1227,5 +1227,6 @@ export default class DiceDSK{
         html.on("click", ".resistEffect", (ev) => DSKActiveEffectConfig.resistEffect(ev))
         html.on("click", ".resistPain", ev => DiceDSK.rollResistPain(ev))
         RequestRoll.chatListeners(html)
+        game.dsk.apps.InformationQueryService.chatListeners(html)
     }
 }
