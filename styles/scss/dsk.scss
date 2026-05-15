@@ -248,6 +248,23 @@ h7 {
   margin-bottom: 8px;
 }
 
+.application.dsk.actor .window-content {
+
+  >[data-application-part="header"],
+  >.sheet-tabs {
+    align-self: stretch;
+    flex: 0 0 auto;
+  }
+
+  >.tab[data-tab] {
+    min-height: 0;
+
+    &.active {
+      flex: 1 1 0;
+    }
+  }
+}
+
 .character-sheet .general,
 .npc-sheet .general,
 .creature-sheet .general {
@@ -1894,6 +1911,12 @@ form.dsk.item-sheet {
   margin: 0;
   width: 100%;
   text-align: center;
+}
+
+.dsk.sheet.application {
+  .controls-dropdown {
+    z-index: 2;
+  }
 }
 
 .label-text,
