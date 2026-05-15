@@ -78,8 +78,8 @@ export class ItemDataModel extends DSKDataModel {
    * @returns {string} Formatted HTML line
    */
   static _chatLineHelper({ key, val, localizeVal = false }) {
-    const displayValue = localizeVal ? game.i18n.localize(val) : val;
-    return `<b>${game.i18n.localize(key)}</b>: ${displayValue || '-'}`;
+    const displayValue = localizeVal ? _loc(val) : val;
+    return `<b>${_loc(key)}</b>: ${displayValue || '-'}`;
   }
 
   /**
@@ -118,12 +118,12 @@ export class ItemDataModel extends DSKDataModel {
 
   static buildReloadProgress(item) {
     const progress = item.system.reloadTimeprogress / item.LZ;
-    item.title = game.i18n.format("dsk.WEAPON.loading", {
+    item.title = _loc("dsk.WEAPON.loading", {
       status: `${item.system.reloadTimeprogress}/${item.LZ}`,
     });
     item.progress = `${item.system.reloadTimeprogress}/${item.LZ}`;
     if (progress >= 1) {
-      item.title = game.i18n.localize("dsk.WEAPON.loaded");
+      item.title = _loc("dsk.WEAPON.loaded");
     }
     this.progressTransformation(item, progress);
   }

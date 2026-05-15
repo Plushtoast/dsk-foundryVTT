@@ -5,9 +5,9 @@ Hooks.once("ready", async() => {
     if (!CreatureType.creatureData) {
         const r = await fetch(`systems/dsk/lazy/creaturetype/${game.i18n.lang}.json`)
         CreatureType.creatureData = await r.json()
-        CreatureType.magical = game.i18n.localize("dsk.WEAPON.magical")
-        CreatureType.clerical = game.i18n.localize("dsk.WEAPON.clerical")
-        CreatureType.silverPlated = game.i18n.localize("dsk.WEAPON.silverPlated")
+        CreatureType.magical = _loc("dsk.WEAPON.magical")
+        CreatureType.clerical = _loc("dsk.WEAPON.clerical")
+        CreatureType.silverPlated = _loc("dsk.WEAPON.silverPlated")
         game.dsk.apps.CreatureType = CreatureType
     }
 })
@@ -94,7 +94,7 @@ export default class CreatureType {
                         const key = isBonus ? "WEAPON.vulnerableTo" : "WEAPON.resistantTo"
                         situationalModifiers.push(
                             ...CreatureType.buildDamageMod(
-                                `${game.i18n.format(key, { name: source.system.combatskill })} (${x.source})`,
+                                `${_loc(key, { name: source.system.combatskill })} (${x.source})`,
                                 x.value
                             )
                         )
@@ -142,7 +142,7 @@ export default class CreatureType {
             value,
             selected,
             type: "dmg",
-            source: game.i18n.localize('dsk.target')
+            source: _loc('dsk.target')
         } ]
     }
 
@@ -188,7 +188,7 @@ class ChimeraType extends VulnerableToLifeGods {}
 class DaimonidType extends CreatureType {
     constructor(creatureClass) {
         super(creatureClass)
-        this.spellImmunities = ["Influence", "Transformation"].map((x) => game.i18n.localize(`Features.${x}`))
+        this.spellImmunities = ["Influence", "Transformation"].map((x) => _loc(`Features.${x}`))
     }
     damageModifier(attackItem) {
         if (this.isAttackItem(attackItem)) {
@@ -205,7 +205,7 @@ class DemonType extends CreatureType {
     constructor(creatureClass) {
         super(creatureClass)
         this.spellImmunities = ["Influence", "Transformation", "Healing", "Illusion"].map((x) =>
-            game.i18n.localize(`Features.${x}`)
+            _loc(`Features.${x}`)
         )
         this.poisonImmunity = true
         this.diseaseImmunity = true
@@ -266,7 +266,7 @@ class ElementalType extends CreatureType {
 class FairyType extends CreatureType {
     constructor(creatureClass) {
         super(creatureClass)
-        this.spellImmunities = ["Illusion"].map((x) => game.i18n.localize(`Features.${x}`))
+        this.spellImmunities = ["Illusion"].map((x) => _loc(`Features.${x}`))
         this.poisonImmunity = true
         this.diseaseImmunity = true
     }
@@ -276,7 +276,7 @@ class GhostType extends CreatureType {
     constructor(creatureClass) {
         super(creatureClass)
         this.spellImmunities = ["Illusion", "Healing", "Telekinesis", "Transformation"].map((x) =>
-            game.i18n.localize(`Features.${x}`)
+            _loc(`Features.${x}`)
         )
         this.poisonImmunity = true
         this.diseaseImmunity = true
@@ -305,7 +305,7 @@ class GhostType extends CreatureType {
 class GolemType extends VulnerableToLifeGods {
     constructor(creatureClass) {
         super(creatureClass)
-        this.spellImmunities = ["Transformation"].map((x) => game.i18n.localize(`Features.${x}`))
+        this.spellImmunities = ["Transformation"].map((x) => _loc(`Features.${x}`))
         this.poisonImmunity = true
         this.diseaseImmunity = true
     }
@@ -317,7 +317,7 @@ class GolemType extends VulnerableToLifeGods {
 class HomunculiType extends VulnerableToLifeGods {
     constructor(creatureClass) {
         super(creatureClass)
-        this.spellImmunities = ["Healing"].map((x) => game.i18n.localize(`Features.${x}`))
+        this.spellImmunities = ["Healing"].map((x) => _loc(`Features.${x}`))
     }
     ignoredCondition(condition) {
         return !["inpain", "encumbered", "stunned", "feared", "paralysed", "confused"].includes(condition)
@@ -333,7 +333,7 @@ class AnimalType extends CreatureType {}
 class UndeadType extends CreatureType {
     constructor(creatureClass) {
         super(creatureClass)
-        this.spellImmunities = ["Influence", "Healing", "Illusion"].map((x) => game.i18n.localize(`Features.${x}`))
+        this.spellImmunities = ["Influence", "Healing", "Illusion"].map((x) => _loc(`Features.${x}`))
         this.poisonImmunity = true
         this.diseaseImmunity = true
     }
@@ -357,7 +357,7 @@ class SupernaturalType extends CreatureType {}
 class MagicalConstructType extends CreatureType {
     constructor(creatureClass) {
         super(creatureClass)
-        this.spellImmunities = ["Transformation"].map((x) => game.i18n.localize(`Features.${x}`))
+        this.spellImmunities = ["Transformation"].map((x) => _loc(`Features.${x}`))
         this.poisonImmunity = true
         this.diseaseImmunity = true
     }

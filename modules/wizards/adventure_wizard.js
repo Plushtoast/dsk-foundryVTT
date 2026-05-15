@@ -189,7 +189,7 @@ export default class BookWizard extends DragMixin(DefaultAppv2) {
 
             html = $(html)
             let div = $('<div class="header-actions action-buttons flexrow"></div>')
-            let button = $(`<button id="openJournalBrowser"><i class="fa fa-book"></i>${game.i18n.localize("dsk.Book.Wizard")}</button>`)
+            let button = $(`<button id="openJournalBrowser"><i class="fa fa-book"></i>${_loc("dsk.Book.Wizard")}</button>`)
             button.on('click', () => { BookWizard.wizard.render(true) })
             div.append(button)
             html.find(".header-actions:first-child").after(div)
@@ -562,7 +562,7 @@ export default class BookWizard extends DragMixin(DefaultAppv2) {
         this.bookData.isDynamic = true
         this.bookData.chapters = [
             {
-                "name": game.i18n.localize(`${this.bookData.moduleName}.name`),
+                "name": _loc(`${this.bookData.moduleName}.name`),
                 "content": journal.folders.map(x => {
                     return {
                         "name": x.name,
@@ -577,7 +577,7 @@ export default class BookWizard extends DragMixin(DefaultAppv2) {
         if (!chapter.actors) return []
 
         let result = []
-        const head = await game.folders.contents.find(x => x.name == game.i18n.localize(`${this.bookData.moduleName}.name`) && x.type == "Actor" && x.folder == null)
+        const head = await game.folders.contents.find(x => x.name == _loc(`${this.bookData.moduleName}.name`) && x.type == "Actor" && x.folder == null)
         const folderids = head ? await game.folders.contents.filter(x => x.type == "Actor" && x.folder?.id == head.id).map(x => x.id) : undefined
         for (let k of chapter.actors) {
             let actor = folderids?.length ? game.actors.contents.find(x => x.name == k && folderids.includes(x.folder?.id)) : undefined
@@ -633,7 +633,7 @@ export default class BookWizard extends DragMixin(DefaultAppv2) {
             if (this.selectedChapter) {
                 if (this.selectedChapter == "prep") {
                     let info = {
-                        initDescr: game.i18n.format(`${this.bookData.options?.scope || this.bookData.moduleName}.importContent`, { defaultText: game.i18n.localize('dsk.importDefault') })
+                        initDescr: _loc(`${this.bookData.options?.scope || this.bookData.moduleName}.importContent`, { defaultText: _loc('dsk.importDefault') })
                     }
 
                     let modules = this.bookData.modules
@@ -808,7 +808,7 @@ class InitializerForm extends FormApplication {
     static _warnedAppV1 = true;
 
     render(mod, options) {
-        new game.dsk.apps.DSKInitializer("DSK Module Initialization", game.i18n.format(`${options?.scope || mod}.importContent`, { defaultText: game.i18n.localize("dsk.importDefault") }), mod, game.i18n.lang, options).render(true)
+        new game.dsk.apps.DSKInitializer("DSK Module Initialization", _loc(`${options?.scope || mod}.importContent`, { defaultText: _loc("dsk.importDefault") }), mod, game.i18n.lang, options).render(true)
     }
 }
 

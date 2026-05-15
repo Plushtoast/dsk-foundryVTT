@@ -112,14 +112,14 @@ export default class WizardDSK extends DefaultAppv2 {
                 item = {
                     name: x.trim(),
                     notFound: true,
-                    tooltip: game.i18n.localize('dsk.DSKError.itemNotFound'),
+                    tooltip: _loc('dsk.DSKError.itemNotFound'),
                     apCost: "?"
                 }
             } else {
                 const uuid = item.uuid
                 item = duplicate(item)
                 item.uuid = uuid
-                item.tooltip = game.i18n.localize("dsk.details")
+                item.tooltip = _loc("dsk.details")
                 item = ItemRulesDSK.reverseAdoptionCalculation(this.actor, parsed, item)
                 if (item.system.ap) {
                     item.APunparseable = isNaN(item.system.ap)
@@ -131,7 +131,7 @@ export default class WizardDSK extends DefaultAppv2 {
             let actorHasItem = this.actor.items.find(y => types.includes(y.type) && y.name == parsed.original) != undefined
             item.disabled = actorHasItem || item.notFound || item.APunparseable
             if (actorHasItem)
-                item.tooltip = game.i18n.localize("dsk.YouAlreadyHaveit")
+                item.tooltip = _loc("dsk.YouAlreadyHaveit")
             return item
         }))
     }
@@ -202,7 +202,7 @@ export default class WizardDSK extends DefaultAppv2 {
         result = await new Promise((resolve, reject) => {
             foundry.applications.api.DialogV2.wait({
                 window: { title: "dsk.DIALOG.warning" },
-                content: game.i18n.format('dsk.DIALOG.alreadyAddedCharacterpart', { category: DSKUtility.categoryLocalization(category) }),
+                content: _loc('dsk.DIALOG.alreadyAddedCharacterpart', { category: DSKUtility.categoryLocalization(category) }),
                 buttons: [
                     {
                         action: "ok",
@@ -284,7 +284,7 @@ export default class WizardDSK extends DefaultAppv2 {
         if (this.errors.length == 0) {
             this.close()
         } else {
-            $(this.element).find('.dialog-buttons').html(`<div class="error"><p>${game.i18n.localize('dsk.DSKError.notUnderstood')}</p><ul><li>${this.errors.join("</li><li>")}</li></ul></div>`)
+            $(this.element).find('.dialog-buttons').html(`<div class="error"><p>${_loc('dsk.DSKError.notUnderstood')}</p><ul><li>${this.errors.join("</li><li>")}</li></ul></div>`)
         }
     }
 }

@@ -33,7 +33,7 @@ export default class OnUseEffect {
             }
         } else {
             ui.notifications.error(
-                game.i18n.format("dsk.DSKError.macroNotFound", { name })
+                _loc("dsk.DSKError.macroNotFound", { name })
             );
         }
         return result;
@@ -75,7 +75,7 @@ export default class OnUseEffect {
         return {
             name,
             img: "icons/svg/aura.svg",
-            changes,
+            system: { changes: changes.map(change => ({ ...change, type: change.type ?? OnUseEffect.modeToType(change.mode) })) },
             duration,
             flags: {
                 dsk: {
@@ -86,12 +86,16 @@ export default class OnUseEffect {
         };
     }
 
+    static modeToType(mode) {
+        return ["custom", "multiply", "add", "downgrade", "upgrade", "override"][Number(mode)] ?? mode;
+    }
+
     async socketedConditionAddActor(actors, data) {
         if (game.user.isGM) {
             const systemCon = typeof data === "string";
             if (systemCon) {
-                data = duplicate(CONFIG.statusEffects.find((e) => e.id == data));
-                data.name = game.i18n.localize(data.name);
+                data = duplicate(CONFIG.statusEffects[data]);
+                data.name = _loc(data.name);
             }
 
             const names = [];
@@ -118,7 +122,7 @@ export default class OnUseEffect {
     async createInfoMessage(data, names, added = true) {
         if (names.length) {
             const format = added ? "ActiveEffects.appliedEffect" : "ActiveEffects.removedEffect"
-            const infoMsg = game.i18n.format(format, {
+            const infoMsg = _loc(format, {
                 source: data.label,
                 target: names.join(", "),
             });
@@ -136,8 +140,8 @@ export default class OnUseEffect {
                     names.push(token.name);
                 }
             }
-            const data = CONFIG.statusEffects.find((x) => x.id == coreId);
-            data.name = game.i18n.localize(data.name);
+            const data = CONFIG.statusEffects[coreId];
+            data.name = _loc(data.name);
             await this.createInfoMessage(data, names, false);
         } else {
             const payload = {
@@ -177,8 +181,8 @@ export default class OnUseEffect {
         if (game.user.isGM) {
             const systemCon = typeof data === "string";
             if (systemCon) {
-                data = duplicate(CONFIG.statusEffects.find((e) => e.id == data));
-                data.name = game.i18n.localize(data.name);
+                data = duplicate(CONFIG.statusEffects[data]);
+                data.name = _loc(data.name);
             }
 
             const names = [];

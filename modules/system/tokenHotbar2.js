@@ -38,8 +38,8 @@ export default class TokenHotbar2 extends DefaultAppv2 {
     constructor(options = {}) {
         super(options);
 
-        this.combatSkills = ["selfControl", "featOfStrength", "bodyControl", "perception"].map(x => game.i18n.localize(`dsk.LocalizedIDs.${x}`))
-        this.defaultSkills = [game.i18n.localize("dsk.LocalizedIDs.perception")]
+        this.combatSkills = ["selfControl", "featOfStrength", "bodyControl", "perception"].map(x => _loc(`dsk.LocalizedIDs.${x}`))
+        this.defaultSkills = [_loc("dsk.LocalizedIDs.perception")]
 
         const parentUpdate = (source) => {
             const id = source.parent ? source.parent.id : undefined
@@ -330,7 +330,7 @@ export default class TokenHotbar2 extends DefaultAppv2 {
         }
 
         if (this.showEffects) {
-            const label = game.i18n.localize("dsk.CONDITION.add")
+            const label = _loc("dsk.CONDITION.add")
             let effect = { name: label, id: "", icon: "icons/svg/aura.svg", cssClass: "effect", abbrev: label[0], subfunction: "addEffect" }
             if (effects.length > 0) {
                 effect.more = effects
@@ -390,7 +390,7 @@ class AddEffectDialog extends DefaultAppv2 {
         classes: ["dsk", "tokenStatusEffects"],
         position: {
             width: 700,
-            height: Math.ceil(CONFIG.statusEffects?.length || 20 / 3) * 32
+            height: Math.ceil(Object.keys(CONFIG.statusEffects ?? {}).length || 20 / 3) * 32
         },
         window: {
             resizable: true,
@@ -413,11 +413,11 @@ class AddEffectDialog extends DefaultAppv2 {
 
     async _prepareContext(_options) {
         const data = await super._prepareContext(_options);
-        data.effects = foundry.utils.duplicate(CONFIG.statusEffects).map(x => {
+        data.effects = foundry.utils.duplicate(Object.values(CONFIG.statusEffects)).map(x => {
             return {
-                name: game.i18n.localize(x.name),
+                name: _loc(x.name),
                 icon: x.img,
-                description: game.i18n.localize(x.description),
+                description: _loc(x.description),
                 id: x.id
             }
         }).sort((a, b) => a.name.localeCompare(b.name));

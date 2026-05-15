@@ -43,8 +43,8 @@ export default class CreatureData extends ActorDataModel.mixin(
     }
   }
 
-  static _migrateData(source) {
-    super._migrateData(source);
+  static _migrateData(source, options, _state) {
+    super._migrateData(source, options, _state);
 
     // Migrate actionCount from string to number if needed
     const actionCount = source.actionCount;

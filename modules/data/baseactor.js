@@ -132,7 +132,7 @@ export class ActorDataModel extends DSKDataModel {
       this._applyConditionsAndMovement();
     } catch (error) {
       console.error(`Error preparing actor data for ${this.parent.name}:`, error);
-      ui.notifications.error(game.i18n.format("dsk.DSKError.PreparationError", { name: this.parent.name }) + error.message);
+      ui.notifications.error(_loc("dsk.DSKError.PreparationError", { name: this.parent.name }) + error.message);
     }
   }
 
@@ -331,7 +331,7 @@ export class ActorDataModel extends DSKDataModel {
     }, 0);
     return Math.max(
       0,
-      encumbrance - SpecialabilityRulesDSK.abilityStep(this.parent, game.i18n.localize("dsk.LocalizedIDs.inuredToEncumbrance"))
+      encumbrance - SpecialabilityRulesDSK.abilityStep(this.parent, _loc("dsk.LocalizedIDs.inuredToEncumbrance"))
     );
   }
 

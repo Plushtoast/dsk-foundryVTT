@@ -55,7 +55,7 @@ export default class ItemDSK extends Item{
 
         if (game.user.targets.size) {
             cardOptions.isOpposedTest = testData.opposable
-            const opposed = ` - ${game.i18n.localize("dsk.Opposed")}`
+            const opposed = ` - ${_loc("dsk.Opposed")}`
             if (cardOptions.isOpposedTest && cardOptions.title.match(opposed + "$") != opposed) cardOptions.title += opposed
         }
 
@@ -67,7 +67,7 @@ export default class ItemDSK extends Item{
     static attackStatEffect(situationalModifiers, value) {
         if (value != 0) {
             situationalModifiers.push({
-                name: game.i18n.localize("dsk.statuseffects"),
+                name: _loc("dsk.statuseffects"),
                 value,
                 selected: true,
             })
@@ -76,7 +76,7 @@ export default class ItemDSK extends Item{
 
     static prepareRangeAttack(situationalModifiers, actor, data, source, tokenId, combatskills, currentAmmo = undefined) {
         situationalModifiers.push(
-            ...AdvantageRulesDSK.getVantageAsModifier(actor, game.i18n.localize("dsk.LocalizedIDs.restrictedSenseSight"), -2)
+            ...AdvantageRulesDSK.getVantageAsModifier(actor, _loc("dsk.LocalizedIDs.restrictedSenseSight"), -2)
         )
         this.getCombatSkillModifier(actor, source, situationalModifiers)
 
@@ -85,7 +85,7 @@ export default class ItemDSK extends Item{
         const defenseMalus = Number(actor.system.rangeStats.defenseMalus) * -1
         if (defenseMalus != 0) {
             situationalModifiers.push({
-                name: `${game.i18n.localize("dsk.statuseffects")} - ${game.i18n.localize("dsk.MODS.defenseMalus")}`,
+                name: `${_loc("dsk.statuseffects")} - ${_loc("dsk.MODS.defenseMalus")}`,
                 value: defenseMalus,
                 type: "defenseMalus",
                 selected: true,
@@ -94,14 +94,14 @@ export default class ItemDSK extends Item{
 
         const rangeOptions = {...DSK.rangeWeaponModifiers }
         delete rangeOptions[
-            AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.senseOfRange")) ? "long" : "rangesense"
+            AdvantageRulesDSK.hasVantage(actor, _loc("dsk.LocalizedIDs.senseOfRange")) ? "long" : "rangesense"
         ]
-        if (!SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.extremeShot"))) delete rangeOptions["extreme"]
-        const drivingArcher = SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.drivingArcher"))
+        if (!SpecialabilityRulesDSK.hasAbility(actor, _loc("dsk.LocalizedIDs.extremeShot"))) delete rangeOptions["extreme"]
+        const drivingArcher = SpecialabilityRulesDSK.hasAbility(actor, _loc("dsk.LocalizedIDs.drivingArcher"))
         const mountedOptions = drivingArcher ? duplicate(DSK.drivingArcherOptions) : duplicate(DSK.mountedRangeOptions)
         let finalMountedOptions = {}
         for(let key of Object.keys(mountedOptions)){
-            finalMountedOptions[`${game.i18n.localize('mountedRangeOptions.' + key)} (${mountedOptions[key]})`] = mountedOptions[key]
+            finalMountedOptions[`${_loc('mountedRangeOptions.' + key)} (${mountedOptions[key]})`] = mountedOptions[key]
         }
 
         mergeObject(data, {
@@ -175,7 +175,7 @@ export default class ItemDSK extends Item{
         const defenseMalus = Number(actor.system.meleeStats.defenseMalus) * -1
         if (defenseMalus != 0) {
             situationalModifiers.push({
-                name: `${game.i18n.localize("dsk.statuseffects")} - ${game.i18n.localize("dsk.MODS.defenseMalus")}`,
+                name: `${_loc("dsk.statuseffects")} - ${_loc("dsk.MODS.defenseMalus")}`,
                 value: defenseMalus,
                 type: "defenseMalus",
                 selected: true,
@@ -255,12 +255,12 @@ export default class ItemDSK extends Item{
         const combatskill = actor.items.find((x) => x.type == "combatskill" && x.name == source.system.combatskill)
 
         for (let ef of combatskill.effects) {
-            for (let change of ef.changes) {
+            for (let change of ef.system?.changes ?? ef.changes) {
                 switch (change.key) {
                     case "system.rangeStats.defenseMalus":
                     case "system.meleeStats.defenseMalus":
                         situationalModifiers.push({
-                            name: `${combatskill.name} - ${game.i18n.localize("dsk.MODS.defenseMalus")}`,
+                            name: `${combatskill.name} - ${_loc("dsk.MODS.defenseMalus")}`,
                             value: change.value * -1,
                             type: "defenseMalus",
                             selected: true,
@@ -274,7 +274,7 @@ export default class ItemDSK extends Item{
     static buildCombatSpecAbs(actor, categories, toSearch, mode) {
         let searchFilter
         if (toSearch) {
-            toSearch.push(game.i18n.localize("dsk.LocalizedIDs.all"))
+            toSearch.push(_loc("dsk.LocalizedIDs.all"))
             toSearch = toSearch.map((x) => x.toLowerCase())
             searchFilter = (x, toSearch) => {
                 return (
@@ -297,10 +297,10 @@ export default class ItemDSK extends Item{
         })
 
         let combatskills = []
-        const at = game.i18n.localize("dsk.LocalizedAbilityModifiers.at")
-        const tp = game.i18n.localize("dsk.LocalizedAbilityModifiers.tp")
-        const pa = game.i18n.localize("dsk.LocalizedAbilityModifiers.pa")
-        const dm = game.i18n.localize("dsk.LocalizedAbilityModifiers.dm")
+        const at = _loc("dsk.LocalizedAbilityModifiers.at")
+        const tp = _loc("dsk.LocalizedAbilityModifiers.tp")
+        const pa = _loc("dsk.LocalizedAbilityModifiers.pa")
+        const dm = _loc("dsk.LocalizedAbilityModifiers.dm")
 
         if (mode == "attack") {
             for (let com of combatSpecAbs) {
@@ -309,7 +309,7 @@ export default class ItemDSK extends Item{
                 const tpbonus = effects[tp] || 0
                 const dmmalus = effects[dm] || 0
                 if (atbonus != 0 || tpbonus != 0 || dmmalus != 0 || com.effects.size > 0) {
-                    const subCategory = game.i18n.localize(DSK.combatSkillSubCategories[com.system.subcategory])
+                    const subCategory = _loc(DSK.combatSkillSubCategories[com.system.subcategory])
                     combatskills.push({
                         name: com.name,
                         atbonus,
@@ -332,7 +332,7 @@ export default class ItemDSK extends Item{
                 const effects = ItemDSK.parseEffect(com.system.effect, actor)
                 const pabonus = effects[pa] || 0
                 if (pabonus != 0) {
-                    const subCategory = game.i18n.localize(DSK.combatSkillSubCategories[com.system.subcategory])
+                    const subCategory = _loc(DSK.combatSkillSubCategories[com.system.subcategory])
                     combatskills.push({
                         name: com.name,
                         pabonus,
@@ -446,7 +446,7 @@ export default class ItemDSK extends Item{
     }
 
     static _chatLineHelper(key, val) {
-        return `<b>${game.i18n.localize(key)}</b>: ${val ? val : "-"}`
+        return `<b>${_loc(key)}</b>: ${val ? val : "-"}`
     }
 
     static setupSubClasses() {
@@ -486,7 +486,7 @@ export default class ItemDSK extends Item{
         let itemModifiers = {}
         if (!effect || typeof effect !== 'string') return itemModifiers
         
-        let regex = new RegExp(game.i18n.localize("dsk.CHARAbbrev.GS"), "gi")
+        let regex = new RegExp(_loc("dsk.CHARAbbrev.GS"), "gi")
         for (let mod of effect.split(/,|;/).map((x) => x.trim())) {
             let vals = mod.replace(/(\s+)/g, " ").trim().split(" ")
             vals[0] = vals[0].replace(regex, actor.system.stats.gs.max)
@@ -525,7 +525,7 @@ export default class ItemDSK extends Item{
 
         chatData.hasPrice = ("price" in chatData.system) && !detailsObfuscated
         if (chatData.hasPrice) {
-            chatData.properties.push(`<b>${game.i18n.localize("dsk.price")}</b>: ${chatData.system.price}`)
+            chatData.properties.push(`<b>${_loc("dsk.price")}</b>: ${chatData.system.price}`)
         }
 
         if (item.pack) chatData.itemLink = item.link
@@ -597,7 +597,7 @@ class ItemTrait extends ItemDSK {
 
     static setupDialog(ev, options, item, actor, tokenId) {
         let mode = options["mode"]
-        let title = item.name + " " + game.i18n.localize("dsk." + mode + "test")
+        let title = item.name + " " + _loc("dsk." + mode + "test")
         const source = item.toObject()
         mergeObject(source.system,{
             characteristic1: "attack",
@@ -615,10 +615,10 @@ class ItemTrait extends ItemDSK {
         }
         const multipleDefenseValue = RuleChaos.multipleDefenseValue(actor, source)
         let data = {
-            rollMode: options.rollMode,
+            messageMode: options.messageMode,
             mode,
             hasSchips: this.hasSchips(actor),
-            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
+            defenseCountString: _loc("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
         }
 
         const traitType = getProperty(item, "system.traitType")
@@ -637,7 +637,7 @@ class ItemTrait extends ItemDSK {
                 } else {
                     DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue)
                 }
-                if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) actor.reduceSchips(0)
+                if(testData.situationalModifiers.some(x => x.name == _loc("dsk.schips"))) actor.reduceSchips(0)
 
                 testData.isRangeDefense = data.isRangeDefense
                 Hooks.call("callbackDialogCombatDSK", testData, actor, html, item, tokenId)
@@ -673,14 +673,14 @@ class ItemMeleeweapon extends ItemDSK{
             this._chatLineHelper("dsk.damage", data.tp),
             this._chatLineHelper("dsk.ABBR.awvw", `${data.aw} / ${data.vw}`),
             this._chatLineHelper("TYPES.Item.combatskill", data.combatskill),
-            this._chatLineHelper("dsk.range", game.i18n.localize(`dsk.Range.${data.rw}`)),
+            this._chatLineHelper("dsk.range", _loc(`dsk.Range.${data.rw}`)),
         ]
 
         return res
     }
 
     static getSituationalModifiers(situationalModifiers, actor, data, source) {
-        let wrongHandDisabled = AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.ambidextrous"))
+        let wrongHandDisabled = AdvantageRulesDSK.hasVantage(actor, _loc("dsk.LocalizedIDs.ambidextrous"))
         source = DSKUtility.toObjectIfPossible(source)
 
         let toSearch = [source.system.combatskill]
@@ -695,7 +695,7 @@ class ItemMeleeweapon extends ItemDSK{
 
     static setupDialog(ev, options, item, actor, tokenId) {
         let mode = options.mode
-        let title = item.name + " " + game.i18n.localize("dsk." + mode + "test")
+        let title = item.name + " " + _loc("dsk." + mode + "test")
 
         const source = item.toObject()
         const skill = actor.items.find(x => x.type == "combatskill" && x.name == item.system.combatskill)
@@ -716,10 +716,10 @@ class ItemMeleeweapon extends ItemDSK{
         }
         const multipleDefenseValue = RuleChaos.multipleDefenseValue(actor, testData.source);
         let data = {
-            rollMode: options.rollMode,
+            messageMode: options.messageMode,
             mode,
             hasSchips: this.hasSchips(actor),
-            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
+            defenseCountString: _loc("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
         }
         let situationalModifiers = actor ? DSKStatusEffects.getRollModifiers(actor, item, { mode }) : []
         this.getSituationalModifiers(situationalModifiers, actor, data, item)
@@ -731,7 +731,7 @@ class ItemMeleeweapon extends ItemDSK{
             data,
             callback: (html, options = {}) => {
                 DSKCombatDialog.resolveMeleeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue, mode)
-                if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) actor.reduceSchips(0)
+                if(testData.situationalModifiers.some(x => x.name == _loc("dsk.schips"))) actor.reduceSchips(0)
 
                 Hooks.call("callbackDialogCombatDSK", testData, actor, html, item, tokenId)
                 testData.isRangeDefense = data.isRangeDefense
@@ -775,7 +775,7 @@ class ItemRangeweapon extends ItemDSK{
             if (currentAmmo) {
                 if (currentAmmo.system.atmod) {
                     situationalModifiers.push({
-                        name: `${currentAmmo.name} - ${game.i18n.localize("dsk.atmod")}`,
+                        name: `${currentAmmo.name} - ${_loc("dsk.atmod")}`,
                         value: currentAmmo.system.atmod,
                         selected: true,
                         specAbId: source.system.currentAmmo,
@@ -783,7 +783,7 @@ class ItemRangeweapon extends ItemDSK{
                 }
                 if (currentAmmo.system.damageMod || currentAmmo.system.armorMod) {
                     const dmgMod = {
-                        name: `${currentAmmo.name} - ${game.i18n.localize("dsk.MODS.damage")}`,
+                        name: `${currentAmmo.name} - ${_loc("dsk.MODS.damage")}`,
                         value: currentAmmo.system.damageMod.replace(/wWD/g, "d") || 0,
                         type: "dmg",
                         selected: true,
@@ -794,9 +794,9 @@ class ItemRangeweapon extends ItemDSK{
                 }
                 if(currentAmmo.effects.length){
                     situationalModifiers.push({
-                        name: `${currentAmmo.name} - ${game.i18n.localize("dsk.effect")}`,
+                        name: `${currentAmmo.name} - ${_loc("dsk.effect")}`,
                         value: 1,
-                        type: game.i18n.localize('dsk.effect'),
+                        type: _loc('dsk.effect'),
                         selected: true,
                         specAbId: source.system.currentAmmo,
                     })
@@ -838,7 +838,7 @@ class ItemRangeweapon extends ItemDSK{
 
     static async setupDialog(ev, options, item, actor, tokenId) {
         let mode = options.mode
-        let title = item.name + " " + game.i18n.localize("dsk." + mode + "test")
+        let title = item.name + " " + _loc("dsk." + mode + "test")
         const skill = actor.items.find(x => x.type == "combatskill" && x.name == item.system.combatskill)
         const source = item.toObject()
         mergeObject(source.system, {
@@ -860,10 +860,10 @@ class ItemRangeweapon extends ItemDSK{
 
         const multipleDefenseValue = RuleChaos.multipleDefenseValue(actor, source);
         let data = {
-            rollMode: options.rollMode,
+            messageMode: options.messageMode,
             mode,
             hasSchips: this.hasSchips(actor),
-            defenseCountString: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
+            defenseCountString: _loc("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
         }
         let situationalModifiers = actor ? DSKStatusEffects.getRollModifiers(actor, item, { mode }) : []
         this.getSituationalModifiers(situationalModifiers, actor, data, item, tokenId)
@@ -875,7 +875,7 @@ class ItemRangeweapon extends ItemDSK{
             data,
             callback: (html, options = {}) => {
                 DSKCombatDialog.resolveRangeDialog(testData, cardOptions, html, actor, options, multipleDefenseValue)
-                if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) actor.reduceSchips(0)
+                if(testData.situationalModifiers.some(x => x.name == _loc("dsk.schips"))) actor.reduceSchips(0)
                 
                 Hooks.call("callbackDialogCombatDSK", testData, actor, html, item, tokenId)
                 return { testData, cardOptions }
@@ -900,13 +900,13 @@ class ItemArmor extends ItemDSK{
 
 class ItemAmmunition extends ItemDSK{
     static chatData(data, name) {
-        return [this._chatLineHelper("dsk.ammunitionType", game.i18n.localize(`dsk.ammunition.${data.ammunitionType}`))]
+        return [this._chatLineHelper("dsk.ammunitionType", _loc(`dsk.ammunition.${data.ammunitionType}`))]
     }
 }
 
 class ItemEquipment extends ItemDSK{
     static chatData(data, name) {
-        return [this._chatLineHelper("dsk.equipmentType", game.i18n.localize(`dsk.Equipment.${data.category}`))]
+        return [this._chatLineHelper("dsk.equipmentType", _loc(`dsk.Equipment.${data.category}`))]
     }
 }
 
@@ -957,7 +957,7 @@ class ItemAhnengabe extends ItemDSK{
         testData.testDifficulty = 0
         testData.situationalModifiers = ActorDSK._parseModifiers(html)
         ActorDSK.schipsModifier(html, testData.situationalModifiers)
-        if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) actor.reduceSchips(0)
+        if(testData.situationalModifiers.some(x => x.name == _loc("dsk.schips"))) actor.reduceSchips(0)
 
         const form = html[0].tagName == 'FORM' ? html[0] : html.find('form')[0]
         const formData = new foundry.applications.ux.FormDataExtended(form).object
@@ -967,16 +967,16 @@ class ItemAhnengabe extends ItemDSK{
             reach: html.find(".reach").text()
         }
         testData.situationalModifiers.push({
-            name: game.i18n.localize("dsk.removeGesture"),
+            name: _loc("dsk.removeGesture"),
             value: Number(formData.removeGesture) || 0,
         }, {
-            name: game.i18n.localize("dsk.removeFormula"),
+            name: _loc("dsk.removeFormula"),
             value: Number(formData.removeFormula) || 0,
         }, {
-            name: game.i18n.localize("dsk.zkModifier"),
+            name: _loc("dsk.zkModifier"),
             value: formData.zkModifier || 0,
         }, {
-            name: game.i18n.localize("dsk.skModifier"),
+            name: _loc("dsk.skModifier"),
             value: formData.skModifier || 0,
         })
         testData.extensions = ItemAhnengabe.getSpecAbModifiers(html)
@@ -998,13 +998,13 @@ class ItemAhnengabe extends ItemDSK{
 
     static getSituationalModifiers(situationalModifiers, actor, data, source) {
         situationalModifiers.push(
-            ...AdvantageRulesDSK.getVantageAsModifier(actor, game.i18n.localize("dsk.LocalizedIDs.magicalAttunement"), 1, true),
+            ...AdvantageRulesDSK.getVantageAsModifier(actor, _loc("dsk.LocalizedIDs.magicalAttunement"), 1, true),
             ...AdvantageRulesDSK.getVantageAsModifier(
                 actor,
-                game.i18n.localize("dsk.LocalizedIDs.magicalRestriction"), -1,
+                _loc("dsk.LocalizedIDs.magicalRestriction"), -1,
                 true
             ),
-            ...AdvantageRulesDSK.getVantageAsModifier(actor, game.i18n.localize("dsk.LocalizedIDs.boundToArtifact"), -1, true),
+            ...AdvantageRulesDSK.getVantageAsModifier(actor, _loc("dsk.LocalizedIDs.boundToArtifact"), -1, true),
             //...this.attackSpellMalus(source)
         )
 
@@ -1024,7 +1024,7 @@ class ItemAhnengabe extends ItemDSK{
     static setupDialog(ev, options, spell, actor, tokenId) {
         let sheet = "ahnen"
 
-        let title = spell.name + " " + game.i18n.localize(`dsk.probe`)  + (options.subtitle || "")
+        let title = spell.name + " " + _loc(`dsk.probe`)  + (options.subtitle || "")
 
         let testData = {
             opposable: !!spell.system.effectFormula,
@@ -1042,7 +1042,7 @@ class ItemAhnengabe extends ItemDSK{
         }
 
         let data = {
-            rollMode: options.rollMode,
+            messageMode: options.messageMode,
             hasSKModifier: spell.system.resist == "sk",
             hasZKModifier: spell.system.resist == "zk",
             spellCost: spell.system.AeP,
@@ -1061,7 +1061,7 @@ class ItemAhnengabe extends ItemDSK{
             template: `/systems/dsk/templates/dialog/${sheet}-enhanced-dialog.hbs`,
             data,
             callback: async(html, options = {}) => {
-                cardOptions.rollMode = html.find('[name="rollMode"]').val()
+                cardOptions.messageMode = html.find('[name="messageMode"]:checked').val()
                 await this.getCallbackData(testData, html, actor)
                 mergeObject(testData.extra.options, options)
                 return { testData, cardOptions }
@@ -1094,7 +1094,7 @@ class ItemPoison extends ItemDSK{
                     situationalModifiers.push(
                         ...AdvantageRulesDSK.getVantageAsModifier(
                             target.actor,
-                            game.i18n.localize("dsk.LocalizedIDs.poisonResistance"), -1,
+                            _loc("dsk.LocalizedIDs.poisonResistance"), -1,
                             false,
                             true
                         )
@@ -1109,7 +1109,7 @@ class ItemPoison extends ItemDSK{
     }
 
     static setupDialog(ev, options, item, actor, tokenId) {
-        let title = item.name + " " + game.i18n.localize("TYPES.Item." + item.type) + " " + game.i18n.localize("dsk.check")
+        let title = item.name + " " + _loc("TYPES.Item." + item.type) + " " + _loc("dsk.check")
 
         let testData = {
             opposable: false,
@@ -1121,7 +1121,7 @@ class ItemPoison extends ItemDSK{
         }
 
         let data = {
-            rollMode: options.rollMode,
+            messageMode: options.messageMode,
         }
 
         let situationalModifiers = []
@@ -1133,15 +1133,15 @@ class ItemPoison extends ItemDSK{
             template: "/systems/dsk/templates/dialog/poison-dialog.hbs",
             data,
             callback: (html, options = {}) => {
-                cardOptions.rollMode = html.find('[name="rollMode"]').val()
+                cardOptions.messageMode = html.find('[name="messageMode"]:checked').val()
                 testData.situationalModifiers = ActorDSK._parseModifiers(html)
 
                 testData.situationalModifiers.push({
-                    name: game.i18n.localize("zkModifier"),
+                    name: _loc("zkModifier"),
                     value: html.find('[name="zkModifier"]').val() || 0,
                 })
                 testData.situationalModifiers.push({
-                    name: game.i18n.localize("skModifier"),
+                    name: _loc("skModifier"),
                     value: html.find('[name="skModifier"]').val() || 0,
                 })
                 mergeObject(testData.extra.options, options)
@@ -1167,7 +1167,7 @@ class ItemSkill extends ItemDSK{
     }
 
     static setupDialog(ev, options, skill, actor, tokenId) {
-        let title = skill.name + " " + game.i18n.localize("dsk.probe") + (options.subtitle || "")
+        let title = skill.name + " " + _loc("dsk.probe") + (options.subtitle || "")
         let testData = {
             opposable: true,
             source: skill,
@@ -1179,7 +1179,7 @@ class ItemSkill extends ItemDSK{
         }
 
         let data = {
-            rollMode: options.rollMode,
+            messageMode: options.messageMode,
             modifier: options.modifier || 0,
             difficultyLabels: DSK.skillDifficultyLabels,
             hasSchips: this.hasSchips(actor),
@@ -1195,10 +1195,10 @@ class ItemSkill extends ItemDSK{
             template: "/systems/dsk/templates/dialog/skill-dialog.hbs",
             data,
             callback: (html, options = {}) => {
-                cardOptions.rollMode = html.find('[name="rollMode"]').val()
+                cardOptions.messageMode = html.find('[name="messageMode"]:checked').val()
                 testData.situationalModifiers = ActorDSK._parseModifiers(html)
                 ActorDSK.schipsModifier(html, testData.situationalModifiers)
-                if(testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) actor.reduceSchips(0)
+                if(testData.situationalModifiers.some(x => x.name == _loc("dsk.schips"))) actor.reduceSchips(0)
 
                 testData.testDifficulty = DSK.skillDifficultyModifiers[html.find('[name="testDifficulty"]').val()]
                 testData.advancedModifiers = {

@@ -44,10 +44,10 @@ export default class SkillTemplate extends DSKDataModel {
   }
 
   _prepareItemAdvancementCost(item) {
-    item.cost = game.i18n.format("dsk.advancementCost", {
+    item.cost = _loc("dsk.advancementCost", {
       cost: DSKUtility._calculateAdvCost(item.system.level, item.system.StF),
     });
-    item.refund = game.i18n.format("dsk.refundCost", {
+    item.refund = _loc("dsk.refundCost", {
       cost: DSKUtility._calculateAdvCost(item.system.level, item.system.StF, 0),
     });
     item.canAdvance = this.parent.parent.system.canAdvance;

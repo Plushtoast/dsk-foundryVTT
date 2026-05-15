@@ -78,7 +78,7 @@ export default class DSKInitializer extends foundry.applications.api.DialogV2 {
                 const updates = []
                 for (let folder in this.folders) {
                     const flag = this.folders[folder].getFlag("dsk", "parent")
-                    let parent = flag == headReplace ? game.i18n.localize(`${this.module}.name`) : flag
+                    let parent = flag == headReplace ? _loc(`${this.module}.name`) : flag
                     if (parent) {
                         updates.push({ _id: this.folders[folder].id, parent: this.folders[parent].id })
                     }
@@ -141,7 +141,7 @@ export default class DSKInitializer extends foundry.applications.api.DialogV2 {
                         [resetScene, resetAll] = await new Promise((resolve, reject) => {
                             foundry.applications.api.DialogV2.wait({
                                 window: { title: "dsk.Book.sceneReset" },
-                                content: game.i18n.format("dsk.Book.sceneResetDescription", { name: entry.name }),
+                                content: _loc("dsk.Book.sceneResetDescription", { name: entry.name }),
                                 buttons: [
                                     {
                                         action: "yes",
@@ -314,7 +314,7 @@ export default class DSKInitializer extends foundry.applications.api.DialogV2 {
     }
 
     async getFolderForType(documentType, parent = null, folderName = null, sort = 0, color = "") {
-        if (!folderName) folderName = game.i18n.localize(`${this.module}.name`)
+        if (!folderName) folderName = _loc(`${this.module}.name`)
 
         return DSKUtility.getFolderForType(documentType, parent, folderName, sort, color)
     }

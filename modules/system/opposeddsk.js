@@ -77,11 +77,11 @@ export default class OpposedDSK{
             testResult.source = preData.source
             const damage = OpposedDSK._calculateOpposedDamage(testResult, defender)
             const title = [
-                damage.armorMod != 0 ? `${damage.armorMod + " " + game.i18n.localize('dsk.Modifier')}` : "",
-                damage.armorMultiplier != 1 ? "*" + damage.armorMultiplier + " " + game.i18n.localize('dsk.Modifier') : "",
-                damage.spellArmor != 0 ? `${damage.spellArmor} ${game.i18n.localize('dsk.spellArmor')}` : ""
+                damage.armorMod != 0 ? `${damage.armorMod + " " + _loc('dsk.Modifier')}` : "",
+                damage.armorMultiplier != 1 ? "*" + damage.armorMultiplier + " " + _loc('dsk.Modifier') : "",
+                damage.spellArmor != 0 ? `${damage.spellArmor} ${_loc('dsk.spellArmor')}` : ""
             ].join("")
-            const description = `<b>${game.i18n.localize("dsk.damage")}</b>: ${damage.damage}<i class="lighticon fa attackWeaponless" data-tooltip="Roll"></i> - <span data-tooltip="${title}">${damage.armor}</span><i class="lighticon fa fa-shield-alt" data-tooltip="protection"></i> = ${damage.sum}`
+            const description = `<b>${_loc("dsk.damage")}</b>: ${damage.damage}<i class="lighticon fa attackWeaponless" data-tooltip="Roll"></i> - <span data-tooltip="${title}">${damage.armor}</span><i class="lighticon fa fa-shield-alt" data-tooltip="protection"></i> = ${damage.sum}`
             let opposedResult = { 
                 winner: "attacker",
                 damage: {
@@ -133,10 +133,10 @@ export default class OpposedDSK{
     static formatOpposedResult(opposeResult, attacker, defender, testResult) {
         let str = opposeResult.differenceSL ? "winsFP" : "wins"
         if (opposeResult.winner == "attacker") {
-            opposeResult.result = game.i18n.format("dsk.OPPOSED." + str, { winner: attacker.name, loser: defender.name, SL: opposeResult.differenceSL })
+            opposeResult.result = _loc("dsk.OPPOSED." + str, { winner: attacker.name, loser: defender.name, SL: opposeResult.differenceSL })
             opposeResult.img = attacker.img;
         } else if (opposeResult.winner == "defender") {
-            opposeResult.result = game.i18n.format("dsk.OPPOSED." + str, { winner: defender.name, loser: attacker.name, SL: opposeResult.differenceSL })
+            opposeResult.result = _loc("dsk.OPPOSED." + str, { winner: defender.name, loser: attacker.name, SL: opposeResult.differenceSL })
             opposeResult.img = defender.img
         }
 
@@ -172,7 +172,7 @@ export default class OpposedDSK{
 
     static opposeMessage(attacker, target, fail) {
         return `<div class="opposed-message">
-            <b>${attacker.name}</b> ${game.i18n.localize("dsk.ROLL.Targeting")} <b>${target.document.name}</b> ${fail ? game.i18n.localize("dsk.ROLL.failed"): ""}
+            <b>${attacker.name}</b> ${_loc("dsk.ROLL.Targeting")} <b>${target.document.name}</b> ${fail ? _loc("dsk.ROLL.failed"): ""}
             </div>
             <div class="opposed-tokens row-section">
                 <div class="col two attacker">${OpposedDSK.videoOrImgTag(attacker.texture.src)}</div>

@@ -111,7 +111,7 @@ export default class Migrakel {
     }
 
     static async updateSpellsAndLiturgies(actor) {
-        if (await this.showDialog(game.i18n.localize("dsk.Migrakel.spells"))) {
+        if (await this.showDialog(_loc("dsk.Migrakel.spells"))) {
             const condition = (x) => {
                 return ["spell", "liturgy", "ritual", "ceremony", "spellextension"].includes(x.type);
             };
@@ -127,7 +127,7 @@ export default class Migrakel {
     }
 
     static async updateSpecialAbilities(actor) {
-        if (await this.showDialog(game.i18n.localize("dsk.Migrakel.abilities"))) {
+        if (await this.showDialog(_loc("dsk.Migrakel.abilities"))) {
             const updator = (find) => {
                 let update = {
                     system: { effect: { value: find.system.effect } },
@@ -158,7 +158,7 @@ export default class Migrakel {
     }
 
     static async updateCombatskills(actor) {
-        if (await this.showDialog(game.i18n.localize("dsk.Migrakel.cskills"))) {
+        if (await this.showDialog(_loc("dsk.Migrakel.cskills"))) {
             const updator = (find) => {
                 return {
                     effects: find.effects.toObject(),
@@ -172,7 +172,7 @@ export default class Migrakel {
     }
 
     static async updateSkills(actor) {
-        if (await this.showDialog(game.i18n.localize("dsk.Migrakel.skills"))) {
+        if (await this.showDialog(_loc("dsk.Migrakel.skills"))) {
             const condition = (x) => {
                 return ["skill"].includes(x.type);
             };
@@ -195,7 +195,7 @@ export default class Migrakel {
     }
 
     static async updateGear(actor) {
-        if (await this.showDialog(game.i18n.localize("dsk.Migrakel.gear"))) {
+        if (await this.showDialog(_loc("dsk.Migrakel.gear"))) {
             let condition = (x) => {
                 return [
                     "meleeweapon",

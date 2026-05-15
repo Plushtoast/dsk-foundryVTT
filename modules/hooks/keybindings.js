@@ -4,31 +4,31 @@ import { DSKCombatTracker } from "./combat_tracker.js"
 export function setupKeybindings() {    
     game.keybindings.register("dsk", "combatTrackerNext", {
         name: "COMBAT.TurnNext",
-        hint: game.i18n.localize("COMBAT.TurnNext"),
+        hint: _loc("COMBAT.TurnNext"),
         editable: [{ key: "KeyN" }],
         onDown: () => combatTurn("nextTurn")
     })
     game.keybindings.register("dsk", "combatTrackerPrevious", {
         name: "COMBAT.TurnPrev",
-        hint: game.i18n.localize("COMBAT.TurnPrev"),
+        hint: _loc("COMBAT.TurnPrev"),
         editable: [{ key: "KeyV" }],
         onDown: () => combatTurn("previousTurn")
     })
     game.keybindings.register("dsk", "attacktest", {
         name: "attacktest",
-        hint: game.i18n.localize("dsk.KEYBINDINGS.attack"),
+        hint: _loc("dsk.KEYBINDINGS.attack"),
         editable: [{ key: "KeyB" }],
         onDown: () => DSKCombatTracker.runActAttackDialog()
     })
     game.keybindings.register("dsk", "journalBrowser", {
         name: "Book.Wizard",
-        hint: game.i18n.localize("dsk.KEYBINDINGS.journalBrowser"),
+        hint: _loc("dsk.KEYBINDINGS.journalBrowser"),
         editable: [{ key: "KeyJ" }],
         onDown: () => DSKUtility.renderToggle(game.dsk.apps.journalBrowser)
     })
     game.keybindings.register("dsk", "library", {
         name: "ItemLibrary",
-        hint: game.i18n.localize("dsk.KEYBINDINGS.library"),
+        hint: _loc("dsk.KEYBINDINGS.library"),
         editable: [{ key: "KeyL" }],
         onDown: () => DSKUtility.renderToggle(game.dsk.itemLibrary)
     })

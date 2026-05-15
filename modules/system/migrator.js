@@ -78,7 +78,7 @@ async function setDefaultSkin() {
   if (!setDefaults) return;
 
   const proceed = await foundry.applications.api.DialogV2.confirm({
-    content: `<p>${game.i18n.localize('dsk.DSKError.invalidSkinCombination')}</p>`,
+    content: `<p>${_loc('dsk.DSKError.invalidSkinCombination')}</p>`,
     rejectClose: false,
     modal: true
   });

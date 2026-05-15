@@ -32,7 +32,7 @@ export default class DSKCombatDialog extends DialogShared {
                 div.classList.add("hovermenu");
                 let post = document.createElement("i");
                 post.classList.add("fas", "fa-comment");
-                post.title = game.i18n.localize("dsk.SHEET.PostItem");
+                post.title = _loc("dsk.SHEET.PostItem");
                 post.addEventListener("mousedown", this._postItem, false);
                 div.appendChild(post);
                 ev.currentTarget.appendChild(div);
@@ -164,8 +164,8 @@ export default class DSKCombatDialog extends DialogShared {
 
             const actor = DSKUtility.getSpeaker(this.dialogData.speaker);
             if (actor) {
-                const darkSightLevel = AdvantageRulesDSK.vantageStep(actor, game.i18n.localize("dsk.LocalizedIDs.darksight")) + SpecialabilityRulesDSK.abilityStep(actor, game.i18n.localize("dsk.LocalizedIDs.sappeurStyle"));
-                const blindCombat = SpecialabilityRulesDSK.abilityStep(actor, game.i18n.localize("dsk.LocalizedIDs.blindFighting"));
+                const darkSightLevel = AdvantageRulesDSK.vantageStep(actor, _loc("dsk.LocalizedIDs.darksight")) + SpecialabilityRulesDSK.abilityStep(actor, _loc("dsk.LocalizedIDs.sappeurStyle"));
+                const blindCombat = SpecialabilityRulesDSK.abilityStep(actor, _loc("dsk.LocalizedIDs.blindFighting"));
                 if (level < 4 && level > 0) {
                     if (darkSightLevel > 1) {
                         level = 0;
@@ -175,7 +175,7 @@ export default class DSKCombatDialog extends DialogShared {
 
                         level = Math.min(
                             4,
-                            level + AdvantageRulesDSK.vantageStep(actor, game.i18n.localize("dsk.LocalizedIDs.nightBlind"))
+                            level + AdvantageRulesDSK.vantageStep(actor, _loc("dsk.LocalizedIDs.nightBlind"))
                         );
                     }
                 }
@@ -215,37 +215,37 @@ export default class DSKCombatDialog extends DialogShared {
         testData.narrowSpace = data.narrowSpace
         testData.attackOfOpportunity = this.attackOfOpportunity(testData.situationalModifiers, data);
         testData.situationalModifiers.push(
-            ItemDSK.parseValueType(game.i18n.localize("dsk.sight"), data.vision || 0), {
-                name: game.i18n.localize("dsk.attackFromBehind"),
+            ItemDSK.parseValueType(_loc("dsk.sight"), data.vision || 0), {
+                name: _loc("dsk.attackFromBehind"),
                 value: data.attackFromBehind ? -4 : 0,
             }, {
-                name: game.i18n.localize("dsk.MODS.damage"),
+                name: _loc("dsk.MODS.damage"),
                 damageBonus: data.damageModifier,
                 value: 0,
                 step: 1,
             }, {
-                name: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
+                name: _loc("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
                 dmmalus: (Number(data.defenseCount) || 0) * multipleDefenseValue * -1,
                 value: (Number(data.defenseCount) || 0) * multipleDefenseValue * -1,
                 type: "defenseMalus"
             }, {
-                name: game.i18n.localize("dsk.wrongHand"),
+                name: _loc("dsk.wrongHand"),
                 value: data.wrongHand ? -4 : 0,
             }, {
-                name: game.i18n.localize("dsk.advantageousPosition"),
+                name: _loc("dsk.advantageousPosition"),
                 value: data.advantageousPosition ? 2 : 0,
             },
             {
-                name: game.i18n.localize("dsk.sizeCategory"),
+                name: _loc("dsk.sizeCategory"),
                 value: DSK.meleeSizeModifier[data.size],
             },
             ...ItemDSK.getSpecAbModifiers(html, mode)
         );
         if (mode == "attack") {
             testData.situationalModifiers.push({
-                name: game.i18n.localize("dsk.doubleAttack"),
+                name: _loc("dsk.doubleAttack"),
                 value: data.doubleAttack ?
-                    -3 + Math.floor(SpecialabilityRulesDSK.abilityStep(actor, game.i18n.localize("dsk.LocalizedIDs.twoWeaponCombat")) * 1.5) : 0,
+                    -3 + Math.floor(SpecialabilityRulesDSK.abilityStep(actor, _loc("dsk.LocalizedIDs.twoWeaponCombat")) * 1.5) : 0,
             });
         }
     }
@@ -259,49 +259,49 @@ export default class DSKCombatDialog extends DialogShared {
         testData.rangeModifier = data.distance
 
         testData.situationalModifiers.push({
-                name: game.i18n.localize("dsk.target") + " " + html.find('[name="targetMovement"] option:selected').text(),
+                name: _loc("dsk.target") + " " + html.find('[name="targetMovement"] option:selected').text(),
                 value: Number(data.targetMovement) || 0,
             }, {
-                name: game.i18n.localize("dsk.shooter") + " " + html.find('[name="shooterMovement"] option:selected').text(),
+                name: _loc("dsk.shooter") + " " + html.find('[name="shooterMovement"] option:selected').text(),
                 value: Number(data.shooterMovement) || 0,
             }, {
-                name: game.i18n.localize("dsk.mount") + " " + html.find('[name="mountedOptions"] option:selected').text(),
+                name: _loc("dsk.mount") + " " + html.find('[name="mountedOptions"] option:selected').text(),
                 value: Number(data.mountedOptions) || 0,
             },
             {
-                name: game.i18n.format("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
+                name: _loc("dsk.defenseCount", { malus: -1 * multipleDefenseValue }),
                 dmmalus: (Number(data.defenseCount) || 0) * multipleDefenseValue * -1,
                 value: (Number(data.defenseCount) || 0) * multipleDefenseValue * -1,
                 type: "defenseMalus"
             },
             {
-                name: game.i18n.localize("dsk.rangeMovementOptions.QUICKCHANGE"),
+                name: _loc("dsk.rangeMovementOptions.QUICKCHANGE"),
                 value: data.quickChange ? -4 : 0,
             }, {
-                name: game.i18n.localize("dsk.MODS.combatTurmoil"),
+                name: _loc("dsk.MODS.combatTurmoil"),
                 value: data.combatTurmoil ? -2 : 0,
             }, {
-                name: game.i18n.localize("dsk.aim"),
+                name: _loc("dsk.aim"),
                 value: Number(data.aim) || 0,
             }, {
-                name: game.i18n.localize("dsk.MODS.damage"),
+                name: _loc("dsk.MODS.damage"),
                 damageBonus: data.damageModifier,
                 value: 0,
                 step: 1,
             }, {
-                name: game.i18n.localize("dsk.sight"),
+                name: _loc("dsk.sight"),
                 value: Number(data.vision || 0),
             },
             ...ItemDSK.getSpecAbModifiers(html, "attack"), 
             {
-                name: game.i18n.localize("dsk.sizeCategory"),
+                name: _loc("dsk.sizeCategory"),
                 value: DSK.rangeSizeModifier[data.size],
             }
         );
     }
 
     static _resolveDefault(testData, cardOptions, html, actor, options) {
-        cardOptions.rollMode = html.find('[name="rollMode"]:checked').val();
+        cardOptions.messageMode = html.find('[name="messageMode"]:checked').val();
         testData.situationalModifiers = ActorDSK._parseModifiers(html);
         ActorDSK.schipsModifier(html, testData.situationalModifiers)
         testData.vw = html.find('[name="vw"]').val()
@@ -312,10 +312,10 @@ export default class DSKCombatDialog extends DialogShared {
         let value = formData.opportunityAttack ? -8 : 0;
         if (value) {
             situationalModifiers.push({
-                name: game.i18n.localize("dsk.opportunityAttack"),
+                name: _loc("dsk.opportunityAttack"),
                 value,
             });
-            const enemySense = game.i18n.localize("dsk.LocalizedIDs.enemySense")
+            const enemySense = _loc("dsk.LocalizedIDs.enemySense")
             game.user.targets.forEach((target) => {
                 if (target.actor) {
                     if (target.actor.items.find((x) => x.type == "specialability" && x.name == enemySense)) {
@@ -345,13 +345,13 @@ export default class DSKCombatDialog extends DialogShared {
             if (progress < LZ) {
                 buttons.push({
                     action: "reloadButton",
-                    label: `${game.i18n.localize("dsk.WEAPON.reload")} (${progress}/${LZ})`,
+                    label: `${_loc("dsk.WEAPON.reload")} (${progress}/${LZ})`,
                     callback: async (event, button, dialog) => {
                         const actor = await DSKUtility.getSpeaker(testData.extra.speaker)
                         await actor.updateEmbeddedDocuments("Item", [
                             { _id: testData.source._id, "system.reloadTimeprogress": progress + 1 },
                         ])
-                        const infoMsg = game.i18n.format("dsk.WEAPON.isReloading", {
+                        const infoMsg = _loc("dsk.WEAPON.isReloading", {
                             actor: testData.extra.actor.name,
                             item: testData.source.name,
                             status: `${progress + 1}/${LZ}`,

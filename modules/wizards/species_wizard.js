@@ -29,7 +29,7 @@ export default class SpeciesWizard extends WizardDSK {
     };
 
     get title() {
-        return game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.species")} ${this.species?.name || ''}` });
+        return _loc("dsk.WIZARD.addItem", { item: `${_loc("TYPES.Item.species")} ${this.species?.name || ''}` });
     }
 
     async _parseBonus(text){
@@ -37,7 +37,7 @@ export default class SpeciesWizard extends WizardDSK {
         let optionals = []
         let anyAttributeRequirements = false
         let attrs = Object.keys(DSK.characteristics)
-        let attrRegex = new RegExp(game.i18n.localize("dsk.WIZARDPARSER.speciesAdvantage"), "i")
+        let attrRegex = new RegExp(_loc("dsk.WIZARDPARSER.speciesAdvantage"), "i")
         for(let k of text.split(",")){
             if(attrRegex.test(k)){
                 anyAttributeRequirements = true
@@ -59,10 +59,10 @@ export default class SpeciesWizard extends WizardDSK {
         const {anyAttributeRequirements, attributeRequirements, optionals} = await this._parseBonus(this.species.system.advantages)
         const generalToChose = anyAttributeRequirements
         mergeObject(data, {
-            speciesDescription: game.i18n.has(`dsk.Racedescr.${this.species.name}`) ? game.i18n.localize(`dsk.Racedescr.${this.species.name}`) : this.species.system.description.value,
+            speciesDescription: game.i18n.has(`dsk.Racedescr.${this.species.name}`) ? _loc(`dsk.Racedescr.${this.species.name}`) : this.species.system.description.value,
             species: this.species,
-            description: game.i18n.format("dsk.WIZARD.speciesdescr", { species: this.species.name }),
-            title: game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.species")} ${this.species.name}` }),
+            description: _loc("dsk.WIZARD.speciesdescr", { species: this.species.name }),
+            title: _loc("dsk.WIZARD.addItem", { item: `${_loc("TYPES.Item.species")} ${this.species.name}` }),
             generalToChose,
             anyAttributeRequirements,
             optionals,

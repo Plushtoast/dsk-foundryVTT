@@ -64,7 +64,7 @@ export class ReactToSkillDialog extends DialogReactDSK {
         const item = source.name
         let items = (await DSKUtility.allSkillsList()).map(k => { return { name: k, id: k } })
         items.unshift({
-            name: game.i18n.localize("dsk.doNothing"),
+            name: _loc("dsk.doNothing"),
             id: "doNothing"
         })
         return renderTemplate('systems/dsk/templates/dialog/dialog-act.hbs', { items, original: item, title: "DIALOG.selectReaction" })

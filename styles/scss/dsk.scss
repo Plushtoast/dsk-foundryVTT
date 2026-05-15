@@ -1744,6 +1744,83 @@ form.dsk.item-sheet {
   gap: 0px;
 }
 
+.dsaMessageMode {
+  .checkbox input[type='radio'] {
+    display: none;
+  }
+
+  .checkbox {
+    margin-right: 4px;
+    text-align: center;
+  }
+
+  .checkbox > i {
+    cursor: pointer;
+    display: inline-block;
+    padding: 0px 10px;
+    border-radius: 5px;
+    width: 100%;
+    background: var(--oddColor);
+    border: 1px solid var(--color-border-light-tertiary);
+    line-height: 22px;
+
+    i {
+      margin: 0px 2px;
+      padding: 0;
+    }
+  }
+
+  .checkbox input[type='radio']:checked + i {
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+  }
+}
+
+.inlineCodeMirror {
+  min-height: unset;
+}
+
+.select2-container {
+  .select2-dropdown {
+    background: #efe4e4;
+    color: black;
+
+    .select2-search__field {
+      background: #efe4e4;
+      color: black;
+    }
+  }
+}
+
+.theme-dark {
+  --select2bg: #302831;
+
+  .changes .selMenu {
+    &+.select2 {
+      background: var(--select2bg);
+      color: white;
+    }
+  }
+
+  .select2-container {
+    .select2-dropdown {
+      background: var(--select2bg);
+      color: white;
+
+      .select2-search__field {
+        background: var(--select2bg);
+        color: white;
+      }
+    }
+  }
+
+  .application {
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: white;
+    }
+  }
+}
+
 .dskrelative,
 .statusEffectMenu,
 .dsklist li,
@@ -3586,7 +3663,9 @@ a {
 }
 
 .dskbox2 .editor.prosemirror,
-.editor.prosemirror {
+.form-group.full-height .editor.prosemirror,
+.application .editor.prosemirror.active,
+.window-app .editor.prosemirror.active {
   min-height: 300px;
 }
 
@@ -5073,17 +5152,17 @@ input[type="checkbox"].autoCheckbox {
 }
 
 .garadanborder {
-  h1 {
+  h2 {
     text-decoration: none;
     border: none;
     margin: 0;
     margin-top: 0px;
-    margin-top: 45px;
+    margin-top: 20px;
     font-size: 24px;
     line-height: 24px;
   }
 
-  h2 {
+  h3 {
     margin: 0;
     border: none;
     font-size: 14px;

@@ -135,7 +135,7 @@ class DSKSystemConfiguration {
   static async renderTooltip(item, fullTextSearch) {
     const description = this.getDescription(item, fullTextSearch)
     const langKey = `TYPES.${item.documentName}.${item.type}`
-    const type = game.i18n.has(langKey) ? game.i18n.localize(langKey) : item.type
+    const type = game.i18n.has(langKey) ? _loc(langKey) : item.type
     let typeDetails = ""
     if (item.documentName === "Item" && item.type) {
       const templatePath = `systems/dsk/templates/items/browse/item_${item.type}.hbs`
@@ -279,7 +279,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
         if (!this.models[category]) this.models[category] = []
         const langKey = `TYPES.${documentName}.${key}`
         this.models[category].push({
-          label: game.i18n.has(langKey) ? game.i18n.localize(langKey) : key,
+          label: game.i18n.has(langKey) ? _loc(langKey) : key,
           selected: false,
           key
         })
@@ -773,7 +773,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
     this.detailStoreBySubcategory[subcategory] = this.detailStoreBySubcategory[subcategory] || {};
 
     const { index } = this.selectIndex(category);
-    const catName = game.i18n.localize(`TYPES.${itemType}.${subcategory}`);
+    const catName = _loc(`TYPES.${itemType}.${subcategory}`);
     const progress = ui.notifications.info('dsk.Library.loading', { format: { item: catName }, progress: true });
     const target = $(this.element).find(`*[data-tab="${category}"]`);
 
@@ -833,7 +833,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
 
   async buildDetailFilter(category, subcategory, savedSettings = undefined) {
     if (category === 'none') {
-      return `<p>${game.i18n.localize('dsk.Library.selectAdvanced')}</p>`;
+      return `<p>${_loc('dsk.Library.selectAdvanced')}</p>`;
     }
 
     const indexPromise = this.createDetailIndex(category, subcategory);
@@ -915,7 +915,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
     const uuid = $(ev.currentTarget).data("uuid")
     const item = await fromUuid(uuid)
     if (!item) {
-      ui.notifications.warn(game.i18n.localize("dsk.DSKError.notFound"))
+      ui.notifications.warn(_loc("dsk.DSKError.notFound"))
       return
     }
     item.sheet.render(true)
@@ -1054,7 +1054,7 @@ export default class DSKItemLibrary extends DefaultAppv2 {
 
     try {
       if (typeof effectiveCategory === 'string') this.setBGImage([1], effectiveCategory);
-      const loading = $(`<div class="loader"><i class="fa fa-4x fa-spinner fa-spin"></i>${game.i18n.localize('dsk.Library.buildingIndex')}</div>`);
+      const loading = $(`<div class="loader"><i class="fa fa-4x fa-spinner fa-spin"></i>${_loc('dsk.Library.buildingIndex')}</div>`);
       loading.appendTo(target.find('.searchResult'));
     } catch (e) {
     }

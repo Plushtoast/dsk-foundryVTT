@@ -16,12 +16,8 @@
 {{/if}}
 
 <div class="form-group custom-select">
-  <label>{{localize "dsk.DIALOG.RollMode"}}</label>
-  <div class="form-fields">
-    <select name="rollMode">
-      {{selectOptions rollModes selected=rollMode localize=true}}
-    </select>
-  </div>
+  <label>{{localize "dsk.DIALOG.MessageMode"}}</label>
+  {{> systems/dsk/templates/dialog/parts/message-mode.hbs messageMode=messageMode}}
 </div>
 {{#if hasSchips}}
 <div class="form-group">

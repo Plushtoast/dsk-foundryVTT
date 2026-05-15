@@ -9,19 +9,19 @@ export function initSidebar() {
         const buttons = [
             {
                 icon: '<i class="fas fa-bug"></i>',
-                label: game.i18n.localize('dsk.DSKError.reportBug'),
+                label: _loc('dsk.DSKError.reportBug'),
                 link: 'https://github.com/Plushtoast/dsk-foundryVTT/issues',
                 attrs: { id: 'reportADSKBug' },
             },
             {
                 icon: '<i class="fas fa-info-circle"></i>',
-                label: game.i18n.localize('DSA5Wiki'),
+                label: _loc('DSA5Wiki'),
                 link: `https://github.com/Plushtoast/dsa5-foundryVTT/wiki${game.i18n.lang == 'de' ? '/de-Home' : ''}`,
             },
             {
                 icon: '<div></div>',
                 label: 'F-Shop',
-                link: game.i18n.localize('dsk.fshopLink'),
+                link: _loc('dsk.fshopLink'),
                 attrs: { class: 'fshopButton' }
             }
         ]
@@ -38,7 +38,7 @@ export function initSidebar() {
     })
 
     Hooks.on("renderCompendiumDirectory", (app, html, data) => {
-        const button = $(`<button type="button"><i class="fas fa-university"></i> <span>${game.i18n.localize('ItemLibrary')}</span></button>`);
+        const button = $(`<button type="button"><i class="fas fa-university"></i> <span>${_loc('ItemLibrary')}</span></button>`);
         const headerActions = $(html).find('.header-actions');
         const container = $('<div class="header-actions action-buttons flexrow"></div>');
         container.append(button);

@@ -31,8 +31,8 @@ export default class EquipmentTemplate extends DSKDataModel {
    * Migrate old shield size values to new ones
    * @param {Object} source - The source data
    */
-  static _migrateData(source) {
-    super._migrateData(source);
+  static _migrateData(source, options, _state) {
+    super._migrateData(source, options, _state);
 
     if (source.price == null || isNaN(source.price)) {
       source.price = 0;

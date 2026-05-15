@@ -67,7 +67,7 @@ export function initActorHooks() {
     function checkIniChange(effect){
         if(!game.user.isGM) return
 
-        if(game.combat && effect.changes.some(x => /(system\.stats\.ini|system\.characteristics.mu|system\.characteristics\.ge)/.test(x.key))){
+        if(game.combat && (effect.system?.changes ?? effect.changes).some(x => /(system\.stats\.ini|system\.characteristics.mu|system\.characteristics\.ge)/.test(x.key))){
             const actorId = effect.parent.id
             const combatant = game.combat.combatants.find(x => x.actor.id == actorId)
             if(combatant) combatant.recalcInitiative()
@@ -90,8 +90,8 @@ export function initActorHooks() {
         if(!actor || actor.documentName != "Actor") return
 
         const efKeys = /^system\.condition\./
-        for(let ef of effect.changes || []){
-          if(efKeys.test(ef.key) && ef.mode == 2){
+                for(let ef of (effect.system?.changes ?? effect.changes ?? [])){
+                    if(efKeys.test(ef.key) && (ef.type == "add" || ef.mode == 2)){
             toCheck[ef.key.split(".")[2]] = Number(ef.value)
           }
         }
@@ -111,11 +111,11 @@ export function initActorHooks() {
             ((Number(toCheck.inpain) || 0) > 0) &&
             !actor.hasCondition("bloodrush") &&
             actor.system.condition.inpain > 0 &&
-            AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.frenzy"))
+            AdvantageRulesDSK.hasVantage(actor, _loc("dsk.LocalizedIDs.frenzy"))
           ) {
             await actor.addCondition("bloodrush");
             const msg = DSKUtility.replaceConditions(
-              `${game.i18n.format("dsk.CHATNOTIFICATION.gainsBloodrush", {
+              `${_loc("dsk.CHATNOTIFICATION.gainsBloodrush", {
                 character: "<b>" + actor.name + "</b>",
               })}`
             );
@@ -139,7 +139,7 @@ export function initActorHooks() {
         if (setting == 0 || getProperty(actor, "merchant.merchantType") == "loot") return
 
         let sameActorTokens = canvas.scene.tokens.filter((x) => x.actor && x.actor.id === actor.id);
-        let name = game.i18n.localize("dsk.unknown")
+        let name = _loc("dsk.unknown")
         if ([2,4].includes(setting)) {
             const tokenId = token.id || token._id
             if(!tokenId) return
@@ -189,7 +189,7 @@ class AskForNameDialog {
     static async getDialog(tokenObject, setting){
         await foundry.applications.api.DialogV2.wait({
             window: { title: "dsk.SETTINGS.obfuscateTokenNames" },
-            content: `<label for="name">${game.i18n.localize('dsk.SETTINGS.rename')}</label> <input dtype="string" name="name" type="text" value="${tokenObject.actor.name}"/>`,
+            content: `<label for="name">${_loc('dsk.SETTINGS.rename')}</label> <input dtype="string" name="name" type="text" value="${tokenObject.actor.name}"/>`,
             buttons: [
                 {
                     action: "yes",
@@ -217,7 +217,7 @@ class AskForNameDialog {
                     callback: async (event, button, dialog) => {
                         const tokenId = tokenObject.id || tokenObject._id
                         const token = canvas.scene.tokens.get(tokenId)
-                        await token.update({ name: game.i18n.localize("dsk.unknown") })
+                        await token.update({ name: _loc("dsk.unknown") })
                     }
                 },
                 {

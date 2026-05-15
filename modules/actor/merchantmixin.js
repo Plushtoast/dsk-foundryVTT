@@ -353,7 +353,7 @@ export const MerchantSheetMixin = (superclass) => {
     async clearInventory(ev) {
         foundry.applications.api.DialogV2.wait({
             window: { title: "dsk.MERCHANT.clearInventory" },
-            content: game.i18n.localize("dsk.MERCHANT.deleteAllGoods"),
+            content: _loc("dsk.MERCHANT.deleteAllGoods"),
             buttons: [
                 {
                     action: "yes",
@@ -559,7 +559,7 @@ export const MerchantSheetMixin = (superclass) => {
         if (notify == 0 || getProperty(item, "system.category") == "service") return
 
         const notif = "dsk.MERCHANT." + (buy ? "buy" : "sell") + (noNeedToPay ? "Loot" : "") + "Notification"
-        const template = game.i18n.format(notif, { item: item.name, source: source.name, target: target.name, amount, price, buy })
+        const template = _loc(notif, { item: item.name, source: source.name, target: target.name, amount, price, buy })
         const chatData = DSKUtility.chatDataSetup(template)
         if (notify == 2) chatData["whisper"] = ChatMessage.getWhisperRecipients("GM").map(u => u.id)
         await ChatMessage.create(chatData)
@@ -584,7 +584,7 @@ export const MerchantSheetMixin = (superclass) => {
         let item = duplicate(sourceItem)
         const isService = getProperty(item, "system.category") == "service"
         if (isService) {
-            const msg = game.i18n.format("dsk.MERCHANT.buyNotification", { item: item.name, amount, source: target.name, target: source.name, price })
+            const msg = _loc("dsk.MERCHANT.buyNotification", { item: item.name, amount, source: target.name, target: source.name, price })
             ChatMessage.create(DSKUtility.chatDataSetup(msg));
         } else {
             let res = target.items.find(i => ItemDSK.areEquals(item, i));
@@ -646,7 +646,7 @@ export const MerchantSheetMixin = (superclass) => {
         const data = await super._prepareContext(options);
         data["merchantType"] = getProperty(this.actor.system, "merchant.merchantType") || "none"
         data["merchantTypes"] = DSK.merchantTypes
-        data["invName"] = game.i18n.localize(DSK.merchantTypes[data["merchantType"]])
+        data["invName"] = _loc(DSK.merchantTypes[data["merchantType"]])
         data["players"] = game.users.filter(x => !x.isGM).map(x => {
             x.allowedMerchant = this.actor.testUserPermission(x, "LIMITED", false)
             x.buyingFactor = getProperty(this.actor.system, `merchant.factors.buyingFactor.${x.id}`)

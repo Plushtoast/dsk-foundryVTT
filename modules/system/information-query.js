@@ -20,8 +20,8 @@ export default class InformationQueryService {
 
         const skill = actor.items.find(x => x.name == skillName && x.type == "skill")
         if (!skill) {
-            ui.notifications.error(game.i18n.format("dsk.DSKError.notFound", {
-                category: game.i18n.localize("TYPES.Item.skill"),
+            ui.notifications.error(_loc("dsk.DSKError.notFound", {
+                category: _loc("TYPES.Item.skill"),
                 name: skillName,
             }))
             return
@@ -65,7 +65,7 @@ export default class InformationQueryService {
         try {
             const response = await foundry.applications.api.DialogV2.wait({
                 window: {
-                    title: game.i18n.format("dsk.INFORMATIONQUERY.dialogTitle", { item: item.name }),
+                    title: _loc("dsk.INFORMATIONQUERY.dialogTitle", { item: item.name }),
                 },
                 content,
                 buttons: [

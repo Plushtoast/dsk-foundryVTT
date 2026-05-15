@@ -3,7 +3,7 @@ const { getProperty } = foundry.utils
 export default class DPS {
     static rangeFinder(tokenSource, tokenTarget) {
         const gridSize = canvas.scene.grid.size
-        const ray = new Ray(tokenSource, tokenTarget)
+        const ray = new foundry.canvas.geometry.Ray(tokenSource, tokenTarget)
         const tileDistance = ray.distance / gridSize
         const distance = tileDistance * canvas.scene.grid.distance
         const elevation = Math.abs((getProperty(tokenSource, "document.elevation") || 0) - (getProperty(tokenTarget, "document.elevation") || 0))
@@ -33,7 +33,7 @@ export default class DPS {
             if ((maxDist.distanceSum || 0) < dist.distanceSum) maxDist = dist
         }
 
-        if (maxDist.unit == game.i18n.localize("dsk.gridUnits")) {
+        if (maxDist.unit == _loc("dsk.gridUnits")) {
             const rangeMultiplier = Number(getProperty(currentAmmo, "system.rangeMultiplier")) || 1
             const rangeBands = rangeweapon.system.rw.split("/").map(x => Number(x) * rangeMultiplier)
             let index = 0

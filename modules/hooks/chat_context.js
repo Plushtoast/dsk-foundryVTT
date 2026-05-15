@@ -50,7 +50,7 @@ export function initChatContext() {
         if (message.speaker.actor && message.flags.data) {
             let actor = game.actors.get(message.speaker.actor);
             if (actor.isOwner) {
-                return actor.items.find(x => x.name == `${game.i18n.localize('dsk.LocalizedIDs.aptitude')} (${message.flags.data.preData.source.name})`) != undefined && !message.flags.data.talentedRerollUsed;
+                return actor.items.find(x => x.name == `${_loc('dsk.LocalizedIDs.aptitude')} (${message.flags.data.preData.source.name})`) != undefined && !message.flags.data.talentedRerollUsed;
             }
         }
         return false
@@ -125,7 +125,7 @@ export function initChatContext() {
 
         if (!actor.isOwner) return ui.notifications.error("dsk.DSKError.DamagePermission", { localize: true })
         await actor.applyDamage(cardData.damage[mode])
-        await message.update({ "flags.data.damageApplied": true, content: message.content.replace(/hideAnchor">/, `hideAnchor"><i class="fas fa-check" style="float:right" data-tooltip="${game.i18n.localize("damageApplied")}"></i>`) })
+        await message.update({ "flags.data.damageApplied": true, content: message.content.replace(/hideAnchor">/, `hideAnchor"><i class="fas fa-check" style="float:right" data-tooltip="${_loc("damageApplied")}"></i>`) })
     }
 
     const applyChatCardDamage = (li, mode) => {
@@ -154,20 +154,20 @@ export function initChatContext() {
 
     Hooks.on("getChatMessageContextOptions", (html, options) => {
         options.push({
-            name: "dsk.CHATCONTEXT.hideData",
+            label: "dsk.CHATCONTEXT.hideData",
             icon: '<i class="fas fa-eye"></i>',
-            condition: canHideData,
-            callback: (li) => { showHideData(li) }
+            visible: (li) => canHideData(li),
+            onClick: (_, li) => { showHideData(li) }
         }, {
-            name: "dsk.CHATCONTEXT.showData",
+            label: "dsk.CHATCONTEXT.showData",
             icon: '<i class="fas fa-eye"></i>',
-            condition: canUnhideData,
-            callback: (li) => { showHideData(li) }
+            visible: (li) => canUnhideData(li),
+            onClick: (_, li) => { showHideData(li) }
         }, {
-            name: "dsk.regenerate",
+            label: "dsk.regenerate",
             icon: '<i class="fas fa-user-plus"></i>',
-            condition: canHeal,
-            callback: async (li) => {
+            visible: (li) => canHeal(li),
+            onClick: async (_, li) => {
                 const message = await game.messages.get(li.dataset.messageId)
                 const actor = DSKUtility.getSpeaker(message.speaker)
                 if (!actor.isOwner)
@@ -177,45 +177,45 @@ export function initChatContext() {
                 await actor.applyRegeneration(message.flags.data.postData.LeP, message.flags.data.postData.AeP, message.flags.data.postData.KaP)
             }
         }, {
-            name: "dsk.CHATCONTEXT.ApplyMana",
+            label: "dsk.CHATCONTEXT.ApplyMana",
             icon: '<i class="fas fa-user-minus"></i>',
-            condition: canCostMana,
-            callback: async (li) => { payMana(li) }
+            visible: (li) => canCostMana(li),
+            onClick: async (_, li) => { payMana(li) }
         }, {
-            name: "dsk.CHATCONTEXT.ApplyDamage",
+            label: "dsk.CHATCONTEXT.ApplyDamage",
             icon: '<i class="fas fa-user-minus"></i>',
-            condition: canHurt,
-            callback: li => { applyDamage(li, "value") }
+            visible: (li) => canHurt(li),
+            onClick: (_, li) => { applyDamage(li, "value") }
         }, {
-            name: "dsk.CHATCONTEXT.ApplyDamageSP",
+            label: "dsk.CHATCONTEXT.ApplyDamageSP",
             icon: '<i class="fas fa-user-minus"></i>',
-            condition: canHurtSP,
-            callback: li => { applyDamage(li, "sp") }
+            visible: (li) => canHurtSP(li),
+            onClick: (_, li) => { applyDamage(li, "sp") }
         }, {
-            name: "dsk.CHATCONTEXT.ApplyDamage",
+            label: "dsk.CHATCONTEXT.ApplyDamage",
             icon: '<i class="fas fa-user-minus"></i>',
-            condition: canApplyDefaultRolls,
-            callback: li => { applyChatCardDamage(li, "value") }
+            visible: (li) => canApplyDefaultRolls(li),
+            onClick: (_, li) => { applyChatCardDamage(li, "value") }
         }, {
-            name: "dsk.CHATCONTEXT.ApplyDamageSP",
+            label: "dsk.CHATCONTEXT.ApplyDamageSP",
             icon: '<i class="fas fa-user-minus"></i>',
-            condition: canApplyDefaultRolls,
-            callback: li => { applyChatCardDamage(li, "sp") }
+            visible: (li) => canApplyDefaultRolls(li),
+            onClick: (_, li) => { applyChatCardDamage(li, "sp") }
         }, {
-            name: "dsk.CHATCONTEXT.Reroll",
+            label: "dsk.CHATCONTEXT.Reroll",
             icon: '<i class="fas fa-dice"></i>',
-            condition: canReroll,
-            callback: li => { useFate(li, "reroll") }
+            visible: (li) => canReroll(li),
+            onClick: (_, li) => { useFate(li, "reroll") }
         }, {
-            name: "dsk.CHATCONTEXT.talentedReroll",
+            label: "dsk.CHATCONTEXT.talentedReroll",
             icon: '<i class="fas fa-dice"></i>',
-            condition: isTalented,
-            callback: li => { useFate(li, "isTalented") }
+            visible: (li) => isTalented(li),
+            onClick: (_, li) => { useFate(li, "isTalented") }
         }, {
-            name: "dsk.CHATCONTEXT.rerollDamage",
+            label: "dsk.CHATCONTEXT.rerollDamage",
             icon: '<i class="fas fa-dice"></i>',
-            condition: canRerollDamage,
-            callback: li => { useFate(li, "rerollDamage") }
+            visible: (li) => canRerollDamage(li),
+            onClick: (_, li) => { useFate(li, "rerollDamage") }
         }
         )
     })

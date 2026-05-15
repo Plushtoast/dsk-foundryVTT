@@ -38,7 +38,7 @@ async function callMacro(packName, name, actor, item, qs, args = {}) {
             }
         } else {
             ui.notifications.error(
-                game.i18n.format("dsk.DSKError.macroNotFound", { name })
+                _loc("dsk.DSKError.macroNotFound", { name })
             );
         }
     }
@@ -53,7 +53,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
             resizable: true,
         },
         position: {
-            width: 600,
+            width: 700,
         },
     };
 
@@ -100,17 +100,33 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
         }
     }
 
-    async checkTimesUpInstalled() {
-        const isInstalled = DSKUtility.moduleEnabled("times-up")
-        if (!isInstalled && game.user.isGM) ui.notifications.warn('dsk.DSKError.shouldTimesUp', { localize: true })
-        return isInstalled
-    }
-
     async _preparePartContext(partId, context) {
         const partContext = await super._preparePartContext(partId, context);
         if (partId in partContext.tabs) partContext.tab = partContext.tabs[partId];
         const document = this.document;
         switch (partId) {
+            case 'changes': {
+                const changeFields = document.system.schema.fields.changes.element.fields;
+                const changeTypes = Object.entries(ActiveEffect.CHANGE_TYPES)
+                    .map(([type, { label }]) => ({ type, label: _loc(label) }))
+                    .sort((a, b) => a.label.localeCompare(b.label, game.i18n.lang))
+                    .reduce((types, { type, label }) => {
+                        types[type] = label;
+                        return types;
+                    }, {});
+                const changePriorities = Object.fromEntries(
+                    Object.entries(ActiveEffect.CHANGE_TYPES).map(([type, { defaultPriority }]) => [type, defaultPriority]),
+                );
+                const changePhases = Object.fromEntries(
+                    Object.entries(ActiveEffect.CHANGE_PHASES).map(([phase, { label }]) => [phase, _loc(label)]),
+                );
+                const changes = foundry.utils.deepClone(context.source.system?.changes ?? document.system.changes ?? []);
+                for (const change of changes) {
+                    if (typeof change.value !== "string") change.value = JSON.stringify(change.value);
+                }
+                mergeObject(partContext, { changeFields, changeTypes, changePriorities, changePhases, changes });
+                break;
+            }
             case 'advanced':
                 let index = -1;
                 const advancedFunctions = ["none", "systemEffect", "macro", "creature"].map((x) => {
@@ -156,8 +172,8 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
     }
 
     getStatusEffects() {
-        return duplicate(CONFIG.statusEffects).map((x) => {
-            return { id: x.id, name: game.i18n.localize(x.name) };
+        return duplicate(Object.values(CONFIG.statusEffects)).map((x) => {
+            return { id: x.id, name: _loc(x.name) };
         }).sort((a, b) => a.name.localeCompare(b.name))
     }
 
@@ -227,13 +243,13 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
                         switch (customEf) {
                             case 1: //Systemeffekt
                                 {
-                                    const effect = duplicate(CONFIG.statusEffects.find((e) => e.id == getProperty(ef, "flags.dsk.args0")));
+                                    const effect = duplicate(CONFIG.statusEffects[getProperty(ef, "flags.dsk.args0")]);
                                     let value = `${getProperty(ef, "flags.dsk.args1")}` || "1";
                                     effect.duration = ef.duration;
                                     if (/,/.test(value)) {
                                         value = Number(value.split(",")[qs - 1]);
                                     } else {
-                                        value = Number(value.replace(game.i18n.localize("dsk.CHARAbbrev.QS"), qs));
+                                        value = Number(value.replace(_loc("dsk.CHARAbbrev.QS"), qs));
                                     }
                                     await actor.addCondition(effect, value, false, false);
                                 }
@@ -260,7 +276,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
                                     .split(",")
                                     .map((x) => `@Compendium[${x.trim().replace(/(@Compendium\[|\])/)}]`)
                                     .join(" ");
-                                msg += `<p><b>${game.i18n.localize("dsk.ActiveEffects.advancedFunctions.creature")}</b>:</p><p>${creatures}</p>`;
+                                msg += `<p><b>${_loc("dsk.ActiveEffects.advancedFunctions.creature")}</b>:</p><p>${creatures}</p>`;
                                 break;
                         }
                     }
@@ -341,7 +357,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
                     options.skipResistRolls || false
                 );
                 if (effectApplied) {
-                    const appliedEffect = game.i18n.format("dsk.ActiveEffects.appliedEffect", { target: actor.token?.name || actor.name, source: effectNames.join(", ") });
+                    const appliedEffect = _loc("dsk.ActiveEffects.appliedEffect", { target: actor.token?.name || actor.name, source: effectNames.join(", ") });
                     const infoMsg = `${appliedEffect}${msg || ""}`;
                     await ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
                 }
@@ -391,16 +407,16 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
         }
 
         let duration = getProperty(source, "system.duration") || "";
-        duration = duration.replace(" x ", " * ").replace(game.i18n.localize("dsk.CHARAbbrev.QS"), testData.qualityStep);
+        duration = duration.replace(" x ", " * ").replace(_loc("dsk.CHARAbbrev.QS"), testData.qualityStep);
         try {
             const regexes = [
-                { regEx: new RegExp(game.i18n.localize("dsk.DSKREGEX.combatRounds"), "gi"), seconds: 5 },
-                { regEx: new RegExp(game.i18n.localize("dsk.DSKREGEX.minutes"), "gi"), seconds: 60 },
-                { regEx: new RegExp(game.i18n.localize("dsk.DSKREGEX.hours"), "gi"), seconds: 3600 },
-                { regEx: new RegExp(game.i18n.localize("dsk.DSKREGEX.days"), "gi"), seconds: 3600 * 24 },
-                { regEx: new RegExp(game.i18n.localize("dsk.DSKREGEXmaintain.weeks"), "gi"), seconds: 3600 * 24 * 7 },
-                { regEx: new RegExp(game.i18n.localize("dsk.DSKREGEXmaintain.months"), "gi"), seconds: 3600 * 24 * 30 },
-                { regEx: new RegExp(game.i18n.localize("dsk.DSKREGEXmaintain.years"), "gi"), seconds: 3600 * 24 * 350 }
+                { regEx: new RegExp(_loc("dsk.DSKREGEX.combatRounds"), "gi"), seconds: 5 },
+                { regEx: new RegExp(_loc("dsk.DSKREGEX.minutes"), "gi"), seconds: 60 },
+                { regEx: new RegExp(_loc("dsk.DSKREGEX.hours"), "gi"), seconds: 3600 },
+                { regEx: new RegExp(_loc("dsk.DSKREGEX.days"), "gi"), seconds: 3600 * 24 },
+                { regEx: new RegExp(_loc("dsk.DSKREGEXmaintain.weeks"), "gi"), seconds: 3600 * 24 * 7 },
+                { regEx: new RegExp(_loc("dsk.DSKREGEXmaintain.months"), "gi"), seconds: 3600 * 24 * 30 },
+                { regEx: new RegExp(_loc("dsk.DSKREGEXmaintain.years"), "gi"), seconds: 3600 * 24 * 350 }
             ];
             for (const reg of regexes) {
                 if (reg.regEx.test(duration)) {
@@ -414,8 +430,9 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
                                 let qsDuration = customDuration.split(",")[testData.qualityStep - 1];
                                 if (qsDuration && qsDuration != "-") calcTime = Number(qsDuration);
                             }
-                            ef.duration.seconds = calcTime;
-                            ef.duration.rounds = ef.duration.seconds / 5;
+                            ef.duration ??= {};
+                            ef.duration.value = calcTime;
+                            ef.duration.units = "seconds";
                         }
                     }
                     break;
@@ -428,81 +445,81 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
     }
 
     dropDownMenu() {
-        const FW = game.i18n.localize("dsk.MODS.FW");
-        const skill = game.i18n.localize("TYPES.Item.skill");
-        const regenerate = game.i18n.localize("dsk.regenerate")
-        const FP = game.i18n.localize("dsk.MODS.FP");
-        const stepValue = game.i18n.localize("dsk.stepValue");
-        const QS = game.i18n.localize("dsk.MODS.QS");
-        const partChecks = game.i18n.localize("dsk.MODS.partChecks");
-        const demo = `${game.i18n.localize("dsk.LocalizedIDs.perception")} 1`;
-        const democs = `${game.i18n.localize("dsk.LocalizedIDs.wrestle")} 1`;
-        const closeCombat = game.i18n.localize("dsk.closeCombatAttacks");
-        const rangeCombat = game.i18n.localize("dsk.rangeCombatAttacks");
-        const combatReg = `${regenerate} (${game.i18n.localize("dsk.CHARAbbrev.CR")})`;
-        const AePCost = game.i18n.localize("dsk.AePCost");
-        const descriptor = `${game.i18n.localize("dsk.description")} 1`
-        const feature = `${game.i18n.localize("Healing")} 1`
+        const FW = _loc("dsk.MODS.FW");
+        const skill = _loc("TYPES.Item.skill");
+        const regenerate = _loc("dsk.regenerate")
+        const FP = _loc("dsk.MODS.FP");
+        const stepValue = _loc("dsk.stepValue");
+        const QS = _loc("dsk.MODS.QS");
+        const partChecks = _loc("dsk.MODS.partChecks");
+        const demo = `${_loc("dsk.LocalizedIDs.perception")} 1`;
+        const democs = `${_loc("dsk.LocalizedIDs.wrestle")} 1`;
+        const closeCombat = _loc("dsk.closeCombatAttacks");
+        const rangeCombat = _loc("dsk.rangeCombatAttacks");
+        const combatReg = `${regenerate} (${_loc("dsk.CHARAbbrev.CR")})`;
+        const AePCost = _loc("dsk.AePCost");
+        const descriptor = `${_loc("dsk.description")} 1`
+        const feature = `${_loc("Healing")} 1`
 
         let optns = [
-            { name: game.i18n.localize("dsk.protection"), val: "system.totalArmor", mode: 2, ph: "1" },
+            { name: _loc("dsk.protection"), val: "system.totalArmor", mode: 2, ph: "1" },
             {
-                name: `${game.i18n.localize("dsk.resistanceModifier")} (${game.i18n.localize("dsk.condition")})`,
+                name: `${_loc("dsk.resistanceModifier")} (${_loc("dsk.condition")})`,
                 val: "system.resistances.effects",
                 mode: 0,
                 ph: "inpain 1",
             },
-            { name: game.i18n.localize("dsk.carrycapacity"), val: "system.carryModifier", mode: 2, ph: "1" },
+            { name: _loc("dsk.carrycapacity"), val: "system.carryModifier", mode: 2, ph: "1" },
             {
-                name: `${closeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.AW")}`,
+                name: `${closeCombat} - ${_loc("dsk.CHARAbbrev.AW")}`,
                 val: "system.meleeStats.attack",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${closeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.VW")}`,
+                name: `${closeCombat} - ${_loc("dsk.CHARAbbrev.VW")}`,
                 val: "system.meleeStats.parry",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${closeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.damage")}`,
+                name: `${closeCombat} - ${_loc("dsk.CHARAbbrev.damage")}`,
                 val: "system.meleeStats.damage",
                 mode: 2,
                 ph: "1d6",
             },
             {
-                name: `${closeCombat} - ${game.i18n.localize("dsk.MODS.defenseMalus")}`,
+                name: `${closeCombat} - ${_loc("dsk.MODS.defenseMalus")}`,
                 val: "system.meleeStats.defenseMalus",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: game.i18n.localize("dsk.MODS.creatureBonus"),
+                name: _loc("dsk.MODS.creatureBonus"),
                 val: "system.creatureBonus",
                 mode: 0,
                 ph: `Elementar 1`,
             },
             {
-                name: `${rangeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.AW")}`,
+                name: `${rangeCombat} - ${_loc("dsk.CHARAbbrev.AW")}`,
                 val: "system.rangeStats.attack",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${rangeCombat} - ${game.i18n.localize("dsk.CHARAbbrev.damage")}`,
+                name: `${rangeCombat} - ${_loc("dsk.CHARAbbrev.damage")}`,
                 val: "system.rangeStats.damage",
                 mode: 2,
                 ph: "1d6",
             },
             {
-                name: `${rangeCombat} - ${game.i18n.localize("dsk.MODS.defenseMalus")}`,
+                name: `${rangeCombat} - ${_loc("dsk.MODS.defenseMalus")}`,
                 val: "system.rangeStats.defenseMalus",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${game.i18n.localize("TYPES.Item.ahnengabe")} - ${game.i18n.localize("dsk.CHARAbbrev.damage")}`,
+                name: `${_loc("TYPES.Item.ahnengabe")} - ${_loc("dsk.CHARAbbrev.damage")}`,
                 val: "system.spellStats.damage",
                 mode: 2,
                 ph: "1",
@@ -514,39 +531,39 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
             { name: `${skill} - ${QS}`, val: "system.skillModifiers.QL", mode: 0, ph: demo },
             { name: `${skill} - ${partChecks}`, val: "system.skillModifiers.TPM", mode: 0, ph: demo },
             {
-                name: `${game.i18n.localize("dsk.vulnerability")} - ${game.i18n.localize("TYPES.Item.combatskill")}`,
+                name: `${_loc("dsk.vulnerability")} - ${_loc("TYPES.Item.combatskill")}`,
                 val: "system.vulnerabilities.combatskill",
                 mode: 0,
                 ph: democs,
             },
 
-            { name: `${skill} - ${game.i18n.localize("dsk.MODS.global")}`, val: "system.skillModifiers.global", mode: 0, ph: "1" },
+            { name: `${skill} - ${_loc("dsk.MODS.global")}`, val: "system.skillModifiers.global", mode: 0, ph: "1" },
             {
-                name: `${combatReg} - ${game.i18n.localize("dsk.LeP")}`,
+                name: `${combatReg} - ${_loc("dsk.LeP")}`,
                 val: "system.repeatingEffects.startOfRound.LeP",
                 mode: 0,
                 ph: "1d6",
             },
             {
-                name: `${combatReg} - ${game.i18n.localize("dsk.AeP")}`,
+                name: `${combatReg} - ${_loc("dsk.AeP")}`,
                 val: "system.repeatingEffects.startOfRound.AeP",
                 mode: 0,
                 ph: "1d6",
             },
             {
-                name: `${regenerate} - ${game.i18n.localize("dsk.LeP")}`,
+                name: `${regenerate} - ${_loc("dsk.LeP")}`,
                 val: "system.stats.regeneration.LePgearmodifier",
                 mode: 2,
                 ph: "1",
             },
             {
-                name: `${regenerate} - ${game.i18n.localize("dsk.AeP")}`,
+                name: `${regenerate} - ${_loc("dsk.AeP")}`,
                 val: "system.stats.regeneration.AePgearmodifier",
                 mode: 2,
                 ph: "1"
             },
             {
-                name: `${game.i18n.localize("dsk.advanced")} - ${AePCost}`,
+                name: `${_loc("dsk.advanced")} - ${AePCost}`,
                 val: `system.skillModifiers.conditional.AePCost`,
                 mode: 0,
                 ph: descriptor,
@@ -562,7 +579,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
         const cummulativeEffects = ["inpain", "selfconfidence", "encumbered", "stunned", "feared"]
         for (const k of cummulativeEffects) {
             optns.push({
-                name: game.i18n.localize(`dsk.CONDITION.${k}`),
+                name: _loc(`dsk.CONDITION.${k}`),
                 val: `system.status.${k}`,
                 mode: 2,
                 ph: 1
@@ -571,14 +588,14 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
 
         for (const k of Object.keys(DSK.characteristics))
             optns.push({
-                name: game.i18n.localize(`dsk.characteristics.${k}.name`),
+                name: _loc(`dsk.characteristics.${k}.name`),
                 val: `system.characteristics.${k}.gearmodifier`,
                 mode: 2,
                 ph: "1",
             });
 
         for (const k of DSK.gearModifyableCalculatedAttributes)
-            optns.push({ name: game.i18n.localize(`dsk.${k}`), val: `system.stats.${k}.gearmodifier`, mode: 2, ph: "1" });
+            optns.push({ name: _loc(`dsk.${k}`), val: `system.stats.${k}.gearmodifier`, mode: 2, ph: "1" });
 
         optns = optns.sort((a, b) => {
             return a.name.localeCompare(b.name);
@@ -590,7 +607,9 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
 
         optns = optns
             .map((x) => {
-                return `<option value="${x.val}" data-mode="${x.mode}" data-ph="${x.ph}">${x.name}</option>`;
+                const type = x.type ?? ({ 0: "custom", 1: "multiply", 2: "add", 3: "subtract", 4: "downgrade", 5: "override" }[x.mode] ?? "add");
+                const phase = x.phase ?? "initial";
+                return `<option value="${x.val}" data-type="${type}" data-phase="${phase}" data-ph="${x.ph}">${x.name}</option>`;
             })
             .join("\n");
         return `<select class="selMenu">${optns}</select>`;
@@ -614,7 +633,7 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
             });
         });
         if (this.document.statuses.size && game.i18n.has(this.document.description)) {
-            html.find('[data-tab="details"] .editor').replaceWith(`<p>${game.i18n.localize(this.document.description)}</p>`);
+            html.find('[data-tab="details"] .editor').replaceWith(`<p>${_loc(this.document.description)}</p>`);
         }
         const dropDown = this.dropDownMenu();
         html.find('.changes .ol .key').append(dropDown);
@@ -626,13 +645,14 @@ export default class DSKActiveEffectConfig extends foundry.applications.sheets.A
                 elem.siblings('input').val(elem.val());
                 const parent = elem.closest('.row-section');
                 const data = elem.find('option:selected');
-                parent.find('.mode select').val(data.attr('data-mode'));
-                parent.find('.value input').attr('placeholder', data.attr('data-ph'));
+                const exampleValue = data.attr('data-ph') || '';
+                parent.find('.type select').val(data.attr('data-type'));
+                parent.find('.phase select').val(data.attr('data-phase') || 'initial');
+                parent.find('.value input').val(exampleValue).attr('placeholder', '');
                 elem.trigger('blur');
             });
         html.find('.select2').each((i, el) => {
             $(el)[0].style.removeProperty('width');
         });
-        this.checkTimesUpInstalled();
     }
 }

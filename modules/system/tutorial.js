@@ -5,7 +5,7 @@ export default class DSKTutorial {
     static async firstTimeMessage() {
         if (!(await game.settings.get("dsk", "firstTimeStart"))) {
             await DSKTutorial.setupDefaultOptions()
-            let msg = game.i18n.localize('dsk.WELCOME')
+            let msg = _loc('dsk.WELCOME')
             ChatMessage.create(DSKUtility.chatDataSetup(msg))
             DSKTutorial.firstTimeLanguage()
             await game.settings.set("dsk", "firstTimeStart", true)
@@ -16,13 +16,13 @@ export default class DSKTutorial {
         const langs = ["de"]
         const buttons = langs.map(lang => ({
             action: lang,
-            label: game.i18n.localize(lang),
+            label: _loc(lang),
             callback: () => DSKTutorial.setLanguage(lang)
         }));
 
         foundry.applications.api.DialogV2.wait({
             window: { title: "dsk.DIALOG.firstTime" },
-            content: game.i18n.localize("dsk.DIALOG.firstTimeWarning"),
+            content: _loc("dsk.DIALOG.firstTimeWarning"),
             buttons: buttons
         });
     }

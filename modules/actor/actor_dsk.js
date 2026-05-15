@@ -57,7 +57,7 @@ export default class ActorDSK extends Actor {
       data.maxDefense = this.maxDefenseValue();
     } catch (error) {
       console.error("Something went wrong with preparing actor data: " + error + error.stack);
-      ui.notifications.error(game.i18n.format("dsk.DSKError.PreparationError", { name: this.name }) + error + error.stack);
+      ui.notifications.error(_loc("dsk.DSKError.PreparationError", { name: this.name }) + error + error.stack);
     }
   }
 
@@ -77,7 +77,7 @@ export default class ActorDSK extends Actor {
     const data = actor.system
     const isMerchant = actor.isMerchant()
 
-    if (!TraitRulesDSK.hasTrait(actor, game.i18n.localize("dsk.LocalizedIDs.painImmunity"))) {
+    if (!TraitRulesDSK.hasTrait(actor, _loc("dsk.LocalizedIDs.painImmunity"))) {
       const pain = actor.woundPain(data)
       await this.deferredEffectAddition("inpain", actor, pain * 2)
     }
@@ -89,9 +89,9 @@ export default class ActorDSK extends Actor {
 
     await this.deferredEffectAddition("encumbered", actor, encumbrance)
 
-    if (AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.blind"))) await actor.addCondition("blind");
-    if (AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.mute"))) await actor.addCondition("mute");
-    if (AdvantageRulesDSK.hasVantage(actor, game.i18n.localize("dsk.LocalizedIDs.deaf"))) await actor.addCondition("deaf");
+    if (AdvantageRulesDSK.hasVantage(actor, _loc("dsk.LocalizedIDs.blind"))) await actor.addCondition("blind");
+    if (AdvantageRulesDSK.hasVantage(actor, _loc("dsk.LocalizedIDs.mute"))) await actor.addCondition("mute");
+    if (AdvantageRulesDSK.hasVantage(actor, _loc("dsk.LocalizedIDs.deaf"))) await actor.addCondition("deaf");
 
     if (isMerchant) actor.prepareMerchant()
   }
@@ -113,9 +113,9 @@ export default class ActorDSK extends Actor {
   effectivePain(data) {
     let pain = data.status.inpain || 0
     if (pain < 8)
-      pain -= AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.ruggedFighter"))
+      pain -= AdvantageRulesDSK.vantageStep(this, _loc("dsk.LocalizedIDs.ruggedFighter"))
     if (pain > 0)
-      pain += AdvantageRulesDSK.vantageStep(this, game.i18n.localize("dsk.LocalizedIDs.sensitiveToPain"))
+      pain += AdvantageRulesDSK.vantageStep(this, _loc("dsk.LocalizedIDs.sensitiveToPain"))
 
     pain = Math.clamp(pain, 0, 8);
     data.status.inpain = pain
@@ -147,7 +147,7 @@ export default class ActorDSK extends Actor {
   }
 
   static lockedCondition() {
-    const locked = game.i18n.localize("dsk.MERCHANT.locked");
+    const locked = _loc("dsk.MERCHANT.locked");
     return {
       id: "locked",
       name: locked,
@@ -166,16 +166,14 @@ export default class ActorDSK extends Actor {
     return ["merchant", "loot"].includes(this.system.merchant.merchantType);
   }
 
-  applyActiveEffects() {
-    const overrides = {};
+  applyActiveEffects(phase) {
+    this._completedActiveEffectPhases.add(phase);
+    this.tokenActiveEffectChanges ??= {};
+    this.tokenActiveEffectChanges[phase] = [];
 
-    this.statuses ??= new Set();
-    // Identify which special statuses had been active
-    const specialStatuses = new Map();
-    for (const statusId of Object.values(CONFIG.specialStatusEffects)) {
-      specialStatuses.set(statusId, this.statuses.has(statusId));
-    }
-    this.statuses.clear();
+    if (phase !== "initial") return;
+
+    const overrides = {};
     const changes = []
     let multiply = 1
     for (const e of this.effects) {
@@ -188,11 +186,10 @@ export default class ActorDSK extends Actor {
       }
       for (let i = 0; i < multiply; i++) {
         changes.push(
-          ...e.changes.map((c) => {
-            c = foundry.utils.duplicate(c);
-            c.effect = e;
-            c.priority = c.priority ? c.priority : c.mode * 10;
-            return c;
+          ...(e.system?.changes ?? e.changes).map((c) => {
+            const change = { ...c, effect: e };
+            change.priority ??= ActiveEffect.CHANGE_TYPES[change.type]?.defaultPriority ?? change.mode * 10;
+            return change;
           })
         )
       }
@@ -240,11 +237,10 @@ export default class ActorDSK extends Actor {
 
         for (let i = 0; i < multiply; i++) {
           changes.push(
-            ...e.changes.map((c) => {
-              c = foundry.utils.duplicate(c);
-              c.effect = e;
-              c.priority = c.priority ? c.priority : c.mode * 10;
-              return c;
+            ...(e.system?.changes ?? e.changes).map((c) => {
+              const change = { ...c, effect: e };
+              change.priority ??= ActiveEffect.CHANGE_TYPES[change.type]?.defaultPriority ?? change.mode * 10;
+              return change;
             })
           )
         }
@@ -252,25 +248,33 @@ export default class ActorDSK extends Actor {
       }
     }
     changes.sort((a, b) => a.priority - b.priority);
+    foundry.documents.ActiveEffect.implementation._shimChanges(changes);
 
+    const tokenChanges = [];
+    const actorChanges = [];
     for (let change of changes) {
       if (!change.key) continue;
-      const result = change.effect.apply(this, change);
-      Object.assign(overrides, result);
+      if (change.key.startsWith("token.")) {
+        change.key = change.key.slice(6);
+        tokenChanges.push(change);
+      } else {
+        actorChanges.push(change);
+      }
+    }
+    this.tokenActiveEffectChanges[phase] = tokenChanges;
+
+    const replacementData = this.getRollData();
+    for (const change of actorChanges) {
+      const result = change.effect.apply(this, change, { replacementData });
+      if (foundry.utils.isPlainObject(result)) Object.assign(overrides, result);
     }
 
-    this.overrides = foundry.utils.expandObject(overrides);
-    let tokens;
-    for (const [statusId, wasActive] of specialStatuses) {
-      const isActive = this.statuses.has(statusId);
-      if (isActive === wasActive) continue;
-      tokens ??= this.getActiveTokens();
-      for (const token of tokens) token._onApplyStatusEffect(statusId, isActive);
-    }
+    this.overrides ??= {};
+    foundry.utils.mergeObject(this.overrides, foundry.utils.expandObject(overrides));
   }
 
   maxDefenseValue() {
-    let defense = { parry: 0, name: game.i18n.localize("dsk.noDefense") }
+    let defense = { parry: 0, name: _loc("dsk.noDefense") }
     const combatskills = []
     const wornweapons = []
     for (let cur of this.items) {
@@ -301,7 +305,7 @@ export default class ActorDSK extends Actor {
     let data = message.flags.data;
     let cardOptions = {
       flags: { img: message.flags.img },
-      rollMode: data.rollMode,
+      messageMode: data.messageMode,
       speaker: message.speaker,
       template: data.template,
       title: data.title,
@@ -326,11 +330,11 @@ export default class ActorDSK extends Actor {
         fateAvailable = game.settings.get("dsk", "groupschips").split("/")[0];
         schipText = "GroupPointsRemaining";
       }
-      let infoMsg = `<h3 class="center"><b>${game.i18n.localize("dsk.CHATFATE.fatepointUsed")}</b></h3>
-                  ${game.i18n.format("dsk.CHATFATE." + type, {
+      let infoMsg = `<h3 class="center"><b>${_loc("dsk.CHATFATE.fatepointUsed")}</b></h3>
+                  ${_loc("dsk.CHATFATE." + type, {
         character: "<b>" + this.name + "</b>",
       })}<br>
-                  <b>${game.i18n.localize(`dsk.CHATFATE.${schipText}`)}</b>: ${fateAvailable}`;
+                  <b>${_loc(`dsk.CHATFATE.${schipText}`)}</b>: ${fateAvailable}`;
 
       let newTestData = data.preData;
       newTestData.extra.actor = DSKUtility.getSpeaker(newTestData.extra.speaker).toObject(false);
@@ -374,7 +378,7 @@ export default class ActorDSK extends Actor {
                 await new Roll(oldDamageRoll.formula || oldDamageRoll._formula).evaluate(),
                 "dsk.CHATCONTEXT.rerollDamage"
               );
-              await DiceDSK.showDiceSoNice(newRoll, newTestData.rollMode);
+              await DiceDSK.showDiceSoNice(newRoll, newTestData.messageMode);
               for (let i = 0; i < newRoll.dice.length; i++) newRoll.dice[i].options.colorset = "black";
 
               let ind = 0;
@@ -391,7 +395,7 @@ export default class ActorDSK extends Actor {
               oldDamageRoll.editRollAtIndex(changes)
               newTestData.damageRoll = oldDamageRoll
 
-              infoMsg += `<br><b>${game.i18n.localize("dsk.Roll")}</b>: ${changedRolls.join(", ")}`;
+              infoMsg += `<br><b>${_loc("dsk.Roll")}</b>: ${changedRolls.join(", ")}`;
               ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
 
               this[`${data.postData.postFunction}`]({ testData: newTestData, cardOptions }, { rerenderMessage: message });
@@ -441,17 +445,17 @@ export default class ActorDSK extends Actor {
                 await new Roll(newRoll.join("+")).evaluate(),
                 "dsk.CHATCONTEXT.Reroll"
               );
-              await DiceDSK.showDiceSoNice(newRoll, newTestData.rollMode);
+              await DiceDSK.showDiceSoNice(newRoll, newTestData.messageMode);
 
               let ind = 0;
               let changedRolls = [];
               const actor = DSKUtility.getSpeaker(newTestData.extra.speaker);
-              const phexTradition = game.i18n.localize("dsk.LocalizedIDs.traditionPhex");
+              const phexTradition = _loc("dsk.LocalizedIDs.traditionPhex");
               const isPhex = actor.items.some((x) => x.type == "specialability" && x.name == phexTradition);
 
               for (let k of diesToReroll) {
                 const characteristic = newTestData.source.system[`characteristic${k + 1}`];
-                const attr = characteristic ? `${game.i18n.localize(`dsk.characteristics.${characteristic}.abbr`)} - ` : "";
+                const attr = characteristic ? `${_loc(`dsk.characteristics.${characteristic}.abbr`)} - ` : "";
                 changedRolls.push(
                   `${attr}${newTestData.roll.terms[k * 2].results[0].result}/${newRoll.terms[ind * 2].results[0].result}`
                 );
@@ -465,7 +469,7 @@ export default class ActorDSK extends Actor {
                 ind += 1;
               }
 
-              infoMsg += `<br><b>${game.i18n.localize("dsk.Roll")}</b>: ${changedRolls.join(", ")}`;
+              infoMsg += `<br><b>${_loc("dsk.Roll")}</b>: ${changedRolls.join(", ")}`;
               ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
 
               this[`${data.postData.postFunction}`]({ testData: newTestData, cardOptions }, { rerenderMessage: message });
@@ -488,8 +492,8 @@ export default class ActorDSK extends Actor {
 
     this.resetTargetAndMessage(data, cardOptions);
 
-    infoMsg = `<h3 class="center"><b>${game.i18n.localize("dsk.CHATFATE.fatepointUsed")}</b></h3>
-              ${game.i18n.format("dsk.CHATFATE.isTalented", {
+    infoMsg = `<h3 class="center"><b>${_loc("dsk.CHATFATE.fatepointUsed")}</b></h3>
+              ${_loc("dsk.CHATFATE.isTalented", {
       character: "<b>" + this.name + "</b>",
     })}<br>`;
     const html = await renderTemplate("systems/dsk/templates/dialog/isTalentedReroll-dialog.hbs", {
@@ -517,14 +521,14 @@ export default class ActorDSK extends Actor {
                 await new Roll(newRoll.join("+")).evaluate(),
                 "dsk.CHATCONTEXT.talentedReroll"
               );
-              await DiceDSK.showDiceSoNice(newRoll, newTestData.rollMode);
+              await DiceDSK.showDiceSoNice(newRoll, newTestData.messageMode);
 
               let ind = 0;
               let changedRolls = [];
 
               for (let k of diesToReroll) {
                 const characteristic = newTestData.source.system[`characteristic${k + 1}`];
-                const attr = characteristic ? `${game.i18n.localize(`dsk.characteristics.${characteristic}.abbr`)} - ` : "";
+                const attr = characteristic ? `${_loc(`dsk.characteristics.${characteristic}.abbr`)} - ` : "";
 
                 changedRolls.push(
                   `${attr}${newTestData.roll.terms[k * 2].results[0].result}/${newRoll.terms[ind * 2].results[0].result}`
@@ -533,7 +537,7 @@ export default class ActorDSK extends Actor {
 
                 ind += 1;
               }
-              infoMsg += `<b>${game.i18n.localize("dsk.Roll")}</b>: ${changedRolls.join(", ")}`;
+              infoMsg += `<b>${_loc("dsk.Roll")}</b>: ${changedRolls.join(", ")}`;
               ChatMessage.create(DSKUtility.chatDataSetup(infoMsg));
 
               this[`${data.postData.postFunction}`]({ testData: newTestData, cardOptions }, { rerenderMessage: message });
@@ -601,10 +605,10 @@ export default class ActorDSK extends Actor {
         mergeObject(preparedData.system, {
           stats: {
             [k]: {
-              cost: game.i18n.format("dsk.advancementCost", {
+              cost: _loc("dsk.advancementCost", {
                 cost: DSKUtility._calculateAdvCost(preData.system.stats[k].advances, "D"),
               }),
-              refund: game.i18n.format("dsk.refundCost", {
+              refund: _loc("dsk.refundCost", {
                 cost: DSKUtility._calculateAdvCost(preData.system.stats[k].advances, "D", 0),
               }),
             },
@@ -614,10 +618,10 @@ export default class ActorDSK extends Actor {
 
       for (let [key, ch] of Object.entries(this.system.characteristics)) {
         preparedData.system.characteristics[key] = {
-          cost: game.i18n.format("dsk.advancementCost", {
+          cost: _loc("dsk.advancementCost", {
             cost: DSKUtility._calculateAdvCost(ch.initial + ch.advances, "Eig"),
           }),
-          refund: game.i18n.format("dsk.refundCost", {
+          refund: _loc("dsk.refundCost", {
             cost: DSKUtility._calculateAdvCost(ch.initial + ch.advances, "Eig", 0),
           })
         };
@@ -660,7 +664,7 @@ export default class ActorDSK extends Actor {
       if (item.LZ > 0) ItemDataModel.buildReloadProgress(item);
     } else {
       ui.notifications.error(
-        game.i18n.format("dsk.DSKError.unknownCombatSkill", {
+        _loc("dsk.DSKError.unknownCombatSkill", {
           skill: item.system.combatskill,
           item: item.name,
         })
@@ -679,7 +683,7 @@ export default class ActorDSK extends Actor {
 
       item.attack = Number(skillAttack) + Number(item.system.aw);
       item.parry = Math.max(0, skillParry + Number(item.system.vw) + Number(actorData.system.meleeStats?.parry || 0) +
-        (item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Shields") ? Number(item.system.vw) : 0));
+        (item.system.combatskill == _loc("dsk.LocalizedIDs.Shields") ? Number(item.system.vw) : 0));
 
       item.yieldedTwoHand = RuleChaos.isYieldedTwohanded(item)
       if (!item.yieldedTwoHand) {
@@ -711,7 +715,7 @@ export default class ActorDSK extends Actor {
       }
     } else {
       ui.notifications.error(
-        game.i18n.format("dsk.DSKError.unknownCombatSkill", {
+        _loc("dsk.DSKError.unknownCombatSkill", {
           skill: item.system.combatskill,
           item: item.name,
         })
@@ -736,7 +740,7 @@ export default class ActorDSK extends Actor {
       let damageMod = getProperty(modification, "system.damageMod");
       if (Number(damageMod)) damageTerm += `+${Number(damageMod)}`;
       else if (damageMod)
-        item.damageBonusDescription = `, ${damageMod} ${game.i18n.localize("dsk.CHARAbbrev.damage")} ${modification.name}`;
+        item.damageBonusDescription = `, ${damageMod} ${_loc("dsk.CHARAbbrev.damage")} ${modification.name}`;
     }
     if (damageTerm) damageTerm = Roll.safeEval(damageTerm);
 
@@ -749,13 +753,13 @@ export default class ActorDSK extends Actor {
   static calcLZ(item, actor) {
     let factor = 1;
     let modifier = 0;
-    if (item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Throwing Weapons"))
-      modifier = SpecialabilityRulesDSK.abilityStep(actor, game.i18n.localize("dsk.LocalizedIDs.quickdraw")) * -1;
+    if (item.system.combatskill == _loc("dsk.LocalizedIDs.Throwing Weapons"))
+      modifier = SpecialabilityRulesDSK.abilityStep(actor, _loc("dsk.LocalizedIDs.quickdraw")) * -1;
     else if (
-      item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Crossbows") &&
+      item.system.combatskill == _loc("dsk.LocalizedIDs.Crossbows") &&
       SpecialabilityRulesDSK.hasAbility(
         actor,
-        game.i18n.localize("dsk.LocalizedIDs.quickload")
+        _loc("dsk.LocalizedIDs.quickload")
       )
     )
       factor = 0.5;
@@ -763,7 +767,7 @@ export default class ActorDSK extends Actor {
       modifier =
         SpecialabilityRulesDSK.abilityStep(
           actor,
-          game.i18n.localize("dsk.LocalizedIDs.quickload")
+          _loc("dsk.LocalizedIDs.quickload")
         ) * -1;
     }
 
@@ -790,7 +794,7 @@ export default class ActorDSK extends Actor {
     }, 0);
     return Math.max(
       0,
-      encumbrance - SpecialabilityRulesDSK.abilityStep(actorData, game.i18n.localize("dsk.LocalizedIDs.inuredToEncumbrance"))
+      encumbrance - SpecialabilityRulesDSK.abilityStep(actorData, _loc("dsk.LocalizedIDs.inuredToEncumbrance"))
     );
   }
 
@@ -1047,7 +1051,7 @@ export default class ActorDSK extends Actor {
     if (Number(this.system.details.experience.total) - Number(this.system.details.experience.spent) >= cost) {
       return true;
     } else if (Number(this.system.details.experience.total == 0)) {
-      let template = `<p>${game.i18n.localize("dsk.DSKError.zeroXP")}</p><label>${game.i18n.localize(
+      let template = `<p>${_loc("dsk.DSKError.zeroXP")}</p><label>${_loc(
         "dsk.APValue"
       )}: </label><input type="number" name="APsel" value="150"/>`;
       let newXp = 0;
@@ -1128,7 +1132,7 @@ export default class ActorDSK extends Actor {
         const ap = Number(APValue);
         dataUpdate["system.details.experience.spent"] = Number(this.system.details.experience.spent) + ap;
         await this.update(dataUpdate, options);
-        const msg = game.i18n.format(ap > 0 ? "dsk.advancementCost" : "dsk.refundCost", { cost: Math.abs(ap) });
+        const msg = _loc(ap > 0 ? "dsk.advancementCost" : "dsk.refundCost", { cost: Math.abs(ap) });
         tinyNotification(msg);
       } else {
         ui.notifications.error("dsk.DSKError.APUpdateError", { localize: true });
@@ -1137,7 +1141,7 @@ export default class ActorDSK extends Actor {
   }
 
   setupRegeneration(statusId, options = {}, tokenId) {
-    let title = game.i18n.localize("dsk.regenerationTest");
+    let title = _loc("dsk.regenerationTest");
 
     let testData = {
       source: {
@@ -1159,7 +1163,7 @@ export default class ActorDSK extends Actor {
       title,
       template: "/systems/dsk/templates/dialog/regeneration-dialog.hbs",
       data: {
-        rollMode: options.rollMode,
+        messageMode: options.messageMode,
         regenerationInterruptOptions: DSK.regenerationInterruptOptions,
         regnerationCampLocations: DSK.regnerationCampLocations,
         showAepModifier: this.system.isMage,
@@ -1168,16 +1172,16 @@ export default class ActorDSK extends Actor {
       },
       callback: (html, options = {}) => {
         testData.situationalModifiers = ActorDSK._parseModifiers(html);
-        cardOptions.rollMode = html.find('[name="rollMode"]').val();
+        cardOptions.messageMode = html.find('[name="messageMode"]:checked').val();
         testData.situationalModifiers.push(
           {
             name:
-              game.i18n.localize("dsk.camplocation") + " - " + html.find('[name="regnerationCampLocations"] option:selected').text(),
+              _loc("dsk.camplocation") + " - " + html.find('[name="regnerationCampLocations"] option:selected').text(),
             value: html.find('[name="regnerationCampLocations"]').val(),
           },
           {
             name:
-              game.i18n.localize("dsk.interruption") +
+              _loc("dsk.interruption") +
               " - " +
               html.find('[name="regenerationInterruptOptions"] option:selected').text(),
             value: html.find('[name="regenerationInterruptOptions"]').val(),
@@ -1211,7 +1215,7 @@ export default class ActorDSK extends Actor {
 
   setupCharacteristic(characteristicId, options = {}, tokenId) {
     let char = this.system.characteristics[characteristicId];
-    let title = game.i18n.localize(`dsk.characteristics.${characteristicId}.name`) + " " + game.i18n.localize("dsk.probe");
+    let title = _loc(`dsk.characteristics.${characteristicId}.name`) + " " + _loc("dsk.probe");
 
     let testData = {
       opposable: false,
@@ -1234,16 +1238,16 @@ export default class ActorDSK extends Actor {
       title,
       template: "/systems/dsk/templates/dialog/characteristic-dialog.hbs",
       data: {
-        rollMode: options.rollMode,
+        messageMode: options.messageMode,
         modifier: options.modifier || 0,
         characteristics: [1, 2].map((x) => characteristicId),
         hasSchips: ItemDSK.hasSchips(this)
       },
       callback: (html, options = {}) => {
-        cardOptions.rollMode = html.find('[name="rollMode"]').val();
+        cardOptions.messageMode = html.find('[name="messageMode"]:checked').val();
         testData.situationalModifiers = ActorDSK._parseModifiers(html);
         ActorDSK.schipsModifier(html, testData.situationalModifiers)
-        if (testData.situationalModifiers.some(x => x.name == game.i18n.localize("dsk.schips"))) this.reduceSchips(0)
+        if (testData.situationalModifiers.some(x => x.name == _loc("dsk.schips"))) this.reduceSchips(0)
 
         ItemDSK.changeChars(testData.source, ...[0, 1].map((x) => html.find(`[name="characteristics${x}"]`).val()))
         mergeObject(testData.extra.options, options);
@@ -1305,7 +1309,7 @@ export default class ActorDSK extends Actor {
       res.push(data);
     });
     res.push({
-      name: game.i18n.localize("dsk.manual"),
+      name: _loc("dsk.manual"),
       value: Number(html.find('[name="testModifier"]').val()),
       type: "",
     });
@@ -1316,7 +1320,7 @@ export default class ActorDSK extends Actor {
   static async schipsModifier(html, situationalModifiers) {
     if (html.find('[name="schips"]').is(":checked")) {
       situationalModifiers.push({
-        name: game.i18n.localize("dsk.schips"),
+        name: _loc("dsk.schips"),
         value: 5,
         type: ""
       })
@@ -1375,7 +1379,7 @@ export default class ActorDSK extends Actor {
 
     if (game.user.targets.size) {
       cardOptions.isOpposedTest = testData.opposable;
-      const opposed = ` - ${game.i18n.localize("dsk.Opposed")}`;
+      const opposed = ` - ${_loc("dsk.Opposed")}`;
       if (cardOptions.isOpposedTest && cardOptions.title.match(opposed + "$") != opposed) cardOptions.title += opposed;
     }
 

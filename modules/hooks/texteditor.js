@@ -10,8 +10,8 @@ export function setEnrichers() {
     const replaceRegex2 = /[\[\]]/g
 
     if (!DSK.statusRegex) {
-        let effects = DSK.statusEffects.map(x => game.i18n.localize(x.name).toLowerCase())
-        let keywords = ["dsk.status", "dsk.condition", "dsk.level", "dsk.levels"].map(x => game.i18n.localize(x)).join("|")
+        let effects = DSK.statusEffects.map(x => _loc(x.name).toLowerCase())
+        let keywords = ["dsk.status", "dsk.condition", "dsk.level", "dsk.levels"].map(x => _loc(x)).join("|")
         DSK.statusRegex = {
             effects: effects,
             regex: new RegExp(`(${keywords}) (${effects.join('|')})`, 'gi')

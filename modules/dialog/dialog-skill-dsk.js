@@ -16,7 +16,7 @@ export default class SkillDialogDSK extends DialogShared {
         let buttons = DSKDialog.getRollButtons(testData, dialogOptions, resolve, reject);
         // Update the rollButton label
         const rollButton = buttons.find(b => b.action === "rollButton");
-        if (rollButton) rollButton.label = game.i18n.localize("dsk.Opposed");
+        if (rollButton) rollButton.label = _loc("dsk.Opposed");
 
         // Add nonOpposedButton at the beginning
         buttons.unshift({

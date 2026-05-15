@@ -74,7 +74,7 @@ export default class CombatskillData extends ItemDataModel.mixin(
     } else {
       i.system.parry = 0;
     }
-    i.cost = game.i18n.format("dsk.advancementCost", {
+    i.cost = _loc("dsk.advancementCost", {
       cost: DSKUtility._calculateAdvCost(i.system.level, i.system.StF),
     });
     return i;

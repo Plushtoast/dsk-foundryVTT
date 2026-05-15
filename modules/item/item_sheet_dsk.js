@@ -7,12 +7,11 @@ import { svgAutoFit } from "../system/view_helper.js";
 import { ItemSheetObfuscation } from "./obfuscatemixin.js";
 import { itemFromDrop } from "../system/view_helper.js";
 import { AppV2Mixin } from "../actor/mixins/appv2_mixin.js";
-import { DragMixin } from "../actor/mixins/drag_mixin.js";
 const { mergeObject, getProperty } = foundry.utils
 const { renderTemplate } = foundry.applications.handlebars;
 const { TextEditor } = foundry.applications.ux;
 
-export default class ItemSheetDSK extends AppV2Mixin(DragMixin(foundry.applications.api.HandlebarsApplicationMixin(foundry.applications.sheets.ItemSheetV2))) {
+export default class ItemSheetDSK extends AppV2Mixin(foundry.applications.api.HandlebarsApplicationMixin(foundry.applications.sheets.ItemSheetV2)) {
 
     static setupSheets() {
         const sheetMappings = [
@@ -474,7 +473,7 @@ class ItemSheetConsumable extends ItemSheetObfuscation(EffectsEquipmentSheet) {
         const data = await super._prepareContext(options)
         mergeObject(data, {
             calculatedPrice: game.dsk.config.ItemSubClasses.consumable.consumablePrice(this.item),
-            qsOptions: Array.fromRange(3, 0).reduce((acc, x) => { acc[x] = game.i18n.localize(`dsk.consumable.qs.${x}`); return acc }, {}),
+            qsOptions: Array.fromRange(3, 0).reduce((acc, x) => { acc[x] = _loc(`dsk.consumable.qs.${x}`); return acc }, {}),
             consumableCategories: {
                 "0": 'dsk.consumable.category.0'
             }
@@ -491,11 +490,11 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(EffectsEquipmentSheet){
         if (!twoHanded) {
             wrongGripHint = "wrongGrip.yieldTwo"
         } else {
-            const localizedCT = game.i18n.localize(`dsk.LocalizedCTs.${this.item.system.combatskill}`)
+            const localizedCT = _loc(`dsk.LocalizedCTs.${this.item.system.combatskill}`)
             switch (localizedCT) {
                 case "Two-Handed Impact Weapons":
                 case "Two-Handed Swords":
-                    const reg = new RegExp(game.i18n.localize('dsk.wrongGrip.wrongGripBastardRegex'))
+                    const reg = new RegExp(_loc('dsk.wrongGrip.wrongGripBastardRegex'))
                     if (reg.test(this.item.name))
                         wrongGripHint = "wrongGrip.yieldOneBastard"
                     else
@@ -510,7 +509,7 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(EffectsEquipmentSheet){
             twoHanded,
             wrongGripLabel: twoHanded ? "wrongGrip.oneHanded" : "wrongGrip.twoHanded",
             wrongGripHint,
-            isShield: this.item.system.combatskill == game.i18n.localize("dsk.LocalizedIDs.Shields"),
+            isShield: this.item.system.combatskill == _loc("dsk.LocalizedIDs.Shields"),
             combatskills: (await DSKUtility.allSkillsList(["combatskill"])).meleeSkills,
             ranges: DSK.meleeRanges,
             shieldSizes: DSK.shieldSizes
@@ -518,7 +517,7 @@ class ItemSheetMeleeweapon extends ItemSheetObfuscation(EffectsEquipmentSheet){
         if (this.item.actor) {
             const combatSkill = this.item.actor.items.find(x => x.type == "combatskill" && x.name == this.item.system.combatskill)
             data['canBeOffHand'] = combatSkill && !(combatSkill.system.weapontype.twoHanded) && this.item.system.worn.value
-            data['canBeWrongGrip'] = !["Daggers", "Fencing Weapons"].includes(game.i18n.localize(`dsk.LocalizedCTs.${this.item.system.combatskill}`))
+            data['canBeWrongGrip'] = !["Daggers", "Fencing Weapons"].includes(_loc(`dsk.LocalizedCTs.${this.item.system.combatskill}`))
         }
         data.canOnUseEffect = game.user.isGM || await game.settings.get("dsk", "playerCanEditSpellMacro")
         return data
@@ -854,7 +853,7 @@ class ItemSheetAhnengeschenk extends NoEffectsSheet {
 
         const cantrip = game.dsk.config.ItemSubClasses.ahnengeschenk
         await this.item.actor.update({ "system.stats.AeP.value": this.item.actor.system.stats.AeP.value -= 1 })
-        const chatMessage = `<p><b>${this.item.name} - ${game.i18n.localize('TYPES.Item.ahnengeschenk')} ${game.i18n.localize('dsk.probe')}</b></p><p>${this.item.system.description.value}</p><p>${cantrip.chatData(this.item.system, "").join("</br>")}</p>`
+        const chatMessage = `<p><b>${this.item.name} - ${_loc('TYPES.Item.ahnengeschenk')} ${_loc('dsk.probe')}</b></p><p>${this.item.system.description.value}</p><p>${cantrip.chatData(this.item.system, "").join("</br>")}</p>`
         await ChatMessage.create(DSKUtility.chatDataSetup(chatMessage));
     }
 }

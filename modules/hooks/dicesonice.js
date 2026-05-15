@@ -115,7 +115,7 @@ export class DiceSoNiceCustomization extends DefaultAppv2 {
         game.settings.registerMenu("dsk", "dicesonicesettings", {
             name: "DiceSoNiceSettings",
             label: "DiceSoNice Settings",
-            hint: game.i18n.localize("dsk.SETTINGS.dicesonicesettings"),
+            hint: _loc("dsk.SETTINGS.dicesonicesettings"),
             type: DiceSoNiceForm,
             restricted: false
         })

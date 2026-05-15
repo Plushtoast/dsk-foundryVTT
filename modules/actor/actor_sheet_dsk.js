@@ -409,12 +409,12 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 let effect;
                 let text;
                 if (descriptor) {
-                    effect = CONFIG.statusEffects.find(x => x.id == descriptor);
-                    text = $(`<div style="padding:5px;"><b><a class="chat-condition chatButton" data-id="${effect.id}"><img src="${effect.img}"/>${game.i18n.localize(effect.name)}</a></b>: ${game.i18n.localize(effect.description)}</div>`);
+                    effect = CONFIG.statusEffects[descriptor];
+                    text = $(`<div style="padding:5px;"><b><a class="chat-condition chatButton" data-id="${effect.id}"><img src="${effect.img}"/>${_loc(effect.name)}</a></b>: ${_loc(effect.description)}</div>`);
                 } else {
                     effect = this.actor.effects.find(x => x.id == id);
                     if (effect) {
-                        text = $(`<div style="padding:5px;"><b><a class="chat-condition chatButton" data-id="${effect.id}"><img src="${effect.img}"/>${game.i18n.localize(effect.name)}</a></b>: ${game.i18n.localize(effect.flags.dsk.description)}</div>`);
+                        text = $(`<div style="padding:5px;"><b><a class="chat-condition chatButton" data-id="${effect.id}"><img src="${effect.img}"/>${_loc(effect.name)}</a></b>: ${_loc(effect.flags.dsk.description)}</div>`);
                     }
                 }
                 const elem = $(target).closest('.groupbox').find('.effectDescription');
@@ -689,6 +689,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         if (!item) return;
         ui.context.menuItems = this._getItemContextOptions(item);
         Hooks.call('dsk.getItemContextOptions', item, ui.context.menuItems);
+        this._normalizeContextOptions(ui.context.menuItems);
     }
 
     _onStatusEffectContext(target) {
@@ -702,36 +703,47 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         ui.context.menuItems = this._getStatusEffectContextOptions(effect);
     }
 
+    _normalizeContextOptions(options) {
+        for (const option of options) {
+            option.label ??= option.name;
+            option.visible ??= option.condition;
+            option.onClick ??= option.callback;
+            delete option.name;
+            delete option.condition;
+            delete option.callback;
+        }
+    }
+
     _getItemContextOptions(item) {
         return [
             {
-                name: "dsk.SHEET.EditItem",
+                label: "dsk.SHEET.EditItem",
                 icon: "<i class='fas fa-edit fa-fw'></i>",
-                callback: () => item.sheet.render(true)
+                onClick: () => item.sheet.render(true)
             },
             {
-                name: "dsk.SHEET.PostItem",
+                label: "dsk.SHEET.PostItem",
                 icon: "<i class='fas fa-comment fa-fw'></i>",
-                callback: () => item.postItem()
+                onClick: () => item.postItem()
             },
             {
-                name: "dsk.SHEET.Dropdown",
+                label: "dsk.SHEET.Dropdown",
                 icon: "<i class='fas fa-chevron-down fa-fw'></i>",
-                condition: () => !!this.element?.querySelector(`.item[data-item-id="${item.id}"] .expandDetails`),
-                callback: () => {
+                visible: () => !!this.element?.querySelector(`.item[data-item-id="${item.id}"] .expandDetails`),
+                onClick: () => {
                     const details = this.element?.querySelector(`.item[data-item-id="${item.id}"] .expandDetails`);
                     details?.classList.toggle('shown');
                 }
             },
             {
-                name: "dsk.SHEET.DuplicateItem",
+                label: "dsk.SHEET.DuplicateItem",
                 icon: "<i class='fas fa-copy fa-fw'></i>",
-                callback: () => this.handleItemCopy(item.toObject(), item.type)
+                onClick: () => this.handleItemCopy(item.toObject(), item.type)
             },
             {
-                name: "dsk.SHEET.DeleteItem",
+                label: "dsk.SHEET.DeleteItem",
                 icon: "<i class='fas fa-trash fa-fw'></i>",
-                callback: () => this._deleteItem(item.id)
+                onClick: () => this._deleteItem(item.id)
             }
         ];
     }
@@ -739,14 +751,14 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     _getStatusEffectContextOptions(effect) {
         return [
             {
-                name: "dsk.SHEET.EditItem",
+                label: "dsk.SHEET.EditItem",
                 icon: "<i class='fas fa-edit fa-fw'></i>",
-                callback: () => effect.sheet.render(true)
+                onClick: () => effect.sheet.render(true)
             },
             {
-                name: "dsk.SHEET.DeleteItem",
+                label: "dsk.SHEET.DeleteItem",
                 icon: "<i class='fas fa-trash fa-fw'></i>",
-                callback: () => this._deleteActiveEffect(effect.id)
+                onClick: () => this._deleteActiveEffect(effect.id)
             }
         ];
     }
@@ -791,11 +803,11 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 div.classList.add("hovermenu");
                 const del = document.createElement('i');
                 del.classList.add("fas", "fa-times");
-                del.title = game.i18n.localize('dsk.SHEET.DeleteItem');
+                del.title = _loc('dsk.SHEET.DeleteItem');
                 del.addEventListener('click', deletehand, false);
                 const post = document.createElement('i');
                 post.classList.add("fas", "fa-comment");
-                post.title = game.i18n.localize('dsk.SHEET.PostItem');
+                post.title = _loc('dsk.SHEET.PostItem');
                 post.addEventListener('click', posthand, false);
                 div.appendChild(post);
                 div.appendChild(del);
@@ -943,7 +955,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
     }
 
     maxByAttr(item, specialability) {
-        return Math.max(...[this.actor.system.characteristics[item.system.characteristic1].value, this.actor.system.characteristics[item.system.characteristic2].value]) + 2 + AdvantageRulesDSK.vantageStep(this.actor, `${game.i18n.localize(specialability)} (${item.name})`)
+        return Math.max(...[this.actor.system.characteristics[item.system.characteristic1].value, this.actor.system.characteristics[item.system.characteristic2].value]) + 2 + AdvantageRulesDSK.vantageStep(this.actor, `${_loc(specialability)} (${item.name})`)
     }
 
     async _checkEnoughXP(cost) {
@@ -1041,7 +1053,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 continue;
             }
 
-            const title = game.i18n.localize(entry.querySelector('button')?.dataset?.tooltip || entry.querySelector('a')?.dataset?.tooltip) || '';
+            const title = _loc(entry.querySelector('button')?.dataset?.tooltip || entry.querySelector('a')?.dataset?.tooltip) || '';
             const isMatch = [title].some(q => rgx.test(SearchFilter.cleanQuery(q)));
             entry.hidden = !isMatch;
         }
@@ -1059,7 +1071,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
         if (!this.isEditable) return
 
         let item = this.actor.items.get(itemId)
-        let message = game.i18n.format("dsk.DIALOG.DeleteItemDetail", { item: item.name })
+        let message = _loc("dsk.DIALOG.DeleteItemDetail", { item: item.name })
         renderTemplate('systems/dsk/templates/dialog/delete-item-dialog.hbs', { message }).then(html => {
             foundry.applications.api.DialogV2.wait({
                 window: { title: "dsk.DIALOG.deleteConfirmation" },
@@ -1207,7 +1219,7 @@ export default class ActorSheetDSK extends AppV2Mixin(foundry.applications.api.H
                 await this._handleEffectWrapper(item)
                 break
             default:
-                ui.notifications.error(game.i18n.format("dsk.DSKError.canNotBeAdded", { item: item.name, category: game.i18n.localize(item.type) }))
+                ui.notifications.error(_loc("dsk.DSKError.canNotBeAdded", { item: item.name, category: _loc(item.type) }))
         }
     }
 

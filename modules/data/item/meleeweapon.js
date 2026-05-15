@@ -42,8 +42,8 @@ export default class MeleeweaponData extends ItemDataModel.mixin(
    * Migrate old shield size values to new ones
    * @param {Object} source - The source data
    */
-  static _migrateData(source) {
-    super._migrateData(source);
+  static _migrateData(source, options, _state) {
+    super._migrateData(source, options, _state);
 
     // Migrate old shieldsize values: small -> short, large -> long
     if (source.shieldsize) {

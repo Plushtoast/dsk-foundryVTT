@@ -22,7 +22,7 @@ export default class DSKStatusEffects{
     }
 
     static createCustomEffect(owner, description = "", name) {
-        name = name || game.i18n.localize("dsk.CONDITION.custom")
+        name = name || _loc("dsk.CONDITION.custom")
         if (description == "") description = name
 
         owner.addCondition({
@@ -42,7 +42,7 @@ export default class DSKStatusEffects{
         if (!target.isOwner) return "Not owned"
         if (target.compendium) return "Can not add in compendium"
         if (absolute && value < 1) return this.removeCondition(target, effect, value, auto, absolute)
-        if (typeof(effect) === "string") effect = duplicate(CONFIG.statusEffects.find(e => e.id == effect))
+        if (typeof(effect) === "string") effect = duplicate(CONFIG.statusEffects[effect])
         if (!effect) return "No Effect Found"
 
         let existing = this.hasCondition(target, effect.id)
@@ -59,7 +59,7 @@ export default class DSKStatusEffects{
         const immune = this.immuneToEffect(actor, effect)
         if (immune) return immune
 
-        effect.name = game.i18n.localize(effect.name);
+        effect.name = _loc(effect.name);
         if (auto) {
             effect.flags.dsk.auto = Math.min(effect.flags.dsk.max, value);
             effect.flags.dsk.manual = 0
@@ -76,6 +76,8 @@ export default class DSKStatusEffects{
         if (effect.id == "dead")
             effect["flags.core.overlay"] = true;
 
+        DSKStatusEffects.migrateEffectChanges(effect);
+
         let result = await actor.createEmbeddedDocuments("ActiveEffect", [duplicate(effect)])
         delete effect.id
         return result
@@ -83,7 +85,7 @@ export default class DSKStatusEffects{
 
     static async removeCondition(target, effect, value = 1, auto = true, absolute = false) {
         if (!target.isOwner) return "Not owned"
-        if (typeof(effect) === "string") effect = duplicate(CONFIG.statusEffects.find(e => e.id == effect))
+        if (typeof(effect) === "string") effect = duplicate(CONFIG.statusEffects[effect])
         if (!effect) return "No Effect Found"
 
         let existing = this.hasCondition(target, effect.id)
@@ -95,6 +97,17 @@ export default class DSKStatusEffects{
             return res
         } else if (existing)
             return await DSKStatusEffects.removeEffect(target, existing, value, absolute, auto)
+    }
+
+    static migrateEffectChanges(effect) {
+        if (!effect.changes) return;
+        effect.system ??= {};
+        effect.system.changes = effect.changes.map(change => ({ ...change, type: change.type ?? DSKStatusEffects.modeToType(change.mode) }));
+        delete effect.changes;
+    }
+
+    static modeToType(mode) {
+        return ["custom", "multiply", "add", "downgrade", "upgrade", "override"][Number(mode)] ?? mode;
     }
 
     static async removeEffect(actor, existing, value, absolute, autoMode) {
@@ -136,7 +149,7 @@ export default class DSKStatusEffects{
         update.flags.dsk.value = Math.max(0, Math.min(existing.flags.dsk.max, update.flags.dsk.manual + update.flags.dsk.auto))
         if (newEffect.duration) {
             update.duration = newEffect.duration
-            update.duration.startTime = game.time.worldTime
+            update.start = { time: game.time.worldTime }
         }
 
         await existing.update(update)
@@ -147,7 +160,7 @@ export default class DSKStatusEffects{
         //TODO add this to effect dropdown
         const immunities = getProperty(target, "system.immunities") || []
         if (immunities.includes(effect.id)) {
-            const msg = game.i18n.format("dsk.DSKError.immuneTo", { name: target.name, condition: game.i18n.localize(`dsk.CONDITION.${effect.id}`) })
+            const msg = _loc("dsk.DSKError.immuneTo", { name: target.name, condition: _loc(`dsk.CONDITION.${effect.id}`) })
             if (ui.notifications && !silent) ui.notifications.warn(msg)
             return msg
         }
@@ -175,7 +188,7 @@ export default class DSKStatusEffects{
     }
 
     static prepareActiveEffects(target, data = {}) {
-        let systemConditions = duplicate(CONFIG.statusEffects) //.filter(x => x.flags.dsk.editable)
+        let systemConditions = duplicate(Object.values(CONFIG.statusEffects)) //.filter(x => x.flags.dsk.editable)
         let appliedSystemConditions = []
         data.conditions = []
         data.transferedConditions = []
@@ -224,7 +237,7 @@ export default class DSKStatusEffects{
             cumulativeConditions.push({
                 img: ef.img,
                 id: key,
-                name: game.i18n.localize(ef.name),
+                name: _loc(ef.name),
                 value: target.system.status[key]
             })
           }
@@ -244,14 +257,14 @@ export default class DSKStatusEffects{
     }
 
     static getRollModifiers(actor, item, options = {}) {
-        const source = game.i18n.localize('dsk.status') + "/" + game.i18n.localize('dsk.condition')
+        const source = _loc('dsk.status') + "/" + _loc('dsk.condition')
         const actorEffects = []
         const status = actor.system?.status || {}
         for(let key of Object.keys(status)){
             if(status[key]){
                 const effectClass = game.dsk.config.statusEffectClasses[key] || DSKStatusEffects
                 actorEffects.push({
-                    name: game.i18n.localize(`dsk.CONDITION.${key}`),
+                    name: _loc(`dsk.CONDITION.${key}`),
                     value: effectClass.calculateRollModifier(key, actor, item, options),
                     selected: effectClass.ModifierIsSelected(item, options, actor),
                     source

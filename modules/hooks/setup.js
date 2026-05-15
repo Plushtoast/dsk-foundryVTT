@@ -35,7 +35,7 @@ export function initSetup(){
 const showWrongLanguageDialog = (forceLanguage) => {
     foundry.applications.api.DialogV2.wait({
         window: { title: "dsk.SETTINGS.forceLanguage" },
-        content: game.i18n.format("dsk.DSKError.wrongLanguage", { lang: forceLanguage }),
+        content: _loc("dsk.DSKError.wrongLanguage", { lang: forceLanguage }),
         buttons: [
             {
                 action: "ok",

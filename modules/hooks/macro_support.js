@@ -18,7 +18,7 @@ export function setupMacros() {
             } else {
                 command = `game.dsk.macro.itemMacroById("${data.actorId}", "${item.name}", "${item.type}", ${param})`;
             }
-            let name = data.mod == undefined ? item.name : `${item.name} - ${game.i18n.localize("dsk.characteristics." + data.mod + ".name")}`
+            let name = data.mod == undefined ? item.name : `${item.name} - ${_loc("dsk.characteristics." + data.mod + ".name")}`
             return createHotBarMacro(command, name, item.img, slot)
         } else if (data.type == "Actor" || data.type == "JournalEntry") {
             const elem = fromUuidSync(data.uuid)

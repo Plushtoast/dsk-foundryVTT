@@ -32,7 +32,7 @@ export default class DSKpellDialog extends DialogShared {
                 const progressLabel = modified > 0 ? ` (${progress}/${modified})` : "";
                 buttons.push({
                     action: "reloadButton",
-                    label: `${game.i18n.localize("dsk.SPELL.reload")}${progressLabel}`,
+                    label: `${_loc("dsk.SPELL.reload")}${progressLabel}`,
                     callback: async (event, button, dialog) => {
                         const dlg = $(button.form);
                         const actor = await DSKUtility.getSpeaker(testData.extra.speaker);
@@ -42,7 +42,7 @@ export default class DSKpellDialog extends DialogShared {
                             reloadUpdate["system.castingTime.modified"] = modified;
                         }
                         await actor.updateEmbeddedDocuments("Item", [reloadUpdate]);
-                        const infoMsg = game.i18n.format("dsk.SPELL.isReloading", {
+                        const infoMsg = _loc("dsk.SPELL.isReloading", {
                             actor: testData.extra.actor.name,
                             item: testData.source.name,
                             status: `${progress + 1}/${modified}`,
@@ -127,13 +127,13 @@ export default class DSKpellDialog extends DialogShared {
         }
 
         mod = 0;
-        let newReach = game.i18n.localize("dsk.ReverseSpellRanges." + baseReach);
+        let newReach = _loc("dsk.ReverseSpellRanges." + baseReach);
         reach.text(baseReach);
         parent.find(".spellModifier[data-reach]:checked").each(function(index, element) {
             if (newReach == "self") {
                 element.checked = false;
             } else if (newReach == "touch") {
-                reach.text("4 " + game.i18n.localize("dsk.step"));
+                reach.text("4 " + _loc("dsk.step"));
                 mod += Number(element.value);
             } else {
                 let val = baseReach.split(" ");
@@ -142,7 +142,7 @@ export default class DSKpellDialog extends DialogShared {
                     if(event) event.currentTarget.checked = false;
                     ui.notifications.error("dsk.DSKError.RangeCannotBeParsed", { localize: true });
                 } else {
-                    reach.text(newReach * 2 + " " + game.i18n.localize("dsk.step"));
+                    reach.text(newReach * 2 + " " + _loc("dsk.step"));
                     mod += Number(element.value);
                 }
             }

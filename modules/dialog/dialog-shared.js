@@ -18,7 +18,7 @@ export default class DialogShared extends foundry.applications.api.DialogV2 {
 
     setRollButtonWarning() {
         if (this.dialogData.mode === "attack") {
-            const noTarget = game.i18n.localize("dsk.DIALOG.noTarget");
+            const noTarget = _loc("dsk.DIALOG.noTarget");
             return `<span class="missingTarget"><i class="fas fa-exclamation-circle"></i> ${noTarget}</span>`;
         }
         return "";
@@ -26,7 +26,7 @@ export default class DialogShared extends foundry.applications.api.DialogV2 {
 
     setMultipleTargetsWarning() {
         if (this.dialogData.mode === "attack") {
-            const noTarget = game.i18n.localize("dsk.DIALOG.multipleTarget");
+            const noTarget = _loc("dsk.DIALOG.multipleTarget");
             return `<span class="multipleTarget"><i class="fas fa-exclamation-circle"></i> ${noTarget}</span>`;
         }
         return "";
@@ -41,7 +41,7 @@ export default class DialogShared extends foundry.applications.api.DialogV2 {
     }
 
     async updateRollButton(targets) {
-        let rollTag = this.renderRollValueDie() + game.i18n.localize('dsk.Roll');
+        let rollTag = this.renderRollValueDie() + _loc('dsk.Roll');
 
         if (targets.length === 0) {
             rollTag += this.setRollButtonWarning();

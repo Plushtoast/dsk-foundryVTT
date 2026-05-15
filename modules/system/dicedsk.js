@@ -65,7 +65,7 @@ export default class DiceDSK{
     }
 
     static async setupDialog({ dialogOptions, testData, cardOptions }) {
-        let rollMode = await game.settings.get("core", "rollMode")
+        let messageMode = await game.settings.get("core", "messageMode")
         let sceneStress = 0
 
         if (typeof testData.source.toObject === "function") testData.source = testData.source.toObject(false)
@@ -94,12 +94,12 @@ export default class DiceDSK{
         mergeObject(dialogOptions.data, {
             hasSituationalModifiers: situationalModifiers.length > 0,
             situationalModifiers,
-            rollMode: dialogOptions.data.rollMode || rollMode,
+            messageMode: dialogOptions.data.messageMode || messageMode,
             attributesList: ["mu", "kl", "in", "ch", "ff", "ge", "ko", "kk"].reduce((acc, att) => {
-                acc[att] = game.i18n.localize(`dsk.characteristics.${att}.abbr`)
+                acc[att] = _loc(`dsk.characteristics.${att}.abbr`)
                 return acc
             } , {}),
-            rollModes: CONFIG.Dice.rollModes,
+            messageModes: CONFIG.ChatMessage.modes,
             defenseCount: await this.getDefenseCount(testData),
             targets,
         })
@@ -121,7 +121,7 @@ export default class DiceDSK{
                     .render(true)
             })
         } else {
-            cardOptions.rollMode = testData.extra.options.rollMode || rollMode
+            cardOptions.messageMode = testData.extra.options.messageMode || messageMode
             if (!testData.situationalModifiers) testData.situationalModifiers = []
             return { testData, cardOptions }
         }
@@ -193,11 +193,11 @@ export default class DiceDSK{
     }
 
     static async _addRollDiceSoNice(testData, roll, color) {
-        if (testData.rollMode) {
+        if (testData.messageMode) {
             for (let i = 0; i < roll.dice.length; i++) {
                 mergeObject(roll.dice[i].options, color)
             }
-            await this.showDiceSoNice(roll, testData.rollMode)
+            await this.showDiceSoNice(roll, testData.messageMode)
         }
     }
 
@@ -208,7 +208,7 @@ export default class DiceDSK{
         res.preData.calculatedSpellModifiers.finalcost = Number(res.preData.calculatedSpellModifiers.cost)
         if (res.successLevel >= 2) {
             let extraFps = 10
-            res.description = res.description + ", " + game.i18n.localize("dsk.additionalQLs") + " " + extraFps
+            res.description = res.description + ", " + _loc("dsk.additionalQLs") + " " + extraFps
             res.qualityStep = Math.min(6, Math.ceil(res.result / 5) + 2)
             res.preData.calculatedSpellModifiers.finalcost = Math.round(res.preData.calculatedSpellModifiers.cost / 2)
         } else if (res.successLevel <= -2) {
@@ -218,7 +218,7 @@ export default class DiceDSK{
         if (res.successLevel > 0) {
             if (testData.source.system.effectFormula != "") {
                 let formula = testData.source.system.effectFormula
-                    .replace(game.i18n.localize("dsk.CHARAbbrev.QS"), res.qualityStep)
+                    .replace(_loc("dsk.CHARAbbrev.QS"), res.qualityStep)
                     .replace(/[Ww]/g, "d")
                 let armorPen = []
                 for (let mod of testData.situationalModifiers) {
@@ -251,7 +251,7 @@ export default class DiceDSK{
                     testData
                 )
                 if (statusDmg != 0) {
-                    damageBonusDescription.push(game.i18n.localize("dsk.statuseffects") + " " + statusDmg)
+                    damageBonusDescription.push(_loc("dsk.statuseffects") + " " + statusDmg)
                 }
                 res["armorPen"] = armorPen
                 res["damageRoll"] = rollEffect.toJSON()
@@ -270,13 +270,13 @@ export default class DiceDSK{
         let costModifiers = []
  
         if(res.successLevel < 0){
-            const traditions = ["traditionWitch", "traditionFjarning", "braniborian"].map(x => game.i18n.localize(`dsk.LocalizedIDs.${x}`))
+            const traditions = ["traditionWitch", "traditionFjarning", "braniborian"].map(x => _loc(`dsk.LocalizedIDs.${x}`))
             const factor = (actorData?.items || []).some(x => x.type == "specialability" && traditions.includes(x.name)) ? 3 : 2
             res.preData.calculatedSpellModifiers.finalcost = Math.round(res.preData.calculatedSpellModifiers.finalcost / factor)
         }
         let feature = "AePCost"
-        let weakBody = game.i18n.localize("dsk.LocalizedIDs.weakAstralBody")
-        let energy = game.i18n.localize(`dsk.LocalizedIDs.${res.successLevel > 0 ? "energyControl" : "smallEnergyControl"}`)
+        let weakBody = _loc("dsk.LocalizedIDs.weakAstralBody")
+        let energy = _loc(`dsk.LocalizedIDs.${res.successLevel > 0 ? "energyControl" : "smallEnergyControl"}`)
         let globalMod = { val: "aepModifier", name: "AeP" }
         
         costModifiers.push(
@@ -289,7 +289,7 @@ export default class DiceDSK{
                 value: SpecialabilityRulesDSK.abilityStep(actorData || testData.extra.actor, energy) * -1,
             },
             {
-                name: `${game.i18n.localize("dsk.statuseffects")} (${game.i18n.localize("dsk.CHARAbbrev." + globalMod.name)})`,
+                name: `${_loc("dsk.statuseffects")} (${_loc("dsk.CHARAbbrev." + globalMod.name)})`,
                 value: (actorData?.system?.[globalMod.val] || 0) + this._situationalModifiers(testData, feature)
             }
         )
@@ -332,7 +332,7 @@ export default class DiceDSK{
                     break
                 case -2:
                     const isMelee = source.type == "meleeweapon" || getProperty(source, "system.traitType") == "meleeAttack"
-                    const isWeaponless = getProperty(source, "system.combatskill") == game.i18n.localize("dsk.LocalizedIDs.wrestle") || source.type == "trait"
+                    const isWeaponless = getProperty(source, "system.combatskill") == _loc("dsk.LocalizedIDs.wrestle") || source.type == "trait"
                     if (isMelee)
                         result.description += DSKTables.rollCritBotchButton("Melee", isWeaponless, testData)
                     else
@@ -399,8 +399,8 @@ export default class DiceDSK{
         } else {
             damage += bonusDmg
 
-            damageBonusDescription.push(game.i18n.localize("dsk.Roll") + " " + weaponroll)
-            if (weaponBonus != 0) damageBonusDescription.push(game.i18n.localize("dsk.weaponModifier") + " " + weaponBonus)
+            damageBonusDescription.push(_loc("dsk.Roll") + " " + weaponroll)
+            if (weaponBonus != 0) damageBonusDescription.push(_loc("dsk.weaponModifier") + " " + weaponBonus)
 
             testData.situationalModifiers.reduce((prev, x) => {
                 if (x.damageBonus) {
@@ -409,21 +409,21 @@ export default class DiceDSK{
                 }
             }, damageBonusDescription)
 
-            if (testData.situationalModifiers.find((x) => x.name.indexOf(game.i18n.localize("dsk.CONDITION.bloodrush")) > -1)) {
+            if (testData.situationalModifiers.find((x) => x.name.indexOf(_loc("dsk.CONDITION.bloodrush")) > -1)) {
                 damage += 2
-                damageBonusDescription.push(game.i18n.localize("dsk.CONDITION.bloodrush") + " " + 2)
+                damageBonusDescription.push(_loc("dsk.CONDITION.bloodrush") + " " + 2)
             }
 
             if (weapon.extraDamage) {
                 damage = Number(weapon.extraDamage) + Number(damage)
-                damageBonusDescription.push(game.i18n.localize("dsk.damageThreshold") + " " + weapon.extraDamage)
+                damageBonusDescription.push(_loc("dsk.damageThreshold") + " " + weapon.extraDamage)
             }
 
             let status
             if (isRangeWeapon) {
                 let rangeDamageMod = DSK.rangeMods[testData.rangeModifier || "medium"].damage
                 damage += rangeDamageMod
-                if (rangeDamageMod != 0) damageBonusDescription.push(game.i18n.localize("dsk.distance") + " " + rangeDamageMod)
+                if (rangeDamageMod != 0) damageBonusDescription.push(_loc("dsk.distance") + " " + rangeDamageMod)
 
                 status = actorData?.system?.rangeStats?.damage ?? 0
             } else {
@@ -433,19 +433,19 @@ export default class DiceDSK{
             const statusDmg = await DiceDSK._stringToRoll(status, testData)
             if (statusDmg != 0) {
                 damage += statusDmg
-                damageBonusDescription.push(game.i18n.localize("dsk.statuseffects") + " " + statusDmg)
+                damageBonusDescription.push(_loc("dsk.statuseffects") + " " + statusDmg)
             }
         }
 
-        const feint = game.i18n.localize("dsk.LocalizedIDs.feint")
+        const feint = _loc("dsk.LocalizedIDs.feint")
         if(result.qualityStep > 0 && !testData.situationalModifiers.find(x => x.name == feint)){
             damage += result.qualityStep
-            damageBonusDescription.push(game.i18n.localize("dsk.qualityStep") + " " + result.qualityStep)
+            damageBonusDescription.push(_loc("dsk.qualityStep") + " " + result.qualityStep)
         }
 
         if (doubleDamage) {
             damage = damage * 3
-            damageBonusDescription.push(game.i18n.localize("dsk.doubleDamage"))
+            damageBonusDescription.push(_loc("dsk.doubleDamage"))
         }
         for (const el of dmgMultipliers) {
             damage = damage * el.val
@@ -466,17 +466,17 @@ export default class DiceDSK{
                 if (regex.test(k.trim())) {
                     const split = k.split("|").map((x) => x.trim())
                     if (split[0] == "condition") {
-                        const effect = CONFIG.statusEffects.find((x) => x.id == split[1])
+                        const effect = CONFIG.statusEffects[split[1]]
                         result.push(
                             `<a class="chat-condition chatButton" data-id="${effect.id}">
-                            <img src="${effect.img}"/>${game.i18n.localize(effect.name)}
+                            <img src="${effect.img}"/>${_loc(effect.name)}
                             </a>`
                         )
                     } else
                         result.push(
                             `<a class="roll-button roll-item" data-name="${split[1]}" data-type="${
                                 split[0]
-                            }"><i class="fas fa-dice"></i>${game.i18n.localize(split[0])}: ${split[1]}</a>`
+                            }"><i class="fas fa-dice"></i>${_loc(split[0])}: ${split[1]}</a>`
                         )
                 }
             }
@@ -486,7 +486,7 @@ export default class DiceDSK{
             result.push(
                 `<a class="roll-button roll-item" data-removecharge="${!poison.permanent}" data-name="${
                     poison.name
-                }" data-type="poison"><i class="fas fa-dice"></i>${game.i18n.localize("TYPES.Item.poison")}: ${poison.name}</a>`
+                }" data-type="poison"><i class="fas fa-dice"></i>${_loc("TYPES.Item.poison")}: ${poison.name}</a>`
             )
         }
         return result.join(", ")
@@ -498,14 +498,14 @@ export default class DiceDSK{
         let successLevel = 0
         const actorData = this._getActorData(testData)
 
-        if(testData.testDifficulty) this._appendSituationalModifiers(testData, game.i18n.localize("dsk.Difficulty"), testData.testDifficulty)
+        if(testData.testDifficulty) this._appendSituationalModifiers(testData, _loc("dsk.Difficulty"), testData.testDifficulty)
 
         if(testData.vw){
             const dmmalus = testData.situationalModifiers.reduce((prev, o) => {
                 return prev + (Number(o.dmmalus) || 0)
             }, 0)
             const finalVw = Math.max(0, Number(testData.vw) - dmmalus)
-            this._appendSituationalModifiers(testData, game.i18n.localize("dsk.ABBR.VW"), -1 * finalVw)
+            this._appendSituationalModifiers(testData, _loc("dsk.ABBR.VW"), -1 * finalVw)
         }
         let modifiers = this._situationalModifiers(testData)
         const pcms = this._situationalPartCheckModifiers(testData, "TPM")
@@ -539,7 +539,7 @@ export default class DiceDSK{
             testData.source.type == "skill" &&
             AdvantageRulesDSK.hasVantage(
                 actorData || testData.extra.actor,
-                `${game.i18n.localize("dsk.LocalizedIDs.incompetent")} (${testData.source.name})`
+                `${_loc("dsk.LocalizedIDs.incompetent")} (${testData.source.name})`
             )
         ) {
             let reroll = await new Roll("1d20").evaluate()
@@ -550,7 +550,7 @@ export default class DiceDSK{
             roll.editRollAtIndex([{index: indexOfMinValue, val: reroll.total}])
             this._addRollDiceSoNice(testData, reroll, roll.terms[indexOfMinValue * 2].options)
             description.push(
-                game.i18n.format("dsk.CHATNOTIFICATION.unableReroll", {
+                _loc("dsk.CHATNOTIFICATION.unableReroll", {
                     die: indexOfMinValue + 1,
                     oldVal: oldValue,
                     newVal: reroll.total,
@@ -562,20 +562,20 @@ export default class DiceDSK{
             testData.source.type == "skill" &&
             TraitRulesDSK.hasTrait(
                 actorData || testData.extra.actor,
-                `${game.i18n.localize("dsk.LocalizedIDs.automaticSuccess")} (${testData.source.name})`
+                `${_loc("dsk.LocalizedIDs.automaticSuccess")} (${testData.source.name})`
             )
         ) {
-            description.push(game.i18n.localize("dsk.LocalizedIDs.automaticSuccess"))
+            description.push(_loc("dsk.LocalizedIDs.automaticSuccess"))
             successLevel = 1
             automaticResult = 1
         } else if (
             testData.source.type == "skill" &&
             TraitRulesDSK.hasTrait(
                 actorData || testData.extra.actor,
-                `${game.i18n.localize("dsk.LocalizedIDs.automaticFail")} (${testData.source.name})`
+                `${_loc("dsk.LocalizedIDs.automaticFail")} (${testData.source.name})`
             )
         ) {
-            description.push(game.i18n.localize("dsk.LocalizedIDs.automaticFail"))
+            description.push(_loc("dsk.LocalizedIDs.automaticFail"))
             successLevel = -1
         } else {
             successLevel = DiceDSK.get2D20SuccessLevel(roll, fws, botch, crit)
@@ -644,19 +644,19 @@ export default class DiceDSK{
         if (preData.advancedModifiers) {
             if (preData.advancedModifiers.chars.some((x) => x != 0))
                 chatData.modifierList.push({
-                    name: game.i18n.localize("dsk.MODS.partChecks"),
+                    name: _loc("dsk.MODS.partChecks"),
                     value: preData.advancedModifiers.chars,
                 })
             if (preData.advancedModifiers.fws != 0)
-                chatData.modifierList.push({ name: game.i18n.localize("dsk.MODS.FW"), value: preData.advancedModifiers.fws })
+                chatData.modifierList.push({ name: _loc("dsk.MODS.FW"), value: preData.advancedModifiers.fws })
             if (preData.advancedModifiers.qls != 0)
-                chatData.modifierList.push({ name: game.i18n.localize("dsk.MODS.QS"), value: preData.advancedModifiers.qls })
+                chatData.modifierList.push({ name: _loc("dsk.MODS.QS"), value: preData.advancedModifiers.qls })
         }
 
-        if (["gmroll", "blindroll"].includes(chatOptions.rollMode))
+        if (["gm", "blind"].includes(chatOptions.messageMode))
             chatOptions["whisper"] = game.users.filter((user) => user.isGM).map((x) => x.id)
-        if (chatOptions.rollMode === "blindroll") chatOptions["blind"] = true
-        else if (chatOptions.rollMode === "selfroll") chatOptions["whisper"] = [game.user.id]
+        if (chatOptions.messageMode === "blind") chatOptions["blind"] = true
+        else if (chatOptions.messageMode === "self") chatOptions["whisper"] = [game.user.id]
 
         DSKSoundEffect.playEffect(
             preData.mode,
@@ -670,7 +670,7 @@ export default class DiceDSK{
             preData,
             postData: testData,
             template: chatOptions.template,
-            rollMode: chatOptions.rollMode,
+            messageMode: chatOptions.messageMode,
             isOpposedTest: chatOptions.isOpposedTest,
             title: chatOptions.title,
             hideData: chatData.hideData,
@@ -728,22 +728,22 @@ export default class DiceDSK{
     }
 
     static getSuccessDescription(successLevel) {
-        return game.i18n.localize(["dsk.CriticalFailure", "dsk.Failure", "", "dsk.Success", "dsk.CriticalSuccess"][successLevel + 2])
+        return _loc(["dsk.CriticalFailure", "dsk.Failure", "", "dsk.Success", "dsk.CriticalSuccess"][successLevel + 2])
     }
 
-    static async showDiceSoNice(roll, rollMode) {
+    static async showDiceSoNice(roll, messageMode) {
         if (DSKUtility.moduleEnabled("dice-so-nice")) {
             let whisper = null
             let blind = false
-            switch (rollMode) {
-                case "blindroll":
+            switch (messageMode) {
+                case "blind":
                     blind = true
                     whisper = game.users.filter((user) => user.isGM).map((x) => x.id)
                     break
-                case "gmroll":
+                case "gm":
                     whisper = game.users.filter((user) => user.isGM).map((x) => x.id)
                     break
-                case "selfroll":
+                case "self":
                     whisper = []
                     break
             }
@@ -814,7 +814,7 @@ export default class DiceDSK{
     static _getNarrowSpaceModifier(weapon, testData) {
         if (!testData.narrowSpace) return 0
 
-        if (game.i18n.localize("dsk.LocalizedIDs.Shields") == weapon.system.combatskill) {
+        if (_loc("dsk.LocalizedIDs.Shields") == weapon.system.combatskill) {
             return DSK.narrowSpaceModifiers["shield" + weapon.system.shieldsize][testData.mode]
         } else {
             return DSK.narrowSpaceModifiers["weapon" + weapon.system.rw][testData.mode]
@@ -830,13 +830,13 @@ export default class DiceDSK{
 
             this._appendSituationalModifiers(
                 testData,
-                game.i18n.localize("dsk.narrowSpace"),
+                _loc("dsk.narrowSpace"),
                 this._getNarrowSpaceModifier(weapon, testData)
             )
         } else {
             this._appendSituationalModifiers(
                 testData,
-                game.i18n.localize("dsk.distance"),
+                _loc("dsk.distance"),
                 DSK.rangeMods[testData.rangeModifier || "medium"].attack
             )
         }
@@ -873,7 +873,7 @@ export default class DiceDSK{
 
             this._appendSituationalModifiers(
                 testData,
-                game.i18n.localize("dsk.narrowSpace"),
+                _loc("dsk.narrowSpace"),
                 this._getNarrowSpaceModifier(weapon, testData)
             )
 
@@ -882,7 +882,7 @@ export default class DiceDSK{
 
             this._appendSituationalModifiers(
                 testData,
-                game.i18n.localize("dsk.distance"),
+                _loc("dsk.distance"),
                 DSK.rangeMods[testData.rangeModifier || "medium"].attack
             )
         }
@@ -922,7 +922,7 @@ export default class DiceDSK{
 
         const isSick = (actorData?.effects || []).some((x) => x.statuses?.has("sick"))
         if (isSick) {
-            this._appendSituationalModifiers(testData, game.i18n.localize("dsk.CONDITION.sick"), "*0")
+            this._appendSituationalModifiers(testData, _loc("dsk.CONDITION.sick"), "*0")
             for (let k of attrs) {
                 chars.push({ char: k, res: 0, die: "d6" })
                 result[k] = 0
@@ -932,37 +932,37 @@ export default class DiceDSK{
             for (let k of attrs) {
                 this._appendSituationalModifiers(
                     testData,
-                    game.i18n.localize(`dsk.LocalizedIDs.regeneration${k}`),
-                    AdvantageRulesDSK.vantageStep(actorData || testData.extra.actor, game.i18n.localize(`dsk.LocalizedIDs.regeneration${k}`)),
+                    _loc(`dsk.LocalizedIDs.regeneration${k}`),
+                    AdvantageRulesDSK.vantageStep(actorData || testData.extra.actor, _loc(`dsk.LocalizedIDs.regeneration${k}`)),
                     k
                 )
                 this._appendSituationalModifiers(
                     testData,
-                    game.i18n.localize(`dsk.LocalizedIDs.weakRegeneration${k}`),
+                    _loc(`dsk.LocalizedIDs.weakRegeneration${k}`),
                     AdvantageRulesDSK.vantageStep(
                         actorData || testData.extra.actor,
-                        game.i18n.localize(`dsk.LocalizedIDs.weakRegeneration${k}`)
+                        _loc(`dsk.LocalizedIDs.weakRegeneration${k}`)
                     ) * -1,
                     k
                 )
                 this._appendSituationalModifiers(
                     testData,
-                    game.i18n.localize(`dsk.LocalizedIDs.advancedRegeneration${k}`),
+                    _loc(`dsk.LocalizedIDs.advancedRegeneration${k}`),
                     SpecialabilityRulesDSK.abilityStep(
                         actorData || testData.extra.actor,
-                        game.i18n.localize(`dsk.LocalizedIDs.advancedRegeneration${k}`)
+                        _loc(`dsk.LocalizedIDs.advancedRegeneration${k}`)
                     ),
                     k
                 )
                 this._appendSituationalModifiers(
                     testData,
-                    `${game.i18n.localize(`CHARAbbrev.${k}`)} ${game.i18n.localize("dsk.Modifier")}`,
+                    `${_loc(`CHARAbbrev.${k}`)} ${_loc("dsk.Modifier")}`,
                     testData[`${k}Modifier`],
                     k
                 )
                 this._appendSituationalModifiers(
                     testData,
-                    `${game.i18n.localize(`CHARAbbrev.${k}`)} ${game.i18n.localize("dsk.regenerate")}`,
+                    `${_loc(`CHARAbbrev.${k}`)} ${_loc("dsk.regenerate")}`,
                     testData[`regeneration${k}`],
                     k
                 )
@@ -1041,9 +1041,9 @@ export default class DiceDSK{
                     console.error("Unexpected roll mode")
             }
             roll = await DiceDSK.manualRolls(roll, testData.source.type, testData.extra.options)
-            await this.showDiceSoNice(roll, cardOptions.rollMode)
+            await this.showDiceSoNice(roll, cardOptions.messageMode)
             testData.roll = duplicate(roll)
-            testData.rollMode = cardOptions.rollMode
+            testData.messageMode = cardOptions.messageMode
         }
         return testData
     }
@@ -1141,11 +1141,11 @@ export default class DiceDSK{
                 }
                 break
             case "mod":
-                index = newTestData.situationalModifiers.findIndex((x) => x.name == game.i18n.localize("dsk.chatEdit"))
+                index = newTestData.situationalModifiers.findIndex((x) => x.name == _loc("dsk.chatEdit"))
                 if (index > 0) newTestData.situationalModifiers.splice(index, 1)
 
                 let newVal = {
-                    name: game.i18n.localize("dsk.chatEdit"),
+                    name: _loc("dsk.chatEdit"),
                     value: Number(input.val()) - this._situationalModifiers(newTestData),
                 }
                 newTestData.situationalModifiers.push(newVal)
@@ -1156,16 +1156,16 @@ export default class DiceDSK{
 
         let chatOptions = {
             template: data.template,
-            rollMode: data.rollMode,
+            messageMode: data.messageMode,
             title: data.title,
             speaker: message.speaker,
             user: message.author.id,
         }
 
-        if (["gmroll", "blindroll"].includes(chatOptions.rollMode))
+        if (["gm", "blind"].includes(chatOptions.messageMode))
             chatOptions["whisper"] = game.users.filter((user) => user.isGM).map((x) => x.id)
 
-        if (chatOptions.rollMode === "blindroll") chatOptions["blind"] = true
+        if (chatOptions.messageMode === "blind") chatOptions["blind"] = true
 
         if (["poison", "disease"].includes(newTestData.source.type)) {
             new ItemDSK(newTestData.source)[`${data.postData.postFunction}`](

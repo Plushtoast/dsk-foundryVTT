@@ -56,7 +56,7 @@ export class DSKCombatTracker extends foundry.applications.sidebar.tabs.CombatTr
         remainders = remainders.sort((a, b) => a.remaining - b.remaining)
 
         if (remainders.length > 0) {
-            turn.ongoings = `${game.i18n.localize('dsk.COMBATTRACKER.ongoing')}\n${remainders.map((x) => `${x.name} - ${x.remaining}`).join("\n")}`
+            turn.ongoings = `${_loc('dsk.COMBATTRACKER.ongoing')}\n${remainders.map((x) => `${x.name} - ${x.remaining}`).join("\n")}`
 
             turn.ongoing = remainders[0].remaining
         }
@@ -327,8 +327,8 @@ class RepeatingEffectsHelper {
 
                 const damageRoll = await new Roll(ef.value).evaluate()
                 const damage = await damageRoll.render()
-                const type = game.i18n.localize(damageRoll.total > 0 ? "dsk.CHATNOTIFICATION.regenerates" : "dsk.CHATNOTIFICATION.getsHurt")
-                const applyDamage = `${turn.actor.name} ${type} ${game.i18n.localize(attr)} ${damage}`
+                const type = _loc(damageRoll.total > 0 ? "dsk.CHATNOTIFICATION.regenerates" : "dsk.CHATNOTIFICATION.getsHurt")
+                const applyDamage = `${turn.actor.name} ${type} ${_loc(attr)} ${damage}`
                 await ChatMessage.create(DSKUtility.chatDataSetup(applyDamage))
 
                 if (attr == "LeP") await turn.actor.applyDamage(damageRoll.total * -1)
@@ -340,7 +340,7 @@ class RepeatingEffectsHelper {
     static async applyBleeding(turn) {
         if (turn.actor.system.stats.LeP.value <= 0) return
 
-        await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format('dsk.CHATNOTIFICATION.bleeding', { actor: turn.actor.name })))
+        await ChatMessage.create(DSKUtility.chatDataSetup(_loc('dsk.CHATNOTIFICATION.bleeding', { actor: turn.actor.name })))
         await turn.actor.applyDamage(1)
     }
 
@@ -353,7 +353,7 @@ class RepeatingEffectsHelper {
         const damageRoll = await new Roll(die).evaluate()
         const damage = await damageRoll.render()
 
-        await ChatMessage.create(DSKUtility.chatDataSetup(game.i18n.format(`dsk.CHATNOTIFICATION.burning.${step}`, { actor: turn.actor.name, damage })))
+        await ChatMessage.create(DSKUtility.chatDataSetup(_loc(`dsk.CHATNOTIFICATION.burning.${step}`, { actor: turn.actor.name, damage })))
         await turn.actor.applyDamage(damageRoll.total)
     }
 }

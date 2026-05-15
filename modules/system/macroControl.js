@@ -28,7 +28,7 @@ export default class MacroDSK {
     }
 
     static runItem(actor, item, itemName, bypassData, tokenId) {
-        if (!actor) return ui.notifications.error(game.i18n.format("dsk.DSKError.MacroItemMissing", { item: itemName }));
+        if (!actor) return ui.notifications.error(_loc("dsk.DSKError.MacroItemMissing", { item: itemName }));
 
         switch (item.type) {
             case "combatskill":

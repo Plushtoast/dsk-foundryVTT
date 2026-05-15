@@ -14,7 +14,7 @@ export default class RequestRoll {
             switch (category) {
                 case "attribute":
                     let characteristic = Object.keys(game.dsk.config.characteristics).find(
-                        (key) => game.i18n.localize(game.dsk.config.characteristics[key]) == name
+                        (key) => _loc(game.dsk.config.characteristics[key]) == name
                     )
                     actor.setupCharacteristic(characteristic, options, tokenId).then((setupData) => {
                         actor.basicTest(setupData)
@@ -37,7 +37,7 @@ export default class RequestRoll {
     static showRQMessage(target, modifier = 0) {
         const mod = modifier < 0 ? ` ${modifier}` : (modifier > 0 ? ` +${modifier}` : "")
         const type = DSKChatAutoCompletion.skills.find(x => x.name == target).type
-        const msg = game.i18n.format("dsk.CHATNOTIFICATION.requestRoll", { user: game.user.name, item: `<a class="roll-button request-roll" data-type="${type}" data-modifier="${modifier}" data-name="${target}"><i class="fas fa-dice"></i> ${target}${mod}</a>` })
+        const msg = _loc("dsk.CHATNOTIFICATION.requestRoll", { user: game.user.name, item: `<a class="roll-button request-roll" data-type="${type}" data-modifier="${modifier}" data-name="${target}"><i class="fas fa-dice"></i> ${target}${mod}</a>` })
         ChatMessage.create(DSKUtility.chatDataSetup(msg));
     }
 

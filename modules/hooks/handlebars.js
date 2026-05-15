@@ -31,14 +31,14 @@ export function setupHandlebars() {
     diceThingsUp: (a, b) => DSKUtility.replaceDies(a, false),
     replaceConditions: DSKUtility.replaceConditions,
     attrLoc: (a, b) => {
-      return game.i18n.localize(`dsk.characteristics.${a}.${b}`);
+      return _loc(`dsk.characteristics.${a}.${b}`);
     },
     floor: (a) => Math.floor(Number(a)),
     situationalTooltip: (mod) => {
-      const key = game.i18n.localize(`${modifierTypes[mod.type] || 'dsk.Modifier'}`);
+      const key = _loc(`${modifierTypes[mod.type] || 'dsk.Modifier'}`);
       let res = `${mod.name}<br/>${key}: ${mod.value}`;
       if (mod.source) {
-        res += `<br/>${game.i18n.localize('dsk.source')}: ${mod.source}`;
+        res += `<br/>${_loc('dsk.source')}: ${mod.source}`;
       }
       return res;
     },
@@ -46,7 +46,7 @@ export function setupHandlebars() {
       return DSKUtility.moneyLocalization();
     },
     dskMoneyValue: () => {
-      return game.i18n.format('dsk.UNITS.money', { money: DSKUtility.moneyLocalization() });
+      return _loc('dsk.UNITS.money', { money: DSKUtility.moneyLocalization() });
     },
     hasElem: (a, b) => a.some((x) => b == x),
     oddLength: (x) => {

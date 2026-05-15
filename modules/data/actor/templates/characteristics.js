@@ -56,8 +56,8 @@ export default class CharacteristicsTemplate extends DSKDataModel {
     };
   }
 
-  static _migrateData(source) {
-    super._migrateData(source);
+  static _migrateData(source, options, _state) {
+    super._migrateData(source, options, _state);
 
     const hasPlayerView = foundry.utils.hasProperty(source, 'playerView');
     const merchantPlayerView = foundry.utils.getProperty(source, 'merchant.playerView');

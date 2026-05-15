@@ -30,23 +30,23 @@ export default class DSKChatListeners {
     }
 
     static postStatus(id) {
-        let effect = CONFIG.statusEffects.find(x => x.id == id)
-        let msg = `<h2><a class="chat-condition chatButton" data-id="${id}"><img class="sender-image" style="background-color:black;margin-right: 8px;" src="${effect.img}"/>${game.i18n.localize(effect.name)}</h2></a><p>${game.i18n.localize(effect.description)}</p>`
+        let effect = CONFIG.statusEffects[id]
+        let msg = `<h2><a class="chat-condition chatButton" data-id="${id}"><img class="sender-image" style="background-color:black;margin-right: 8px;" src="${effect.img}"/>${_loc(effect.name)}</h2></a><p>${_loc(effect.description)}</p>`
         ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
     }
 
     static getHelp() {
-        let msg = DSK.helpContent.map(x => `<h2>${game.i18n.localize(`dsk.HELP.${x.name}`)}</h2>
-            <p><b>${game.i18n.localize("dsk.HELP.command")}</b>: ${x.command}</p>
-            <p><b>${game.i18n.localize("dsk.HELP.example")}</b>: ${x.example}</p>
-            <p><b>${game.i18n.localize("dsk.description")}</b>: ${game.i18n.localize(`dsk.HELP.descr${x.name}`)}`).join("") + `<br>
-            <p>${game.i18n.localize("dsk.HELP.default")}</p>`
+        let msg = DSK.helpContent.map(x => `<h2>${_loc(`dsk.HELP.${x.name}`)}</h2>
+            <p><b>${_loc("dsk.HELP.command")}</b>: ${x.command}</p>
+            <p><b>${_loc("dsk.HELP.example")}</b>: ${x.example}</p>
+            <p><b>${_loc("dsk.description")}</b>: ${_loc(`dsk.HELP.descr${x.name}`)}`).join("") + `<br>
+            <p>${_loc("dsk.HELP.default")}</p>`
         ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
     }
 
     static showConditions() {
-        let effects = duplicate(CONFIG.statusEffects).map(x => {
-            x.name = game.i18n.localize(x.name)
+        let effects = duplicate(Object.values(CONFIG.statusEffects)).map(x => {
+            x.name = _loc(x.name)
             return x
         }).sort((a, b) => { return a.name.localeCompare(b.name) })
         let msg = effects.map(x => `<a class="chat-condition chatButton" data-id="${x.id}"><img src="${x.img}"/>${x.name}</a>`).join(" ")

@@ -20,10 +20,10 @@ export default class DSKPayment {
         if (money) {
             result.actorsMoney = this._actorsMoney(actor)
             if (result.actorsMoney.sum >= money) {
-                result.msg = game.i18n.format("dsk.PAYMENT.pay", { actor: actor.name, amount: DSKPayment._moneyToString(money) })
+                result.msg = _loc("dsk.PAYMENT.pay", { actor: actor.name, amount: DSKPayment._moneyToString(money) })
                 result.success = true
             } else {
-                result.msg = game.i18n.format("dsk.PAYMENT.cannotpay", { actor: actor.name, amount: DSKPayment._moneyToString(money) })
+                result.msg = _loc("dsk.PAYMENT.cannotpay", { actor: actor.name, amount: DSKPayment._moneyToString(money) })
                 if (silent) {
                     ui.notifications.info(result.msg)
                 }
@@ -38,7 +38,7 @@ export default class DSKPayment {
         if (money) {
             let actorsMoney = this._actorsMoney(actor)
             DSKPayment._updateMoney(actor, actorsMoney.sum + money)
-            let msg = `<p>${game.i18n.format("dsk.PAYMENT.getPaid", {actor: actor.name, amount: DSKPayment._moneyToString(money)})}</p>`
+            let msg = `<p>${_loc("dsk.PAYMENT.getPaid", {actor: actor.name, amount: DSKPayment._moneyToString(money)})}</p>`
             if (!silent) {
                 ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
             }
@@ -57,7 +57,7 @@ export default class DSKPayment {
 
         if (money) {
             const whisp = whisper ? ` (${whisper})` : ""
-            let msg = `<p><b>${game.i18n.localize("dsk.PAYMENT.wage")}</b></p><p>${game.i18n.format("dsk.PAYMENT.getPaidSum", { amount: DSKPayment._moneyToString(money) })}${whisp}</p><button class="payButton" data-pay="1" data-amount="${money}">${game.i18n.localize("dsk.PAYMENT.getPaidButton")}</button>`
+            let msg = `<p><b>${_loc("dsk.PAYMENT.wage")}</b></p><p>${_loc("dsk.PAYMENT.getPaidSum", { amount: DSKPayment._moneyToString(money) })}${whisp}</p><button class="payButton" data-pay="1" data-amount="${money}">${_loc("dsk.PAYMENT.getPaidButton")}</button>`
             ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
         }
     }
@@ -67,7 +67,7 @@ export default class DSKPayment {
 
         if (money) {
             const whisp = whisper ? ` (${whisper})` : ""
-            let msg = `<p><b>${game.i18n.localize("dsk.PAYMENT.bill")}</b></p>${game.i18n.format("dsk.PAYMENT.paySum", { amount: DSKPayment._moneyToString(money) })}${whisp}</p><button class="payButton" data-pay="0" data-amount="${money}">${game.i18n.localize("dsk.PAYMENT.payButton")}</button>`
+            let msg = `<p><b>${_loc("dsk.PAYMENT.bill")}</b></p>${_loc("dsk.PAYMENT.paySum", { amount: DSKPayment._moneyToString(money) })}${whisp}</p><button class="payButton" data-pay="0" data-amount="${money}">${_loc("dsk.PAYMENT.payButton")}</button>`
             ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"))
         }
     }
@@ -76,7 +76,7 @@ export default class DSKPayment {
         let money = this._parseMoneyString(moneyString)
 
         if (!money) {
-            let msg = `<p><b>${game.i18n.localize("dsk.PAYMENT.error")}</b></p><p><i>${game.i18n.localize("dsk.PAYMENT.getPaidexample")}</i></p>`;
+            let msg = `<p><b>${_loc("dsk.PAYMENT.error")}</b></p><p><i>${_loc("dsk.PAYMENT.getPaidexample")}</i></p>`;
             ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"));
             return false
         }
@@ -87,7 +87,7 @@ export default class DSKPayment {
         let money = this._parseMoneyString(moneyString)
 
         if (!money) {
-            let msg = `<p><b>${game.i18n.localize("dsk.PAYMENT.error")}</b></p><p><i>${game.i18n.localize("dsk.PAYMENT.payexample")}</i></p>`;
+            let msg = `<p><b>${_loc("dsk.PAYMENT.error")}</b></p><p><i>${_loc("dsk.PAYMENT.payexample")}</i></p>`;
             ChatMessage.create(DSKUtility.chatDataSetup(msg, "roll"));
             return false
         }

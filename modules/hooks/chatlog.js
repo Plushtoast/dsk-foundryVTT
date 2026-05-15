@@ -21,6 +21,9 @@ export function initChatlogHooks() {
     Hooks.on('renderChatInput', applyNotificationListeners);
 
     function applyNotificationListeners(app, html, context) {
+        const inputRoot = html?.['#chat-message'];
+        if (inputRoot && game.dsk.autoComplete) game.dsk.autoComplete.chatListeners($(inputRoot));
+
         if (context.previousParent.id != 'chat-notifications') return;
 
         const chatNotifications = $(context.previousParent);
@@ -30,7 +33,6 @@ export function initChatlogHooks() {
         DSKChatListeners.chatListeners(chatNotifications);
 
         Hooks.call('dskApplyNotificationListeners', chatNotifications);
-        Hooks.off('renderChatInput', applyNotificationListeners);
     }
 
     Hooks.on('chatInput', (event, inputOptions) => {

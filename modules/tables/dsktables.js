@@ -14,10 +14,10 @@ export default class DSKTables {
         options.source = dataset.source
 
         const table = DSK.systemTables.find(x => x.name == dataset.table)
-        const tableResult = await DSKTables.getRollTable(table.pack[game.i18n.lang], game.i18n.localize(`dsk.TABLENAMES.${dataset.table}`), dataset)
+        const tableResult = await DSKTables.getRollTable(table.pack[game.i18n.lang], _loc(`dsk.TABLENAMES.${dataset.table}`), dataset)
         const hasEffect = options.speaker ? await DSKTables.hasEffect(tableResult) : false
         const result = DSKUtility.replaceDies(DSKUtility.replaceConditions(tableResult.results[0].description))
-        const title = `${game.i18n.localize("dsk.TABLENAMES." + dataset.table)}`
+        const title = `${_loc("dsk.TABLENAMES." + dataset.table)}`
 
         const content = await renderTemplate(`systems/dsk/templates/tables/tableCard.hbs`, { result, title, hasEffect })
 
@@ -95,23 +95,23 @@ export default class DSKTables {
     }
 
     static rollCritBotchButton(table, weaponless, testData) {
-        const title = game.i18n.localize(`dsk.TABLENAMES.${table}`)
+        const title = _loc(`dsk.TABLENAMES.${table}`)
         const speaker = testData.extra.speaker
         const source = testData.source._id
         return `, <a class="roll-button botch-roll" data-table="${table}" data-weaponless="${weaponless}" data-source="${source}" data-token="${speaker.token}" data-actor="${speaker.actor}" data-scene="${speaker.scene}"><i class="fas fa-dice"></i>${title}</a>`
     }
 
     static async defaultBotch() {
-        return ", " + game.i18n.localize("dsk.selfDamage") + (await new Roll("1d6+2").evaluate()).total
+        return ", " + _loc("dsk.selfDamage") + (await new Roll("1d6+2").evaluate()).total
     }
 
     static defaultAttackCrit(confirmed) {
-        let res = ", " + game.i18n.localize("dsk.halfDefense")
-        if (confirmed) res += ", " + game.i18n.localize("dsk.doubleDamage")
+        let res = ", " + _loc("dsk.halfDefense")
+        if (confirmed) res += ", " + _loc("dsk.doubleDamage")
         return res
     }
 
     static defaultParryCrit() {
-        return ", " + game.i18n.localize("dsk.attackOfOpportunity")
+        return ", " + _loc("dsk.attackOfOpportunity")
     }
 }

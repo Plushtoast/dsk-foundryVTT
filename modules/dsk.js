@@ -32,7 +32,7 @@ import TestSuite from "./system/testsuite.js"
 Hooks.once("init", () => {
     console.log("Initializing DSK system")
 
-    CONFIG.statusEffects = DSK.statusEffects
+    CONFIG.statusEffects = Object.fromEntries(DSK.statusEffects.map(effect => [effect.id, effect]))
     game.dsk = {
         apps: {
             DSKUtility,

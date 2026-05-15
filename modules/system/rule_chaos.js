@@ -20,11 +20,11 @@ export default class RuleChaos {
     static multipleDefenseValue(actor, item) {
         let multipleDefense = -2
 
-        if ((getProperty(item, "system.combatskill") == game.i18n.localize("dsk.LocalizedIDs.wrestle")) && SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.masterfulDodge")))
+        if ((getProperty(item, "system.combatskill") == _loc("dsk.LocalizedIDs.wrestle")) && SpecialabilityRulesDSK.hasAbility(actor, _loc("dsk.LocalizedIDs.masterfulDodge")))
             multipleDefense = -2
-        else if (SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.mightyMasterfulParry")))
+        else if (SpecialabilityRulesDSK.hasAbility(actor, _loc("dsk.LocalizedIDs.mightyMasterfulParry")))
             multipleDefense = -1
-        else if (SpecialabilityRulesDSK.hasAbility(actor, game.i18n.localize("dsk.LocalizedIDs.masterfulParry")))
+        else if (SpecialabilityRulesDSK.hasAbility(actor, _loc("dsk.LocalizedIDs.masterfulParry")))
             multipleDefense = -2
 
         return Math.min(0, multipleDefense)

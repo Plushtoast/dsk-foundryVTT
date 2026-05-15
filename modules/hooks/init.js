@@ -69,6 +69,7 @@ export function initHooks() {
             "systems/dsk/templates/actors/actor-main.hbs",
             "systems/dsk/templates/chat/roll/test-card.hbs",
             "systems/dsk/templates/dialog/parts/targets.hbs",
+            "systems/dsk/templates/dialog/parts/message-mode.hbs",
             "systems/dsk/templates/dialog/default-combat-dialog.hbs",
             "systems/dsk/templates/actors/creature/creature-notes.hbs",
             "systems/dsk/templates/dialog/enhanced-default-dialog.hbs",

@@ -29,7 +29,7 @@ export default class CultureWizard extends WizardDSK {
     };
 
     get title() {
-        return game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.culture")} ${this.culture?.name || ''}` });
+        return _loc("dsk.WIZARD.addItem", { item: `${_loc("TYPES.Item.culture")} ${this.culture?.name || ''}` });
     }
 
     async _prepareContext(options) {
@@ -41,9 +41,9 @@ export default class CultureWizard extends WizardDSK {
         const disadvantages = vantages.filter(x => x.type == "disadvantage")
         const vantagesToChose = advantages.length > 0 || disadvantages.length > 0
         mergeObject(data, {
-            title: game.i18n.format("dsk.WIZARD.addItem", { item: `${DSKUtility.categoryLocalization("culture")} ${this.culture.name}` }),
+            title: _loc("dsk.WIZARD.addItem", { item: `${DSKUtility.categoryLocalization("culture")} ${this.culture.name}` }),
             culture: this.culture,
-            description: game.i18n.format("dsk.WIZARD.culturedescr", { culture: this.culture.name, cost: baseCost }),
+            description: _loc("dsk.WIZARD.culturedescr", { culture: this.culture.name, cost: baseCost }),
             vantagesToChose,
             advantagesToChose: advantages.length > 0,
             disadvantagesToChose: disadvantages.length > 0,

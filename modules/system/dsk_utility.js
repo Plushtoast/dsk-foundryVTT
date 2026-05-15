@@ -5,15 +5,16 @@ const { duplicate, mergeObject } = foundry.utils
 
 export default class DSKUtility {
     static chatDataSetup(content, modeOverride, forceWhisper) {
+        const messageMode = foundry.dice.Roll._mapLegacyRollMode(modeOverride || game.settings.get("core", "messageMode"));
         let chatData = {
             user: game.user.id,
-            rollMode: modeOverride || game.settings.get("core", "rollMode"),
+            messageMode,
             content: content
         };
 
-        if (["gmroll", "blindroll"].includes(chatData.rollMode)) chatData["whisper"] = ChatMessage.getWhisperRecipients("GM").map(u => u.id);
-        if (chatData.rollMode === "blindroll") chatData["blind"] = true;
-        else if (chatData.rollMode === "selfroll") chatData["whisper"] = [game.user];
+        if (["gm", "blind"].includes(chatData.messageMode)) chatData["whisper"] = ChatMessage.getWhisperRecipients("GM").map(u => u.id);
+        if (chatData.messageMode === "blind") chatData["blind"] = true;
+        else if (chatData.messageMode === "self") chatData["whisper"] = [game.user.id];
 
         if (forceWhisper) {
             chatData["speaker"] = ChatMessage.getSpeaker();
@@ -24,7 +25,7 @@ export default class DSKUtility {
     }
 
     static categoryLocalization(a){
-        return game.i18n.localize(`TYPES.Item.${a}`)
+        return _loc(`TYPES.Item.${a}`)
     }
 
     static fateAvailable(actor, group) {
@@ -215,7 +216,7 @@ export default class DSKUtility {
     }
 
     static moneyLocalization() {
-        return game.i18n.localize(`dsk.moneys.${game.settings.get('dsk', 'moneyChoice')}`)
+        return _loc(`dsk.moneys.${game.settings.get('dsk', 'moneyChoice')}`)
     }
 
     static async getFolderForType(documentType, parent = null, folderName = null, sort = 0, color = "", sorting = undefined) {

@@ -7,11 +7,11 @@ export default class DSKChatAutoCompletion {
     static skills = []
     static cmds = ["sk", "at", "ah", "rq", "w", "ch"]
     static KEY = {
-        UP: 38,
-        DOWN: 40,
-        ENTER: 13,
-        TAB: 9,
-        ESC: 27
+        UP: "ArrowUp",
+        DOWN: "ArrowDown",
+        ENTER: "Enter",
+        TAB: "Tab",
+        ESC: "Escape"
     };
 
     constructor() {
@@ -19,8 +19,8 @@ export default class DSKChatAutoCompletion {
             DSKUtility.allSkills(["skill"]).then(res => {
                 DSKChatAutoCompletion.skills = res.map(x => { return { name: x.name, type: "skill" } })
                     .concat(Object.values(game.dsk.config.characteristics).map(x => {
-                        return { name: game.i18n.localize(x), type: "attribute" }
-                    }).concat({ name: game.i18n.localize('dsk.regenerate'), type: "regeneration" }))
+                        return { name: _loc(x), type: "attribute" }
+                    }).concat({ name: _loc('dsk.regenerate'), type: "regeneration" }))
             })
         }
         this.regex
@@ -33,25 +33,31 @@ export default class DSKChatAutoCompletion {
     }
 
     async chatListeners(html) {
-        const chatInput = document.querySelector('.chat-input');
-        chatInput.addEventListener('keyup', this._parseInput.bind(this));
-
-        $(document.querySelector('#chat-notifications .chat-input')).on('blur', (ev) => {
+        const root = html?.jquery ? html[0] : html;
+        const chatInput = root?.matches?.('.chat-input') ? root : root?.querySelector?.('.chat-input') ?? document.querySelector('.chat-input');
+        if (!chatInput) return;
+        this._boundParseInput ??= this._parseInput.bind(this);
+        this._boundBlur ??= (ev) => {
             if ($(ev.relatedTarget).closest('.quickfind').length || $(ev.relatedTarget).closest('.quick-item').length || $(ev.relatedTarget).hasClass('quick-item')) return;
             this._closeQuickfind(ev);
-        });
+        };
+        chatInput.removeEventListener('keyup', this._boundParseInput);
+        chatInput.addEventListener('keyup', this._boundParseInput);
+
+        chatInput.removeEventListener('focusout', this._boundBlur);
+        chatInput.addEventListener('focusout', this._boundBlur);
     }
 
     _parseInput(ev) {
-        const val = ev.target.value;
-        const keyCode = ev.which;
+        const val = this._getChatInputText(this.getContainer(ev.currentTarget ?? ev.target));
+        const key = this._eventKey(ev);
 
         if (this.filtering && [DSKChatAutoCompletion.KEY.UP, DSKChatAutoCompletion.KEY.DOWN,
-        DSKChatAutoCompletion.KEY.ENTER, DSKChatAutoCompletion.KEY.TAB].includes(keyCode)) {
+        DSKChatAutoCompletion.KEY.ENTER, DSKChatAutoCompletion.KEY.TAB].includes(key)) {
             return this._navigateQuickFind(ev);
         }
 
-        if (keyCode === DSKChatAutoCompletion.KEY.ESC) {
+        if (key === DSKChatAutoCompletion.KEY.ESC) {
             this._closeQuickfind(ev);
             return false;
         }
@@ -79,8 +85,7 @@ export default class DSKChatAutoCompletion {
 
     _completeCurrentEntry(target) {
         const container = this.getContainer(target);
-        const chatbox = container.find('.chat-input');
-        const cmdText = chatbox.val().split(' ')[0];
+        const cmdText = this._getChatInputText(container).split(' ')[0];
 
         let newVal = cmdText + ' ';
         if (/^\/w$/i.test(cmdText)) {
@@ -89,12 +94,62 @@ export default class DSKChatAutoCompletion {
             newVal += target.text();
         }
 
-        chatbox.val(newVal);
+        this._setChatInputText(container, newVal);
+    }
+
+    _eventKey(ev) {
+        if (ev.key) return ev.key;
+
+        const keyMap = {
+            38: DSKChatAutoCompletion.KEY.UP,
+            40: DSKChatAutoCompletion.KEY.DOWN,
+            13: DSKChatAutoCompletion.KEY.ENTER,
+            9: DSKChatAutoCompletion.KEY.TAB,
+            27: DSKChatAutoCompletion.KEY.ESC
+        };
+        return keyMap[ev.which];
+    }
+
+    _getChatInputText(container) {
+        const root = container?.jquery ? container[0] : container;
+        const pmDiv = root?.querySelector?.('.chat-input .ProseMirror');
+        if (pmDiv) return pmDiv.textContent?.trim() ?? '';
+
+        const chatInput = root?.querySelector?.('.chat-input') ?? container?.find?.('.chat-input')?.[0];
+        return chatInput?.value?.trim() ?? '';
+    }
+
+    _setChatInputText(container, text) {
+        const root = container?.jquery ? container[0] : container;
+        const pmDiv = root?.querySelector?.('.chat-input .ProseMirror');
+        if (pmDiv) {
+            const paragraph = pmDiv.querySelector('p');
+            if (!paragraph) return;
+
+            pmDiv.focus();
+            if (text) {
+                paragraph.textContent = text;
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(paragraph);
+                range.collapse(false);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            } else {
+                paragraph.innerHTML = '<br>';
+            }
+            return;
+        }
+
+        const chatInput = root?.querySelector?.('.chat-input') ?? container?.find?.('.chat-input')?.[0];
+        if (chatInput) chatInput.value = text;
     }
 
     getContainer(target) {
-        let element = target.closest('.chat-form');
-        if (!element || !element.length) {
+        let element = target?.jquery ? target.closest('.chat-form') : target?.closest?.('.chat-form');
+        if (element?.jquery) {
+            if (!element.length) element = document.querySelector('#chat-notifications');
+        } else if (!element) {
             element = document.querySelector('#chat-notifications');
         }
         return $(element);
@@ -106,7 +161,7 @@ export default class DSKChatAutoCompletion {
 
     _closeQuickfind(ev) {
         this.filtering = false;
-        this.getContainer(ev.currentTarget).find('.quickfind').remove();
+        this.getContainer(ev.currentTarget ?? ev.target).find('.quickfind').remove();
     }
 
     _filterW(search, ev) {
@@ -145,7 +200,7 @@ export default class DSKChatAutoCompletion {
     _setFilteredList(result, cmd, ev) {
         if (!result.length) {
             result.push({
-                name: game.i18n.localize('dsk.DSKError.noMatch'),
+                name: _loc('dsk.DSKError.noMatch'),
                 type: 'none',
             });
         }
@@ -157,7 +212,7 @@ export default class DSKChatAutoCompletion {
         let result = DSKChatAutoCompletion.skills.filter(x => { return x.name.toLowerCase().trim().indexOf(search) != -1 && (type == undefined || type == x.type) }).slice(0, 5)
         if (!result.length) {
             result.push({
-                name: game.i18n.localize('dsk.DSKError.noMatch'),
+                name: _loc('dsk.DSKError.noMatch'),
                 type: 'none',
             });
         }
@@ -202,12 +257,12 @@ export default class DSKChatAutoCompletion {
     _navigateQuickFind(ev) {
         if (!this.filtering) return true;
 
-        const container = this.getContainer(ev.currentTarget);
+        const container = this.getContainer(ev.currentTarget ?? ev.target);
         const target = container.find('.focus');
 
         if (!target.length) return true;
 
-        switch (ev.which) {
+        switch (this._eventKey(ev)) {
             case DSKChatAutoCompletion.KEY.UP:
                 if (target.prev('.quick-item').length) {
                     target.removeClass('focus');
@@ -296,7 +351,7 @@ export default class DSKChatAutoCompletion {
                 if (skill) actor.setupSkill(skill, {}, tokenId).then(setupData => { actor.basicTest(setupData) });
                 break
             case "attribute":
-                let characteristic = Object.keys(game.dsk.config.characteristics).find(key => game.i18n.localize(game.dsk.config.characteristics[key]) == target.text())
+                let characteristic = Object.keys(game.dsk.config.characteristics).find(key => _loc(game.dsk.config.characteristics[key]) == target.text())
                 actor.setupCharacteristic(characteristic, {}, tokenId).then(setupData => { actor.basicTest(setupData) });
                 break
             case "regeneration":
@@ -308,13 +363,13 @@ export default class DSKChatAutoCompletion {
 
     _resetChatAutoCompletion(target) {
         const container = this.getContainer(target);
-        container.find('.chat-input').val('');
+        this._setChatInputText(container, '');
         container.find('.quickfind').remove();
     }
 
     getNumberFromChat(target) {
         const container = this.getContainer(target);
-        const val = container.find('.chat-input').val();
+        const val = this._getChatInputText(container);
         return Number(val.match(/(-|\+)?\d+/g)) || 0;
     }
 

@@ -24,9 +24,9 @@ export function setupConfiguration() {
         default: "0",
         type: String,
         choices: {
-            0: game.i18n.localize('dsk.SETTINGS.information0'),
-            1: game.i18n.localize('dsk.SETTINGS.information1'),
-            2: game.i18n.localize('dsk.SETTINGS.information2')
+            0: _loc('dsk.SETTINGS.information0'),
+            1: _loc('dsk.SETTINGS.information1'),
+            2: _loc('dsk.SETTINGS.information2')
         }
     });
     game.settings.register("dsk", "journalFontSizeIndex", {
@@ -60,9 +60,9 @@ export function setupConfiguration() {
         default: "0",
         type: String,
         choices: {
-            0: game.i18n.localize('dsk.no'),
-            1: game.i18n.localize('dsk.yes'),
-            2: game.i18n.localize('dsk.MERCHANT.onlyGM'),
+            0: _loc('dsk.no'),
+            1: _loc('dsk.yes'),
+            2: _loc('dsk.MERCHANT.onlyGM'),
         }
     });
     game.settings.register("dsk", "moneyChoice", {
@@ -73,8 +73,8 @@ export function setupConfiguration() {
         default: "dsk",
         type: String,
         choices: {
-            dsk: game.i18n.localize('dsk.moneys.dsk'),
-            fasar: game.i18n.localize('dsk.moneys.fasar'),
+            dsk: _loc('dsk.moneys.dsk'),
+            fasar: _loc('dsk.moneys.fasar'),
         }
     });
     game.settings.register("dsk", "expandChatModifierlist", {
@@ -327,7 +327,7 @@ export function setupConfiguration() {
     game.settings.registerMenu("dsk", "changelog", {
         name: "Changelog",
         label: "Changelog",
-        hint: game.i18n.localize("dsk.SETTINGS.changelog"),
+        hint: _loc("dsk.SETTINGS.changelog"),
         type: ChangelogForm,
         restricted: false
     })
@@ -365,11 +365,11 @@ export function setupConfiguration() {
         default: "0",
         type: String,
         choices: {
-            "0": game.i18n.localize('dsk.no'),
-            "1": game.i18n.localize('dsk.SETTINGS.yesNumbered'),
-            "2": game.i18n.localize('dsk.SETTINGS.renameNumbered'),
-            "3": game.i18n.localize('dsk.yes'),
-            "4": game.i18n.localize('dsk.SETTINGS.rename')
+            "0": _loc('dsk.no'),
+            "1": _loc('dsk.SETTINGS.yesNumbered'),
+            "2": _loc('dsk.SETTINGS.renameNumbered'),
+            "3": _loc('dsk.yes'),
+            "4": _loc('dsk.SETTINGS.rename')
         }
     });
 
@@ -381,10 +381,10 @@ export function setupConfiguration() {
         default: 0,
         type: Number,
         choices: {
-            0: game.i18n.localize('dsk.SETTINGS.tokenhotbarLayout0'),
-            2: game.i18n.localize('dsk.SETTINGS.tokenhotbarLayout1'),
-            1: game.i18n.localize('dsk.SETTINGS.tokenhotbarLayout2'),
-            3: game.i18n.localize('dsk.SETTINGS.tokenhotbarLayout3')
+            0: _loc('dsk.SETTINGS.tokenhotbarLayout0'),
+            2: _loc('dsk.SETTINGS.tokenhotbarLayout1'),
+            1: _loc('dsk.SETTINGS.tokenhotbarLayout2'),
+            3: _loc('dsk.SETTINGS.tokenhotbarLayout3')
         }
     });
 }

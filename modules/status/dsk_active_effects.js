@@ -64,7 +64,7 @@ export default class DSKActiveEffect extends ActiveEffect {
     _clearModifiedItems() {
         if (!(this.parent instanceof CONFIG.Actor.documentClass)) return
 
-        for (let change of this.changes) {
+        for (let change of this.system?.changes ?? this.changes) {
             if (DSKActiveEffect.itemChangeRegex.test(change.key)) {
                 const itemsToClear = this._getModifiedItems(this.parent, change)
 

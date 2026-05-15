@@ -32,7 +32,7 @@ export default class CareerWizard extends WizardDSK {
     };
 
     get title() {
-        return game.i18n.format("dsk.WIZARD.addItem", { item: `${game.i18n.localize("TYPES.Item.profession")} ${this.career?.name || ''}` });
+        return _loc("dsk.WIZARD.addItem", { item: `${_loc("TYPES.Item.profession")} ${this.career?.name || ''}` });
     }
 
     async _prepareContext(options) {
@@ -49,9 +49,9 @@ export default class CareerWizard extends WizardDSK {
         }, 0)
         const missingSpecialabilities = requirements.filter(x => x.type == "specialability" && !x.disabled)
         mergeObject(data, {
-            title: game.i18n.format("dsk.WIZARD.addItem", { item: `${DSKUtility.categoryLocalization("profession")} ${this.career.name}` }),
+            title: _loc("dsk.WIZARD.addItem", { item: `${DSKUtility.categoryLocalization("profession")} ${this.career.name}` }),
             career: this.career,
-            description: game.i18n.format("dsk.WIZARD.careerdescr", { career: this.career.name, cost: baseCost + reqCost }),
+            description: _loc("dsk.WIZARD.careerdescr", { career: this.career.name, cost: baseCost + reqCost }),
             baseCost,
             missingVantagesToChose: missingVantages.length > 0,
             missingSpecialabiltiesToChose: missingSpecialabilities.length > 0,
@@ -102,7 +102,7 @@ export default class CareerWizard extends WizardDSK {
                 } else {
                     const langCats = types.map(x => DSKUtility.categoryLocalization(x)).join("/")
                     this.errors.push(`${langCats}: ${k}`)
-                    ui.notifications.error(game.i18n.format("dsk.DSKError.notFound", { category: langCats, name: k }))
+                    ui.notifications.error(_loc("dsk.DSKError.notFound", { category: langCats, name: k }))
                 }
             }
         }
