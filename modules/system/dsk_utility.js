@@ -4,8 +4,16 @@ import DSK from "./config.js";
 const { duplicate, mergeObject } = foundry.utils
 
 export default class DSKUtility {
-    static chatDataSetup(content, modeOverride, forceWhisper) {
-        const messageMode = foundry.dice.Roll._mapLegacyRollMode(modeOverride || game.settings.get("core", "messageMode"));
+    static chatDataSetup(content, modeOverride, forceWhisper, forceWhisperIDs) {
+        const legacyModeMap = {
+            roll: "public",
+            publicroll: "public",
+            gmroll: "gm",
+            blindroll: "blind",
+            selfroll: "self",
+        };
+        const mode = modeOverride || game.settings.get("core", "messageMode");
+        const messageMode = legacyModeMap[mode] || mode;
         let chatData = {
             user: game.user.id,
             messageMode,
@@ -15,10 +23,15 @@ export default class DSKUtility {
         if (["gm", "blind"].includes(chatData.messageMode)) chatData["whisper"] = ChatMessage.getWhisperRecipients("GM").map(u => u.id);
         if (chatData.messageMode === "blind") chatData["blind"] = true;
         else if (chatData.messageMode === "self") chatData["whisper"] = [game.user.id];
+        else if (chatData.messageMode === "ic") chatData["speaker"] = ChatMessage.getSpeaker();
 
         if (forceWhisper) {
             chatData["speaker"] = ChatMessage.getSpeaker();
             chatData["whisper"] = ChatMessage.getWhisperRecipients(forceWhisper);
+        }
+        if (forceWhisperIDs) {
+            chatData["speaker"] = ChatMessage.getSpeaker();
+            chatData["whisper"] = forceWhisperIDs;
         }
 
         return chatData;
