@@ -1,19 +1,20 @@
 export class TransparentControlIcon extends foundry.canvas.containers.ControlIcon {
-    async draw() {
-        this.bg.clear()
-        return await super.draw()
+    /** @override */
+    _refresh() {
+        super._refresh();
+        // v14 draws the white background and border in _refresh(), not draw()
+        this.bg.clear();
+        this.border.clear();
     }
 }
 
-export const initHook = () => {    
+export const initHook = () => {
     foundry.canvas.placeables.Note.prototype._drawControlIcon = function () {
         const noBG = this.document.getFlag("dsk", "noBG");
-        let tint = Color.from(this.document.texture.tint || null);
-        const data = {texture: this.document.texture.src, size: this.document.iconSize, tint}
-        let icon = noBG ? new TransparentControlIcon(data) : new foundry.canvas.containers.ControlIcon(data);
-        icon.x -= (this.document.iconSize / 2);
-        icon.y -= (this.document.iconSize / 2);
-        return icon;
+        const data = { texture: this.document.texture.src };
+        return noBG
+            ? new TransparentControlIcon(data)
+            : new foundry.canvas.containers.ControlIcon(data);
     };
 }
 

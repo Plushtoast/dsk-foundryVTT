@@ -11,6 +11,7 @@ import SpecialabilityRulesDSK from "../system/specialability-rules.js";
 import DSKDialog from "../dialog/dialog-dsk.js";
 import TraitRulesDSK from "../system/trait_rules.js"
 import DSKActiveEffectConfig from "../status/active_effects.js";
+import DSKActiveEffect from "../status/dsk_active_effects.js";
 import CombatskillData from "../data/item/combatskill.js";
 import TraitData from "../data/item/trait.js";
 import { ItemDataModel } from "../data/baseitem.js";
@@ -265,7 +266,7 @@ export default class ActorDSK extends Actor {
 
     const replacementData = this.getRollData();
     for (const change of actorChanges) {
-      const result = change.effect.apply(this, change, { replacementData });
+      const result = DSKActiveEffect.applyChange(this, change, { replacementData });
       if (foundry.utils.isPlainObject(result)) Object.assign(overrides, result);
     }
 

@@ -4,20 +4,53 @@ const { getProperty, setProperty, getType } = foundry.utils
 export default class DSKActiveEffect extends ActiveEffect {
     static itemChangeRegex = /^@/
 
-    apply(actor, change) {
+    static applyChange(targetDoc, change, options = {}) {
         if (DSKActiveEffect.itemChangeRegex.test(change.key)) {
-            const modifiedItems = this._getModifiedItems(actor, change)
+            const effect = change.effect;
+            const modifiedItems = effect._getModifiedItems(targetDoc, change);
 
-            for (let item of modifiedItems.items) {
-                const overrides = foundry.utils.flattenObject(item.overrides || {});
-                overrides[modifiedItems.key] = Number.isNumeric(item.value) ? Number(modifiedItems.value) : modifiedItems.value;
+            for (const item of modifiedItems.items) {
+                if (!item.overrides) item.overrides = {};
+                const overrides = foundry.utils.flattenObject(item.overrides);
                 const newChange = { ...change, key: modifiedItems.key, value: modifiedItems.value };
-                super.apply(item, newChange);
+                const result = super.applyChange(item, newChange, options);
+                Object.assign(overrides, result);
                 item.overrides = foundry.utils.expandObject(overrides);
             }
-        } else {
-            return super.apply(actor, change);
+            return {};
         }
+        return super.applyChange(targetDoc, change, options);
+    }
+
+    static _applyChangeCustom(targetDoc, change, current, delta, changes) {
+        const update = DSKActiveEffect._applyCustomEffect(targetDoc, change, current);
+        if (update !== null) {
+            changes[change.key] = update;
+            return;
+        }
+        return super._applyChangeCustom(targetDoc, change, current, delta, changes);
+    }
+
+    static _applyCustomEffect(targetDoc, change, current) {
+        if (current == null && /^system\.(vulnerabilities|resistances)/.test(change.key)) {
+            current = [];
+            setProperty(targetDoc, change.key, current);
+        }
+        const ct = getType(current);
+        let update = null;
+        switch (ct) {
+            case "Array":
+                const newElems = [];
+                const source = change.effect.name;
+                for (const elem of `${change.value}`.split(/[;,]+/)) {
+                    const vals = elem.split(" ");
+                    const value = vals.pop();
+                    const target = vals.join(" ");
+                    newElems.push({ source, value, target });
+                }
+                update = current.concat(newElems);
+        }
+        return update;
     }
 
     _getModifiedItems(actor, change) {
@@ -88,31 +121,3 @@ export default class DSKActiveEffect extends ActiveEffect {
         this._clearModifiedItems()
     }
 }
-
-const applyCustomEffect = (elem, change) => {
-    let current = getProperty(elem, change.key) || null
-    if (current == null && /^system\.(vulnerabilities|resistances)/.test(change.key)) {
-        current = []
-        setProperty(elem, change.key, current)
-    }
-    const ct = getType(current)
-    let update = null
-    switch (ct) {
-        case "Array":
-            let newElems = []
-            const source = change.effect.name
-            for (let elem of `${change.value}`.split(/[;,]+/)) {
-                let vals = elem.split(" ")
-                const value = vals.pop()
-                const target = vals.join(" ")
-                newElems.push({ source, value, target })
-            }
-            update = current.concat(newElems)
-    }
-    if (update !== null) setProperty(elem, change.key, update)
-    return update
-}
-
-Hooks.on("applyActiveEffect", (actor, change) => {
-    return applyCustomEffect(actor, change)
-})

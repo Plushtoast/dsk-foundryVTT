@@ -1,4 +1,5 @@
 import { DSKDataModel } from '../../abstract.js';
+import DSK from '../../../system/config.js';
 
 const { SchemaField, StringField, NumberField, HTMLField } = foundry.data.fields;
 
@@ -10,6 +11,11 @@ export default class DetailsTemplate extends DSKDataModel {
     return {
       details: new SchemaField({
         species: new StringField({ initial: '', label: 'TYPES.Item.species' }),
+        size: new StringField({
+          initial: 'average',
+          choices: DSK.sizeCategories,
+          label: 'dsk.size',
+        }),
         profession: new StringField({ initial: '', label: 'TYPES.Item.profession' }),
         culture: new StringField({ initial: '', label: 'TYPES.Item.culture' }),
         gender: new StringField({ initial: '', label: 'dsk.Gender' }),
