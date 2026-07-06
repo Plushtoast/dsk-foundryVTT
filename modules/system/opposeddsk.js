@@ -37,9 +37,10 @@ export default class OpposedDSK{
                 if (target.actor) {
                     switch(testResult.rollType){
                         case "weapon":
+                        case "ahnengabe":
                             await OpposedDSK.evaluateAttack(actor, message, testResult, preData, attacker, target)
                             break
-                        default: 
+                        default:
                             const content = OpposedDSK.opposeMessage(attacker, target, false)
                             await ChatMessage.create({
                                 user: game.user.id,

@@ -204,7 +204,7 @@ export default class DiceDSK{
     static async rollSpell(testData) {
         const actorData = this._getActorData(testData)
         let res = await this._roll2D20(testData)
-        res["rollType"] = testData.source.types
+        res["rollType"] = testData.source.type
         res.preData.calculatedSpellModifiers.finalcost = Number(res.preData.calculatedSpellModifiers.cost)
         if (res.successLevel >= 2) {
             let extraFps = 10
